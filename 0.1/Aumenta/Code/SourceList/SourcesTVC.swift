@@ -28,6 +28,11 @@ class SourcesTVC: UITableViewController {
     }
     
     
+    
+    func randRange (lower: Int , upper: Int) -> Int {
+        return Int(arc4random_uniform(UInt32(upper - lower)))
+    }
+    
     func addSource(){
         let source = RLM_Source()
         
@@ -42,8 +47,8 @@ class SourcesTVC: UITableViewController {
                 source.id = UUID().uuidString
                 source.name = String(result)
                 
-                source.lat = 12.12
-                source.lng = 40.12
+                source.lat = Double(randRange(lower: 10, upper: 20))
+                source.lng = Double(randRange(lower: 10, upper: 20))
                 
                 self.realm.add(source)
             }

@@ -90,6 +90,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )
+        updateBeacons()
     }
 
 }
