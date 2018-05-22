@@ -43,10 +43,8 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func updateScene() {
-        // Iterate objects
-        
-        let objScene = SCNScene(named: "test.scn")
+    func updateScene(sceneName: String) {
+        let objScene = SCNScene(named: "main.scn")
         
         if (objScene != nil) {
             let objNode = objScene?.rootNode.childNode(withName: "capsule", recursively: true)
@@ -54,10 +52,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        print(error)
-    }
+
     
     
     func sessionWasInterrupted(_ session: ARSession) {
@@ -90,6 +85,12 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        print(error)
+    }
+    
 }
 
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3164AF4920B47E79009EDA27 /* RLM_Obj.swift */; };
 		3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177251E20B03AD4009FA8B1 /* AppDelegate.swift */; };
 		3177252120B03AD4009FA8B1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 3177252020B03AD4009FA8B1 /* art.scnassets */; };
 		3177252320B03AD4009FA8B1 /* ViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177252220B03AD4009FA8B1 /* ViewerVC.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3164AF4920B47E79009EDA27 /* RLM_Obj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Obj.swift; sourceTree = "<group>"; };
 		3177251B20B03AD4009FA8B1 /* Aumenta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aumenta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3177251E20B03AD4009FA8B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3177252020B03AD4009FA8B1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				319AA77C20B3FE0C00F99223 /* RLM_Session.swift */,
+				3164AF4920B47E79009EDA27 /* RLM_Obj.swift */,
 				31AB869320B356D70038F4D5 /* RLM_Source.swift */,
 				319AA78420B465F000F99223 /* RLM_ObjectPath.swift */,
 				319AA78220B4659200F99223 /* MockJson.json */,
@@ -287,6 +290,7 @@
 			files = (
 				31AB869120B355A30038F4D5 /* SourcesTVC.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
+				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
 				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
 				3177252320B03AD4009FA8B1 /* ViewerVC.swift in Sources */,

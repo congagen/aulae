@@ -41,13 +41,19 @@ class MainVC: UITabBarController {
     }
     
     
+    @objc func sourceUpdate() {
+        for s in sources {
+            
+        }
+    }
+    
+    
     @objc func mainUpdate() {
         
-        if session.count < 1 {
-            updateSources()
-            updateSources()
-            
-            if mainUpdateTimer.timeInterval != session[0].updateInterval { mainUpdateTimer.invalidate() }
+        if session.count > 0 {
+            if mainUpdateTimer.timeInterval != session.first?.updateInterval {
+                mainUpdateTimer.invalidate()
+            }
             
             if !mainUpdateTimer.isValid {
                 mainUpdateTimer = Timer.scheduledTimer(
@@ -81,9 +87,9 @@ class MainVC: UITabBarController {
         if let viewControllers = tabBarController?.viewControllers {
             for viewController in viewControllers {
                 let _ = viewController.view
+                viewControllers.forEach { $0.view }
             }
             
-            viewControllers.forEach { $0.view }
 
         }
         

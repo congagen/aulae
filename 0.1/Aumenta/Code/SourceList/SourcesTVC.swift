@@ -28,10 +28,10 @@ class SourcesTVC: UITableViewController {
     }
     
     
-    
     func randRange (lower: Int , upper: Int) -> Int {
         return Int(arc4random_uniform(UInt32(upper - lower)))
     }
+    
     
     func addSource(){
         let source = RLM_Source()
