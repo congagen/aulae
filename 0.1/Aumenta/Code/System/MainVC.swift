@@ -77,6 +77,16 @@ class MainVC: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initSession()
+        
+        if let viewControllers = tabBarController?.viewControllers {
+            for viewController in viewControllers {
+                let _ = viewController.view
+            }
+            
+            viewControllers.forEach { $0.view }
+
+        }
+        
         mainUpdate()
     }
 

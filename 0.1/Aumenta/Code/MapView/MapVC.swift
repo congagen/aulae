@@ -28,7 +28,22 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     var curLng = 0.0
     
     
-    func updateBeacons(){
+    func addRadiusOverlay(lat:Double, long:Double, radius:Double) {
+        
+        let currentOverlays = mapView.overlays.filter {
+            $0.coordinate.latitude == lat && $0.coordinate.longitude == long
+        }
+        
+        let locat: CLLocationCoordinate2D = CLLocationCoordinate2DMake(lat, long)
+        
+        if currentOverlays.count == 0 {
+            let areaCircle = MKCircle(center: locat, radius: Double(radius))
+            mapView.add(areaCircle)
+        }
+    }
+    
+    
+    func updateObjects(){
         
         for s in sources.filter({$0.active}) {
             let sOnMap = mapView.annotations.filter({$0.coordinate.latitude == s.lat && $0.coordinate.longitude == s.lng})
@@ -37,6 +52,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 let ano = MapAno()
                 ano.coordinate = CLLocationCoordinate2D(latitude: s.lat, longitude: s.lng)
                 mapView.addAnnotation(ano)
+                addRadiusOverlay(lat: s.lat, long: s.lng, radius: s.radius)
             }
         }
         
@@ -45,6 +61,16 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             
             if sInData.count == 0 {
                 mapView.removeAnnotation(a)
+                
+                let overlays = mapView.overlays.filter({
+                    $0.coordinate.latitude == a.coordinate.latitude && $0.coordinate.longitude == a.coordinate.longitude
+                })
+                
+                if overlays.count > 0 {
+                    for o in overlays {
+                        mapView.remove(o)
+                    }
+                }
             }
         }
         
@@ -54,9 +80,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         curLat = (locations.last?.coordinate.latitude)!
         curLng = (locations.last?.coordinate.longitude)!
-        
-        print(curLat)
-        print(curLng)
     }
     
     
@@ -84,13 +107,11 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
-    
+
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )
-        updateBeacons()
+        updateObjects()
     }
 
 }

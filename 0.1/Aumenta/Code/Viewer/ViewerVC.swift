@@ -12,10 +12,10 @@ import Foundation
 import MapKit
 import ARKit
 
+
 class ViewerVC: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
-    
     var sources: [String] = [""]
 
     
@@ -40,26 +40,6 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         sceneView.showsStatistics = true
 
         sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
-    }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setUpSceneView()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        sceneView.session.pause()
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
     
     
@@ -91,6 +71,24 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: ViewerVC")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setUpSceneView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        sceneView.session.pause()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
 }
 
