@@ -14,12 +14,12 @@
         <!--Viewer-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController title="Viewer" id="BV1-FR-VrT" customClass="ViewerVC" customModule="ArkitTest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Viewer" id="BV1-FR-VrT" customClass="ViewerVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
                     <arscnView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="BrB-h1-WRS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </arscnView>
-                    <navigationItem key="navigationItem" title="Viewer" id="na9-Cn-huz">
+                    <navigationItem key="navigationItem" title="Aumscape" id="na9-Cn-huz">
                         <barButtonItem key="rightBarButtonItem" systemItem="action" id="GHp-tP-57j"/>
                     </navigationItem>
                     <connections>
@@ -30,10 +30,10 @@
             </objects>
             <point key="canvasLocation" x="1057" y="1632"/>
         </scene>
-        <!--Sources-->
+        <!--Aumscape-->
         <scene sceneID="x9n-Rz-mVX">
             <objects>
-                <tableViewController id="4ZI-rx-Clo" customClass="SourcesTVC" customModule="ArkitTest" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="4ZI-rx-Clo" customClass="SourcesTVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Co9-JA-gGn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -103,7 +103,7 @@
                             <outlet property="delegate" destination="4ZI-rx-Clo" id="AYB-z0-Mok"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Sources" id="Nhx-W2-kfA">
+                    <navigationItem key="navigationItem" title="Aumscape" id="Nhx-W2-kfA">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="IYM-9R-419">
                             <connections>
                                 <action selector="addBtnAction:" destination="4ZI-rx-Clo" id="9T1-zV-i3g"/>
@@ -115,10 +115,10 @@
             </objects>
             <point key="canvasLocation" x="116" y="1633"/>
         </scene>
-        <!--Map-->
+        <!--Aumscape-->
         <scene sceneID="CcG-m6-yJt">
             <objects>
-                <viewController id="shz-14-nLG" customClass="MapVC" customModule="ArkitTest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="shz-14-nLG" customClass="MapVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="raj-ma-XdT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -136,7 +136,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Map" id="jef-En-32s"/>
+                    <navigationItem key="navigationItem" title="Aumscape" id="jef-En-32s"/>
                     <connections>
                         <outlet property="mapView" destination="zU5-ko-yXY" id="CUy-QG-oKU"/>
                     </connections>
@@ -148,7 +148,7 @@
         <!--MainVC-->
         <scene sceneID="Wui-Ci-rQu">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="jBl-tO-DwV" customClass="MainVC" customModule="ArkitTest" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="jBl-tO-DwV" customClass="MainVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="4T4-ar-U71">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
@@ -168,7 +168,6 @@
         <!--Sources-->
         <scene sceneID="cD3-xi-SHa">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bHN-BP-oUd" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Be5-wM-mQA" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Sources" id="iA0-4h-1mo"/>
                     <toolbarItems/>
@@ -181,6 +180,7 @@
                         <segue destination="4ZI-rx-Clo" kind="relationship" relationship="rootViewController" id="MQh-DR-9pb"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bHN-BP-oUd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="116" y="903"/>
         </scene>

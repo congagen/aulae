@@ -22,11 +22,23 @@ class MainVC: UITabBarController {
     
     func updateSession(){
         
+        // If near and notify -> Send notification
+        
     }
-    
+
     
     func updateSources(){
-        
+        for s in sources {
+            //
+            
+            print(s.id)
+            print(s.active)
+            print(s.lat)
+            print(s.lng)
+            print(s.date)
+
+            
+        }
     }
     
     
