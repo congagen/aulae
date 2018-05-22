@@ -17,47 +17,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     var sources: [String] = [""]
-    var mockModelURL = "https://raw.githubusercontent.com/markbrown4/webgl-workshop/master/models/stanford-bunny.dae"
-    
-    
-    func downloadF(fURL: String, filename: String) -> String {
-        
-        let documentsUrl:URL =  (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first as URL?)!
-        let destinationFileUrl = documentsUrl.appendingPathComponent(filename)
-        
-        let fileURL = URL(string: fURL)
-        
-        let sessionConfig = URLSessionConfiguration.default
-        let session = URLSession(configuration: sessionConfig)
-        let request = URLRequest(url:fileURL!)
-        
-        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
-            if let tempLocalUrl = tempLocalUrl, error == nil {
 
-                if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                    print("Successfully downloaded. Status code: \(statusCode)")
-                }
-                
-                do {
-                    try FileManager.default.copyItem(at: tempLocalUrl, to: destinationFileUrl)
-
-                } catch (let writeError) {
-                    print("Error creating a file \(destinationFileUrl) : \(writeError)")
-                }
-                
-            } else {
-                print("Error took place while downloading a file. Error description: %@", error?.localizedDescription as Any);
-            }
-        }
-        task.resume()
-        
-        if (destinationFileUrl.isFileURL) {
-            return destinationFileUrl.absoluteString
-        } else {
-            return ""
-        }
-    }
-    
     
     func updateEnvironemnt(objectPaths: [String]) -> SCNNode? {
         let scene: SCNNode? = nil
@@ -86,49 +46,32 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         addTapGestureToSceneView()
-    
-        let f = downloadF(fURL: mockModelURL, filename: "test.dae")
-        print(f)
-        
-        //let _ = downloadFile(fURL: mockModelURL)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Create a session configuration
-
-        // Run the view's session
         setUpSceneView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        // Pause the view's session
         sceneView.session.pause()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Release any cached data, images, etc that aren't in use.
     }
-
-    // MARK: - ARSCNViewDelegate
     
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
+    
+    func addObejct() {
+        
+        
     }
-*/
     
     
     @objc func addObjToScene(withGestureRecognizer recognizer: UIGestureRecognizer) {
-        print("addObjToScene")
+        print("addScene")
 
         let tapLocation = recognizer.location(in: sceneView)
         let hitTestResults = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
@@ -158,8 +101,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
+        print(error)
     }
     
     func sessionWasInterrupted(_ session: ARSession) {
@@ -169,13 +111,15 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear: ViewerVC")
     }
 }
 
 
 extension ViewerVC {
-    
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }

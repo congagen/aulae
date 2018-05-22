@@ -21,6 +21,7 @@
 		318FE90020B169510050528B /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 318FE8FC20B169510050528B /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA77C20B3FE0C00F99223 /* RLM_Session.swift */; };
 		319AA77F20B418E800F99223 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA77E20B418E800F99223 /* MainVC.swift */; };
+		319AA78120B4356500F99223 /* MapAno.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA78020B4356500F99223 /* MapAno.swift */; };
 		31AB869120B355A30038F4D5 /* SourcesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869020B355A30038F4D5 /* SourcesTVC.swift */; };
 		31AB869420B356D70038F4D5 /* RLM_Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869320B356D70038F4D5 /* RLM_Source.swift */; };
 		31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869520B3FB040038F4D5 /* MapVC.swift */; };
@@ -57,6 +58,7 @@
 		318FE8FC20B169510050528B /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		319AA77C20B3FE0C00F99223 /* RLM_Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Session.swift; sourceTree = "<group>"; };
 		319AA77E20B418E800F99223 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
+		319AA78020B4356500F99223 /* MapAno.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAno.swift; sourceTree = "<group>"; };
 		31AB869020B355A30038F4D5 /* SourcesTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesTVC.swift; sourceTree = "<group>"; };
 		31AB869320B356D70038F4D5 /* RLM_Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Source.swift; sourceTree = "<group>"; };
 		31AB869520B3FB040038F4D5 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				31AB869520B3FB040038F4D5 /* MapVC.swift */,
+				319AA78020B4356500F99223 /* MapAno.swift */,
 			);
 			path = MapView;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 			files = (
 				31AB869120B355A30038F4D5 /* SourcesTVC.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
+				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
 				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
 				3177252320B03AD4009FA8B1 /* ViewerVC.swift in Sources */,
 				3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */,

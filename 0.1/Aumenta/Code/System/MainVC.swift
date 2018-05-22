@@ -35,7 +35,6 @@ class MainVC: UITabBarController {
             print(s.active)
             print(s.lat)
             print(s.lng)
-            print(s.date)
 
             
         }
