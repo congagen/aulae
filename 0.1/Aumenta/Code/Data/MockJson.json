@@ -1,0 +1,18 @@
+
+{
+    "content": {
+        "a": {
+            "name": "ItemName",
+            "id": "12345",
+            "pos": [
+                    -40,
+                    90
+                    ],
+            "url": "https://raw.githubusercontent.com/markbrown4/webgl-workshop/master/models/stanford-bunny.dae"
+        }
+    },
+    "meta": {
+        "a": "",
+        "b": ""
+    }
+}

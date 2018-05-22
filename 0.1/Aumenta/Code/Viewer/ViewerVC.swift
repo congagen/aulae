@@ -64,7 +64,10 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func addObejct() {
+    func updateScene() {
+        // Iterate objects
+        
+        
         
         
     }
@@ -85,12 +88,8 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         // TODO:
         guard let objScene = SCNScene(named: "test.scn"),
             let objNode = objScene.rootNode.childNode(withName: "capsule", recursively: true)
-
             else { return }
         
-        print("ADDOK")
-        
-        objNode.position = SCNVector3(x, y, z)
         sceneView.scene.rootNode.addChildNode(objNode)
     }
     
