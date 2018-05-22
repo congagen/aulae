@@ -189,10 +189,10 @@
 		31AB869220B356C30038F4D5 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				31AB869320B356D70038F4D5 /* RLM_Source.swift */,
 				319AA77C20B3FE0C00F99223 /* RLM_Session.swift */,
-				319AA78220B4659200F99223 /* MockJson.json */,
+				31AB869320B356D70038F4D5 /* RLM_Source.swift */,
 				319AA78420B465F000F99223 /* RLM_ObjectPath.swift */,
+				319AA78220B4659200F99223 /* MockJson.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";

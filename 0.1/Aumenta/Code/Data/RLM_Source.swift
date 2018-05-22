@@ -4,7 +4,6 @@ import RealmSwift
 
 class RLM_Source: Object {
     
-    
     @objc dynamic var name: String = ""
     @objc dynamic var id: String = ""
     @objc dynamic var updatedUtx: Int = 1

@@ -45,7 +45,6 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addTapGestureToSceneView()
     }
     
     
@@ -67,41 +66,19 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     func updateScene() {
         // Iterate objects
         
+        let objScene = SCNScene(named: "test.scn")
         
-        
-        
+        if (objScene != nil) {
+            let objNode = objScene?.rootNode.childNode(withName: "capsule", recursively: true)
+            sceneView.scene.rootNode.addChildNode(objNode!)
+        }
     }
     
-    
-    @objc func addObjToScene(withGestureRecognizer recognizer: UIGestureRecognizer) {
-        print("addScene")
-
-        let tapLocation = recognizer.location(in: sceneView)
-        let hitTestResults = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
-        
-        guard let hitTestResult = hitTestResults.first else { return }
-        let translation = hitTestResult.worldTransform
-        let x = Float(translation[0].x)
-        let y = Float(translation[0].y)
-        let z = Float(translation[0].z)
-        
-        // TODO:
-        guard let objScene = SCNScene(named: "test.scn"),
-            let objNode = objScene.rootNode.childNode(withName: "capsule", recursively: true)
-            else { return }
-        
-        sceneView.scene.rootNode.addChildNode(objNode)
-    }
-    
-
-    func addTapGestureToSceneView() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewerVC.addObjToScene(withGestureRecognizer:)))
-        sceneView.addGestureRecognizer(tapGestureRecognizer)
-    }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         print(error)
     }
+    
     
     func sessionWasInterrupted(_ session: ARSession) {
         // Inform the user that the session has been interrupted, for example, by presenting an overlay
