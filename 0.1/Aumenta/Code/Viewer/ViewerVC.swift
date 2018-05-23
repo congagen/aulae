@@ -51,21 +51,20 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         objScene?.removeAllParticleSystems()
         
         for s in sources {
+            
 //            for o in s.sObjects {
+//                print(o.fileName)
 //
+//                let obj = SCNScene(named: "art.scnassets/test.dae")
+//                //let obj = SCNScene(named: "art.scnassets/" + o.fileName)
 //
+//                objScene?.rootNode.addChildNode((obj?.rootNode.childNode(withName: "test.dae", recursively: true)!)!)
 //            }
             
-            print("Source: " + String(s.id) )
             
-            let ptc = SCNParticleSystem(named: "Ptsys.scnp", inDirectory: nil)
-            let pos = SCNMatrix4(m11: 1, m12: 1, m13: 1, m14: 1, m21: 1, m22: 1, m23: 1, m24: 1, m31: 1, m32: 1, m33: 1, m34: 1, m41: 1, m42: 1, m43: 1, m44: 1)
+            let obj = SCNScene(named: "art.scnassets/test.dae")
+            objScene?.rootNode.addChildNode((obj?.rootNode.childNode(withName: "test.dae", recursively: true)!)!)
             
-            if ptc == nil {
-                print("NIL")
-            }
-            
-            objScene?.addParticleSystem(ptc!, transform: .init())
         }
         
         if (objScene != nil) {

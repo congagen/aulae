@@ -3,7 +3,7 @@ import Foundation
 
 class RLM_Obj: Object {
     
-    @objc dynamic var name: String = ""
+    @objc dynamic var fileName: String = ""
     @objc dynamic var info: String = ""
     @objc dynamic var id: String = ""
 
