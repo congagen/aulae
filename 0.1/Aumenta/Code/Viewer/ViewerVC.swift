@@ -47,12 +47,25 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     
     func updateScene(sceneName: String) {
-        let objScene = SCNScene(named: "main.scn")
+        let objScene = SCNScene(named: sceneName)
+        objScene?.removeAllParticleSystems()
         
         for s in sources {
-            for o in s.sObjects {
-                print(o)
+//            for o in s.sObjects {
+//
+//
+//            }
+            
+            print("Source: " + String(s.id) )
+            
+            let ptc = SCNParticleSystem(named: "Ptsys.scnp", inDirectory: nil)
+            let pos = SCNMatrix4(m11: 1, m12: 1, m13: 1, m14: 1, m21: 1, m22: 1, m23: 1, m24: 1, m31: 1, m32: 1, m33: 1, m34: 1, m41: 1, m42: 1, m43: 1, m44: 1)
+            
+            if ptc == nil {
+                print("NIL")
             }
+            
+            objScene?.addParticleSystem(ptc!, transform: .init())
         }
         
         if (objScene != nil) {
@@ -73,6 +86,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: ViewerVC")
+        updateScene(sceneName: "main.scn")
     }
     
     override func viewDidLoad() {

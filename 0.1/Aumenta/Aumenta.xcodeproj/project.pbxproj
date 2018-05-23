@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3158C65920B598D200E2F3FB /* Ptsys.scnp in Resources */ = {isa = PBXBuildFile; fileRef = 3158C65720B598D200E2F3FB /* Ptsys.scnp */; };
+		3158C65A20B598D200E2F3FB /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 3158C65820B598D200E2F3FB /* star.png */; };
 		3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3164AF4920B47E79009EDA27 /* RLM_Obj.swift */; };
 		3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177251E20B03AD4009FA8B1 /* AppDelegate.swift */; };
 		3177252120B03AD4009FA8B1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 3177252020B03AD4009FA8B1 /* art.scnassets */; };
@@ -46,6 +48,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3158C65720B598D200E2F3FB /* Ptsys.scnp */ = {isa = PBXFileReference; lastKnownFileType = file.scp; path = Ptsys.scnp; sourceTree = "<group>"; };
+		3158C65820B598D200E2F3FB /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
 		3164AF4920B47E79009EDA27 /* RLM_Obj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Obj.swift; sourceTree = "<group>"; };
 		3177251B20B03AD4009FA8B1 /* Aumenta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aumenta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3177251E20B03AD4009FA8B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -150,6 +154,8 @@
 			children = (
 				3177252020B03AD4009FA8B1 /* art.scnassets */,
 				3177252720B03AD6009FA8B1 /* Assets.xcassets */,
+				3158C65720B598D200E2F3FB /* Ptsys.scnp */,
+				3158C65820B598D200E2F3FB /* star.png */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -274,8 +280,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				319AA78320B4659200F99223 /* MockJson.json in Resources */,
+				3158C65920B598D200E2F3FB /* Ptsys.scnp in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
+				3158C65A20B598D200E2F3FB /* star.png in Resources */,
 				3177252820B03AD6009FA8B1 /* Assets.xcassets in Resources */,
 				3177252620B03AD4009FA8B1 /* Main.storyboard in Resources */,
 			);
