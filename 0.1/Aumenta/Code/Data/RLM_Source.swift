@@ -17,5 +17,8 @@ class RLM_Source: Object {
     @objc dynamic var radius: Double = 1000
     
     @objc dynamic var url: String = "https://api.myjson.com/bins/19fxoa"
+    
+    var sObjects = List<RLM_Obj>()
+
 
 }

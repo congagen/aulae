@@ -12,47 +12,54 @@ import Foundation
 import MapKit
 import ARKit
 
+import Realm
+import RealmSwift
+
 
 class ViewerVC: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
-    var sources: [String] = [""]
+    
+    let realm = try! Realm()
+    lazy var sources: Results<RLM_Source> = { self.realm.objects(RLM_Source.self) }()
 
-    
-    func updateEnvironemnt(objectPaths: [String]) -> SCNNode? {
-        let scene: SCNNode? = nil
-        
-        for obj in objectPaths {
-            print(obj)
-        }
-        
-        return scene
-    }
-    
     
     func setUpSceneView() {
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
         
         sceneView.session.run(configuration)
-        
         sceneView.delegate = self
         sceneView.showsStatistics = true
-
         sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
+    }
+    
+    
+    func loadObject(assetDir: String, format: String) {
+        if let filePath = Bundle.main.path(forResource: "Test", ofType: format, inDirectory: assetDir) {
+            let referenceURL = URL(fileURLWithPath: filePath)
+            
+            let referenceNode = SCNReferenceNode(url: referenceURL)
+            referenceNode?.load()
+            sceneView.scene.rootNode.addChildNode(referenceNode!)
+        }
     }
     
     
     func updateScene(sceneName: String) {
         let objScene = SCNScene(named: "main.scn")
         
+        for s in sources {
+            for o in s.sObjects {
+                print(o)
+            }
+        }
+        
         if (objScene != nil) {
             let objNode = objScene?.rootNode.childNode(withName: "capsule", recursively: true)
             sceneView.scene.rootNode.addChildNode(objNode!)
         }
     }
-    
-
     
     
     func sessionWasInterrupted(_ session: ARSession) {
