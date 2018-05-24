@@ -23,7 +23,10 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var sources: Results<RLM_Source> = { self.realm.objects(RLM_Source.self) }()
-
+    
+    var updateTimer = Timer()
+    let updateInterval: Double = 10
+    
     
     func setUpSceneView() {
         let configuration = ARWorldTrackingConfiguration()
@@ -77,7 +80,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func listObjects(sources: [RLM_Source]) -> [RLM_Obj] {
+    func listSourceObjects(sources: [RLM_Source]) -> [RLM_Obj] {
         var objectList: [RLM_Obj] = []
         
         for s in sources {
@@ -90,22 +93,49 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func updateScene(sceneName: String) {
+    func updateScene() {
+        print("updateScene")
+
         let objScene = sceneView.scene
         objScene.removeAllParticleSystems()
         
         // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let sInRange = sourcesInRange(position: curPos, useManualRange: false, manualRange: 0)
-        let objList = listObjects(sources: sInRange)
+        let objInRange = listSourceObjects(sources: sInRange)
         
-        for o in objList {
-            //let obj = SCNScene(named: "art.scnassets/" + o.fileName)
-            let obj = SCNScene(named: "art.scnassets/test.dae")
+        for o in objInRange {
+            let referenceURL = URL(fileURLWithPath: o.absPath)
+            let referenceNode = SCNReferenceNode(url: referenceURL)
             
-            objScene.rootNode.addChildNode((obj?.rootNode.childNode(withName: "test.dae", recursively: true)!)!)
+            referenceNode?.load()
+            objScene.rootNode.addChildNode(referenceNode!)
         }
+    }
+    
+    
+    @objc func mainUpdate() {
+        print("mainUpdate: ViewerVC")
         
+        updateScene()
+        
+        if session.count > 0 {
+            if updateTimer.timeInterval != updateInterval {
+                updateTimer.invalidate()
+            }
+            
+            if !updateTimer.isValid {
+                updateTimer = Timer.scheduledTimer(
+                    timeInterval: updateInterval,
+                    target: self, selector: #selector(mainUpdate),
+                    userInfo: nil, repeats: true)
+            }
+        }
+    }
+    
+    
+    @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
+        updateScene()
     }
     
     
@@ -120,11 +150,12 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: ViewerVC")
-        updateScene(sceneName: "main.scn")
+        updateScene()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mainUpdate()
     }
     
     override func viewWillAppear(_ animated: Bool) {

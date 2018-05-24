@@ -49,6 +49,7 @@ class MainVC: UITabBarController {
     
     
     @objc func mainUpdate() {
+        print("mainUpdate: MainVC")
         
         if session.count > 0 {
             if mainUpdateTimer.timeInterval != session.first?.updateInterval {
@@ -77,6 +78,8 @@ class MainVC: UITabBarController {
                 print("Error: \(error)")
             }
         }
+        
+        mainUpdate()
     }
     
     
@@ -87,13 +90,10 @@ class MainVC: UITabBarController {
         if let viewControllers = tabBarController?.viewControllers {
             for viewController in viewControllers {
                 let _ = viewController.view
-                viewControllers.forEach { $0.view }
+                viewControllers.forEach { $0.view.updateConstraints() }
             }
-            
-
         }
         
-        mainUpdate()
     }
 
     override func didReceiveMemoryWarning() {

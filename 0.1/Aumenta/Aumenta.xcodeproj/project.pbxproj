@@ -22,6 +22,7 @@
 		318FE8FE20B169510050528B /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 318FE8FB20B169500050528B /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		318FE8FF20B169510050528B /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 318FE8FC20B169510050528B /* RealmSwift.framework */; };
 		318FE90020B169510050528B /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 318FE8FC20B169510050528B /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3196C88620B6AB1500468B4D /* ObjectLoader.swift */; };
 		319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA77C20B3FE0C00F99223 /* RLM_Session.swift */; };
 		319AA77F20B418E800F99223 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA77E20B418E800F99223 /* MainVC.swift */; };
 		319AA78120B4356500F99223 /* MapAno.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA78020B4356500F99223 /* MapAno.swift */; };
@@ -64,6 +65,7 @@
 		318FE8F820B0C3880050528B /* ArkitTest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ArkitTest.entitlements; sourceTree = "<group>"; };
 		318FE8FB20B169500050528B /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		318FE8FC20B169510050528B /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
+		3196C88620B6AB1500468B4D /* ObjectLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectLoader.swift; sourceTree = "<group>"; };
 		319AA77C20B3FE0C00F99223 /* RLM_Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Session.swift; sourceTree = "<group>"; };
 		319AA77E20B418E800F99223 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		319AA78020B4356500F99223 /* MapAno.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAno.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 			children = (
 				318FE8F120B0BB730050528B /* HttpDownloader.swift */,
 				319AA77E20B418E800F99223 /* MainVC.swift */,
+				3196C88620B6AB1500468B4D /* ObjectLoader.swift */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				31AB869120B355A30038F4D5 /* SourcesTVC.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
+				3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
 				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
 				3177252320B03AD4009FA8B1 /* ViewerVC.swift in Sources */,

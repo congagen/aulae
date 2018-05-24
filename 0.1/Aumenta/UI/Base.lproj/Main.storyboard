@@ -20,6 +20,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </arscnView>
                     <navigationItem key="navigationItem" title="Aumscape" id="na9-Cn-huz">
+                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="OPU-Xe-6HZ">
+                            <connections>
+                                <action selector="refreshBtnAction:" destination="BV1-FR-VrT" id="rym-Ze-N9V"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="action" id="GHp-tP-57j"/>
                     </navigationItem>
                     <connections>
