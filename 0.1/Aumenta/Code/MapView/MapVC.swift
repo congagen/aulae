@@ -80,6 +80,16 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         curLat = (locations.last?.coordinate.latitude)!
         curLng = (locations.last?.coordinate.longitude)!
+        
+        do {
+            try realm.write {
+                session.first?.currentLat = curLat
+                session.first?.currentLng = curLng
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
     }
     
     

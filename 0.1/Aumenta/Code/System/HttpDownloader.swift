@@ -12,6 +12,18 @@ import Foundation
 class HttpDownloader {
     
     
+    func deviceRemainingFreeSpaceInBytes() -> Int64? {
+        let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last!
+        guard
+            let systemAttributes = try? FileManager.default.attributesOfFileSystem(forPath: documentDirectory),
+            let freeSize = systemAttributes[.systemFreeSize] as? NSNumber
+            else {
+                return nil
+        }
+        return freeSize.int64Value
+    }
+    
+    
     func downloadFileSync(fURL: String, filename: String) -> String {
         
         let documentsUrl:URL =  (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first as URL?)!

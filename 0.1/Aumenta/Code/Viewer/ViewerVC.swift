@@ -21,6 +21,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     let realm = try! Realm()
+    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var sources: Results<RLM_Source> = { self.realm.objects(RLM_Source.self) }()
 
     
@@ -46,31 +47,65 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func updateScene(sceneName: String) {
-        let objScene = SCNScene(named: sceneName)
-        objScene?.removeAllParticleSystems()
+    func sourcesInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Source] {
+        var sourceList: [RLM_Source] = []
+        
+        if ((sources.count) > 0) {
+            if (useManualRange) {
+                sourceList = (sources.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double(manualRange))})
+            } else {
+                sourceList = (sources.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double($0.radius))})
+            }
+        }
+        
+        return sourceList
+    }
+    
+    
+    func obejctsInRange(sObjects: [RLM_Obj], position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
+        var objList: [RLM_Obj] = []
+
+        if ((sObjects.count) > 0) {
+            if (useManualRange) {
+                objList = (sObjects.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double(manualRange))})
+            } else {
+                objList = (sObjects.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double($0.radius))})
+            }
+        }
+        
+        return objList
+    }
+    
+    
+    func listObjects(sources: [RLM_Source]) -> [RLM_Obj] {
+        var objectList: [RLM_Obj] = []
         
         for s in sources {
-            
-//            for o in s.sObjects {
-//                print(o.fileName)
-//
-//                let obj = SCNScene(named: "art.scnassets/test.dae")
-//                //let obj = SCNScene(named: "art.scnassets/" + o.fileName)
-//
-//                objScene?.rootNode.addChildNode((obj?.rootNode.childNode(withName: "test.dae", recursively: true)!)!)
-//            }
-            
-            
-            let obj = SCNScene(named: "art.scnassets/test.dae")
-            objScene?.rootNode.addChildNode((obj?.rootNode.childNode(withName: "test.dae", recursively: true)!)!)
-            
+            for o in s.sObjects {
+                objectList.append(o)
+            }
         }
         
-        if (objScene != nil) {
-            let objNode = objScene?.rootNode.childNode(withName: "capsule", recursively: true)
-            sceneView.scene.rootNode.addChildNode(objNode!)
+        return objectList
+    }
+    
+    
+    func updateScene(sceneName: String) {
+        let objScene = sceneView.scene
+        objScene.removeAllParticleSystems()
+        
+        // Scenes in range
+        let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        let sInRange = sourcesInRange(position: curPos, useManualRange: false, manualRange: 0)
+        let objList = listObjects(sources: sInRange)
+        
+        for o in objList {
+            //let obj = SCNScene(named: "art.scnassets/" + o.fileName)
+            let obj = SCNScene(named: "art.scnassets/test.dae")
+            
+            objScene.rootNode.addChildNode((obj?.rootNode.childNode(withName: "test.dae", recursively: true)!)!)
         }
+        
     }
     
     
