@@ -26,7 +26,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     var updateTimer = Timer()
     let updateInterval: Double = 10
-    
+
     
     func setUpSceneView() {
         let configuration = ARWorldTrackingConfiguration()
@@ -102,15 +102,28 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let sInRange = sourcesInRange(position: curPos, useManualRange: false, manualRange: 0)
-        let objInRange = listSourceObjects(sources: sInRange)
         
-        for o in objInRange {
-            let referenceURL = URL(fileURLWithPath: o.absPath)
-            let referenceNode = SCNReferenceNode(url: referenceURL)
-            
-            referenceNode?.load()
-            objScene.rootNode.addChildNode(referenceNode!)
+        let objsInRange = listSourceObjects(sources: sInRange)
+        let objsInScene = sceneView.scene.rootNode.childNodes
+        
+        for o in objsInRange {
+            if objsInScene.filter({$0.name == o.id}).count == 0 {
+                let referenceURL = URL(fileURLWithPath: o.absPath)
+                let objNode = SCNReferenceNode(url: referenceURL)
+                objNode?.load()
+                objNode?.name = o.id
+                objScene.rootNode.addChildNode(objNode!)
+            } else {
+                // TODO: Check model version?
+            }
         }
+        
+        for i in objsInScene {
+            if objsInRange.filter({$0.name == i.name}).count == 0 {
+                i.removeFromParentNode()
+            }
+        }
+        
     }
     
     
@@ -185,25 +198,20 @@ extension ViewerVC {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
         
-        // 2
         let width = CGFloat(planeAnchor.extent.x)
         let height = CGFloat(planeAnchor.extent.z)
         let plane = SCNPlane(width: width, height: height)
         
-        // 3
         plane.materials.first?.diffuse.contents = UIColor(red: 0, green: 1, blue: 1, alpha: 0.5)
         
-        // 4
         let planeNode = SCNNode(geometry: plane)
         
-        // 5
         let x = CGFloat(planeAnchor.center.x)
         let y = CGFloat(planeAnchor.center.y)
         let z = CGFloat(planeAnchor.center.z)
         planeNode.position = SCNVector3(x,y,z)
         planeNode.eulerAngles.x = -.pi / 2
         
-        // 6
         node.addChildNode(planeNode)
     }
     
@@ -214,13 +222,11 @@ extension ViewerVC {
             let plane = planeNode.geometry as? SCNPlane
             else { return }
         
-        // 2
         let width = CGFloat(planeAnchor.extent.x)
         let height = CGFloat(planeAnchor.extent.z)
         plane.width = width
         plane.height = height
         
-        // 3
         let x = CGFloat(planeAnchor.center.x)
         let y = CGFloat(planeAnchor.center.y)
         let z = CGFloat(planeAnchor.center.z)
