@@ -89,13 +89,12 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         } catch {
             print("Error: \(error)")
         }
-        
     }
     
     
     func initMapView() {
         mapView.delegate = self
-        mapView.showsUserLocation = false
+        mapView.showsUserLocation = true
         mapView.showsPointsOfInterest = false
         mapView.showsCompass = false
         mapView.showsScale = false

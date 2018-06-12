@@ -11,5 +11,7 @@ class RLM_Session: Object {
     @objc dynamic var currentLng: Double = 0.0
     
     var sessionBeacons = List<RLM_ObjectPath>()
+    
+    var downloads = List<RLM_ObjectPath>()
 
 }

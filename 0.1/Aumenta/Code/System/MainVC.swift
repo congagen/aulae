@@ -18,7 +18,11 @@ class MainVC: UITabBarController {
     lazy var sources: Results<RLM_Source> = { self.realm.objects(RLM_Source.self) }()
     
     var mainUpdateTimer = Timer()
-
+    
+    var downloads: [String: Bool] = [:]
+    
+    
+    
     
     func updateSession(){
         
@@ -27,7 +31,12 @@ class MainVC: UITabBarController {
     }
 
     
-    func updateSources(){
+    func updateSources() {
+        
+        // Download JSON if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
+        // Download Objects if distance < N
+        
+        
         for s in sources {
             //
             
@@ -36,13 +45,6 @@ class MainVC: UITabBarController {
             print(s.lat)
             print(s.lng)
 
-            
-        }
-    }
-    
-    
-    @objc func sourceUpdate() {
-        for s in sources {
             
         }
     }
