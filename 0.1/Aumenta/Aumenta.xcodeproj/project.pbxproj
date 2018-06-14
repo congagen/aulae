@@ -26,11 +26,14 @@
 		319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA77C20B3FE0C00F99223 /* RLM_Session.swift */; };
 		319AA77F20B418E800F99223 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA77E20B418E800F99223 /* MainVC.swift */; };
 		319AA78120B4356500F99223 /* MapAno.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA78020B4356500F99223 /* MapAno.swift */; };
-		319AA78320B4659200F99223 /* MockJson.json in Resources */ = {isa = PBXBuildFile; fileRef = 319AA78220B4659200F99223 /* MockJson.json */; };
+		319AA78320B4659200F99223 /* source_content.json in Resources */ = {isa = PBXBuildFile; fileRef = 319AA78220B4659200F99223 /* source_content.json */; };
 		319AA78520B465F000F99223 /* RLM_ObjectPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA78420B465F000F99223 /* RLM_ObjectPath.swift */; };
 		31AB869120B355A30038F4D5 /* SourcesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869020B355A30038F4D5 /* SourcesTVC.swift */; };
 		31AB869420B356D70038F4D5 /* RLM_Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869320B356D70038F4D5 /* RLM_Source.swift */; };
 		31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869520B3FB040038F4D5 /* MapVC.swift */; };
+		31D284B920D2B1F5004451A6 /* RLM_SourceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D284B820D2B1F5004451A6 /* RLM_SourceList.swift */; };
+		31D284BB20D2B262004451A6 /* source_list.json in Resources */ = {isa = PBXBuildFile; fileRef = 31D284BA20D2B262004451A6 /* source_list.json */; };
+		31D284BD20D2C183004451A6 /* RLM_ObjUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D284BC20D2C183004451A6 /* RLM_ObjUrl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -69,11 +72,14 @@
 		319AA77C20B3FE0C00F99223 /* RLM_Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Session.swift; sourceTree = "<group>"; };
 		319AA77E20B418E800F99223 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		319AA78020B4356500F99223 /* MapAno.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAno.swift; sourceTree = "<group>"; };
-		319AA78220B4659200F99223 /* MockJson.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MockJson.json; sourceTree = "<group>"; };
+		319AA78220B4659200F99223 /* source_content.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = source_content.json; sourceTree = "<group>"; };
 		319AA78420B465F000F99223 /* RLM_ObjectPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_ObjectPath.swift; sourceTree = "<group>"; };
 		31AB869020B355A30038F4D5 /* SourcesTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesTVC.swift; sourceTree = "<group>"; };
 		31AB869320B356D70038F4D5 /* RLM_Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Source.swift; sourceTree = "<group>"; };
 		31AB869520B3FB040038F4D5 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
+		31D284B820D2B1F5004451A6 /* RLM_SourceList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_SourceList.swift; sourceTree = "<group>"; };
+		31D284BA20D2B262004451A6 /* source_list.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = source_list.json; sourceTree = "<group>"; };
+		31D284BC20D2C183004451A6 /* RLM_ObjUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_ObjUrl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,9 +208,12 @@
 			children = (
 				319AA77C20B3FE0C00F99223 /* RLM_Session.swift */,
 				3164AF4920B47E79009EDA27 /* RLM_Obj.swift */,
+				31D284BC20D2C183004451A6 /* RLM_ObjUrl.swift */,
 				31AB869320B356D70038F4D5 /* RLM_Source.swift */,
 				319AA78420B465F000F99223 /* RLM_ObjectPath.swift */,
-				319AA78220B4659200F99223 /* MockJson.json */,
+				31D284B820D2B1F5004451A6 /* RLM_SourceList.swift */,
+				319AA78220B4659200F99223 /* source_content.json */,
+				31D284BA20D2B262004451A6 /* source_list.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -282,10 +291,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				319AA78320B4659200F99223 /* MockJson.json in Resources */,
+				319AA78320B4659200F99223 /* source_content.json in Resources */,
 				3158C65920B598D200E2F3FB /* Ptsys.scnp in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
+				31D284BB20D2B262004451A6 /* source_list.json in Resources */,
 				3158C65A20B598D200E2F3FB /* star.png in Resources */,
 				3177252820B03AD6009FA8B1 /* Assets.xcassets in Resources */,
 				3177252620B03AD4009FA8B1 /* Main.storyboard in Resources */,
@@ -303,12 +313,14 @@
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
 				3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */,
+				31D284B920D2B1F5004451A6 /* RLM_SourceList.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
 				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
 				3177252320B03AD4009FA8B1 /* ViewerVC.swift in Sources */,
 				3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */,
 				319AA77F20B418E800F99223 /* MainVC.swift in Sources */,
 				318FE8F220B0BB730050528B /* HttpDownloader.swift in Sources */,
+				31D284BD20D2C183004451A6 /* RLM_ObjUrl.swift in Sources */,
 				31AB869420B356D70038F4D5 /* RLM_Source.swift in Sources */,
 				319AA78520B465F000F99223 /* RLM_ObjectPath.swift in Sources */,
 			);

@@ -4,6 +4,11 @@
         "name_a": {
             "name": "ItemName_A",
             "id": "12345",
+            
+            "lat":  10,
+            "long": 10,
+            "radius": 10,
+            
             "info": "Object info A",
             "pos": [
                     -40,
@@ -14,6 +19,11 @@
         "name_b": {
             "name": "ItemName_B",
             "id": "12345",
+            
+            "lat":  10,
+            "long": 10,
+            "radius": 10,
+            
             "info": "Object info B",
             "pos": [
                     -50,

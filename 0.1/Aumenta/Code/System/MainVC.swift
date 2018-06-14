@@ -18,7 +18,6 @@ class MainVC: UITabBarController {
     lazy var sources: Results<RLM_Source> = { self.realm.objects(RLM_Source.self) }()
     
     var mainUpdateTimer = Timer()
-    
     var downloads: [String: RLM_Source] = [:]
     
     let httpDl = HttpDownloader()
@@ -39,31 +38,65 @@ class MainVC: UITabBarController {
     }
     
     
-    func ummm(ah: URL) {
+    func updateSource(fileUrl: URL, id: String) -> Dictionary<String, AnyObject> {
+        var result: Dictionary<String, AnyObject>? = Dictionary<String, AnyObject>()
         
-        print("File: " + String(ah.absoluteString))
-        
-        if FileManager.default.fileExists(atPath: ah.path) {
-            //let path = Bundle.main.path(forResource: ah.path, ofType: ah.pathExtension)
-            
+        if FileManager.default.fileExists(atPath: fileUrl.path) {
             do {
-                let data = try Data(contentsOf: ah, options: .mappedIfSafe)
+                let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
                 
                 if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
-                    print(jsonResult)
-                } else {
-                    print("!jsonResult")
+                    result = jsonResult
+                    
+                    storeSource(sourceSpec: jsonResult)
+                    
                 }
             } catch {
                 print(error)
             }
-            
-            
-//            } else {
-//                print("ERROR " + String(ah.path) + " ERROR")
-//            }
         }
+        
+        return result!
+    }
+    
+    
+    func storeSource(sourceSpec: Dictionary<String, AnyObject>) {
+        
+        let meta = sourceSpec["meta"] as! Dictionary<String, AnyObject>
+        
+        let sID: String = meta["id"] as! String
+        let sVersion: Int = meta["version"] as! Int
+        let sUrl: String = sourceSpec["url"] as! String
+    
+        let date = Date()
+        let currentUtx = Int(date.timeIntervalSince1970)
+        
+        let s = sources.filter( {$0.id == sID} )
+       
+        var sObject = RLM_Source()
+        if  s.count > 0 {
+            if s.first?.version != sVersion {
+                sObject = (s.first)!
+            }
+        }
+    
+        do {
+            try realm.write {
+                sObject.name = sID
+                sObject.updatedUtx = currentUtx
+                sObject.id = sID
+                sObject.version = sVersion
+                sObject.url = sUrl
+
+                realm.add(sObject)
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+
+
     }
     
     
@@ -91,7 +124,9 @@ class MainVC: UITabBarController {
                     let f = httpDl.loadFileAsync(
                         url: URL as URL,
                         destinationUrl: destinationUrl!,
-                        completion: { self.ummm(ah: destinationUrl!) }
+                        completion: {
+                            self.updateSource(fileUrl: destinationUrl!, id: s.id)
+                    }
                     )
                 }
             }
