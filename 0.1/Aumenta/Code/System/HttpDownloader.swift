@@ -23,7 +23,7 @@ class HttpDownloader {
         return freeSize.int64Value
     }
     
-    
+
     func downloadFileSync(fURL: String, filename: String) -> String {
         
         let documentsUrl:URL =  (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first as URL?)!
@@ -63,6 +63,71 @@ class HttpDownloader {
     }
     
     
+    @objc func completion(filePath: String) {
+        print(filePath)
+        print(filePath)
+        print(filePath)
+        print(filePath)
+        print(filePath)
+        print(filePath)
+    }
+    
+    
+//    func verifyUrl (url: NSURL) -> Bool {
+//        //Check for nil
+//        var exists: Bool = false
+//        let request: NSMutableURLRequest = NSMutableURLRequest(url: url as URL)
+//        request.httpMethod = "HEAD"
+//        let response: URLResponse = URLResponse()
+//
+//        if let httpResponse = response as? HTTPURLResponse {
+//            if httpResponse.statusCode == 200 {
+//                exists =  true
+//            }else{
+//                exists  = false
+//            }
+//        }
+//        return exists
+//    }
+    
+
+    func load(url: URL, completion: @escaping () -> ()) {
+        let sessionConfig = URLSessionConfiguration.default
+        let session = URLSession(configuration: sessionConfig)
+        
+        let request = try! URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
+        
+        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
+            if let tempLocalUrl = tempLocalUrl, error == nil {
+                // Success
+                if let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                    print("Success: \(statusCode)")
+                }
+                
+                let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                //let destinationUrl = documentsUrl.appendingPathComponent(url.lastPathComponent)
+                let destinationUrl = documentsUrl.appendingPathComponent(".json")
+                
+//                if FileManager.default.fileExists(atPath: destinationUrl!.path) {
+//                    try! FileManager.default.removeItem(at: destinationUrl!)
+//                }
+            
+                do {
+                    try FileManager.default.copyItem(at: tempLocalUrl, to: destinationUrl!)
+                    completion()
+                } catch (let writeError) {
+                    print(writeError)
+                }
+                
+            } else {
+                print(error)
+                print(url.absoluteString)
+            }
+        }
+        task.resume()
+    }
+
+    
     func loadFileSync(url: NSURL, completion:(_ path:String, _ error:NSError?) -> Void) {
         let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
         let destinationUrl = documentsUrl.appendingPathComponent(url.lastPathComponent!)
@@ -82,9 +147,7 @@ class HttpDownloader {
     }
     
     
-    
-    static func loadFileAsync(url: URL, completion: @escaping (String?, Error?) -> Void)
-    {
+    static func loadFileAsync(url: URL, completion: @escaping (String?, Error?) -> Void) {
         let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let destinationUrl = documentsUrl.appendingPathComponent(url.lastPathComponent)
         

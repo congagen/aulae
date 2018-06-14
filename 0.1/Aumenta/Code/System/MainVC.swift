@@ -19,9 +19,9 @@ class MainVC: UITabBarController {
     
     var mainUpdateTimer = Timer()
     
-    var downloads: [String: Bool] = [:]
+    var downloads: [String: RLM_Source] = [:]
     
-    
+    let downloader = HttpDownloader()
     
     
     func updateSession(){
@@ -30,22 +30,65 @@ class MainVC: UITabBarController {
         
     }
 
+    func handler(a:String, b:String) {
+        
+    }
+    
+    func randRange (lower: Int , upper: Int) -> Int {
+        return Int(arc4random_uniform(UInt32(upper - lower)))
+    }
+    
+    
+    func ummm(ah: String) {
+    
+        if FileManager.default.fileExists(atPath: ah) {
+            if let path = Bundle.main.path(forResource: ah, ofType: "json") {
+                do {
+                    let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+                    let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+                    if let jsonResult = jsonResult as? Dictionary<String, AnyObject>, let person = jsonResult["person"] as? [Any] {
+                        print(jsonResult)
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+        }
+    }
+    
     
     func updateSources() {
-        
         // Download JSON if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
         // Download Objects if distance < N
         
+        let updateInterval = randRange(lower: 3, upper: 5)
         
         for s in sources {
-            //
+            let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(s.updatedUtx)))
             
-            print(s.id)
-            print(s.active)
-            print(s.lat)
-            print(s.lng)
-
+            print("Time Since Update: " + String(timeSinceUpdate))
+            print(String(s.id) + " " + String(s.active) + " " + String(s.lat) + " " + String(s.lng) + " " + String(s.url))
             
+            let sUrl = URL(string: s.url)
+            
+            if Int(timeSinceUpdate) > updateInterval {
+                print("SOURCE UPDATE")
+                
+                if let URL = NSURL(string: s.url) {
+                    downloader.load(url: sUrl!, completion: {
+                        self.ummm(ah: URL.absoluteString!)
+                    })
+                }
+                
+            }
+            
+            do {
+                try realm.write {
+                    s.updatedUtx = abs(Int(NSDate().timeIntervalSince1970))
+                }
+            } catch {
+                print("Error: \(error)")
+            }
         }
     }
     
@@ -65,6 +108,8 @@ class MainVC: UITabBarController {
                     userInfo: nil, repeats: true)
             }
         }
+        
+        updateSources()
     }
     
     

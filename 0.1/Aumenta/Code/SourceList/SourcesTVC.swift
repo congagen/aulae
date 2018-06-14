@@ -41,11 +41,12 @@ class SourcesTVC: UITableViewController {
         formatter.dateFormat = "yyyy/MM/dd - HH:mm"
         let result = formatter.string(from: date)
         
-        
         do {
             try realm.write {
                 source.id = UUID().uuidString
                 source.name = String(result)
+                source.updatedUtx = 0
+                source.url = "https:/api.myjson.com/bins/19fxoa"
                 
                 source.lat = Double(randRange(lower: 10, upper: 20))
                 source.lng = Double(randRange(lower: 10, upper: 20))
