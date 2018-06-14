@@ -21,7 +21,7 @@ class MainVC: UITabBarController {
     
     var downloads: [String: RLM_Source] = [:]
     
-    let downloader = HttpDownloader()
+    let httpDl = HttpDownloader()
     
     
     func updateSession(){
@@ -39,20 +39,30 @@ class MainVC: UITabBarController {
     }
     
     
-    func ummm(ah: String) {
-    
-        if FileManager.default.fileExists(atPath: ah) {
-            if let path = Bundle.main.path(forResource: ah, ofType: "json") {
-                do {
-                    let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-                    let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-                    if let jsonResult = jsonResult as? Dictionary<String, AnyObject>, let person = jsonResult["person"] as? [Any] {
-                        print(jsonResult)
-                    }
-                } catch {
-                    print(error)
+    func ummm(ah: URL) {
+        
+        print("File: " + String(ah.absoluteString))
+        
+        if FileManager.default.fileExists(atPath: ah.path) {
+            //let path = Bundle.main.path(forResource: ah.path, ofType: ah.pathExtension)
+            
+            do {
+                let data = try Data(contentsOf: ah, options: .mappedIfSafe)
+                let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+                
+                if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
+                    print(jsonResult)
+                } else {
+                    print("!jsonResult")
                 }
+            } catch {
+                print(error)
             }
+            
+            
+//            } else {
+//                print("ERROR " + String(ah.path) + " ERROR")
+//            }
         }
     }
     
@@ -69,17 +79,21 @@ class MainVC: UITabBarController {
             print("Time Since Update: " + String(timeSinceUpdate))
             print(String(s.id) + " " + String(s.active) + " " + String(s.lat) + " " + String(s.lng) + " " + String(s.url))
             
-            let sUrl = URL(string: s.url)
+            let fileName = s.id + ".json"
+            
+            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+            let destinationUrl = documentsUrl.appendingPathComponent(fileName)
             
             if Int(timeSinceUpdate) > updateInterval {
-                print("SOURCE UPDATE")
+                print("Dest URL: " + (destinationUrl?.path)! )
                 
-                if let URL = NSURL(string: s.url) {
-                    downloader.load(url: sUrl!, completion: {
-                        self.ummm(ah: URL.absoluteString!)
-                    })
+                if let URL = URL(string: s.url) {
+                    let f = httpDl.loadFileAsync(
+                        url: URL as URL,
+                        destinationUrl: destinationUrl!,
+                        completion: { self.ummm(ah: destinationUrl!) }
+                    )
                 }
-                
             }
             
             do {
