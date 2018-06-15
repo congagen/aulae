@@ -46,7 +46,7 @@ class FeedsTVC: UITableViewController {
                 feed.id = UUID().uuidString
                 feed.name = String(result)
                 feed.updatedUtx = 0
-                feed.url = "https://api.myjson.com/bins/h61m6"
+                feed.url = "https://api.myjson.com/bins/ttpxq"
                 
                 feed.lat = Double(randRange(lower: 10, upper: 20))
                 feed.lng = Double(randRange(lower: 10, upper: 20))

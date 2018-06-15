@@ -5,7 +5,7 @@ class RLM_Obj: Object {
     
     @objc dynamic var name: String = ""
     @objc dynamic var id: String = ""
-    @objc dynamic var version: String = ""
+    @objc dynamic var version: Int = 0
     @objc dynamic var info: String = ""
 
     @objc dynamic var fileName: String = ""

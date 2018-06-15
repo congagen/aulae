@@ -78,7 +78,7 @@ class MainVC: UITabBarController {
                 "name":   item["name"] as! String,
                 "id":     item["id"] as! String,
                 "info":   item["info"] as! String,
-                "version":100,
+                "version":item["version"] as! Int,
 
                 "url":    item["model_url"] as! String,
                 
@@ -97,8 +97,8 @@ class MainVC: UITabBarController {
                 "scale":  item["scale"] as! Double
             ]
             
-            let objId = item["id"] as! String
-            let version = "100" //TODO
+            let objId =    item["id"] as! String
+            let version =  item["version"] as! Int
             let modelUrl = item["model_url"] as! String
 
             let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
@@ -130,7 +130,7 @@ class MainVC: UITabBarController {
         let sID: String = feedspec["id"] as! String
         let sName: String = feedspec["name"] as! String
         let sInfo: String = feedspec["info"] as! String
-        let sVersion: String = feedspec["version"] as! String
+        let sVersion: Int = feedspec["version"] as! Int
         //let sUpdated_utx: String = feedspec["updated_utx"] as! String
     
         let date = Date()
