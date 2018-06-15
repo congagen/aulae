@@ -5,11 +5,11 @@ class RLM_Obj: Object {
     
     @objc dynamic var name: String = ""
     @objc dynamic var id: String = ""
+    @objc dynamic var version: String = ""
     @objc dynamic var info: String = ""
 
     @objc dynamic var fileName: String = ""
     @objc dynamic var filePath: String = ""
-    @objc dynamic var absPath: String = ""
 
     @objc dynamic var lat: Double = 0.0
     @objc dynamic var lng: Double = 0.0
@@ -23,6 +23,6 @@ class RLM_Obj: Object {
     @objc dynamic var yRot: Double = 0.0
     @objc dynamic var zRot: Double = 0.0
     
-    @objc dynamic var size: Double = 1
+    @objc dynamic var scale: Double = 1.0
     
 }

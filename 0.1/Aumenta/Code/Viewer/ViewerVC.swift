@@ -102,7 +102,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         
         for o in objsInRange {
             if objsInScene.filter({$0.name == o.id}).count == 0 {
-                let referenceURL = URL(fileURLWithPath: o.absPath)
+                let referenceURL = URL(fileURLWithPath: o.filePath)
                 let objNode = SCNReferenceNode(url: referenceURL)
                 objNode?.load()
                 objNode?.name = o.id
