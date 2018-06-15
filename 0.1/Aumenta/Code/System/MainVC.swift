@@ -78,7 +78,7 @@ class MainVC: UITabBarController {
                 "name":   item["name"] as! String,
                 "id":     item["id"] as! String,
                 "info":   item["info"] as! String,
-                "version":item["version"] as! Double,
+                "version":100,
 
                 "url":    item["model_url"] as! String,
                 
@@ -98,11 +98,11 @@ class MainVC: UITabBarController {
             ]
             
             let objId = item["id"] as! String
-            let version = item["version"] as! String
-            let modelUrl = item["modelUrl"] as! String
+            let version = "100" //TODO
+            let modelUrl = item["model_url"] as! String
 
             let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-            let fileName = item["id"] as! String + documentsUrl.lastPathComponent!
+            let fileName = (URL(string: modelUrl)?.lastPathComponent)!
             let destinationUrl = documentsUrl.appendingPathComponent(fileName)
             
             let idExists = feedObjects.filter( {$0.id == objId} ).count > 0
@@ -162,8 +162,6 @@ class MainVC: UITabBarController {
                     updateFeedDatabase(feedDbItem: feedDbItem, feedspec: jsonResult)
                     updateFeedObjects(feedList: jsonResult)
                     
-                    
-                    
 //                    if jsonResult["version"] as! String != feedDbItem.version {
 //                        updateFeedDatabase(feedDbItem: feedDbItem, feedspec: jsonResult)
 //                        updateFeedObjects(feedList: jsonResult)
@@ -185,19 +183,21 @@ class MainVC: UITabBarController {
         let updateInterval = 10 //randRange(lower: 3, upper: 5)
         
         for fe in feeds {
-            let timeSinceUpdate = abs(NSDate().timeIntervalSinceNow.distance(to: Double(fe.updatedUtx)))
+            let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
             
             print("Time Since Update: " + String(timeSinceUpdate))
             print(String(fe.id) + " " + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
+            print("FeedObjectCount: " + String(feedObjects.count))
+            
+            for ob in feedObjects {
+                print(ob.filePath)
+            }
             
             let fileName = fe.id + ".json"
             let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
             let destinationUrl = documentsUrl.appendingPathComponent(fileName)
             
             if Int(timeSinceUpdate) > updateInterval {
-                print("TimeSinceUpdate > UpdateInterval")
-                print("Updating... Dest URL: " + (destinationUrl?.path)! )
-                print("FeedObjectCount: " + String(feedObjects.count))
                 
                 if let URL = URL(string: fe.url) {
                     let _ = httpDl.loadFileAsync(
