@@ -38,6 +38,54 @@ class MainVC: UITabBarController {
     }
     
     
+    
+    
+    
+    func updateFeedObjects(feedList: Dictionary<String, AnyObject>) {
+        for k in feedList["content"] as! Dictionary<String, AnyObject> {
+            print(feedList["content"]![k])
+        }
+    }
+    
+    
+    func storeSource(sourceSpec: Dictionary<String, AnyObject>) {
+        var sObject = RLM_Feed()
+
+        let sID: String = sourceSpec["id"] as! String
+        let sName: String = sourceSpec["name"] as! String
+        let sInfo: String = sourceSpec["info"] as! String
+        let sVersion: Int = sourceSpec["version"] as! Int
+        //let sUpdated_utx: String = sourceSpec["updated_utx"] as! String
+    
+        let date = Date()
+        let currentUtx = Int(date.timeIntervalSince1970)
+        
+        let s = sources.filter( {$0.id == sID} )
+        if  s.count > 0 {
+            if s.first?.version != sVersion {
+                sObject = (s.first)!
+                updateFeedObjects(feedList: sourceSpec)
+            }
+        }
+    
+        do {
+            try realm.write {
+                sObject.id = sID
+                sObject.name = sName
+                sObject.info = sInfo
+                sObject.version = sVersion
+                sObject.updatedUtx = currentUtx
+                
+                updateFeedObjects(feedList: sourceSpec)
+                realm.add(sObject)
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+
+    }
+    
+    
     func updateSource(fileUrl: URL, id: String) -> Dictionary<String, AnyObject> {
         var result: Dictionary<String, AnyObject>? = Dictionary<String, AnyObject>()
         
@@ -58,47 +106,6 @@ class MainVC: UITabBarController {
         }
         
         return result!
-    }
-    
-    
-    func storeSource(sourceSpec: Dictionary<String, AnyObject>) {
-        var sObject = RLM_Feed()
-
-        let sID: String = sourceSpec["id"] as! String
-        let sName: String = sourceSpec["name"] as! String
-        let sInfo: String = sourceSpec["info"] as! String
-        let sVersion: Int = sourceSpec["version"] as! Int
-        //let sUpdated_utx: String = sourceSpec["updated_utx"] as! String
-    
-        let date = Date()
-        let currentUtx = Int(date.timeIntervalSince1970)
-        
-        let s = sources.filter( {$0.id == sID} )
-        if  s.count > 0 {
-            if s.first?.version != sVersion {
-                sObject = (s.first)!
-                
-                if s.first?.version != sVersion {
-                    
-                }
-            }
-        }
-    
-        do {
-            try realm.write {
-                sObject.id = sID
-                sObject.name = sName
-                sObject.info = sInfo
-                sObject.version = sVersion
-                sObject.updatedUtx = currentUtx
-                realm.add(sObject)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-
-
     }
     
     
@@ -123,7 +130,7 @@ class MainVC: UITabBarController {
                 print("Dest URL: " + (destinationUrl?.path)! )
                 
                 if let URL = URL(string: s.url) {
-                    let f = httpDl.loadFileAsync(
+                    let _ = httpDl.loadFileAsync(
                         url: URL as URL,
                         destinationUrl: destinationUrl!,
                         completion: {
