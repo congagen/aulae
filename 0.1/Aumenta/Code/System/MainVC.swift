@@ -45,22 +45,23 @@ class MainVC: UITabBarController {
     }
     
     
-    func storeFeed(feedspec: Dictionary<String, AnyObject>) {
+    func updateFeedDatabase(feedspec: Dictionary<String, AnyObject>) {
+        print("updateFeedDatabase")
         var sObject = RLM_Feed()
 
         let sID: String = feedspec["id"] as! String
         let sName: String = feedspec["name"] as! String
         let sInfo: String = feedspec["info"] as! String
-        let sVersion: Int = feedspec["version"] as! Int
+        let sVersion: String = feedspec["version"] as! String
         //let sUpdated_utx: String = feedspec["updated_utx"] as! String
     
         let date = Date()
         let currentUtx = Int(date.timeIntervalSince1970)
         
-        let s = feeds.filter( {$0.id == sID} )
-        if  s.count > 0 {
-            if s.first?.version != sVersion {
-                sObject = (s.first)!
+        let fd = feeds.filter( {$0.id == sID} )
+        if  fd.count > 0 {
+            if fd.first?.version != sVersion {
+                sObject = (fd.first)!
                 updateFeedObjects(feedList: feedspec)
             }
         }
@@ -74,7 +75,11 @@ class MainVC: UITabBarController {
                 sObject.updatedUtx = currentUtx
                 
                 updateFeedObjects(feedList: feedspec)
-                realm.add(sObject)
+                
+                if fd.count < 1 {
+                    realm.add(sObject)
+                }
+                
             }
         } catch {
             print("Error: \(error)")
@@ -83,34 +88,28 @@ class MainVC: UITabBarController {
     }
     
     
-    func updateFeed(fileUrl: URL, id: String) -> Dictionary<String, AnyObject> {
-        var result: Dictionary<String, AnyObject>? = Dictionary<String, AnyObject>()
-        
+    func updateFeed(fileUrl: URL, id: String) {
         if FileManager.default.fileExists(atPath: fileUrl.path) {
             do {
                 let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
                 
                 if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
-                    result = jsonResult
-                    
-                    storeFeed(feedspec: jsonResult)
-                    
+                    updateFeedDatabase(feedspec: jsonResult)
                 }
             } catch {
                 print(error)
             }
         }
-        
-        return result!
     }
     
     
     func updateFeeds() {
+        print("updateFeeds")
         // Download JSON if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
         // Download Objects if distance < N
         
-        let updateInterval = randRange(lower: 3, upper: 5)
+        let updateInterval = 10 //randRange(lower: 3, upper: 5)
         
         for s in feeds {
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(s.updatedUtx)))
@@ -124,14 +123,18 @@ class MainVC: UITabBarController {
             let destinationUrl = documentsUrl.appendingPathComponent(fileName)
             
             if Int(timeSinceUpdate) > updateInterval {
-                print("Dest URL: " + (destinationUrl?.path)! )
+                print("timeSinceUpdate > updateInterval")
+                print("Updating... Dest URL: " + (destinationUrl?.path)! )
                 
                 if let URL = URL(string: s.url) {
                     let _ = httpDl.loadFileAsync(
                         url: URL as URL,
                         destinationUrl: destinationUrl!,
                         completion: {
-                            self.updateFeed(fileUrl: destinationUrl!, id: s.id)
+                            DispatchQueue.main.async {
+                                self.updateFeed(fileUrl: destinationUrl!, id: s.id)
+                            }
+                            
                     }
                     )
                 }
@@ -164,7 +167,10 @@ class MainVC: UITabBarController {
             }
         }
         
-        updateFeeds()
+        DispatchQueue.main.async {
+            self.updateFeeds()
+        }
+
     }
     
     
