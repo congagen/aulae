@@ -1,0 +1,32 @@
+{
+    "id":          "12345678",
+    "name":        "12345678",
+    "info":        "abcdefgh",
+    "version":     "12345678",
+    "updated_utx": "12345678",
+    
+    "content": {
+        "name_a": {
+            "name": "ItemName_A",
+            "id": "12345",
+            "info": "Object info A",
+            
+            "lat": 10,
+            "long": 10,
+            "radius": 10,
+            
+            "xPos": 0.0,
+            "yPos": 0.0,
+            "zPos": 0.0,
+            
+            "xRot": 0.0,
+            "yRot": 0.0,
+            "zRot": 0.0,
+            
+            "scale": 1,
+            
+            "audio_url": "",
+            "model_url": "https://raw.githubusercontent.com/markbrown4/webgl-workshop/master/models/stanford-bunny.dae"
+        }
+    }
+}
