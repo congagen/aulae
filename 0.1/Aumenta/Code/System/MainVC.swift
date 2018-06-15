@@ -15,10 +15,10 @@ class MainVC: UITabBarController {
     lazy var realm = try! Realm()
     
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var sources: Results<RLM_Source> = { self.realm.objects(RLM_Source.self) }()
+    lazy var sources: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     
     var mainUpdateTimer = Timer()
-    var downloads: [String: RLM_Source] = [:]
+    var downloads: [String: RLM_Feed] = [:]
     
     let httpDl = HttpDownloader()
     
@@ -62,33 +62,35 @@ class MainVC: UITabBarController {
     
     
     func storeSource(sourceSpec: Dictionary<String, AnyObject>) {
-        
-        let meta = sourceSpec["meta"] as! Dictionary<String, AnyObject>
-        
-        let sID: String = meta["id"] as! String
-        let sVersion: Int = meta["version"] as! Int
-        let sUrl: String = sourceSpec["url"] as! String
+        var sObject = RLM_Feed()
+
+        let sID: String = sourceSpec["id"] as! String
+        let sName: String = sourceSpec["name"] as! String
+        let sInfo: String = sourceSpec["info"] as! String
+        let sVersion: Int = sourceSpec["version"] as! Int
+        //let sUpdated_utx: String = sourceSpec["updated_utx"] as! String
     
         let date = Date()
         let currentUtx = Int(date.timeIntervalSince1970)
         
         let s = sources.filter( {$0.id == sID} )
-       
-        var sObject = RLM_Source()
         if  s.count > 0 {
             if s.first?.version != sVersion {
                 sObject = (s.first)!
+                
+                if s.first?.version != sVersion {
+                    
+                }
             }
         }
     
         do {
             try realm.write {
-                sObject.name = sID
-                sObject.updatedUtx = currentUtx
                 sObject.id = sID
+                sObject.name = sName
+                sObject.info = sInfo
                 sObject.version = sVersion
-                sObject.url = sUrl
-
+                sObject.updatedUtx = currentUtx
                 realm.add(sObject)
             }
         } catch {

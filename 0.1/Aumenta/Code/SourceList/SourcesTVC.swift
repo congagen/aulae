@@ -13,10 +13,10 @@ import RealmSwift
 class SourcesTVC: UITableViewController {
 
     let realm = try! Realm()
-    lazy var sources: Results<RLM_Source> = { self.realm.objects(RLM_Source.self) }()
+    lazy var sources: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     var textField: UITextField? = nil
 
-    var selected: RLM_Source? = nil
+    var selected: RLM_Feed? = nil
     
     
     public var screenHeight: CGFloat {
@@ -34,7 +34,7 @@ class SourcesTVC: UITableViewController {
     
     
     func addSource(){
-        let source = RLM_Source()
+        let source = RLM_Feed()
         
         let date = Date()
         let formatter = DateFormatter()
@@ -46,7 +46,7 @@ class SourcesTVC: UITableViewController {
                 source.id = UUID().uuidString
                 source.name = String(result)
                 source.updatedUtx = 0
-                source.url = "https:/api.myjson.com/bins/19fxoa"
+                source.url = "https://api.myjson.com/bins/h61m6"
                 
                 source.lat = Double(randRange(lower: 10, upper: 20))
                 source.lng = Double(randRange(lower: 10, upper: 20))

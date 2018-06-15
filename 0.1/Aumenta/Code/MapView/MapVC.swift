@@ -22,7 +22,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
     lazy var realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var sources: Results<RLM_Source> = { self.realm.objects(RLM_Source.self) }()
+    lazy var sources: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     
     var curLat = 0.0
     var curLng = 0.0

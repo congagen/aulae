@@ -22,8 +22,9 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var sources: Results<RLM_Source> = { self.realm.objects(RLM_Source.self) }()
-    
+    lazy var sources: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var objects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+
     var updateTimer = Timer()
     let updateInterval: Double = 10
 
@@ -50,8 +51,8 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func sourcesInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Source] {
-        var sourceList: [RLM_Source] = []
+    func sourcesInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Feed] {
+        var sourceList: [RLM_Feed] = []
         
         if ((sources.count) > 0) {
             if (useManualRange) {
@@ -80,16 +81,9 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func listSourceObjects(sources: [RLM_Source]) -> [RLM_Obj] {
-        var objectList: [RLM_Obj] = []
+    func listSourceObjects(sources: [RLM_Feed]) -> [RLM_Obj] {
         
-        for s in sources {
-            for o in s.sObjects {
-                objectList.append(o)
-            }
-        }
-        
-        return objectList
+        return Array(objects)
     }
     
     
