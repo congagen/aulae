@@ -15,10 +15,10 @@ class MainVC: UITabBarController {
     lazy var realm = try! Realm()
     
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var sources: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     
     var mainUpdateTimer = Timer()
-    var downloads: [String: RLM_Feed] = [:]
+    var activeDownloads: [String: String] = [:]
     
     let httpDl = HttpDownloader()
     
@@ -38,9 +38,6 @@ class MainVC: UITabBarController {
     }
     
     
-    
-    
-    
     func updateFeedObjects(feedList: Dictionary<String, AnyObject>) {
         for k in feedList["content"] as! Dictionary<String, AnyObject> {
             print(feedList["content"]![k])
@@ -48,23 +45,23 @@ class MainVC: UITabBarController {
     }
     
     
-    func storeSource(sourceSpec: Dictionary<String, AnyObject>) {
+    func storeFeed(feedspec: Dictionary<String, AnyObject>) {
         var sObject = RLM_Feed()
 
-        let sID: String = sourceSpec["id"] as! String
-        let sName: String = sourceSpec["name"] as! String
-        let sInfo: String = sourceSpec["info"] as! String
-        let sVersion: Int = sourceSpec["version"] as! Int
-        //let sUpdated_utx: String = sourceSpec["updated_utx"] as! String
+        let sID: String = feedspec["id"] as! String
+        let sName: String = feedspec["name"] as! String
+        let sInfo: String = feedspec["info"] as! String
+        let sVersion: Int = feedspec["version"] as! Int
+        //let sUpdated_utx: String = feedspec["updated_utx"] as! String
     
         let date = Date()
         let currentUtx = Int(date.timeIntervalSince1970)
         
-        let s = sources.filter( {$0.id == sID} )
+        let s = feeds.filter( {$0.id == sID} )
         if  s.count > 0 {
             if s.first?.version != sVersion {
                 sObject = (s.first)!
-                updateFeedObjects(feedList: sourceSpec)
+                updateFeedObjects(feedList: feedspec)
             }
         }
     
@@ -76,7 +73,7 @@ class MainVC: UITabBarController {
                 sObject.version = sVersion
                 sObject.updatedUtx = currentUtx
                 
-                updateFeedObjects(feedList: sourceSpec)
+                updateFeedObjects(feedList: feedspec)
                 realm.add(sObject)
             }
         } catch {
@@ -86,7 +83,7 @@ class MainVC: UITabBarController {
     }
     
     
-    func updateSource(fileUrl: URL, id: String) -> Dictionary<String, AnyObject> {
+    func updateFeed(fileUrl: URL, id: String) -> Dictionary<String, AnyObject> {
         var result: Dictionary<String, AnyObject>? = Dictionary<String, AnyObject>()
         
         if FileManager.default.fileExists(atPath: fileUrl.path) {
@@ -97,7 +94,7 @@ class MainVC: UITabBarController {
                 if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
                     result = jsonResult
                     
-                    storeSource(sourceSpec: jsonResult)
+                    storeFeed(feedspec: jsonResult)
                     
                 }
             } catch {
@@ -109,13 +106,13 @@ class MainVC: UITabBarController {
     }
     
     
-    func updateSources() {
+    func updateFeeds() {
         // Download JSON if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
         // Download Objects if distance < N
         
         let updateInterval = randRange(lower: 3, upper: 5)
         
-        for s in sources {
+        for s in feeds {
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(s.updatedUtx)))
             
             print("Time Since Update: " + String(timeSinceUpdate))
@@ -134,7 +131,7 @@ class MainVC: UITabBarController {
                         url: URL as URL,
                         destinationUrl: destinationUrl!,
                         completion: {
-                            self.updateSource(fileUrl: destinationUrl!, id: s.id)
+                            self.updateFeed(fileUrl: destinationUrl!, id: s.id)
                     }
                     )
                 }
@@ -167,7 +164,7 @@ class MainVC: UITabBarController {
             }
         }
         
-        updateSources()
+        updateFeeds()
     }
     
     

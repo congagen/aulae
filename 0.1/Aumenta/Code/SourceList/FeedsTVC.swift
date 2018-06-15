@@ -1,5 +1,5 @@
 //
-//  SourcesTVC.swift
+//  feedsTVC.swift
 //  ArkitTest
 //
 //  Created by Tim Sandgren on 2018-05-21.
@@ -10,10 +10,10 @@ import UIKit
 import Realm
 import RealmSwift
 
-class SourcesTVC: UITableViewController {
+class FeedsTVC: UITableViewController {
 
     let realm = try! Realm()
-    lazy var sources: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     var textField: UITextField? = nil
 
     var selected: RLM_Feed? = nil
@@ -24,7 +24,7 @@ class SourcesTVC: UITableViewController {
     }
 
     @IBAction func addBtnAction(_ sender: UIBarButtonItem) {
-        addSource()
+        addFeed()
     }
     
     
@@ -33,8 +33,8 @@ class SourcesTVC: UITableViewController {
     }
     
     
-    func addSource(){
-        let source = RLM_Feed()
+    func addFeed(){
+        let feed = RLM_Feed()
         
         let date = Date()
         let formatter = DateFormatter()
@@ -43,21 +43,21 @@ class SourcesTVC: UITableViewController {
         
         do {
             try realm.write {
-                source.id = UUID().uuidString
-                source.name = String(result)
-                source.updatedUtx = 0
-                source.url = "https://api.myjson.com/bins/h61m6"
+                feed.id = UUID().uuidString
+                feed.name = String(result)
+                feed.updatedUtx = 0
+                feed.url = "https://api.myjson.com/bins/h61m6"
                 
-                source.lat = Double(randRange(lower: 10, upper: 20))
-                source.lng = Double(randRange(lower: 10, upper: 20))
+                feed.lat = Double(randRange(lower: 10, upper: 20))
+                feed.lng = Double(randRange(lower: 10, upper: 20))
                 
-                self.realm.add(source)
+                self.realm.add(feed)
             }
         } catch {
             print("Error: \(error)")
         }
         
-        selected = source
+        selected = feed
         
         showURLAlert(aMessage: "https://...")
         
@@ -92,17 +92,17 @@ class SourcesTVC: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let source = sources[section]
+        let feed = feeds[section]
         
-        cell.textLabel?.text = String(source.name)
-        cell.detailTextLabel?.text = "Source: " + String(source.url)
+        cell.textLabel?.text = String(feed.name)
+        cell.detailTextLabel?.text = "Feed: " + String(feed.url)
 
-        cell.restorationIdentifier = source.id
+        cell.restorationIdentifier = feed.id
         cell.backgroundColor = UIColor.clear
         cell.contentView.backgroundColor = UIColor.clear
-        cell.accessibilityHint = String(source.name) + " Source: " + String(source.url)
+        cell.accessibilityHint = String(feed.name) + " Feed: " + String(feed.url)
         
-        if !source.active {
+        if !feed.active {
             cell.textLabel?.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             cell.detailTextLabel?.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         } else {
@@ -119,10 +119,10 @@ class SourcesTVC: UITableViewController {
     }
     
     
-    func removeSource(indexP: IndexPath) {
+    func removeFeed(indexP: IndexPath) {
         
         let section = indexP.section
-        let src = sources[section]
+        let src = feeds[section]
         
         do {
             try realm.write {
@@ -166,7 +166,7 @@ class SourcesTVC: UITableViewController {
     
     func showURLAlert(aMessage: String?){
         let alert = UIAlertController(
-            title: "Source URL",
+            title: "Feed URL",
             message: "",
             preferredStyle: UIAlertControllerStyle.alert
         )
@@ -221,8 +221,8 @@ class SourcesTVC: UITableViewController {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let section = indexPath.section
         
-        if sources[section].id != "" {
-            selected = sources[section]
+        if feeds[section].id != "" {
+            selected = feeds[section]
         }
         
         let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (rowAction, indexPath) in
@@ -236,7 +236,7 @@ class SourcesTVC: UITableViewController {
         renameAction.backgroundColor = UIColor(red: 0.0, green: 0.2, blue: 1, alpha: 0.75)
         
         let deleteAction = UITableViewRowAction(style: .normal, title: "Delete") { (rowAction, indexPath) in
-            self.removeSource(indexP: indexPath)
+            self.removeFeed(indexP: indexPath)
         }
         deleteAction.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.75)
         
@@ -263,7 +263,7 @@ class SourcesTVC: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return sources.count
+        return feeds.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

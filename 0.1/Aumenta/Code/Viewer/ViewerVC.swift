@@ -22,7 +22,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var sources: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var objects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
     var updateTimer = Timer()
@@ -51,18 +51,18 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func sourcesInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Feed] {
-        var sourceList: [RLM_Feed] = []
+    func feedsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Feed] {
+        var feedList: [RLM_Feed] = []
         
-        if ((sources.count) > 0) {
+        if ((feeds.count) > 0) {
             if (useManualRange) {
-                sourceList = (sources.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double(manualRange))})
+                feedList = (feeds.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double(manualRange))})
             } else {
-                sourceList = (sources.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double($0.radius))})
+                feedList = (feeds.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double($0.radius))})
             }
         }
         
-        return sourceList
+        return feedList
     }
     
     
@@ -81,7 +81,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func listSourceObjects(sources: [RLM_Feed]) -> [RLM_Obj] {
+    func listFeedObjects(feeds: [RLM_Feed]) -> [RLM_Obj] {
         
         return Array(objects)
     }
@@ -95,9 +95,9 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         
         // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        let sInRange = sourcesInRange(position: curPos, useManualRange: false, manualRange: 0)
+        let sInRange = feedsInRange(position: curPos, useManualRange: false, manualRange: 0)
         
-        let objsInRange = listSourceObjects(sources: sInRange)
+        let objsInRange = listFeedObjects(feeds: sInRange)
         let objsInScene = sceneView.scene.rootNode.childNodes
         
         for o in objsInRange {

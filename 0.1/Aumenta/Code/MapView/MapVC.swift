@@ -22,7 +22,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
     lazy var realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var sources: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     
     var curLat = 0.0
     var curLng = 0.0
@@ -45,7 +45,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     func updateObjects(){
         
-        for s in sources.filter({$0.active}) {
+        for s in feeds.filter({$0.active}) {
             let sOnMap = mapView.annotations.filter({$0.coordinate.latitude == s.lat && $0.coordinate.longitude == s.lng})
             
             if sOnMap.count == 0 {
@@ -57,7 +57,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         }
         
         for a in mapView.annotations {
-            let sInData = sources.filter({$0.lat == a.coordinate.latitude && $0.lng == a.coordinate.longitude})
+            let sInData = feeds.filter({$0.lat == a.coordinate.latitude && $0.lng == a.coordinate.longitude})
             
             if sInData.count == 0 {
                 mapView.removeAnnotation(a)
