@@ -11,12 +11,14 @@ import Foundation
 extension MainVC {
     
     
-    func storeFeedObject(objInfo: [String : Any], objFilePath: URL) {
+    func storeFeedObject(objInfo: [String : Any], objFilePath: URL, originFeed:String) {
         let rlmObj = RLM_Obj()
         
         do {
             try realm.write {
                 rlmObj.id = objInfo["id"] as! String
+                rlmObj.feedId = originFeed
+
                 rlmObj.name = objInfo["name"] as! String
                 rlmObj.info = objInfo["info"] as! String
                 rlmObj.filePath = objFilePath.absoluteString
@@ -111,7 +113,8 @@ extension MainVC {
                 if let URL = URL(string: modelUrl) {
                     let _ = httpDl.loadFileAsync(
                         url: URL as URL, destinationUrl: destinationUrl!,
-                        completion: { DispatchQueue.main.async { self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!)} })
+                        completion: { DispatchQueue.main.async {
+                            self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, originFeed: feedId )} })
                 }
             } else {
                 // TODO: Update error count for feed
@@ -185,12 +188,33 @@ extension MainVC {
     }
     
     
+    func refreshObjects() {
+        for o in feedObjects {
+            let objectFeeds = feeds.filter({ $0.id == o.feedId })
+            
+            if objectFeeds.count == 0 {
+                do {
+                    try realm.write {
+                        o.deleted = true
+                        o.active = false
+                    }
+                } catch {
+                    print("Error: \(error)")
+                }
+            }
+            
+        }
+    }
+    
+    
     func updateFeeds() {
         print("updateFeeds")
         // Download JSON if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
         // Download Objects if distance < N
         
         let updateInterval = 10 //randRange(lower: 3, upper: 5)
+        refreshObjects()
+
         
         for fe in feeds {
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
@@ -208,7 +232,6 @@ extension MainVC {
             let destinationUrl = documentsUrl.appendingPathComponent(fileName)
             
             if Int(timeSinceUpdate) > updateInterval {
-                
                 if let URL = URL(string: fe.url) {
                     let _ = httpDl.loadFileAsync(
                         url: URL as URL,
@@ -221,6 +244,8 @@ extension MainVC {
                 }
             }
         }
+        
+        
     }
     
     

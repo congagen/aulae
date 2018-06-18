@@ -58,9 +58,9 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         }
         
         for a in mapView.annotations {
-            let sInData = fObjects.filter({$0.lat == a.coordinate.latitude && $0.lng == a.coordinate.longitude})
+            let objInDB = fObjects.filter({$0.lat == a.coordinate.latitude && $0.lng == a.coordinate.longitude})
             
-            if sInData.count == 0 {
+            if objInDB.count == 0 {
                 mapView.removeAnnotation(a)
                 
                 let overlays = mapView.overlays.filter({
@@ -90,6 +90,8 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         } catch {
             print("Error: \(error)")
         }
+        
+        updateObjects()
     }
     
     

@@ -135,32 +135,20 @@ class FeedsTVC: UITableViewController {
         return true
     }
     
-    
-    func deleteObjects(id: String) {
-        if feeds.filter({$0.id == id}).count == 0 {
-            if feedObjects.filter({$0.id == id}).count > 0 {
-                for o in feedObjects.filter({$0.id == id}) {
-                    do {
-                        try realm.write {
-                            realm.delete(o)
-                        }
-                    } catch {
-                        print("Error: \(error)")
-                    }
-                }
-            }
-        }
-    }
-    
-    
     func removeFeed(indexP: IndexPath) {
         
         let section = indexP.section
-        let src = feeds[section]
+        let feed = feeds[section]
         
         do {
             try realm.write {
-                realm.delete(src)
+                for obj in feedObjects.filter( {$0.id == feed.id} ) {
+                    obj.deleted = true
+                    obj.active = false
+                }
+                
+                feed.deleted = true
+                feed.active = false
             }
         } catch {
             print("Error: \(error)")
@@ -299,7 +287,7 @@ class FeedsTVC: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return feeds.count
+        return feeds.filter({!$0.deleted}).count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

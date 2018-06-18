@@ -11,7 +11,8 @@ class RLM_Obj: Object {
     @objc dynamic var info: String = ""
     
     @objc dynamic var active: Bool = true
-    
+    @objc dynamic var deleted: Bool = false
+
     @objc dynamic var fileName: String = ""
     @objc dynamic var filePath: String = ""
 
