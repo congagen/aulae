@@ -9,7 +9,9 @@ class RLM_Obj: Object {
     
     @objc dynamic var version: Int = 0
     @objc dynamic var info: String = ""
-
+    
+    @objc dynamic var active: Bool = true
+    
     @objc dynamic var fileName: String = ""
     @objc dynamic var filePath: String = ""
 
@@ -17,13 +19,13 @@ class RLM_Obj: Object {
     @objc dynamic var lng: Double = 0.0
     @objc dynamic var radius: Double = 0.0
     
-    @objc dynamic var xPos: Double = 0.0
-    @objc dynamic var yPos: Double = 0.0
-    @objc dynamic var zPos: Double = 0.0
+    @objc dynamic var x_pos: Double = 0.0
+    @objc dynamic var y_pos: Double = 0.0
+    @objc dynamic var z_pos: Double = 0.0
     
-    @objc dynamic var xRot: Double = 0.0
-    @objc dynamic var yRot: Double = 0.0
-    @objc dynamic var zRot: Double = 0.0
+    @objc dynamic var x_rot: Double = 0.0
+    @objc dynamic var y_rot: Double = 0.0
+    @objc dynamic var z_rot: Double = 0.0
     
     @objc dynamic var scale: Double = 1.0
     
