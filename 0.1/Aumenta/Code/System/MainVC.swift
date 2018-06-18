@@ -29,9 +29,6 @@ class MainVC: UITabBarController {
     }
     
     
- 
-    
-    
     @objc func mainUpdate() {
         print("mainUpdate: MainVC")
         
