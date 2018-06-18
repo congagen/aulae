@@ -228,6 +228,8 @@ extension MainVC {
             
             for ob in feedObjects {
                 print(ob.filePath)
+                print(ob.active)
+                print(ob.deleted)
             }
             
             let fileName = fe.id + ".json"

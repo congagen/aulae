@@ -17,6 +17,9 @@ import RealmSwift
 
 class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
+    var updateTimer = Timer()
+    let updateInterval: Double = 10
+    
     @IBOutlet var mapView: MKMapView!
     let locationManager = CLLocationManager()
 
@@ -45,43 +48,53 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     
     func updateObjectAnnotations(){
+        print("updateObjectAnnotations")
         
         for fo in feedObjects {
             if fo.active && !fo.deleted {
                 let fOnMap = mapView.annotations.filter( {$0.coordinate.latitude == fo.lat && $0.coordinate.longitude == fo.lng} )
                 
                 if fOnMap.count == 0 {
+                    print("Adding annotation: " + String(fo.id) )
                     let ano = MapAno()
                     ano.coordinate = CLLocationCoordinate2D(latitude: fo.lat, longitude: fo.lng)
+                    ano.name = fo.name
+                    ano.id = fo.id
+                    
                     mapView.addAnnotation(ano)
-                    addRadiusOverlay(lat: fo.lat, long: fo.lng, radius: fo.radius) //TODO
+                    //addRadiusOverlay(lat: fo.lat, long: fo.lng, radius: fo.radius) //TODO
                 }
             }
         }
         
+        
         for a in mapView.annotations {
             let objAtAnnotationLocation = feedObjects.filter( {$0.lat == a.coordinate.latitude && $0.lng == a.coordinate.longitude} )
-            let activeInDB = objAtAnnotationLocation.filter({ !$0.active || $0.deleted })
+            //let activeInDB = objAtAnnotationLocation.filter({ !$0.active || $0.deleted })
             
-            if activeInDB.count == 0 {
-                print("DELETEDELETEDELETEDELETEDELETEDELETE")
+            if objAtAnnotationLocation.count == 0 {
+                print("Removing: " + String(a.coordinate.latitude))
                 mapView.removeAnnotation(a)
                 
-                let overlays = mapView.overlays.filter({
-                    $0.coordinate.latitude == a.coordinate.latitude && $0.coordinate.longitude == a.coordinate.longitude
-                })
-                
-                if overlays.count > 0 {
-                    for o in overlays {
-                        mapView.remove(o)
-                    }
-                }
+//                let overlays = mapView.overlays.filter({
+//                    $0.coordinate.latitude == a.coordinate.latitude && $0.coordinate.longitude == a.coordinate.longitude
+//                })
+//
+//                if overlays.count > 0 {
+//                    for o in overlays {
+//                        mapView.remove(o)
+//                    }
+//                }
             }
         }
+        
+        mapView.updateFocusIfNeeded()
     }
     
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("locationManager")
+        
         curLat = (locations.last?.coordinate.latitude)!
         curLng = (locations.last?.coordinate.longitude)!
         
@@ -94,7 +107,24 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             print("Error: \(error)")
         }
         
-        updateObjectAnnotations()
+    }
+    
+    
+    @objc func mainUpdate() {
+        if session.count > 0 {
+            if updateTimer.timeInterval != updateInterval {
+                updateTimer.invalidate()
+            }
+            
+            if !updateTimer.isValid {
+                updateTimer = Timer.scheduledTimer(
+                    timeInterval: updateInterval,
+                    target: self, selector: #selector(mainUpdate),
+                    userInfo: nil, repeats: true)
+            }
+            
+            updateObjectAnnotations()
+        }
     }
     
     
@@ -117,8 +147,10 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         initMapView()
+        mainUpdate()
     }
 
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

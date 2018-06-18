@@ -31,7 +31,8 @@ class MainVC: UITabBarController {
     
     @objc func mainUpdate() {
         print("mainUpdate: MainVC")
-        
+        dbGc()
+
         if session.count > 0 {
             if mainUpdateTimer.timeInterval != session.first?.updateInterval {
                 mainUpdateTimer.invalidate()

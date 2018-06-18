@@ -109,10 +109,7 @@ class FeedsTVC: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
-        let nonDeleted = feeds.filter({!$0.deleted})
-        
-        let feed = nonDeleted[section]
+        let feed = feeds[section]
         
         cell.textLabel?.text = String(feed.name)
         cell.detailTextLabel?.text = "Feed: " + String(feed.url)
@@ -152,6 +149,8 @@ class FeedsTVC: UITableViewController {
                 
                 feed.deleted = true
                 feed.active = false
+                
+                realm.delete(feed)
             }
         } catch {
             print("Error: \(error)")
