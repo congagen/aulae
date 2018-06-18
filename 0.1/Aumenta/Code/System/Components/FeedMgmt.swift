@@ -212,42 +212,44 @@ extension MainVC {
     
     func updateFeeds() {
         print("updateFeeds")
-        // Download JSON if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
-        // Download Objects if distance < N
         
         let updateInterval = 10 //randRange(lower: 3, upper: 5)
         refreshObjects()
 
+        for ob in feedObjects {
+            print("Object: " + "ID: " + ob.id + " | Active: " + String(ob.active) + " | Deleted: " + String(ob.deleted) )
+        }
         
-        for fe in feeds.filter({$0.active && !$0.deleted}) {
+        for fe in feeds {
+            // Download if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
+
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
+            let deleted = fe.deleted
+            let active = fe.active
             
             print("Time Since Update: " + String(timeSinceUpdate))
             print(String(fe.id) + " " + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
             print("FeedObjectCount: " + String(feedObjects.count))
             
-            for ob in feedObjects {
-                print(ob.filePath)
-                print(ob.active)
-                print(ob.deleted)
-            }
-            
-            let fileName = fe.id + ".json"
-            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-            let destinationUrl = documentsUrl.appendingPathComponent(fileName)
-            
-            if Int(timeSinceUpdate) > updateInterval {
-                if let URL = URL(string: fe.url) {
-                    let _ = httpDl.loadFileAsync(
-                        url: URL as URL,
-                        destinationUrl: destinationUrl!,
-                        completion: {
-                            DispatchQueue.main.async {
-                                self.updateFeed(fileUrl: destinationUrl!, feedDbItem: fe)
-                            }
-                    })
+            if active && !deleted {
+                let fileName = fe.id + ".json"
+                let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+                
+                if Int(timeSinceUpdate) > updateInterval {
+                    if let URL = URL(string: fe.url) {
+                        let _ = httpDl.loadFileAsync(
+                            url: URL as URL,
+                            destinationUrl: destinationUrl!,
+                            completion: {
+                                DispatchQueue.main.async {
+                                    self.updateFeed(fileUrl: destinationUrl!, feedDbItem: fe)
+                                }
+                        })
+                    }
                 }
             }
+
         }
         
         
