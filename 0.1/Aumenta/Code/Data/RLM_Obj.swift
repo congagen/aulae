@@ -15,8 +15,8 @@ class RLM_Obj: Object {
     @objc dynamic var fileName: String = ""
     @objc dynamic var filePath: String = ""
 
-    @objc dynamic var lat: Double = 0.0
-    @objc dynamic var lng: Double = 0.0
+    @objc dynamic var lat: Double = 59.292
+    @objc dynamic var lng: Double = 18.102
     @objc dynamic var radius: Double = 0.0
     
     @objc dynamic var x_pos: Double = 0.0

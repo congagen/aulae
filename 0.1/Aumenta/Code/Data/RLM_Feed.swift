@@ -16,8 +16,8 @@ class RLM_Feed: Object {
     
     @objc dynamic var jsonPath: String = ""
     
-    @objc dynamic var lat: Double = 0.0
-    @objc dynamic var lng: Double = 0.0
+    @objc dynamic var lat: Double = 59.292
+    @objc dynamic var lng: Double = 18.102
     
     @objc dynamic var radius: Double = 1000
     @objc dynamic var url: String = "https://api.myjson.com/bins/hta1a"

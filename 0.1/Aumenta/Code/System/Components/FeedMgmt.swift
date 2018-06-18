@@ -21,8 +21,8 @@ extension MainVC {
                 rlmObj.info = objInfo["info"] as! String
                 rlmObj.filePath = objFilePath.absoluteString
                 
-                rlmObj.lat = objInfo["lat"] as! Double
-                rlmObj.lng = objInfo["lng"] as! Double
+                // TODO: rlmObj.lat = objInfo["lat"] as! Double
+                // TODO: rlmObj.lng = objInfo["lng"] as! Double
                 
                 rlmObj.x_pos = objInfo["pos_x"] as! Double
                 rlmObj.y_pos = objInfo["pos_y"] as! Double
@@ -67,7 +67,7 @@ extension MainVC {
     
     
     
-    func updateFeedObjects(feedList: Dictionary<String, AnyObject>) {
+    func updateFeedObjects(feedList: Dictionary<String, AnyObject>, feedId: String) {
         print("! updateFeedObjects !")
         
         for k in (feedList["content"]?.allKeys)! {
@@ -77,19 +77,20 @@ extension MainVC {
             let valid = validateObj(keyList: vKeys, dict: feedContent)
             
             // updated_utx
-            
             if valid {
                 let objData: [String : Any] = [
                     "name":         feedContent["name"] as! String,
                     "id":           feedContent["id"] as! String,
+                    "feed_id":      feedId,
+
                     "version":      feedContent["version"] as! Int,
                     "url":          feedContent["model_url"] as! String,
                     
                     "info":   valueIfPresent(dict: feedContent, key: "info",    placeHolderValue: ""),
                     
-                    "lat":    valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
-                    "lng":    valueIfPresent(dict: feedContent, key: "long",   placeHolderValue: 0.0),
-                    "radius": valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0),
+                    "lat":    valueIfPresent(dict: feedContent, key: "lat",     placeHolderValue: 0.0),
+                    "lng":    valueIfPresent(dict: feedContent, key: "long",    placeHolderValue: 0.0),
+                    "radius": valueIfPresent(dict: feedContent, key: "radius",  placeHolderValue: 1.0),
                     
                     "pos_x":  valueIfPresent(dict: feedContent, key: "x_pos",   placeHolderValue: 0.0),
                     "pos_y":  valueIfPresent(dict: feedContent, key: "y_pos",   placeHolderValue: 0.0),
@@ -102,28 +103,15 @@ extension MainVC {
                     "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
                 ]
                 
-                let objId =    feedContent["id"] as! String
-                let version =  feedContent["version"] as! Int
                 let modelUrl = feedContent["model_url"] as! String
-                
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let fileName = (URL(string: modelUrl)?.lastPathComponent)!
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                 
-                let idExists = feedObjects.filter( {$0.id == objId} ).count > 0
-                let versionExists = feedObjects.filter( {$0.version == version} ).count > 0
-                
-                if !idExists && !versionExists {
-                    if let URL = URL(string: modelUrl) {
-                        let _ = httpDl.loadFileAsync(
-                            url: URL as URL,
-                            destinationUrl: destinationUrl!,
-                            completion: {
-                                DispatchQueue.main.async {
-                                    self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!)
-                                }
-                        })
-                    }
+                if let URL = URL(string: modelUrl) {
+                    let _ = httpDl.loadFileAsync(
+                        url: URL as URL, destinationUrl: destinationUrl!,
+                        completion: { DispatchQueue.main.async { self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!)} })
                 }
             } else {
                 // TODO: Update error count for feed
@@ -181,11 +169,11 @@ extension MainVC {
                     if jsonResult.keys.contains("version") {
                         if jsonResult["version"] as! Int != feedDbItem.version {
                             updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
-                            updateFeedObjects(feedList: jsonResult)
+                            updateFeedObjects(feedList: jsonResult, feedId: feedDbItem.id)
                         }
                     } else {
                         updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
-                        updateFeedObjects(feedList: jsonResult)
+                        updateFeedObjects(feedList: jsonResult, feedId: feedDbItem.id)
                         print("Missing key: VERSION")
                         // TODO: Increment error count?
                     }

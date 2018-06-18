@@ -14,6 +14,8 @@ class FeedsTVC: UITableViewController {
 
     let realm = try! Realm()
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+
     var textField: UITextField? = nil
 
     var selected: RLM_Feed? = nil
@@ -36,20 +38,15 @@ class FeedsTVC: UITableViewController {
     func addFeed(){
         let feed = RLM_Feed()
         
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd - HH:mm"
-        let result = formatter.string(from: date)
+        //let date = Date()
+        //let formatter = DateFormatter()
+        //formatter.dateFormat = "yyyy/MM/dd - HH:mm"
+        //let result = formatter.string(from: date)
         
         do {
             try realm.write {
                 feed.id = UUID().uuidString
-                feed.name = String(result)
-                feed.updatedUtx = 0
-                feed.url = "https://api.myjson.com/bins/hta1a"
-                
-                feed.lat = Double(randRange(lower: 10, upper: 20))
-                feed.lng = Double(randRange(lower: 10, upper: 20))
+                feed.name = String("Updating...")
                 
                 self.realm.add(feed)
             }
@@ -139,6 +136,23 @@ class FeedsTVC: UITableViewController {
     }
     
     
+    func deleteObjects(id: String) {
+        if feeds.filter({$0.id == id}).count == 0 {
+            if feedObjects.filter({$0.id == id}).count > 0 {
+                for o in feedObjects.filter({$0.id == id}) {
+                    do {
+                        try realm.write {
+                            realm.delete(o)
+                        }
+                    } catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
+    
     func removeFeed(indexP: IndexPath) {
         
         let section = indexP.section
@@ -190,6 +204,8 @@ class FeedsTVC: UITableViewController {
             message: "",
             preferredStyle: UIAlertControllerStyle.alert
         )
+        
+        // TODO: Add Name Field
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:handleCancel))
