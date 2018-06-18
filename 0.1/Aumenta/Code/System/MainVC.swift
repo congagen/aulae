@@ -24,16 +24,6 @@ class MainVC: UITabBarController {
     let httpDl = HttpDownloader()
     
     
-    func updateSession(){
-        
-        // If near and notify -> Send notification
-        
-    }
-
-    func handler(a:String, b:String) {
-        
-    }
-    
     func randRange (lower: Int , upper: Int) -> Int {
         return Int(arc4random_uniform(UInt32(upper - lower)))
     }
@@ -48,6 +38,9 @@ class MainVC: UITabBarController {
                 rlmObj.name = objInfo["name"] as! String
                 rlmObj.info = objInfo["info"] as! String
                 rlmObj.filePath = objFilePath.absoluteString
+                
+                rlmObj.lat = objInfo["lat"] as! Double
+                rlmObj.lng = objInfo["lng"] as! Double
                 
                 rlmObj.xPos = objInfo["pos_x"] as! Double
                 rlmObj.yPos = objInfo["pos_y"] as! Double
@@ -67,6 +60,32 @@ class MainVC: UITabBarController {
     }
     
     
+    func validateObj(keyList: [String], item: Dictionary<String, AnyObject>) -> Bool {
+        var valid = true
+        
+        for k in item.keys {
+            if keyList.contains(k) == false {
+                valid = false
+                return valid
+            }
+        }
+        
+        return valid
+    }
+    
+    
+    func valudIfPresent(dict:Dictionary<String, AnyObject>, key: String, placeHolderValue: Any) -> Any {
+        
+        if dict.keys.contains(key) {
+            return dict[key]!
+        } else {
+            return placeHolderValue
+        }
+
+    }
+    
+    
+    
     func updateFeedObjects(feedList: Dictionary<String, AnyObject>) {
         print("! updateFeedObjects !")
 
@@ -74,52 +93,59 @@ class MainVC: UITabBarController {
             
             let item = feedList["content"]![k] as! Dictionary<String, AnyObject>
             
-            let objData: [String : Any] = [
-                "name":   item["name"] as! String,
-                "id":     item["id"] as! String,
-                "info":   item["info"] as! String,
-                "version":item["version"] as! Int,
-
-                "url":    item["model_url"] as! String,
-                
-                "lat":    item["lat"] as! Double,
-                "lng":    item["long"] as! Double,
-                "radius": item["radius"] as! Double,
-                
-                "pos_x":  item["xPos"] as! Double,
-                "pos_y":  item["yPos"] as! Double,
-                "pos_z":  item["xPos"] as! Double,
-                
-                "rot_x":  item["xRot"] as! Double,
-                "rot_y":  item["yRot"] as! Double,
-                "rot_z":  item["zRot"] as! Double,
-                
-                "scale":  item["scale"] as! Double
-            ]
+            let vKeys = ["name", "id", "info", "version", "model_url"]
+            let valid = validateObj(keyList: vKeys, item: item)
             
-            let objId =    item["id"] as! String
-            let version =  item["version"] as! Int
-            let modelUrl = item["model_url"] as! String
-
-            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-            let fileName = (URL(string: modelUrl)?.lastPathComponent)!
-            let destinationUrl = documentsUrl.appendingPathComponent(fileName)
-            
-            let idExists = feedObjects.filter( {$0.id == objId} ).count > 0
-            let versionExists = feedObjects.filter( {$0.version == version} ).count > 0
-            
-            if !idExists && !versionExists {
-                if let URL = URL(string: modelUrl) {
-                    let _ = httpDl.loadFileAsync(
-                        url: URL as URL,
-                        destinationUrl: destinationUrl!,
-                        completion: {
-                            DispatchQueue.main.async {
-                                self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!)
-                            }
-                    })
+            if valid {
+                let objData: [String : Any] = [
+                    "name":   item["name"] as! String,
+                    "id":     item["id"] as! String,
+                    "info":   item["info"] as! String,
+                    "version":item["version"] as! Int,
+                    
+                    "url":    item["model_url"] as! String,
+                    
+                    "lat":    valudIfPresent(dict: item, key: "lat",    placeHolderValue: 0.0),
+                    "lng":    valudIfPresent(dict: item, key: "long",   placeHolderValue: 0.0),
+                    "radius": valudIfPresent(dict: item, key: "radius", placeHolderValue: 1.0),
+                    
+                    "pos_x":  valudIfPresent(dict: item, key: "xPos",   placeHolderValue: 0.0),
+                    "pos_y":  valudIfPresent(dict: item, key: "yPos",   placeHolderValue: 0.0),
+                    "pos_z":  valudIfPresent(dict: item, key: "zPos",   placeHolderValue: 1.0),
+                    
+                    "rot_x":  valudIfPresent(dict: item, key: "xRot",   placeHolderValue: 0.0),
+                    "rot_y":  valudIfPresent(dict: item, key: "yRot",   placeHolderValue: 0.0),
+                    "rot_z":  valudIfPresent(dict: item, key: "zRot",   placeHolderValue: 0.0),
+                    
+                    "scale":  valudIfPresent(dict: item, key: "scale",  placeHolderValue: 1.0)
+                ]
+                
+                let objId =    item["id"] as! String
+                let version =  item["version"] as! Int
+                let modelUrl = item["model_url"] as! String
+                
+                let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                let fileName = (URL(string: modelUrl)?.lastPathComponent)!
+                let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+                
+                let idExists = feedObjects.filter( {$0.id == objId} ).count > 0
+                let versionExists = feedObjects.filter( {$0.version == version} ).count > 0
+                
+                if !idExists && !versionExists {
+                    if let URL = URL(string: modelUrl) {
+                        let _ = httpDl.loadFileAsync(
+                            url: URL as URL,
+                            destinationUrl: destinationUrl!,
+                            completion: {
+                                DispatchQueue.main.async {
+                                    self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!)
+                                }
+                        })
+                    }
                 }
             }
+            
+            
         }
     }
     
