@@ -192,15 +192,18 @@ extension MainVC {
         for o in feedObjects {
             let objectFeeds = feeds.filter({ $0.id == o.feedId })
             
-            if objectFeeds.count == 0 {
-                do {
-                    try realm.write {
+            do {
+                try realm.write {
+                    if objectFeeds.count > 0 {
+                        o.deleted = (objectFeeds.first?.deleted)!
+                        o.active  = (objectFeeds.first?.active)!
+                    } else {
                         o.deleted = true
-                        o.active = false
+                        o.active  = false
                     }
-                } catch {
-                    print("Error: \(error)")
                 }
+            } catch {
+                print("Error: \(error)")
             }
             
         }
@@ -216,7 +219,7 @@ extension MainVC {
         refreshObjects()
 
         
-        for fe in feeds {
+        for fe in feeds.filter({$0.active && !$0.deleted}) {
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
             
             print("Time Since Update: " + String(timeSinceUpdate))

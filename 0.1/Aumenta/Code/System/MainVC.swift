@@ -52,7 +52,32 @@ class MainVC: UITabBarController {
     }
     
     
+    func dbGc(){
+        
+        do {
+            try realm.write {
+                for f in feeds {
+                    if f.deleted {
+                        realm.delete(f)
+                    }
+                }
+                
+                for o in feedObjects {
+                    if o.deleted {
+                        realm.delete(o)
+                    }
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+
+    }
+    
+    
     func initSession(){
+        dbGc()
+        
         if session.count < 1 {
             let sess = RLM_Session()
             

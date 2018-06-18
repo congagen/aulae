@@ -23,7 +23,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     lazy var realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
-    lazy var fObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
     var curLat = 0.0
     var curLng = 0.0
@@ -44,23 +44,27 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     }
     
     
-    func updateObjects(){
+    func updateObjectAnnotations(){
         
-        for s in fObjects {
-            let sOnMap = mapView.annotations.filter({$0.coordinate.latitude == s.lat && $0.coordinate.longitude == s.lng})
-            
-            if sOnMap.count == 0 {
-                let ano = MapAno()
-                ano.coordinate = CLLocationCoordinate2D(latitude: s.lat, longitude: s.lng)
-                mapView.addAnnotation(ano)
-                addRadiusOverlay(lat: s.lat, long: s.lng, radius: s.radius)
+        for fo in feedObjects {
+            if fo.active && !fo.deleted {
+                let fOnMap = mapView.annotations.filter( {$0.coordinate.latitude == fo.lat && $0.coordinate.longitude == fo.lng} )
+                
+                if fOnMap.count == 0 {
+                    let ano = MapAno()
+                    ano.coordinate = CLLocationCoordinate2D(latitude: fo.lat, longitude: fo.lng)
+                    mapView.addAnnotation(ano)
+                    addRadiusOverlay(lat: fo.lat, long: fo.lng, radius: fo.radius) //TODO
+                }
             }
         }
         
         for a in mapView.annotations {
-            let objInDB = fObjects.filter({$0.lat == a.coordinate.latitude && $0.lng == a.coordinate.longitude})
+            let objAtAnnotationLocation = feedObjects.filter( {$0.lat == a.coordinate.latitude && $0.lng == a.coordinate.longitude} )
+            let activeInDB = objAtAnnotationLocation.filter({ !$0.active || $0.deleted })
             
-            if objInDB.count == 0 {
+            if activeInDB.count == 0 {
+                print("DELETEDELETEDELETEDELETEDELETEDELETE")
                 mapView.removeAnnotation(a)
                 
                 let overlays = mapView.overlays.filter({
@@ -74,7 +78,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 }
             }
         }
-        
     }
     
     
@@ -91,7 +94,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             print("Error: \(error)")
         }
         
-        updateObjects()
+        updateObjectAnnotations()
     }
     
     
@@ -123,7 +126,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )
-        updateObjects()
+        updateObjectAnnotations()
     }
 
 }
