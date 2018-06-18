@@ -20,6 +20,6 @@ class RLM_Feed: Object {
     @objc dynamic var lng: Double = 0.0
     
     @objc dynamic var radius: Double = 1000
-    @objc dynamic var url: String = "https://api.myjson.com/bins/yf23i"
+    @objc dynamic var url: String = "https://api.myjson.com/bins/hta1a"
     
 }

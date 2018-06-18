@@ -55,7 +55,7 @@ extension MainVC {
     }
     
     
-    func valudIfPresent(dict:Dictionary<String, AnyObject>, key: String, placeHolderValue: Any) -> Any {
+    func valueIfPresent(dict:Dictionary<String, AnyObject>, key: String, placeHolderValue: Any) -> Any {
         
         if dict.keys.contains(key) {
             return dict[key]!
@@ -73,32 +73,33 @@ extension MainVC {
         for k in (feedList["content"]?.allKeys)! {
             
             let feedContent = feedList["content"]![k] as! Dictionary<String, AnyObject>
-            
             let vKeys = ["name", "id", "version", "model_url"]
             let valid = validateObj(keyList: vKeys, dict: feedContent)
             
+            // updated_utx
+            
             if valid {
                 let objData: [String : Any] = [
-                    "name":     feedContent["name"] as! String,
-                    "id":       feedContent["id"] as! String,
-                    "version":  feedContent["version"] as! Int,
-                    "url":      feedContent["model_url"] as! String,
+                    "name":         feedContent["name"] as! String,
+                    "id":           feedContent["id"] as! String,
+                    "version":      feedContent["version"] as! Int,
+                    "url":          feedContent["model_url"] as! String,
                     
-                    "info":   valudIfPresent(dict: feedContent, key: "info",    placeHolderValue: ""),
+                    "info":   valueIfPresent(dict: feedContent, key: "info",    placeHolderValue: ""),
                     
-                    "lat":    valudIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
-                    "lng":    valudIfPresent(dict: feedContent, key: "long",   placeHolderValue: 0.0),
-                    "radius": valudIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0),
+                    "lat":    valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
+                    "lng":    valueIfPresent(dict: feedContent, key: "long",   placeHolderValue: 0.0),
+                    "radius": valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0),
                     
-                    "pos_x":  valudIfPresent(dict: feedContent, key: "x_pos",   placeHolderValue: 0.0),
-                    "pos_y":  valudIfPresent(dict: feedContent, key: "y_pos",   placeHolderValue: 0.0),
-                    "pos_z":  valudIfPresent(dict: feedContent, key: "z_pos",   placeHolderValue: 1.0),
+                    "pos_x":  valueIfPresent(dict: feedContent, key: "x_pos",   placeHolderValue: 0.0),
+                    "pos_y":  valueIfPresent(dict: feedContent, key: "y_pos",   placeHolderValue: 0.0),
+                    "pos_z":  valueIfPresent(dict: feedContent, key: "z_pos",   placeHolderValue: 1.0),
                     
-                    "rot_x":  valudIfPresent(dict: feedContent, key: "x_rot",   placeHolderValue: 0.0),
-                    "rot_y":  valudIfPresent(dict: feedContent, key: "y_rot",   placeHolderValue: 0.0),
-                    "rot_z":  valudIfPresent(dict: feedContent, key: "z_rot",   placeHolderValue: 0.0),
+                    "rot_x":  valueIfPresent(dict: feedContent, key: "x_rot",   placeHolderValue: 0.0),
+                    "rot_y":  valueIfPresent(dict: feedContent, key: "y_rot",   placeHolderValue: 0.0),
+                    "rot_z":  valueIfPresent(dict: feedContent, key: "z_rot",   placeHolderValue: 0.0),
                     
-                    "scale":  valudIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
+                    "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
                 ]
                 
                 let objId =    feedContent["id"] as! String
@@ -132,28 +133,36 @@ extension MainVC {
     }
     
     
-    func updateFeedDatabase(feedDbItem: RLM_Feed, feedspec: Dictionary<String, AnyObject>) {
+    func updateFeedDatabase(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {
         print("updateFeedDatabase")
         
-        let sID: String = feedspec["id"] as! String
-        let sName: String = feedspec["name"] as! String
-        let sInfo: String = feedspec["info"] as! String
-        let sVersion: Int = feedspec["version"] as! Int
-        //let sUpdated_utx: String = feedspec["updated_utx"] as! String
+        let vKeys = ["id", "name", "version", "updated_utx"]
+        let valid = validateObj(keyList: vKeys, dict: feedSpec)
         
-        let date = Date()
-        let currentUtx = Int(date.timeIntervalSince1970)
-        
-        do {
-            try realm.write {
-                feedDbItem.id = sID
-                feedDbItem.name = sName
-                feedDbItem.info = sInfo
-                feedDbItem.version = sVersion
-                feedDbItem.updatedUtx = currentUtx
+        if valid {
+            let sID: String = feedSpec["id"] as! String
+            let sName: String = feedSpec["name"] as! String
+            let sVersion: Int = feedSpec["version"] as! Int
+            let sUpdated_utx: Int = feedSpec["updated_utx"] as! Int
+            
+            let sInfo: String = valueIfPresent(dict: feedSpec, key: "info", placeHolderValue: "") as! String
+            
+            // let date = Date()
+            // let currentUtx = Int(date.timeIntervalSince1970)
+            
+            do {
+                try realm.write {
+                    feedDbItem.id = sID
+                    feedDbItem.name = sName
+                    feedDbItem.info = sInfo
+                    feedDbItem.version = sVersion
+                    feedDbItem.updatedUtx = (sUpdated_utx)
+                }
+            } catch {
+                print("Error: \(error)")
             }
-        } catch {
-            print("Error: \(error)")
+        } else {
+            print("Feed Error: " + String(feedDbItem.name))
         }
         
     }
@@ -171,11 +180,11 @@ extension MainVC {
                     
                     if jsonResult.keys.contains("version") {
                         if jsonResult["version"] as! Int != feedDbItem.version {
-                            updateFeedDatabase(feedDbItem: feedDbItem, feedspec: jsonResult)
+                            updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
                             updateFeedObjects(feedList: jsonResult)
                         }
                     } else {
-                        updateFeedDatabase(feedDbItem: feedDbItem, feedspec: jsonResult)
+                        updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
                         updateFeedObjects(feedList: jsonResult)
                         print("Missing key: VERSION")
                         // TODO: Increment error count?

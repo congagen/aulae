@@ -46,7 +46,7 @@ class FeedsTVC: UITableViewController {
                 feed.id = UUID().uuidString
                 feed.name = String(result)
                 feed.updatedUtx = 0
-                feed.url = "https://api.myjson.com/bins/yf23i"
+                feed.url = "https://api.myjson.com/bins/hta1a"
                 
                 feed.lat = Double(randRange(lower: 10, upper: 20))
                 feed.lng = Double(randRange(lower: 10, upper: 20))
@@ -86,6 +86,26 @@ class FeedsTVC: UITableViewController {
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let section = indexPath.section
+        let feed = feeds[section]
+
+        do {
+            try realm.write {
+                feed.active = !feed.active
+                
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        print("didSelectRowAt")
+        print(!feed.active)
+        
+        tableView.reloadData()
     }
     
 

@@ -3,7 +3,7 @@
     "name":        "12345678",
     "info":        "abcdefgh",
     "version":     1234567891,
-    "updated_utx": "12345678",
+    "updated_utx": 123456781,
     
     "content": {
         "name_a": {
