@@ -13,6 +13,7 @@ import RealmSwift
 class FeedsTVC: UITableViewController {
 
     let realm = try! Realm()
+    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
@@ -36,27 +37,7 @@ class FeedsTVC: UITableViewController {
     
     
     func addFeed(){
-        let feed = RLM_Feed()
-        
-        //let date = Date()
-        //let formatter = DateFormatter()
-        //formatter.dateFormat = "yyyy/MM/dd - HH:mm"
-        //let result = formatter.string(from: date)
-        
-        do {
-            try realm.write {
-                feed.id = UUID().uuidString
-                feed.name = String("Updating...")
-                
-                self.realm.add(feed)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-        selected = feed
-        
-        showURLAlert(aMessage: "https://...")
+        showURLAlert(aMessage: session.first?.debugUrl)
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
@@ -68,22 +49,6 @@ class FeedsTVC: UITableViewController {
         print(self.textField?.text! ?? "")
     }
     
-    
-    func handleOk(alertView: UIAlertAction!)
-    {
-        do {
-            try realm.write {
-                if selected != nil {
-                    if textField?.text != nil { selected?.name = (textField?.text)! }
-                }
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-        self.tableView.reloadData()
-        self.tableView.reloadInputViews()
-    }
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -165,22 +130,50 @@ class FeedsTVC: UITableViewController {
     {
         if let _ = textField {
             self.textField = textField!
-            if selected != nil {
-                textField.text! = (selected?.url)!
-            }
+            textField.text! = (session.first?.debugUrl)!
         }
     }
     
     
-    func handleEnterURL(alertView: UIAlertAction!) {
+    func handleOk(alertView: UIAlertAction!)
+    {
+        
         if selected != nil {
             do {
                 try realm.write {
-                    if textField?.text != nil { selected?.url = (textField?.text)! }
+                    if textField?.text != nil {
+                        selected?.id = (self.textField?.text)!
+                        selected?.name = (self.textField?.text)!
+                    }
                 }
             } catch {
                 print("Error: \(error)")
             }
+        }
+        
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
+    }
+    
+    
+    func handleEnterURL(alertView: UIAlertAction!) {
+        let newFeed = RLM_Feed()
+        
+        do {
+            try realm.write {
+                if textField?.text != nil {
+                    if feeds.filter({$0.id == (self.textField?.text)! }).count == 0 {
+                        newFeed.id = (self.textField?.text)!
+                        newFeed.name = "Untitled"
+                        
+                        self.realm.add(newFeed)
+                    } else {
+                        print("feeds.filter({$0.id == (self.textField?.text)! }).count > 0")
+                    }
+                }
+            }
+        } catch {
+            print("Error: \(error)")
         }
         
         self.tableView.reloadData()

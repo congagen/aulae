@@ -10,4 +10,6 @@ class RLM_Session: Object {
     @objc dynamic var currentLat: Double = 0.0
     @objc dynamic var currentLng: Double = 0.0
     
+    @objc dynamic var debugUrl: String = "https://api.myjson.com/bins/hta1a"
+    
 }
