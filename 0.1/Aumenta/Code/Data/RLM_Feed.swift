@@ -13,6 +13,8 @@ class RLM_Feed: Object {
     @objc dynamic var version: Int = 123456789
     @objc dynamic var updatedUtx: Int = 0
     
+    @objc dynamic var objectCount: Int = 0
+    
     @objc dynamic var errors: Int = 0
     
     @objc dynamic var jsonPath: String = ""
@@ -22,5 +24,6 @@ class RLM_Feed: Object {
     
     @objc dynamic var radius: Double = 1000
     @objc dynamic var url: String = "https://api.myjson.com/bins/hta1a"
+    
     
 }

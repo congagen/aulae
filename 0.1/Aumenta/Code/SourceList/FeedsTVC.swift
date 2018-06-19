@@ -9,6 +9,8 @@
 import UIKit
 import Realm
 import RealmSwift
+import Foundation
+
 
 class FeedsTVC: UITableViewController {
 
@@ -21,7 +23,6 @@ class FeedsTVC: UITableViewController {
     let updateInterval: Double = 10
     
     var textField: UITextField? = nil
-
     var selected: RLM_Feed? = nil
     
     
@@ -51,7 +52,6 @@ class FeedsTVC: UITableViewController {
     {
         print(self.textField?.text! ?? "")
     }
-    
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -171,7 +171,7 @@ class FeedsTVC: UITableViewController {
 //                            newFeed.name = (self.textField?.text)!
 
                             newFeed.id = UUID().uuidString
-                            newFeed.name = "Updating"
+                            newFeed.name = "Updating..."
                             
                             self.realm.add(newFeed)
                         }
@@ -300,6 +300,7 @@ class FeedsTVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mainUpdate()
     }
     
     override func didReceiveMemoryWarning() {

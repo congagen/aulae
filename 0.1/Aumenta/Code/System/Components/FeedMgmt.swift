@@ -72,6 +72,7 @@ extension MainVC {
     func updateFeedObjects(feedList: Dictionary<String, AnyObject>, feedId: String) {
         print("! updateFeedObjects !")
         
+        
         for k in (feedList["content"]?.allKeys)! {
             
             let feedContent = feedList["content"]![k] as! Dictionary<String, AnyObject>
@@ -127,7 +128,7 @@ extension MainVC {
     func updateFeedDatabase(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {
         print("updateFeedDatabase")
         
-        let vKeys = ["id", "name", "version", "updated_utx"]
+        let vKeys = ["id", "name", "version", "updated_utx", "content"]
         let valid = validateObj(keyList: vKeys, dict: feedSpec)
         
         if valid {
@@ -153,7 +154,7 @@ extension MainVC {
                 print("Error: \(error)")
             }
         } else {
-            print("Feed Error: " + String(feedDbItem.name))
+            print("Feed Validation Error: " + String(feedDbItem.url))
         }
         
     }

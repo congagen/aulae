@@ -6,6 +6,8 @@
 //  Copyright © 2018 Abstraqata. All rights reserved.
 //
 
+import Foundation
+
 extension FeedsTVC {
     
     
