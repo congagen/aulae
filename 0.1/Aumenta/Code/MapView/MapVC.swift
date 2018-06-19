@@ -47,12 +47,29 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     }
     
     
+    func reloadAnnotations(){
+        let filterA = mapView.annotations.filter( {$0.isKind(of: MapAno.self)} )
+
+        for a in filterA {
+            mapView.removeAnnotation(a)
+        }
+        
+        updateObjectAnnotations()
+    }
+    
+    
+    
     func updateObjectAnnotations(){
         print("updateObjectAnnotations")
         
         for fo in feedObjects {
             if fo.active && !fo.deleted {
-                let fOnMap = mapView.annotations.filter( {$0.coordinate.latitude == fo.lat && $0.coordinate.longitude == fo.lng} )
+                // Omitt location marker
+                // a.isKind(of: MKUserLocation)
+                let filterA = mapView.annotations.filter( {$0.isKind(of: MapAno.self)} )
+                let fOnMap = filterA.filter( {$0.coordinate.latitude == fo.lat && $0.coordinate.longitude == fo.lng} )
+                
+                print("FeedObject: " + String(fo.lat) + ", " + String(fo.lng))
                 
                 if fOnMap.count == 0 {
                     print("Adding annotation: " + String(fo.id) )
@@ -63,9 +80,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                     
                     mapView.addAnnotation(ano)
                     //addRadiusOverlay(lat: fo.lat, long: fo.lng, radius: fo.radius) //TODO
-                } else {
-                    print("Not adding Anno: " + String(fo.id) + " | On map count: " + String(fOnMap.count))
-                }
+                } 
             }
         }
         
@@ -160,7 +175,8 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )
-        updateObjectAnnotations()
+        reloadAnnotations()
+
     }
 
 }
