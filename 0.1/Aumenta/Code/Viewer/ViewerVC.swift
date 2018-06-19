@@ -20,14 +20,22 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
+    var mainScene: SCNScene? = nil
+    
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
-    lazy var objects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
     var updateTimer = Timer()
     let updateInterval: Double = 10
 
+    
+    @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
+        print("refresh button")
+        updateScene()
+    }
+    
     
     func setUpSceneView() {
         let configuration = ARWorldTrackingConfiguration()
@@ -38,6 +46,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         sceneView.showsStatistics = true
         sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
     }
+    
     
     
     func loadObject(assetDir: String, format: String) {
@@ -51,39 +60,22 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func feedsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Feed] {
-        var feedList: [RLM_Feed] = []
-        
-        if ((feeds.count) > 0) {
-            if (useManualRange) {
-                feedList = (feeds.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double(manualRange))})
-            } else {
-                feedList = (feeds.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double($0.radius))})
-            }
-        }
-        
-        return feedList
-    }
-    
-    
-    func obejctsInRange(sObjects: [RLM_Obj], position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
+    func obejctsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
         var objList: [RLM_Obj] = []
 
-        if ((sObjects.count) > 0) {
-            if (useManualRange) {
-                objList = (sObjects.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double(manualRange))})
-            } else {
-                objList = (sObjects.filter { (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) < Double($0.radius))})
-            }
+        if (useManualRange) {
+            objList = feedObjects.filter({ (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double(manualRange)) })
+        } else {
+            objList = feedObjects.filter({ (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double($0.radius))   })
         }
-        
+    
         return objList
     }
     
     
     func listFeedObjects(feeds: [RLM_Feed]) -> [RLM_Obj] {
         
-        return Array(objects)
+        return Array(feedObjects)
     }
     
     
@@ -91,21 +83,27 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         print("updateScene")
 
         let objScene = sceneView.scene
-        objScene.removeAllParticleSystems()
         
         // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        let sInRange = feedsInRange(position: curPos, useManualRange: false, manualRange: 0)
         
-        let objsInRange = listFeedObjects(feeds: sInRange)
+        // TODO:
+        // let objsInRange = obejctsInRange(position: curPos, useManualRange: false, manualRange: 1)
+        let objsInRange = obejctsInRange(position: curPos, useManualRange: true, manualRange: 0) // <- REMOVE
         let objsInScene = sceneView.scene.rootNode.childNodes
         
         for o in objsInRange {
-            if objsInScene.filter({$0.name == o.id}).count == 0 {
+            print("UpdateScene:objsInRange: " + String(o.id))
+            
+            if objsInScene.filter({$0.name == String(o.id)}).count == 0 {
+                print("Inserting Object: " + String(o.id))
+                
                 let referenceURL = URL(fileURLWithPath: o.filePath)
                 let objNode = SCNReferenceNode(url: referenceURL)
                 objNode?.load()
                 objNode?.name = o.id
+                
+                sceneView.scene.rootNode.addChildNode(objNode!)
                 objScene.rootNode.addChildNode(objNode!)
             } else {
                 // TODO: Check model version?
@@ -141,30 +139,35 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
-        updateScene()
-    }
+ 
     
     
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
+// -------------------------------------------------------------------------------------------------------------
+
+    
+    func initScene(){
+        if mainScene == nil {
+            mainScene = SCNScene()
+        }
     }
     
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-    }
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: ViewerVC")
+        initScene()
         updateScene()
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        initScene()
         mainUpdate()
     }
     
+// -------------------------------------------------------------------------------------------------------------
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setUpSceneView()
@@ -182,7 +185,17 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         print(error)
+        print("ArKit ViewerVC: didFailWithError")
     }
+    
+    func sessionWasInterrupted(_ session: ARSession) {
+        print("ArKit ViewerVC: sessionWasInterrupted")
+    }
+    
+    func sessionInterruptionEnded(_ session: ARSession) {
+        print("ArKit ViewerVC: sessionInterruptionEnded")
+    }
+    
     
 }
 

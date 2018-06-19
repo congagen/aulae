@@ -25,8 +25,7 @@ extension FeedsTVC {
                 target: self, selector: #selector(mainUpdate),
                 userInfo: nil, repeats: true)
         }
-        
-    
+
     }
     
     
