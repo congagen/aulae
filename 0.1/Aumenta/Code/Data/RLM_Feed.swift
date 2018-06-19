@@ -6,6 +6,8 @@ class RLM_Feed: Object {
     
     @objc dynamic var active: Bool = true
     @objc dynamic var deleted: Bool = false
+    
+    @objc dynamic var installed: Bool = false
 
     @objc dynamic var name: String = ""
     @objc dynamic var id: String = ""

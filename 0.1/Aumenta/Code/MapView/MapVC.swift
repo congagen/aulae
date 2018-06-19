@@ -63,6 +63,8 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                     
                     mapView.addAnnotation(ano)
                     //addRadiusOverlay(lat: fo.lat, long: fo.lng, radius: fo.radius) //TODO
+                } else {
+                    print("Not adding Anno: " + String(fo.id) + " | On map count: " + String(fOnMap.count))
                 }
             }
         }

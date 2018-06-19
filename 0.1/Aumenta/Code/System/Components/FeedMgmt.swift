@@ -214,11 +214,11 @@ extension MainVC {
     func updateFeeds() {
         print("updateFeeds")
         
-        let updateInterval = 10 //randRange(lower: 3, upper: 5)
+        let updateInterval = Int((session.first?.feedUpdateInterval)!) + 1
         refreshObjects()
 
         for ob in feedObjects {
-            print("Object: " + "ID: " + ob.id + " | Active: " + String(ob.active) + " | Deleted: " + String(ob.deleted) )
+            print("Object: " + "Path: " + ob.filePath + " | Active: " + String(ob.active) + " | Deleted: " + String(ob.deleted) )
         }
         
         for fe in feeds {
