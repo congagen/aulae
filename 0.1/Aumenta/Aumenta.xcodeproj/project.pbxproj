@@ -11,6 +11,17 @@
 		3158C65A20B598D200E2F3FB /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 3158C65820B598D200E2F3FB /* star.png */; };
 		3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3164AF4920B47E79009EDA27 /* RLM_Obj.swift */; };
 		316B86B620D900940076E63D /* FeedsTVCMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86B520D900940076E63D /* FeedsTVCMain.swift */; };
+		316B86D520D955660076E63D /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CA20D955660076E63D /* SCNVector3+Extensions.swift */; };
+		316B86D620D955660076E63D /* SceneLocationEstimate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CB20D955660076E63D /* SceneLocationEstimate.swift */; };
+		316B86D720D955660076E63D /* SceneLocationEstimate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CC20D955660076E63D /* SceneLocationEstimate+Extensions.swift */; };
+		316B86D820D955660076E63D /* FloatingPoint+Radians.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CD20D955660076E63D /* FloatingPoint+Radians.swift */; };
+		316B86D920D955660076E63D /* LocationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CE20D955660076E63D /* LocationNode.swift */; };
+		316B86DA20D955660076E63D /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CF20D955660076E63D /* CGPoint+Extensions.swift */; };
+		316B86DB20D955660076E63D /* CLLocation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D020D955660076E63D /* CLLocation+Extensions.swift */; };
+		316B86DC20D955660076E63D /* SceneLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D120D955660076E63D /* SceneLocationView.swift */; };
+		316B86DD20D955660076E63D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D220D955660076E63D /* LocationManager.swift */; };
+		316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D320D955660076E63D /* SCNNode+Extensions.swift */; };
+		316B86E020D95C8B0076E63D /* ViewerVC_Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86DF20D95C8B0076E63D /* ViewerVC_Old.swift */; };
 		3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177251E20B03AD4009FA8B1 /* AppDelegate.swift */; };
 		3177252120B03AD4009FA8B1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 3177252020B03AD4009FA8B1 /* art.scnassets */; };
 		3177252320B03AD4009FA8B1 /* ViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177252220B03AD4009FA8B1 /* ViewerVC.swift */; };
@@ -54,6 +65,17 @@
 		3158C65820B598D200E2F3FB /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
 		3164AF4920B47E79009EDA27 /* RLM_Obj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Obj.swift; sourceTree = "<group>"; };
 		316B86B520D900940076E63D /* FeedsTVCMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsTVCMain.swift; sourceTree = "<group>"; };
+		316B86CA20D955660076E63D /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
+		316B86CB20D955660076E63D /* SceneLocationEstimate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneLocationEstimate.swift; sourceTree = "<group>"; };
+		316B86CC20D955660076E63D /* SceneLocationEstimate+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneLocationEstimate+Extensions.swift"; sourceTree = "<group>"; };
+		316B86CD20D955660076E63D /* FloatingPoint+Radians.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FloatingPoint+Radians.swift"; sourceTree = "<group>"; };
+		316B86CE20D955660076E63D /* LocationNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationNode.swift; sourceTree = "<group>"; };
+		316B86CF20D955660076E63D /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
+		316B86D020D955660076E63D /* CLLocation+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extensions.swift"; sourceTree = "<group>"; };
+		316B86D120D955660076E63D /* SceneLocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneLocationView.swift; sourceTree = "<group>"; };
+		316B86D220D955660076E63D /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		316B86D320D955660076E63D /* SCNNode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNNode+Extensions.swift"; sourceTree = "<group>"; };
+		316B86DF20D95C8B0076E63D /* ViewerVC_Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerVC_Old.swift; sourceTree = "<group>"; };
 		3177251B20B03AD4009FA8B1 /* Aumenta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aumenta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3177251E20B03AD4009FA8B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3177252020B03AD4009FA8B1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -100,6 +122,38 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		316B86B720D94B4E0076E63D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		316B86B820D953B60076E63D /* ArKitCoreloc */ = {
+			isa = PBXGroup;
+			children = (
+				316B86C920D955660076E63D /* Source */,
+			);
+			name = ArKitCoreloc;
+			sourceTree = "<group>";
+		};
+		316B86C920D955660076E63D /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				316B86CA20D955660076E63D /* SCNVector3+Extensions.swift */,
+				316B86CB20D955660076E63D /* SceneLocationEstimate.swift */,
+				316B86CC20D955660076E63D /* SceneLocationEstimate+Extensions.swift */,
+				316B86CD20D955660076E63D /* FloatingPoint+Radians.swift */,
+				316B86CE20D955660076E63D /* LocationNode.swift */,
+				316B86CF20D955660076E63D /* CGPoint+Extensions.swift */,
+				316B86D020D955660076E63D /* CLLocation+Extensions.swift */,
+				316B86D120D955660076E63D /* SceneLocationView.swift */,
+				316B86D220D955660076E63D /* LocationManager.swift */,
+				316B86D320D955660076E63D /* SCNNode+Extensions.swift */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 		3177251220B03AD4009FA8B1 = {
 			isa = PBXGroup;
 			children = (
@@ -124,7 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				31AB869220B356C30038F4D5 /* Data */,
-				31AB868F20B352780038F4D5 /* Viewer */,
+				31AB868F20B352780038F4D5 /* ArKitViewer */,
 				31AB868E20B352660038F4D5 /* SourceList */,
 				31AB868D20B3525E0038F4D5 /* MapView */,
 				318FE8F020B0BB5D0050528B /* System */,
@@ -144,6 +198,7 @@
 		318FE8F320B0BDDD0050528B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				316B86B820D953B60076E63D /* ArKitCoreloc */,
 				318FE8FB20B169500050528B /* Realm.framework */,
 				318FE8FC20B169510050528B /* RealmSwift.framework */,
 				318FE8F420B0BDDD0050528B /* MapKit.framework */,
@@ -209,12 +264,14 @@
 			path = SourceList;
 			sourceTree = "<group>";
 		};
-		31AB868F20B352780038F4D5 /* Viewer */ = {
+		31AB868F20B352780038F4D5 /* ArKitViewer */ = {
 			isa = PBXGroup;
 			children = (
+				316B86B720D94B4E0076E63D /* Components */,
 				3177252220B03AD4009FA8B1 /* ViewerVC.swift */,
+				316B86DF20D95C8B0076E63D /* ViewerVC_Old.swift */,
 			);
-			path = Viewer;
+			path = ArKitViewer;
 			sourceTree = "<group>";
 		};
 		31AB869220B356C30038F4D5 /* Data */ = {
@@ -318,17 +375,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				316B86D820D955660076E63D /* FloatingPoint+Radians.swift in Sources */,
+				316B86DD20D955660076E63D /* LocationManager.swift in Sources */,
+				316B86DB20D955660076E63D /* CLLocation+Extensions.swift in Sources */,
 				31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */,
+				316B86D920D955660076E63D /* LocationNode.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
+				316B86E020D95C8B0076E63D /* ViewerVC_Old.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
 				3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */,
+				316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
 				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
 				316B86B620D900940076E63D /* FeedsTVCMain.swift in Sources */,
 				3177252320B03AD4009FA8B1 /* ViewerVC.swift in Sources */,
 				31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */,
+				316B86D720D955660076E63D /* SceneLocationEstimate+Extensions.swift in Sources */,
+				316B86D520D955660076E63D /* SCNVector3+Extensions.swift in Sources */,
 				3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */,
 				319AA77F20B418E800F99223 /* MainVC.swift in Sources */,
+				316B86DA20D955660076E63D /* CGPoint+Extensions.swift in Sources */,
+				316B86DC20D955660076E63D /* SceneLocationView.swift in Sources */,
+				316B86D620D955660076E63D /* SceneLocationEstimate.swift in Sources */,
 				319D3F2820D7965B007FEECA /* FeedMgmt.swift in Sources */,
 				318FE8F220B0BB730050528B /* HttpDownloader.swift in Sources */,
 			);

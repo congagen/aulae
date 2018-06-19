@@ -20,13 +20,14 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
-    var mainScene: SCNScene? = nil
+//    var mainScene: SCNScene? = nil
+    var sceneLocationView = SceneLocationView()
     
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
-
+    
     var updateTimer = Timer()
     let updateInterval: Double = 10
 
@@ -34,17 +35,6 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         print("refresh button")
         updateScene()
-    }
-    
-    
-    func setUpSceneView() {
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = .horizontal
-        
-        sceneView.session.run(configuration)
-        sceneView.delegate = self
-        sceneView.showsStatistics = true
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
     }
     
     
@@ -81,8 +71,6 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     func updateScene() {
         print("updateScene")
-
-        let objScene = sceneView.scene
         
         // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
@@ -95,19 +83,32 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         for o in objsInRange {
             print("UpdateScene:objsInRange: " + String(o.id))
             
-            if objsInScene.filter({$0.name == String(o.id)}).count == 0 {
-                print("Inserting Object: " + String(o.id))
-                
-                let referenceURL = URL(fileURLWithPath: o.filePath)
-                let objNode = SCNReferenceNode(url: referenceURL)
-                objNode?.load()
-                objNode?.name = o.id
-                
-                sceneView.scene.rootNode.addChildNode(objNode!)
-                objScene.rootNode.addChildNode(objNode!)
-            } else {
-                // TODO: Check model version?
+            if !(FileManager.default.fileExists(atPath: o.filePath )) {
+                if objsInScene.filter({$0.name == String(o.id)}).count == 0 {
+                    print("Inserting Object: " + String(o.id))
+                    
+                    let referenceURL = URL(fileURLWithPath: o.filePath)
+                    let objNode = SCNReferenceNode(url: referenceURL)
+                    objNode?.load()
+                    //objNode?.name = o.id
+                    //sceneView.scene.rootNode.addChildNode(objNode!)
+                    
+                    let coordinate = CLLocationCoordinate2D(latitude: o.lat, longitude: o.lng)
+                    let location = CLLocation(coordinate: coordinate, altitude: 300)
+                    let image = UIImage(named: "star")!
+                    
+                    let annotationNode = LocationAnnotationNode(location: location, image: image)
+                    
+                    sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                    
+                    
+                    //mainScene?.rootNode.addChildNode(objNode!)
+                } else {
+                    // TODO: Check model version?
+                }
             }
+            
+            
         }
         
         for i in objsInScene {
@@ -139,22 +140,65 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
- 
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        // Place content only for anchors found by plane detection.
+        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+        
+        // Create a SceneKit plane to visualize the plane anchor using its position and extent.
+        let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
+        let planeNode = SCNNode(geometry: plane)
+        planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+        
+        // `SCNPlane` is vertically oriented in its local coordinate space, so
+        // rotate the plane to match the horizontal orientation of `ARPlaneAnchor`.
+        planeNode.eulerAngles.x = -.pi / 2
+        
+        // Make the plane visualization semitransparent to clearly show real-world placement.
+        planeNode.opacity = 0.25
+        
+        // Add the plane visualization to the ARKit-managed node so that it tracks
+        // changes in the plane anchor as plane estimation continues.
+        node.addChildNode(planeNode)
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        // Update content only for plane anchors and nodes matching the setup created in `renderer(_:didAdd:for:)`.
+        guard let planeAnchor = anchor as?  ARPlaneAnchor,
+            let planeNode = node.childNodes.first,
+            let plane = planeNode.geometry as? SCNPlane
+            else { return }
+        
+        // Plane estimation may shift the center of a plane relative to its anchor's transform.
+        planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+        
+        // Plane estimation may also extend planes, or remove one plane to merge its extent into another.
+        plane.width = CGFloat(planeAnchor.extent.x)
+        plane.height = CGFloat(planeAnchor.extent.z)
+    }
     
     
 // -------------------------------------------------------------------------------------------------------------
 
     
+    func setUpSceneView() {
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = .horizontal
+        
+        sceneView.session.run(configuration)
+        sceneView.delegate = self
+        sceneView.showsStatistics = true
+        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
+    }
+    
+    
     func initScene(){
-        if mainScene == nil {
-            mainScene = SCNScene()
-        }
+        sceneLocationView.run()
+        view.addSubview(sceneLocationView)
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: ViewerVC")
-        initScene()
         updateScene()
     }
     
@@ -165,6 +209,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         initScene()
         mainUpdate()
     }
+    
     
 // -------------------------------------------------------------------------------------------------------------
 
@@ -182,6 +227,11 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         super.didReceiveMemoryWarning()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        sceneLocationView.frame = view.bounds
+    }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         print(error)
@@ -196,48 +246,5 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         print("ArKit ViewerVC: sessionInterruptionEnded")
     }
     
-    
-}
-
-
-extension ViewerVC {
-    
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        
-        let width = CGFloat(planeAnchor.extent.x)
-        let height = CGFloat(planeAnchor.extent.z)
-        let plane = SCNPlane(width: width, height: height)
-        
-        plane.materials.first?.diffuse.contents = UIColor(red: 0, green: 1, blue: 1, alpha: 0.5)
-        
-        let planeNode = SCNNode(geometry: plane)
-        
-        let x = CGFloat(planeAnchor.center.x)
-        let y = CGFloat(planeAnchor.center.y)
-        let z = CGFloat(planeAnchor.center.z)
-        planeNode.position = SCNVector3(x,y,z)
-        planeNode.eulerAngles.x = -.pi / 2
-        
-        node.addChildNode(planeNode)
-    }
-    
-    
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as?  ARPlaneAnchor,
-            let planeNode = node.childNodes.first,
-            let plane = planeNode.geometry as? SCNPlane
-            else { return }
-        
-        let width = CGFloat(planeAnchor.extent.x)
-        let height = CGFloat(planeAnchor.extent.z)
-        plane.width = width
-        plane.height = height
-        
-        let x = CGFloat(planeAnchor.center.x)
-        let y = CGFloat(planeAnchor.center.y)
-        let z = CGFloat(planeAnchor.center.z)
-        planeNode.position = SCNVector3(x, y, z)
-    }
     
 }
