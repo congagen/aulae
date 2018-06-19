@@ -17,6 +17,9 @@ class FeedsTVC: UITableViewController {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
+    var updateTimer = Timer()
+    let updateInterval: Double = 10
+    
     var textField: UITextField? = nil
 
     var selected: RLM_Feed? = nil
@@ -142,7 +145,6 @@ class FeedsTVC: UITableViewController {
             do {
                 try realm.write {
                     if textField?.text != nil {
-                        selected?.id = (self.textField?.text)!
                         selected?.name = (self.textField?.text)!
                     }
                 }
@@ -162,11 +164,18 @@ class FeedsTVC: UITableViewController {
         do {
             try realm.write {
                 if textField?.text != nil {
-                    if feeds.filter({$0.id == (self.textField?.text)! }).count == 0 {
-                        newFeed.id = (self.textField?.text)!
-                        newFeed.name = "Untitled"
+                    if feeds.filter({$0.url == (self.textField?.text)! }).count == 0 {
                         
-                        self.realm.add(newFeed)
+                        if (self.textField?.text)! != "" {
+//                            newFeed.id = (self.textField?.text)!
+//                            newFeed.name = (self.textField?.text)!
+
+                            newFeed.id = UUID().uuidString
+                            newFeed.name = "Updating"
+                            
+                            self.realm.add(newFeed)
+                        }
+                        
                     } else {
                         print("feeds.filter({$0.id == (self.textField?.text)! }).count > 0")
                     }
