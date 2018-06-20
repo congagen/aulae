@@ -62,18 +62,22 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func nodeWithFile(path: String) -> SCNNode {
+    func loadCollada(path: String) -> SCNNode {
         
-        if let scene = SCNScene(named: path) {
-            
-            let node = scene.rootNode.childNodes[0] as SCNNode
-            return node
-            
-        } else {
-            print("Model Path error: " + String(path) )
-            return SCNNode()
+        let urlPath = URL(fileURLWithPath: path)
+        let fileName = urlPath.lastPathComponent
+        let fileDir = urlPath.deletingLastPathComponent().path
+        
+        print("Attempting to load model: " + String(fileDir) + " Filename: " + String(fileName))
+        
+        do {
+            let scene = try SCNScene(url: urlPath, options: nil)
+            return scene.rootNode.childNodes[0] as SCNNode
+        } catch {
+            print(error)
         }
-        
+    
+        return SCNNode()
     }
     
     
@@ -84,20 +88,17 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         let location = CLLocation(coordinate: coordinate, altitude: 300)
         
         if fPath != "" {
-            if contentObj.type.lowercased() == "model" {
-                print("MODEL")
-                let urlPath = URL(fileURLWithPath: fPath).path
-                
-                let modelNode = nodeWithFile(path: fPath)
-                sceneLocationView.scene.rootNode.addChildNode(modelNode)
-            }
-            
             if contentObj.type.lowercased() == "image" {
                 print("IMAGE")
                 
                 let image = UIImage(contentsOfFile: fPath)!
                 let annotationNode = LocationAnnotationNode(location: location, image: image)
                 sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                
+                // TODO: REMOVE:
+                let annotationNode_b = LocationAnnotationNode(location: location, image: #imageLiteral(resourceName: "star.png"))
+                sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode_b)
+                
             }
         } else {
             print("contentObj.filePath == ?")
@@ -118,7 +119,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         let objsInScene = sceneLocationView.scene.rootNode.childNodes
         
         for o in objsInRange {
-            if o.filePath != "" {
+            if o.filePath != "" && !(o.type == "text") {
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let fileName = (URL(string: o.filePath)?.lastPathComponent)!
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)

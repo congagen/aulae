@@ -7,32 +7,6 @@
     
     "content": {
         
-        "name_a": {
-            "name":     "ModelItem",
-            "id":       "12345",
-            "type":     "model",
-            "style":     0,
-            
-            "version":  12345,
-            "info":     "Object info A",
-            
-            "lat":      10,
-            "long":     10,
-            "radius":   10,
-            
-            "x_pos":    0.0,
-            "y_pos":    0.0,
-            "z_pos":    0.0,
-            
-            "x_rot":    0.0,
-            "y_rot":    0.0,
-            "z_rot":    0.0,
-            
-            "scale":    1,
-            
-            "url":      "https://raw.githubusercontent.com/markbrown4/webgl-workshop/master/models/stanford-bunny.dae"
-        },
-        
         "name_b": {
             "name":     "ImageItem",
             "id":       "12345",
@@ -63,6 +37,8 @@
             "name":     "TextItem",
             "id":       "12345",
             "type":     "text",
+            "text":      "Some text to display"
+
             "style":     0,
             
             "version":  12345,
@@ -80,9 +56,8 @@
             "y_rot":    0.0,
             "z_rot":    0.0,
             
-            "scale":    1,
+            "scale":    1
             
-            "text":      "Some text to display"
         }
     }
 }
