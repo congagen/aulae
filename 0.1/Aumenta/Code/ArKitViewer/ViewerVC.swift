@@ -83,7 +83,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         for o in objsInRange {
             print("UpdateScene:objsInRange: " + String(o.id))
             
-            if !(FileManager.default.fileExists(atPath: o.filePath )) {
+            if !(FileManager.default.fileExists(atPath: o.filePath )) && o.type != "text" {
                 if objsInScene.filter({$0.name == String(o.id)}).count == 0 {
                     print("Inserting Object: " + String(o.id))
                     
@@ -100,7 +100,6 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
                     let annotationNode = LocationAnnotationNode(location: location, image: image)
                     
                     sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
-                    
                     
                     //mainScene?.rootNode.addChildNode(objNode!)
                 } else {

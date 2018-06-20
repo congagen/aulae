@@ -18,6 +18,8 @@ class MainVC: UITabBarController {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
+    let validObjectJsonKeys = ["name", "id", "version", "type", "style"]
+    
     var mainUpdateTimer = Timer()
     var activeDownloads: [String: String] = [:]
     

@@ -23,8 +23,11 @@ extension MainVC {
                 rlmObj.info = objInfo["info"] as! String
                 rlmObj.filePath = objFilePath.absoluteString
                 
-                // TODO: rlmObj.lat = objInfo["lat"] as! Double
-                // TODO: rlmObj.lng = objInfo["lng"] as! Double
+                rlmObj.type = objInfo["type"] as! String
+                rlmObj.style = objInfo["style"] as! Int
+                
+                rlmObj.lat = 59.292 //rlmObj.lat = objInfo["lat"] as! Double // TODO
+                rlmObj.lng = 18.102 //rlmObj.lng = objInfo["lng"] as! Double // TODO
                 
                 rlmObj.x_pos = objInfo["pos_x"] as! Double
                 rlmObj.y_pos = objInfo["pos_y"] as! Double
@@ -43,6 +46,43 @@ extension MainVC {
         }
     }
     
+    
+    func storeFeedText(objInfo: [String : Any], originFeed:String) {
+        let rlmObj = RLM_Obj()
+        
+        do {
+            try realm.write {
+                rlmObj.id = objInfo["id"] as! String
+                rlmObj.feedId = originFeed
+                
+                rlmObj.name = objInfo["name"] as! String
+                rlmObj.info = objInfo["info"] as! String
+                
+                rlmObj.type = objInfo["type"] as! String
+                rlmObj.style = objInfo["style"] as! Int
+                
+                rlmObj.text = objInfo["text"] as! String
+                
+                rlmObj.lat = 59.292 //rlmObj.lat = objInfo["lat"] as! Double // TODO
+                rlmObj.lng = 18.102 //rlmObj.lng = objInfo["lng"] as! Double // TODO
+                
+                rlmObj.x_pos = objInfo["pos_x"] as! Double
+                rlmObj.y_pos = objInfo["pos_y"] as! Double
+                rlmObj.z_pos = objInfo["pos_z"] as! Double
+                
+                rlmObj.x_rot = objInfo["rot_x"] as! Double
+                rlmObj.y_rot = objInfo["rot_y"] as! Double
+                rlmObj.z_rot = objInfo["rot_z"] as! Double
+                
+                rlmObj.scale = objInfo["scale"] as! Double
+                
+                realm.add(rlmObj)
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+
     
     func validateObj(keyList: [String], dict: Dictionary<String, AnyObject>) -> Bool {
         var valid = true
@@ -64,9 +104,7 @@ extension MainVC {
         } else {
             return placeHolderValue
         }
-        
     }
-    
     
     
     func updateFeedObjects(feedList: Dictionary<String, AnyObject>, feedId: String) {
@@ -76,8 +114,7 @@ extension MainVC {
         for k in (feedList["content"]?.allKeys)! {
             
             let feedContent = feedList["content"]![k] as! Dictionary<String, AnyObject>
-            let vKeys = ["name", "id", "version", "model_url"]
-            let valid = validateObj(keyList: vKeys, dict: feedContent)
+            let valid = validateObj(keyList: validObjectJsonKeys, dict: feedContent)
             
             // updated_utx
             if valid {
@@ -87,9 +124,14 @@ extension MainVC {
                     "feed_id":      feedId,
 
                     "version":      feedContent["version"] as! Int,
-                    "url":          feedContent["model_url"] as! String,
+                    
+                    "type":         feedContent["type"] as! String,
+                    "style":        feedContent["style"] as! Int,
+                    
+                    "url":    valueIfPresent(dict: feedContent, key: "url",     placeHolderValue: ""),
                     
                     "info":   valueIfPresent(dict: feedContent, key: "info",    placeHolderValue: ""),
+                    "text":   valueIfPresent(dict: feedContent, key: "text",    placeHolderValue: ""),
                     
                     "lat":    valueIfPresent(dict: feedContent, key: "lat",     placeHolderValue: 0.0),
                     "lng":    valueIfPresent(dict: feedContent, key: "long",    placeHolderValue: 0.0),
@@ -106,17 +148,24 @@ extension MainVC {
                     "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
                 ]
                 
-                let modelUrl = feedContent["model_url"] as! String
-                let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-                let fileName = (URL(string: modelUrl)?.lastPathComponent)!
-                let destinationUrl = documentsUrl.appendingPathComponent(fileName)
-                
-                if let URL = URL(string: modelUrl) {
-                    let _ = httpDl.loadFileAsync(
-                        url: URL as URL, destinationUrl: destinationUrl!,
-                        completion: { DispatchQueue.main.async {
-                            self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, originFeed: feedId )} })
+                if feedContent.keys.contains("url") {
+                    let contentUrl = feedContent["url"] as! String
+                    let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                    let fileName = (URL(string: contentUrl)?.lastPathComponent)!
+                    let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+                    
+                    if let URL = URL(string: contentUrl) {
+                        let _ = httpDl.loadFileAsync(
+                            url: URL as URL, destinationUrl: destinationUrl!,
+                            completion: { DispatchQueue.main.async {
+                                self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, originFeed: feedId )} })
+                    }
+                } else {
+                    if feedContent["type"] as! String == "text" {
+                        self.storeFeedText(objInfo: objData, originFeed: feedId)
+                    }
                 }
+                
             } else {
                 // TODO: Update error count for feed
             }
@@ -250,10 +299,7 @@ extension MainVC {
                     }
                 }
             }
-
         }
-        
-        
     }
     
     
