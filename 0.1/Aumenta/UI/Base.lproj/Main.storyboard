@@ -33,7 +33,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="868" y="1684"/>
+            <point key="canvasLocation" x="-1279" y="1813"/>
         </scene>
         <!--Aumscape-->
         <scene sceneID="x9n-Rz-mVX">
@@ -119,6 +119,29 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QzA-Tt-Q7F" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1660" y="1684"/>
+        </scene>
+        <!--Aumscape-->
+        <scene sceneID="9h0-ey-GEW">
+            <objects>
+                <viewController id="cNO-cb-Srl" customClass="ViewerVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1yb-qm-Ox7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Aumscape" id="0Jn-a9-joB">
+                        <barButtonItem key="leftBarButtonItem" title="Item" id="tP4-NO-MBE"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="0vE-dQ-BcC">
+                            <connections>
+                                <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="5Zm-ex-xZ1"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0yF-0m-H2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="868" y="1685"/>
         </scene>
         <!--Aumscape-->
         <scene sceneID="CcG-m6-yJt">
@@ -240,7 +263,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BV1-FR-VrT" kind="relationship" relationship="rootViewController" id="gVT-F5-E9N"/>
+                        <segue destination="cNO-cb-Srl" kind="relationship" relationship="rootViewController" id="ctS-P5-0qD"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8MP-i8-pp2" userLabel="First Responder" sceneMemberID="firstResponder"/>
