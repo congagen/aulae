@@ -18,6 +18,7 @@ import RealmSwift
 
 class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLocationViewDelegate {
     
+    
     func sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
         print("add scene location estimate, position: \(position), location: \(location.coordinate), accuracy: \(location.horizontalAccuracy), date: \(location.timestamp)")
     }
@@ -101,9 +102,9 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
     func addContentToScene(contentObj: RLM_Obj, fPath: String){
         print("Inserting Object: " + String(contentObj.id))
         
-        //let devicePos = CLLocationCoordinate2D(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        let objPos = CLLocationCoordinate2D(latitude: contentObj.lat, longitude: contentObj.lng)
-        let location = CLLocation(coordinate: objPos, altitude: 0)
+        let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        
         
         if fPath != "" {
             if contentObj.type.lowercased() == "image" {
@@ -111,16 +112,19 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
                 
                 let img = UIImage(contentsOfFile: fPath)!
                 
-                print(img)
+                let distance = devicePos.distance(from: CLLocation(latitude: contentObj.lat, longitude: contentObj.lng))
+                let objScale: Double = contentObj.scale / distance
                 
-                let annotationNode = LocationAnnotationNode(location: location, image: img)
+                //TODO: let xPos = devicePos.coordinate.latitude
+                //TODO: let yPos = devicePos.coordinate.longitude
+                //TODO: let zPos = devicePos.altitude
+                
+                let annotationNode = LocationAnnotationNode(location: objPos, image: img)
+                // annotationNode.scale = SCNVector3(x: Float(objScale), y: Float(objScale), z: Float(objScale))
+                // annotationNode.scale = SCNVector3(x: Float(10000), y: Float(10000), z: Float(10000))
                 annotationNode.name = contentObj.id
+                
                 sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
-                
-                // TODO: REMOVE:
-//                let annotationNode_b = LocationAnnotationNode(location: location, image: #imageLiteral(resourceName: "star.png"))
-//                sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode_b)
-                
             }
         } else {
             print("contentObj.filePath == ?")
@@ -136,13 +140,12 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
         
         // TODO:
         // let objsInRange = obejctsInRange(position: curPos, useManualRange: false, manualRange: 1)
-        let objsInRange = obejctsInRange(position: curPos, useManualRange: true, manualRange: 100000000000) // <- REMOVE
+        let objsInRange = obejctsInRange(position: curPos, useManualRange: true, manualRange: 100000000000)
         let locationNodesInScene = sceneLocationView.locationNodes
         
         for o in objsInRange {
             
 //            let presentInScene = sceneLocationView.locationNodes.filter({ $0.name == o.id} )
-            
 //            if presentInScene.count > 0 {
 //                for os in presentInScene {
 //
@@ -173,11 +176,11 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
             }
         }
         
-        for i in locationNodesInScene {
-            if objsInRange.filter({$0.name == i.name}).count == 0 {
-                i.removeFromParentNode()
-            }
-        }
+//        for i in locationNodesInScene {
+//            if objsInRange.filter({$0.name == i.name}).count == 0 {
+//                i.removeFromParentNode()
+//            }
+//        }
         
     }
     
@@ -202,41 +205,42 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
     }
     
     
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        // Place content only for anchors found by plane detection.
-        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        
-        // Create a SceneKit plane to visualize the plane anchor using its position and extent.
-        let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
-        let planeNode = SCNNode(geometry: plane)
-        planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
-        
-        // `SCNPlane` is vertically oriented in its local coordinate space, so
-        // rotate the plane to match the horizontal orientation of `ARPlaneAnchor`.
-        planeNode.eulerAngles.x = -.pi / 2
-        
-        // Make the plane visualization semitransparent to clearly show real-world placement.
-        planeNode.opacity = 0.25
-        
-        // Add the plane visualization to the ARKit-managed node so that it tracks
-        // changes in the plane anchor as plane estimation continues.
-        node.addChildNode(planeNode)
-    }
+//    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+//        // Place content only for anchors found by plane detection.
+//        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+//
+//        // Create a SceneKit plane to visualize the plane anchor using its position and extent.
+//        let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
+//        let planeNode = SCNNode(geometry: plane)
+//        planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+//
+//        // `SCNPlane` is vertically oriented in its local coordinate space, so
+//        // rotate the plane to match the horizontal orientation of `ARPlaneAnchor`.
+//        planeNode.eulerAngles.x = -.pi / 2
+//
+//        // Make the plane visualization semitransparent to clearly show real-world placement.
+//        planeNode.opacity = 0.25
+//
+//
+//        // Add the plane visualization to the ARKit-managed node so that it tracks
+//        // changes in the plane anchor as plane estimation continues.
+//        node.addChildNode(planeNode)
+//    }
     
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        // Update content only for plane anchors and nodes matching the setup created in `renderer(_:didAdd:for:)`.
-        guard let planeAnchor = anchor as?  ARPlaneAnchor,
-            let planeNode = node.childNodes.first,
-            let plane = planeNode.geometry as? SCNPlane
-            else { return }
-        
-        // Plane estimation may shift the center of a plane relative to its anchor's transform.
-        planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
-        
-        // Plane estimation may also extend planes, or remove one plane to merge its extent into another.
-        plane.width = CGFloat(planeAnchor.extent.x)
-        plane.height = CGFloat(planeAnchor.extent.z)
-    }
+//    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+//        // Update content only for plane anchors and nodes matching the setup created in `renderer(_:didAdd:for:)`.
+//        guard let planeAnchor = anchor as?  ARPlaneAnchor,
+//            let planeNode = node.childNodes.first,
+//            let plane = planeNode.geometry as? SCNPlane
+//            else { return }
+//
+//        // Plane estimation may shift the center of a plane relative to its anchor's transform.
+//        planeNode.simdPosition = float3(planeAnchor.center.x, 0, planeAnchor.center.z)
+//
+//        // Plane estimation may also extend planes, or remove one plane to merge its extent into another.
+//        plane.width = CGFloat(planeAnchor.extent.x)
+//        plane.height = CGFloat(planeAnchor.extent.z)
+//    }
     
     
 // -------------------------------------------------------------------------------------------------------------
