@@ -33,7 +33,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1279" y="1813"/>
+            <point key="canvasLocation" x="-866" y="114"/>
         </scene>
         <!--Aumscape-->
         <scene sceneID="x9n-Rz-mVX">
@@ -108,7 +108,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Aumscape" id="Nhx-W2-kfA">
-                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="EGv-8w-zzJ"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="IYM-9R-419">
                             <connections>
                                 <action selector="addBtnAction:" destination="4ZI-rx-Clo" id="9T1-zV-i3g"/>
@@ -131,8 +130,7 @@
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
                     <navigationItem key="navigationItem" title="Aumscape" id="0Jn-a9-joB">
-                        <barButtonItem key="leftBarButtonItem" title="Item" id="tP4-NO-MBE"/>
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="0vE-dQ-BcC">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="0vE-dQ-BcC">
                             <connections>
                                 <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="5Zm-ex-xZ1"/>
                             </connections>
@@ -164,7 +162,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Aumscape" id="jef-En-32s"/>
+                    <navigationItem key="navigationItem" title="Aumscape" id="jef-En-32s">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="tP4-NO-MBE"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="zU5-ko-yXY" id="CUy-QG-oKU"/>
                     </connections>

@@ -16,11 +16,28 @@ import Realm
 import RealmSwift
 
 
-class ViewerVC: UIViewController, ARSCNViewDelegate {
-
-//    @IBOutlet var sceneView: ARSCNView!
+class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLocationViewDelegate {
     
-//    var mainScene: SCNScene? = nil
+    func sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
+        print("add scene location estimate, position: \(position), location: \(location.coordinate), accuracy: \(location.horizontalAccuracy), date: \(location.timestamp)")
+    }
+    
+    func sceneLocationViewDidRemoveSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
+        print("remove scene location estimate, position: \(position), location: \(location.coordinate), accuracy: \(location.horizontalAccuracy), date: \(location.timestamp)")
+    }
+    
+    func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {
+    }
+    
+    func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
+        
+    }
+    
+    func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
+        
+    }
+    
+
     var sceneLocationView = SceneLocationView()
     
     let realm = try! Realm()
@@ -84,26 +101,30 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     func addContentToScene(contentObj: RLM_Obj, fPath: String){
         print("Inserting Object: " + String(contentObj.id))
         
-        let coordinate = CLLocationCoordinate2D(latitude: contentObj.lat, longitude: contentObj.lng)
-        let location = CLLocation(coordinate: coordinate, altitude: 300)
+        //let devicePos = CLLocationCoordinate2D(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        let objPos = CLLocationCoordinate2D(latitude: contentObj.lat, longitude: contentObj.lng)
+        let location = CLLocation(coordinate: objPos, altitude: 0)
         
         if fPath != "" {
             if contentObj.type.lowercased() == "image" {
                 print("IMAGE")
                 
-                let image = UIImage(contentsOfFile: fPath)!
-                let annotationNode = LocationAnnotationNode(location: location, image: image)
+                let img = UIImage(contentsOfFile: fPath)!
+                
+                print(img)
+                
+                let annotationNode = LocationAnnotationNode(location: location, image: img)
+                annotationNode.name = contentObj.id
                 sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
                 
                 // TODO: REMOVE:
-                let annotationNode_b = LocationAnnotationNode(location: location, image: #imageLiteral(resourceName: "star.png"))
-                sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode_b)
+//                let annotationNode_b = LocationAnnotationNode(location: location, image: #imageLiteral(resourceName: "star.png"))
+//                sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode_b)
                 
             }
         } else {
             print("contentObj.filePath == ?")
         }
-        
     }
     
     
@@ -116,9 +137,19 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
         // TODO:
         // let objsInRange = obejctsInRange(position: curPos, useManualRange: false, manualRange: 1)
         let objsInRange = obejctsInRange(position: curPos, useManualRange: true, manualRange: 100000000000) // <- REMOVE
-        let objsInScene = sceneLocationView.scene.rootNode.childNodes
+        let locationNodesInScene = sceneLocationView.locationNodes
         
         for o in objsInRange {
+            
+//            let presentInScene = sceneLocationView.locationNodes.filter({ $0.name == o.id} )
+            
+//            if presentInScene.count > 0 {
+//                for os in presentInScene {
+//
+//                    sceneLocationView.removeLocationNode(locationNode: os)
+//                }
+//            }
+            
             if o.filePath != "" && !(o.type == "text") {
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let fileName = (URL(string: o.filePath)?.lastPathComponent)!
@@ -126,10 +157,11 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
                 
                 print("UpdateScene: objsInRange: " + String(o.id))
                 
+                // TODO: Check if present in scene else insert:
                 if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                     print("FileManager.default.fileExists")
                     
-                    if objsInScene.filter({$0.name == String(o.id)}).count == 0 {
+                    if locationNodesInScene.filter({$0.name == String(o.id)}).count == 0 {
                         print("objsInScene.filter({$0.name == String(o.id)}).count == 0")
                         addContentToScene(contentObj: o, fPath: (destinationUrl?.path)! )
                     }
@@ -141,7 +173,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
             }
         }
         
-        for i in objsInScene {
+        for i in locationNodesInScene {
             if objsInRange.filter({$0.name == i.name}).count == 0 {
                 i.removeFromParentNode()
             }
@@ -210,14 +242,21 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
 // -------------------------------------------------------------------------------------------------------------
 
     
-    func initScene(){
+    func initScene() {
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
         
         sceneLocationView.session.run(configuration)
+        sceneLocationView.run()
+        
+        sceneLocationView.showsStatistics = true
+        sceneLocationView.showAxesNode = true
+        sceneLocationView.showFeaturePoints = true
+        sceneLocationView.locationDelegate = self
+        
         sceneLocationView.delegate = self
         sceneLocationView.showsStatistics = true
-        sceneLocationView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
+        sceneLocationView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
 
         view.addSubview(sceneLocationView)
     }
@@ -255,7 +294,6 @@ class ViewerVC: UIViewController, ARSCNViewDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         sceneLocationView.frame = view.bounds
     }
     

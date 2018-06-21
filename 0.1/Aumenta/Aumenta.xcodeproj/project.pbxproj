@@ -21,7 +21,6 @@
 		316B86DC20D955660076E63D /* SceneLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D120D955660076E63D /* SceneLocationView.swift */; };
 		316B86DD20D955660076E63D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D220D955660076E63D /* LocationManager.swift */; };
 		316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D320D955660076E63D /* SCNNode+Extensions.swift */; };
-		316B86E020D95C8B0076E63D /* ViewerVC_Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86DF20D95C8B0076E63D /* ViewerVC_Old.swift */; };
 		3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177251E20B03AD4009FA8B1 /* AppDelegate.swift */; };
 		3177252120B03AD4009FA8B1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 3177252020B03AD4009FA8B1 /* art.scnassets */; };
 		3177252320B03AD4009FA8B1 /* ViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177252220B03AD4009FA8B1 /* ViewerVC.swift */; };
@@ -75,7 +74,6 @@
 		316B86D120D955660076E63D /* SceneLocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneLocationView.swift; sourceTree = "<group>"; };
 		316B86D220D955660076E63D /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		316B86D320D955660076E63D /* SCNNode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNNode+Extensions.swift"; sourceTree = "<group>"; };
-		316B86DF20D95C8B0076E63D /* ViewerVC_Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerVC_Old.swift; sourceTree = "<group>"; };
 		3177251B20B03AD4009FA8B1 /* Aumenta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aumenta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3177251E20B03AD4009FA8B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3177252020B03AD4009FA8B1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -269,7 +267,6 @@
 			children = (
 				316B86B720D94B4E0076E63D /* Components */,
 				3177252220B03AD4009FA8B1 /* ViewerVC.swift */,
-				316B86DF20D95C8B0076E63D /* ViewerVC_Old.swift */,
 			);
 			path = ArKitViewer;
 			sourceTree = "<group>";
@@ -381,7 +378,6 @@
 				31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */,
 				316B86D920D955660076E63D /* LocationNode.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
-				316B86E020D95C8B0076E63D /* ViewerVC_Old.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
 				3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */,
 				316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */,
