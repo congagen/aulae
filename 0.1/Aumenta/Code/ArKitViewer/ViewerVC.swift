@@ -254,13 +254,16 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
         sceneLocationView.run()
         
         sceneLocationView.showsStatistics = true
-        sceneLocationView.showAxesNode = true
+        sceneLocationView.showAxesNode = false
         sceneLocationView.showFeaturePoints = true
         sceneLocationView.locationDelegate = self
         
         sceneLocationView.delegate = self
         sceneLocationView.showsStatistics = true
-        sceneLocationView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        sceneLocationView.debugOptions = [
+            ARSCNDebugOptions.showFeaturePoints,
+            ARSCNDebugOptions.showWorldOrigin
+        ]
 
         view.addSubview(sceneLocationView)
     }
