@@ -14,6 +14,7 @@ extension MainVC {
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, originFeed:String) {
         let rlmObj = RLM_Obj()
         
+
         do {
             try realm.write {
                 rlmObj.id = objInfo["id"] as! String
@@ -26,8 +27,8 @@ extension MainVC {
                 rlmObj.type = objInfo["type"] as! String
                 rlmObj.style = objInfo["style"] as! Int
                 
-                rlmObj.lat = 59.292 //rlmObj.lat = objInfo["lat"] as! Double // TODO
-                rlmObj.lng = 18.102 //rlmObj.lng = objInfo["lng"] as! Double // TODO
+                rlmObj.lat = objInfo["lat"] as! Double
+                rlmObj.lng = objInfo["lng"] as! Double  // TODO: long -> lng
                 
                 rlmObj.x_pos = objInfo["pos_x"] as! Double
                 rlmObj.y_pos = objInfo["pos_y"] as! Double
@@ -63,8 +64,8 @@ extension MainVC {
                 
                 rlmObj.text = objInfo["text"] as! String
                 
-                rlmObj.lat = 59.292 //rlmObj.lat = objInfo["lat"] as! Double // TODO
-                rlmObj.lng = 18.102 //rlmObj.lng = objInfo["lng"] as! Double // TODO
+                rlmObj.lat = objInfo["lat"] as! Double
+                rlmObj.lng = objInfo["lng"] as! Double // TODO: long -> lng
                 
                 rlmObj.x_pos = objInfo["pos_x"] as! Double
                 rlmObj.y_pos = objInfo["pos_y"] as! Double
@@ -148,6 +149,11 @@ extension MainVC {
                     "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
                 ]
                 
+//                print("SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE ")
+//                print( String(feedContent["lat"] as! Double));
+//                print("SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE ")
+                
+                
                 if feedContent.keys.contains("url") {
                     let contentUrl = feedContent["url"] as! String
                     let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
@@ -165,9 +171,8 @@ extension MainVC {
                         self.storeFeedText(objInfo: objData, originFeed: feedId)
                     }
                 }
-                
             } else {
-                // TODO: Update error count for feed
+                // TODO: Update error count for feed / Remove
             }
             
         }
@@ -219,6 +224,10 @@ extension MainVC {
                 
                 if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
                     
+                    print("SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE ")
+                    print(jsonResult)
+                    print("SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE ")
+                    
                     if jsonResult.keys.contains("version") {
                         if jsonResult["version"] as! Int != feedDbItem.version {
                             updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
@@ -227,7 +236,8 @@ extension MainVC {
                     } else {
                         updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
                         updateFeedObjects(feedList: jsonResult, feedId: feedDbItem.id)
-                        print("Missing key: VERSION")
+                        
+                        print("Error: updateFeed: Missing version key")
                         // TODO: Increment error count?
                     }
                 }
