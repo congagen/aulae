@@ -107,9 +107,9 @@ class MainVC: UITabBarController {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
-        
     }
 
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

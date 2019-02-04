@@ -155,8 +155,6 @@
 		3177251220B03AD4009FA8B1 = {
 			isa = PBXGroup;
 			children = (
-				FA1AAC412153E9D200EE494A /* Realm.framework */,
-				FA1AAC402153E9D000EE494A /* RealmSwift.framework */,
 				3177251D20B03AD4009FA8B1 /* Code */,
 				318FE90520B169C00050528B /* UI */,
 				318FE90420B1697D0050528B /* Assets */,
@@ -198,6 +196,8 @@
 		318FE8F320B0BDDD0050528B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FA1AAC412153E9D200EE494A /* Realm.framework */,
+				FA1AAC402153E9D000EE494A /* RealmSwift.framework */,
 				316B86B820D953B60076E63D /* ArKitCoreloc */,
 				318FE8F420B0BDDD0050528B /* MapKit.framework */,
 			);
