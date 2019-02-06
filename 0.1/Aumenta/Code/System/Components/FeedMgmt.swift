@@ -30,13 +30,13 @@ extension MainVC {
                 rlmObj.lat = objInfo["lat"] as! Double
                 rlmObj.lng = objInfo["lng"] as! Double  // TODO: long -> lng
                 
-                rlmObj.x_pos = objInfo["pos_x"] as! Double
-                rlmObj.y_pos = objInfo["pos_y"] as! Double
-                rlmObj.z_pos = objInfo["pos_z"] as! Double
-                
-                rlmObj.x_rot = objInfo["rot_x"] as! Double
-                rlmObj.y_rot = objInfo["rot_y"] as! Double
-                rlmObj.z_rot = objInfo["rot_z"] as! Double
+//                rlmObj.x_pos = objInfo["pos_x"] as! Double
+//                rlmObj.y_pos = objInfo["pos_y"] as! Double
+//                rlmObj.z_pos = objInfo["pos_z"] as! Double
+//
+//                rlmObj.x_rot = objInfo["rot_x"] as! Double
+//                rlmObj.y_rot = objInfo["rot_y"] as! Double
+//                rlmObj.z_rot = objInfo["rot_z"] as! Double
                 
                 rlmObj.scale = objInfo["scale"] as! Double
                 
@@ -51,6 +51,7 @@ extension MainVC {
     func storeFeedText(objInfo: [String : Any], originFeed:String) {
         let rlmObj = RLM_Obj()
         
+    
         do {
             try realm.write {
                 rlmObj.id = objInfo["id"] as! String
@@ -67,13 +68,13 @@ extension MainVC {
                 rlmObj.lat = objInfo["lat"] as! Double
                 rlmObj.lng = objInfo["lng"] as! Double // TODO: long -> lng
                 
-                rlmObj.x_pos = objInfo["pos_x"] as! Double
-                rlmObj.y_pos = objInfo["pos_y"] as! Double
-                rlmObj.z_pos = objInfo["pos_z"] as! Double
-                
-                rlmObj.x_rot = objInfo["rot_x"] as! Double
-                rlmObj.y_rot = objInfo["rot_y"] as! Double
-                rlmObj.z_rot = objInfo["rot_z"] as! Double
+//                rlmObj.x_pos = objInfo["pos_x"] as! Double
+//                rlmObj.y_pos = objInfo["pos_y"] as! Double
+//                rlmObj.z_pos = objInfo["pos_z"] as! Double
+//
+//                rlmObj.x_rot = objInfo["rot_x"] as! Double
+//                rlmObj.y_rot = objInfo["rot_y"] as! Double
+//                rlmObj.z_rot = objInfo["rot_z"] as! Double
                 
                 rlmObj.scale = objInfo["scale"] as! Double
                 
@@ -138,21 +139,16 @@ extension MainVC {
                     "lng":    valueIfPresent(dict: feedContent, key: "long",    placeHolderValue: 0.0),
                     "radius": valueIfPresent(dict: feedContent, key: "radius",  placeHolderValue: 1.0),
                     
-                    "pos_x":  valueIfPresent(dict: feedContent, key: "x_pos",   placeHolderValue: 0.0),
-                    "pos_y":  valueIfPresent(dict: feedContent, key: "y_pos",   placeHolderValue: 0.0),
-                    "pos_z":  valueIfPresent(dict: feedContent, key: "z_pos",   placeHolderValue: 1.0),
-                    
-                    "rot_x":  valueIfPresent(dict: feedContent, key: "x_rot",   placeHolderValue: 0.0),
-                    "rot_y":  valueIfPresent(dict: feedContent, key: "y_rot",   placeHolderValue: 0.0),
-                    "rot_z":  valueIfPresent(dict: feedContent, key: "z_rot",   placeHolderValue: 0.0),
+//                    "pos_x":  valueIfPresent(dict: feedContent, key: "x_pos",   placeHolderValue: 0.0),
+//                    "pos_y":  valueIfPresent(dict: feedContent, key: "y_pos",   placeHolderValue: 0.0),
+//                    "pos_z":  valueIfPresent(dict: feedContent, key: "z_pos",   placeHolderValue: 1.0),
+//
+//                    "rot_x":  valueIfPresent(dict: feedContent, key: "x_rot",   placeHolderValue: 0.0),
+//                    "rot_y":  valueIfPresent(dict: feedContent, key: "y_rot",   placeHolderValue: 0.0),
+//                    "rot_z":  valueIfPresent(dict: feedContent, key: "z_rot",   placeHolderValue: 0.0),
                     
                     "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
                 ]
-                
-//                print("SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE ")
-//                print( String(feedContent["lat"] as! Double));
-//                print("SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE ")
-                
                 
                 if feedContent.keys.contains("url") {
                     let contentUrl = feedContent["url"] as! String
@@ -223,11 +219,6 @@ extension MainVC {
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
                 
                 if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
-                    
-                    print("SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE ")
-                    print(jsonResult)
-                    print("SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE SANE ")
-                    
                     if jsonResult.keys.contains("version") {
                         if jsonResult["version"] as! Int != feedDbItem.version {
                             updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
