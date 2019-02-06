@@ -129,11 +129,12 @@
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
                     <navigationItem key="navigationItem" title="Aumscape" id="0Jn-a9-joB">
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="0vE-dQ-BcC">
+                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="0vE-dQ-BcC">
                             <connections>
                                 <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="5Zm-ex-xZ1"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="etU-3N-bVO"/>
                     </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0yF-0m-H2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -162,11 +163,21 @@
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
                     <navigationItem key="navigationItem" title="Aumscape" id="jef-En-32s">
-                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="lp5-fg-UQE"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="tP4-NO-MBE"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="lp5-fg-UQE">
+                            <connections>
+                                <action selector="reloadBtnAction:" destination="shz-14-nLG" id="MV4-JY-nUe"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="tP4-NO-MBE">
+                            <connections>
+                                <action selector="addBtnAction:" destination="shz-14-nLG" id="bEH-cx-LuP"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addBtn" destination="tP4-NO-MBE" id="A5P-js-DgR"/>
                         <outlet property="mapView" destination="zU5-ko-yXY" id="CUy-QG-oKU"/>
+                        <outlet property="reloadBtn" destination="lp5-fg-UQE" id="t3g-PX-ERx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jQb-Zr-Rmt" userLabel="First Responder" sceneMemberID="firstResponder"/>

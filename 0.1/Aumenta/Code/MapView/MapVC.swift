@@ -31,6 +31,82 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     var curLat = 0.0
     var curLng = 0.0
     
+    var textField: UITextField? = nil
+
+    @IBOutlet var addBtn: UIBarButtonItem!
+    @IBAction func addBtnAction(_ sender: UIBarButtonItem) {
+        showURLAlert(aMessage: "Yumm")
+    }
+    
+    @IBOutlet var reloadBtn: UIBarButtonItem!
+    @IBAction func reloadBtnAction(_ sender: UIBarButtonItem) {
+        mainUpdate()
+    }
+    
+
+    func handleCancel(alertView: UIAlertAction!)
+    {
+        print(self.textField?.text! ?? "")
+    }
+    
+    
+    func handleEnterURL(alertView: UIAlertAction!) {
+        let newFeed = RLM_Feed()
+        
+        do {
+            try realm.write {
+                if textField?.text != nil {
+                    if feeds.filter({$0.url == (self.textField?.text)! }).count == 0 {
+                        
+                        if (self.textField?.text)! != "" {
+                            newFeed.id = UUID().uuidString
+                            newFeed.name = "Updating..."
+                            
+                            self.realm.add(newFeed)
+                        }
+                        
+                    } else {
+                        print("feeds.filter({$0.id == (self.textField?.text)! }).count > 0")
+                    }
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        mainUpdate()
+
+    }
+    
+    
+    func urlConfigurationTextField(textField: UITextField!)
+    {
+        if let _ = textField {
+            self.textField = textField!
+            textField.text! = (session.first?.debugUrl)!
+        }
+    }
+    
+    
+    func showURLAlert(aMessage: String?){
+        let alert = UIAlertController(
+            title: "Feed URL",
+            message: "",
+            preferredStyle: UIAlertControllerStyle.alert
+        )
+        
+        // TODO: Add Name Field
+        
+        alert.addTextField(configurationHandler: urlConfigurationTextField)
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:handleCancel))
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:handleEnterURL))
+        
+        alert.view.tintColor = UIColor.black
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
     
     func addRadiusOverlay(lat:Double, long:Double, radius:Double) {
         
