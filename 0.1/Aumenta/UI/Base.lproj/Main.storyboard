@@ -142,7 +142,7 @@
                     <navigationItem key="navigationItem" title="Aumscape" id="0Jn-a9-joB">
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="0vE-dQ-BcC">
                             <connections>
-                                <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="5Zm-ex-xZ1"/>
+                                <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="dHf-hJ-ljZ"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="action" id="etU-3N-bVO"/>

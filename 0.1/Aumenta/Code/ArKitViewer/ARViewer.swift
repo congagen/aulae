@@ -30,6 +30,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     var mainScene = SCNScene()
     
+    
+    @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
+        updateScene()
+    }
+    
+    
     @IBOutlet var sceneView: ARSCNView!
     
     
@@ -38,8 +44,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         node.geometry?.materials.first?.diffuse.contents = UIColor.green
         node.physicsBody? = .static()
         node.name = "TestNode"
-        node.geometry?.materials.first?.diffuse.contents = UIImage(named: "Circle")
-        node.position = SCNVector3(0.0, 0.0, -5.0)
+        //node.geometry?.materials.first?.diffuse.contents = UIImage(named: "star")
+        node.position = SCNVector3(5.0, 0.0, -5.0)
         mainScene.rootNode.addChildNode(node)
     }
     
@@ -79,30 +85,30 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     func addContentToScene(contentObj: RLM_Obj, fPath: String){
         print("Inserting Object: " + String(contentObj.id))
 
-        // let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+         let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         // SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
 
         if fPath != "" {
             if contentObj.type.lowercased() == "image" {
+                print("IMAGE")
                 let img = UIImage(contentsOfFile: fPath)!
                 
-                print(img)
+                let distance = devicePos.distance(
+                    from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
+                )
+                
+                let objScale: Double = contentObj.scale / distance
+                
+                print("ObjScale:")
+                print(objScale)
                 
                 let node = SCNNode(geometry: SCNSphere(radius: 100))
                 node.geometry?.materials.first?.diffuse.contents = UIColor.green
                 node.physicsBody? = .static()
                 node.name = "TestNode"
-                node.geometry?.materials.first?.diffuse.contents = UIImage(named: "star")
+                //node.geometry?.materials.first?.diffuse.contents = img
                 node.position = SCNVector3(0.0, 0.0, -5.0)
-                
-//                node.geometry?.materials.first?.diffuse.contents = UIImage(named: "texture")
-
-//                let distance = devicePos.distance(
-//                    from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
-//                )
-//
-//                let objScale: Double = contentObj.scale / distance
-
+            
                 mainScene.rootNode.addChildNode(node)
 
             }
@@ -118,6 +124,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         
+        
         // TODO:  Get search range
         let objsInRange = obejctsInRange(position: curPos, useManualRange: true, manualRange: 100000000000)
         
@@ -131,10 +138,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 
                 print("UpdateScene: objsInRange: " + String(o.id))
                 
-                // TODO: Check if present in scene else insert:
                 if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                     print("FileManager.default.fileExists")
+                    
+                    print("objsInScene.filter({$0.name == String(o.id)}).count == 0")
+                    addContentToScene(contentObj: o, fPath: (destinationUrl?.path)! )
+
                 } else {
+                    // TODO: Add Icon/Placeholder
                     print("File missing: " + String(o.filePath))
                 }
             } else {
@@ -145,9 +156,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     
     @objc func mainUpdate() {
-        print("mainUpdate: ViewerVC")
+        print("mainUpdate: ARViewer")
         
-        updateScene()
+        // updateScene()
         
         if session.count > 0 {
             if updateTimer.timeInterval != updateInterval {
@@ -175,6 +186,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         sceneView.scene = mainScene
         
         addDebugObj(objSize: 0.5)
+        updateScene()
     }
     
     
