@@ -60,6 +60,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
             
             let referenceNode = SCNReferenceNode(url: referenceURL)
             referenceNode?.load()
+            
             sceneView.scene.rootNode.addChildNode(referenceNode!)
         }
     }
@@ -132,6 +133,8 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
     
     func updateScene() {
         print("updateScene")
+        // TODO: Get search range
+        
         
         // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
@@ -142,6 +145,9 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
         let locationNodesInScene = sceneLocationView.locationNodes
         
         for o in objsInRange {
+            
+            print("Obj in range: ")
+            print(o)
             
 //            let presentInScene = sceneLocationView.locationNodes.filter({ $0.name == o.id} )
 //            if presentInScene.count > 0 {
@@ -275,6 +281,12 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Create a new scene
+        //let scene = SCNScene(named: "art.scnassets/main.scn")!
+        
+        // Set the scene to the view
+        //sceneView.scene = scene
         
         initScene()
         mainUpdate()

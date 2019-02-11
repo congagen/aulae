@@ -42,6 +42,7 @@
 		FA1AAC432153E9D200EE494A /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC402153E9D000EE494A /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FA1AAC442153E9D200EE494A /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC412153E9D200EE494A /* Realm.framework */; };
 		FA1AAC452153E9D200EE494A /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC412153E9D200EE494A /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FA8B38682211D6B30099A7A3 /* FeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38672211D6B30099A7A3 /* FeedImage.swift */; };
 		FAAE1767220B24D900EB92CA /* ARObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAE1766220B24D900EB92CA /* ARObject.swift */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
 /* End PBXBuildFile section */
@@ -98,6 +99,7 @@
 		31D284BE20D3B079004451A6 /* RLM_Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Feed.swift; sourceTree = "<group>"; };
 		FA1AAC402153E9D000EE494A /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		FA1AAC412153E9D200EE494A /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
+		FA8B38672211D6B30099A7A3 /* FeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImage.swift; sourceTree = "<group>"; };
 		FAAE1766220B24D900EB92CA /* ARObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARObject.swift; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -128,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				FAAE1766220B24D900EB92CA /* ARObject.swift */,
+				FA8B38672211D6B30099A7A3 /* FeedImage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
 				3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */,
+				FA8B38682211D6B30099A7A3 /* FeedImage.swift in Sources */,
 				316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
 				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
