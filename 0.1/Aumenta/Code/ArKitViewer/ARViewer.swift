@@ -32,6 +32,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     @IBOutlet var sceneView: ARSCNView!
     
+    
+    func addDebugObj(objSize: Double)  {
+        let node = SCNNode(geometry: SCNSphere(radius: CGFloat(objSize) ))
+        node.geometry?.materials.first?.diffuse.contents = UIColor.green
+        node.physicsBody? = .static()
+        node.name = "TestNode"
+        node.geometry?.materials.first?.diffuse.contents = UIImage(named: "Circle")
+        node.position = SCNVector3(0.0, 0.0, -5.0)
+        mainScene.rootNode.addChildNode(node)
+    }
+    
 
     func loadCollada(path: String) -> SCNNode {
 
@@ -68,17 +79,22 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     func addContentToScene(contentObj: RLM_Obj, fPath: String){
         print("Inserting Object: " + String(contentObj.id))
 
-        //let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        // let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         // SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
 
         if fPath != "" {
             if contentObj.type.lowercased() == "image" {
-                //let img = UIImage(contentsOfFile: fPath)!
-
+                let img = UIImage(contentsOfFile: fPath)!
+                
+                print(img)
+                
                 let node = SCNNode(geometry: SCNSphere(radius: 100))
                 node.geometry?.materials.first?.diffuse.contents = UIColor.green
                 node.physicsBody? = .static()
                 node.name = "TestNode"
+                node.geometry?.materials.first?.diffuse.contents = UIImage(named: "star")
+                node.position = SCNVector3(0.0, 0.0, -5.0)
+                
 //                node.geometry?.materials.first?.diffuse.contents = UIImage(named: "texture")
 
 //                let distance = devicePos.distance(
@@ -96,8 +112,61 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     }
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    func updateScene() {
+        print("updateScene")
+        
+        // Scenes in range
+        let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        
+        // TODO:  Get search range
+        let objsInRange = obejctsInRange(position: curPos, useManualRange: true, manualRange: 100000000000)
+        
+        for o in objsInRange {
+            print("Obj in range: ")
+            
+            if o.filePath != "" && !(o.type == "text") {
+                let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                let fileName = (URL(string: o.filePath)?.lastPathComponent)!
+                let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+                
+                print("UpdateScene: objsInRange: " + String(o.id))
+                
+                // TODO: Check if present in scene else insert:
+                if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
+                    print("FileManager.default.fileExists")
+                } else {
+                    print("File missing: " + String(o.filePath))
+                }
+            } else {
+                // Add text w o.style
+            }
+        }
+    }
+    
+    
+    @objc func mainUpdate() {
+        print("mainUpdate: ViewerVC")
+        
+        updateScene()
+        
+        if session.count > 0 {
+            if updateTimer.timeInterval != updateInterval {
+                updateTimer.invalidate()
+            }
+            
+            if !updateTimer.isValid {
+                updateTimer = Timer.scheduledTimer(
+                    timeInterval: updateInterval,
+                    target: self, selector: #selector(mainUpdate),
+                    userInfo: nil, repeats: true)
+            }
+        }
+    }
+    
+    
+    func initScene() {
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = .horizontal
         
         sceneView.delegate = self
         sceneView.showsStatistics = true
@@ -105,30 +174,24 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
         
-        let node = SCNNode(geometry: SCNSphere(radius: 1))
-        node.geometry?.materials.first?.diffuse.contents = UIColor.green
-        node.physicsBody? = .static()
-        node.name = "TestNode"
-        node.geometry?.materials.first?.diffuse.contents = UIImage(named: "Circle")
-        node.position = SCNVector3(0.0, 0.0, -5.0)
-        mainScene.rootNode.addChildNode(node)
-
+        addDebugObj(objSize: 0.5)
+    }
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        initScene()
+        mainUpdate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
-        
-        // Run the view's session
         sceneView.session.run(configuration)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        // Pause the view's session
         sceneView.session.pause()
     }
     

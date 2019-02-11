@@ -264,6 +264,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
         
         sceneLocationView.delegate = self
         sceneLocationView.showsStatistics = true
+        
         sceneLocationView.debugOptions = [
             ARSCNDebugOptions.showFeaturePoints,
             ARSCNDebugOptions.showWorldOrigin
