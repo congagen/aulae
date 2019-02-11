@@ -93,17 +93,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 print("IMAGE")
                 let img = UIImage(contentsOfFile: fPath)!
                 
+                // Latitudes range from 0 to 90. Longitudes range from 0 to 180.
+                // [+] if obj.lat/long < user.lat/long else [-] ?
+                
                 let distance = devicePos.distance(
                     from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
                 )
                 
                 let objScale: Double = contentObj.scale / distance
                 
-                print("ObjScale:")
-                print(objScale)
+                print("ObjScale: " + String(objScale))
                 
                 let node = SCNNode(geometry: SCNSphere(radius: 100))
-                node.geometry?.materials.first?.diffuse.contents = UIColor.green
+                node.geometry?.materials.first?.diffuse.contents = UIColor.white
                 node.physicsBody? = .static()
                 node.name = "TestNode"
                 //node.geometry?.materials.first?.diffuse.contents = img
@@ -123,7 +125,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         
         // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        
         
         // TODO:  Get search range
         let objsInRange = obejctsInRange(position: curPos, useManualRange: true, manualRange: 100000000000)
