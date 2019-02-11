@@ -212,6 +212,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
 //        // Place content only for anchors found by plane detection.
 //        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
 //
+    
 //        // Create a SceneKit plane to visualize the plane anchor using its position and extent.
 //        let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
 //        let planeNode = SCNNode(geometry: plane)
