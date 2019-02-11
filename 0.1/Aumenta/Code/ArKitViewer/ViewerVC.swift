@@ -17,6 +17,15 @@ import RealmSwift
 
 
 class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLocationViewDelegate {
+
+    var sceneLocationView = SceneLocationView()
+    let realm = try! Realm()
+    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    var updateTimer = Timer()
+    let updateInterval: Double = 10
     
     
     func sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
@@ -36,16 +45,6 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
     }
-    
-
-    var sceneLocationView = SceneLocationView()
-    let realm = try! Realm()
-    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
-    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
-    
-    var updateTimer = Timer()
-    let updateInterval: Double = 10
 
     
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
@@ -282,8 +281,7 @@ class ViewerVC: UIViewController, ARSCNViewDelegate, MKMapViewDelegate, SceneLoc
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Create a new scene
-        //let scene = SCNScene(named: "art.scnassets/main.scn")!
+        let scene = SCNScene(named: "art.scnassets/main.scn")!
         
         // Set the scene to the view
         //sceneView.scene = scene
