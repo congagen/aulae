@@ -104,15 +104,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 
                 print("ObjScale: " + String(objScale))
                 
-                let node = SCNNode(geometry: SCNSphere(radius: 100))
+                let node = SCNNode(geometry: SCNSphere(radius: 0.5))
                 node.geometry?.materials.first?.diffuse.contents = UIColor.white
                 node.physicsBody? = .static()
                 node.name = "TestNode"
-                //node.geometry?.materials.first?.diffuse.contents = img
+                node.geometry?.materials.first?.diffuse.contents = img
                 node.position = SCNVector3(0.0, 0.0, -5.0)
-            
-                mainScene.rootNode.addChildNode(node)
 
+                mainScene.rootNode.addChildNode(node)
             }
         } else {
             print("contentObj.filePath == ?")
