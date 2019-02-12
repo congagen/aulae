@@ -145,7 +145,11 @@
                                 <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="dHf-hJ-ljZ"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="etU-3N-bVO"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="etU-3N-bVO">
+                            <connections>
+                                <action selector="sharePhotoBtn:" destination="cNO-cb-Srl" id="p06-zG-iGc"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="sceneView" destination="fEs-rS-yaY" id="cxZ-S7-Spe"/>

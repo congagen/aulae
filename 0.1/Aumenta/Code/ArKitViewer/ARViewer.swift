@@ -27,6 +27,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     var currentCamTransform: simd_float4x4 = simd_float4x4(float4(0), float4(0), float4(0), float4(0))
     
+    var camFrame: ARFrame? = nil
+    var cam: ARCamera? = nil
+    
     var updateTimer = Timer()
     let updateInterval: Double = 10
     
@@ -35,6 +38,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         updateScene()
+    }
+    
+    
+    @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
+        let capImg: UIImage = UIImage(cgImage: sceneView.snapshot().cgImage!)
+        
+        let imageToShare = [capImg]
+        let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
+        
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true)
     }
     
     
@@ -47,6 +61,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         node.physicsBody? = .static()
         node.name = "TestNode"
         //node.geometry?.materials.first?.diffuse.contents = UIImage(named: "star")
+        
+        let objScene = SCNScene(named: "art.scnassets/bunny.dae")
+        objScene!.rootNode.position = SCNVector3(5.0, 0.0, -25.0)
+        mainScene.rootNode.addChildNode(objScene!.rootNode)
+        
         node.position = SCNVector3(5.0, 0.0, -5.0)
         mainScene.rootNode.addChildNode(node)
     }
@@ -92,18 +111,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
          let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         // SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
 
-        let valConv = ValConverters()
-        let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0)
+//        let valConv = ValConverters()
+//        let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0)
+
+//        let xPos = arPos[0] / 1000000
+//        let zPos = arPos[2] / 1000000
         
-        let xPos = arPos[0] / 1000000
-        let zPos = arPos[2] / 1000000
-        
-        let distance = devicePos.distance(
-            from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
-        )
-        let objScale: Double = contentObj.scale / distance
+//        let distance = devicePos.distance(
+//            from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
+//        )
+//        let objScale: Double = contentObj.scale / distance
         
         if fPath != "" {
+            
             if contentObj.type.lowercased() == "image" {
                 print("IMAGE")
                 
@@ -118,6 +138,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
 
                 mainScene.rootNode.addChildNode(node)
             }
+            
+            if contentObj.type.lowercased() == "dae" {
+                let objScene = SCNScene(named: fPath)
+                mainScene.rootNode.addChildNode(objScene!.rootNode)
+            }
+            
         } else {
             let text = SCNText(string: contentObj.text+"!", extrusionDepth: 0.1)
             text.alignmentMode = kCAAlignmentCenter
@@ -208,6 +234,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         // Do something with the new transform
+        
+        if (!(camFrame != nil)) {
+            camFrame = frame
+        }
+    
+        if (!(cam != nil)) {
+            cam = frame.camera
+        }
+        
         currentCamTransform = frame.camera.transform
     }
     
