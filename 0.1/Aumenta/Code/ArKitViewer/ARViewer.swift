@@ -25,6 +25,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
+    var currentCamTransform: simd_float4x4 = simd_float4x4(float4(0), float4(0), float4(0), float4(0))
+    
     var updateTimer = Timer()
     let updateInterval: Double = 10
     
@@ -82,39 +84,50 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func addContentToScene(contentObj: RLM_Obj, fPath: String){
+    func addContentToScene(contentObj: RLM_Obj, fPath: String) {
+        // Latitudes range from 0 to 90. Longitudes range from 0 to 180.
+        // [+] if obj.lat/long < user.lat/long else [-] ?
         print("Inserting Object: " + String(contentObj.id))
 
          let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         // SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
 
+        let valConv = ValConverters()
+        let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0)
+        
+        let xPos = arPos[0] / 1000000
+        let zPos = arPos[2] / 1000000
+        
+        let distance = devicePos.distance(
+            from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
+        )
+        let objScale: Double = contentObj.scale / distance
+        
         if fPath != "" {
             if contentObj.type.lowercased() == "image" {
                 print("IMAGE")
+                
                 let img = UIImage(contentsOfFile: fPath)!
+                let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
                 
-                // Latitudes range from 0 to 90. Longitudes range from 0 to 180.
-                // [+] if obj.lat/long < user.lat/long else [-] ?
-                
-                let distance = devicePos.distance(
-                    from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
-                )
-                
-                let objScale: Double = contentObj.scale / distance
-                
-                print("ObjScale: " + String(objScale))
-                
-                let node = SCNNode(geometry: SCNSphere(radius: 0.5))
-                node.geometry?.materials.first?.diffuse.contents = UIColor.white
                 node.physicsBody? = .static()
-                node.name = "TestNode"
+                node.name = contentObj.name
+                node.geometry?.materials.first?.diffuse.contents = UIColor.white
                 node.geometry?.materials.first?.diffuse.contents = img
-                node.position = SCNVector3(0.0, 0.0, -5.0)
+                node.position = SCNVector3(0.0, 0.0, -3.0)
 
                 mainScene.rootNode.addChildNode(node)
             }
         } else {
-            print("contentObj.filePath == ?")
+            let text = SCNText(string: contentObj.text+"!", extrusionDepth: 0.1)
+            text.alignmentMode = kCAAlignmentCenter
+            
+            let node = SCNNode(geometry: text)
+            node.physicsBody? = .static()
+            node.name = contentObj.name
+            node.position = SCNVector3(0.0, 0.0, -5.0)
+            
+            mainScene.rootNode.addChildNode(node)
         }
     }
     
@@ -127,6 +140,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         
         // TODO:  Get search range
         let objsInRange = obejctsInRange(position: curPos, useManualRange: true, manualRange: 100000000000)
+        
+        mainScene.rootNode.enumerateChildNodes { (node, stop) in
+            node.removeFromParentNode()
+        }
         
         for o in objsInRange {
             print("Obj in range: ")
@@ -185,8 +202,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
         
-        addDebugObj(objSize: 0.5)
         updateScene()
+    }
+    
+    
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        // Do something with the new transform
+        currentCamTransform = frame.camera.transform
     }
     
     
@@ -194,7 +216,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         super.viewDidLoad()
         initScene()
         mainUpdate()
+        
+        addDebugObj(objSize: 0.5)
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
