@@ -195,6 +195,7 @@
                     <connections>
                         <outlet property="addBtn" destination="tP4-NO-MBE" id="A5P-js-DgR"/>
                         <outlet property="mapView" destination="zU5-ko-yXY" id="CUy-QG-oKU"/>
+                        <outlet property="navBar" destination="jef-En-32s" id="GiM-UX-Kpw"/>
                         <outlet property="reloadBtn" destination="lp5-fg-UQE" id="t3g-PX-ERx"/>
                     </connections>
                 </viewController>

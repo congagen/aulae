@@ -40,8 +40,12 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet var reloadBtn: UIBarButtonItem!
     @IBAction func reloadBtnAction(_ sender: UIBarButtonItem) {
+        initMapView()
         mainUpdate()
     }
+    
+    
+    @IBOutlet var navBar: UINavigationItem!
     
 
     func handleCancel(alertView: UIAlertAction!)
@@ -153,7 +157,8 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                     ano.coordinate = CLLocationCoordinate2D(latitude: fo.lat, longitude: fo.lng)
                     ano.name = fo.name
                     ano.id = fo.id
-                    
+                    ano.title = fo.feedId
+                
                     mapView.addAnnotation(ano)
                     //addRadiusOverlay(lat: fo.lat, long: fo.lng, radius: fo.radius) //TODO
                 } 
@@ -168,16 +173,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             if objAtAnnotationLocation.count == 0 {
                 print("Removing: " + String(a.coordinate.latitude))
                 mapView.removeAnnotation(a)
-                
-//                let overlays = mapView.overlays.filter({
-//                    $0.coordinate.latitude == a.coordinate.latitude && $0.coordinate.longitude == a.coordinate.longitude
-//                })
-//
-//                if overlays.count > 0 {
-//                    for o in overlays {
-//                        mapView.remove(o)
-//                    }
-//                }
             }
         }
         
@@ -199,8 +194,32 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         } catch {
             print("Error: \(error)")
         }
+    }
+    
+    
+    
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        let reuseId = "pin"
+        
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        pinView?.canShowCallout = true
+        pinView?.pinTintColor = UIColor.purple
+        
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "Location")
+            pinView?.canShowCallout = false
+            pinView!.pinTintColor = UIColor.black
+        } else {
+            pinView?.pinTintColor = UIColor.purple
+            pinView!.annotation = MapAno()
+            pinView?.canShowCallout = false
+        }
+        
+        return pinView
         
     }
+    
     
     
     @objc func mainUpdate() {
