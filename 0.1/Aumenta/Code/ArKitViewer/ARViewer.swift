@@ -84,23 +84,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func createGIFAnimation(url:URL) -> CAKeyframeAnimation? {
+    func createGIFAnimation(url:URL, fDuration:Float) -> CAKeyframeAnimation? {
         
         guard let src = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
         let frameCount = CGImageSourceGetCount(src)
         
-        // Total loop time
         var time : Float = 0
         
-        // Arrays
         var framesArray = [AnyObject]()
         var tempTimesArray = [NSNumber]()
         
-        // Loop
         for i in 0..<frameCount {
             
-            // Frame default duration
-            var frameDuration : Float = 0.1;
+            var frameDuration : Float = fDuration;
             
             let cfFrameProperties = CGImageSourceCopyPropertiesAtIndex(src, i, nil)
             guard let framePrpoerties = cfFrameProperties as? [String:AnyObject] else {return nil}
@@ -140,9 +136,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
         timesArray.append(NSNumber(value: 1.0))
         
-        // Create animation
         let animation = CAKeyframeAnimation(keyPath: "contents")
-        
         animation.beginTime = AVCoreAnimationBeginTimeAtZero
         animation.duration = CFTimeInterval(time)
         animation.repeatCount = Float.greatestFiniteMagnitude;
@@ -150,7 +144,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         animation.fillMode = kCAFillModeForwards
         animation.values = framesArray
         animation.keyTimes = timesArray
-        //animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
         animation.calculationMode = kCAAnimationDiscrete
         
         return animation;
@@ -167,7 +160,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
 
         do {
             let scene = try SCNScene(url: urlPath, options: nil)
-            return scene.rootNode.childNodes[0] as SCNNode
+            return scene.rootNode
         } catch {
             print(error)
         }
@@ -201,25 +194,30 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         let valConv = ValConverters()
         let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0)
 
-        let xPos = arPos[0] / 1000000
-        let zPos = arPos[2] / 1000000
+        let xPos = arPos[2] / 1000000
+        let yPos = -1.0
+        let zPos = arPos[0] / 1000000
         
         let distance = devicePos.distance(
             from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
         )
         let objScale: Double = contentObj.scale / distance
         
+        
         if contentObj.type.lowercased() == "text" {
-            let text = SCNText(string: contentObj.text+"!", extrusionDepth: 0.1)
+            print("ADDING TEXT TO SCENE: " + contentObj.text)
+
+            let text = SCNText(string: contentObj.text + "123456789", extrusionDepth: 0.5)
             text.alignmentMode = kCAAlignmentCenter
             
             let node = SCNNode(geometry: text)
             node.physicsBody? = .static()
             node.name = contentObj.name
-            node.position = SCNVector3(-2.0, 0.0, -5.0)
-            
+            node.position = SCNVector3(0.0, 0.0, -5.0)
+
             mainScene.rootNode.addChildNode(node)
         }
+        
         
         if fPath != "" {
             
@@ -234,48 +232,43 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 node.geometry?.materials.first?.diffuse.contents = UIColor.white
                 node.geometry?.materials.first?.diffuse.contents = img
                 node.geometry?.materials.first?.isDoubleSided = true
-                node.position = SCNVector3(-1.0, 0.0, -3.0)
+                node.position = SCNVector3(-xPos, yPos, -zPos)
 
                 mainScene.rootNode.addChildNode(node)
             }
             
             if contentObj.type.lowercased() == "dae" {
                 print("ADDING DAEOBJ TO SCENE: " + fPath)
-                
-                do {
-                    let objScene = try SCNScene(url: URL(fileURLWithPath: fPath))
-                    mainScene.rootNode.addChildNode(objScene.rootNode)
-                } catch {
-                    print(error)
-                }
-                
+            
+                let objNode =  loadCollada(path: fPath)
+                mainScene.rootNode.addChildNode(objNode)
+        
             }
             
             if contentObj.type.lowercased() == "gif" {
                 print("ADDING GIF TO SCENE")
                 
-                let plane = SCNPlane(width: 2, height: 2)
+                let gifPlane = SCNPlane(width: 2, height: 2)
                 
-                let animation : CAKeyframeAnimation = createGIFAnimation(url: URL(fileURLWithPath: fPath) )!
+                let src = CGImageSourceCreateWithURL(URL(fileURLWithPath: fPath) as CFURL, nil)
+                let srcPro = CGImageSourceCopyPropertiesAtIndex(src!, 0, nil)
+                
+                let animation : CAKeyframeAnimation = createGIFAnimation(
+                    url: URL(fileURLWithPath: fPath), fDuration: 0.1 )!
                 
                 let layer = CALayer()
-                
                 layer.bounds = CGRect(x: 0, y: 0, width:500, height:500)
-                
                 layer.add(animation, forKey: "contents")
-                
                 layer.anchorPoint = CGPoint(x:0.0,y:1.0)
                 
-                let newMaterial = SCNMaterial()
+                let gifMaterial = SCNMaterial()
+                gifMaterial.isDoubleSided = true
+                gifMaterial.diffuse.contents = layer
                 
-                newMaterial.isDoubleSided = true
+                gifPlane.materials = [gifMaterial]
                 
-                newMaterial.diffuse.contents = layer
-                
-                plane.materials = [newMaterial]
-                
-                let node = SCNNode(geometry: plane)
-                node.position = SCNVector3(-xPos, 0.0, -zPos)
+                let node = SCNNode(geometry: gifPlane)
+                node.position = SCNVector3(-xPos, yPos, -zPos)
 
                 mainScene.rootNode.addChildNode(node)
                 
@@ -315,11 +308,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                     addContentToScene(contentObj: o, fPath: (destinationUrl?.path)! )
 
                 } else {
-                    // TODO: Add Icon/Placeholder
-                    print("File missing: " + String(o.filePath))
+                    print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
                 }
             } else {
-                // Add text w o.style
+                if (o.type == "text") {
+                    addContentToScene(contentObj: o, fPath:"" )
+                }
             }
         }
     }

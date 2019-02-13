@@ -9,7 +9,8 @@
 import Foundation
 
 extension MainVC {
-    
+
+
     
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, originFeed:String) {
         let rlmObj = RLM_Obj()
@@ -104,6 +105,7 @@ extension MainVC {
             
             // updated_utx
             if valid {
+                
                 let objData: [String : Any] = [
                     "name":         feedContent["name"] as! String,
                     "id":           feedContent["id"] as! String,
@@ -120,7 +122,7 @@ extension MainVC {
                     "text":   valueIfPresent(dict: feedContent, key: "text",    placeHolderValue: ""),
                     
                     "lat":    valueIfPresent(dict: feedContent, key: "lat",     placeHolderValue: 0.0),
-                    "lng":    valueIfPresent(dict: feedContent, key: "long",    placeHolderValue: 0.0),
+                    "lng":    valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
                     "radius": valueIfPresent(dict: feedContent, key: "radius",  placeHolderValue: 1.0),
                     
                     "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
@@ -144,7 +146,8 @@ extension MainVC {
                     }
                 }
             } else {
-                // TODO: Update error count for feed / Remove
+                print("ERROR: MALFORMED FEED ITEM: ")
+                print((feedContent))
             }
             
         }
