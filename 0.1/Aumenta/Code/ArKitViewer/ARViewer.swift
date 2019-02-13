@@ -4,8 +4,7 @@
 //
 //  Created by Tim Sandgren on 2019-02-11.
 //  Copyright © 2019 Abstraqata. All rights reserved.
-//
-//
+
 
 import UIKit
 import SceneKit
@@ -26,7 +25,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     var currentCamTransform: simd_float4x4 = simd_float4x4(float4(0), float4(0), float4(0), float4(0))
-    
+    let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
+
     var camFrame: ARFrame? = nil
     var cam: ARCamera? = nil
     
@@ -61,13 +61,26 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         node.physicsBody? = .static()
         node.name = "TestNode"
         //node.geometry?.materials.first?.diffuse.contents = UIImage(named: "star")
-        
-        let objScene = SCNScene(named: "art.scnassets/bunny.dae")
-        objScene!.rootNode.position = SCNVector3(5.0, 0.0, -25.0)
-        mainScene.rootNode.addChildNode(objScene!.rootNode)
-        
         node.position = SCNVector3(5.0, 0.0, -5.0)
         mainScene.rootNode.addChildNode(node)
+        
+        let objScene = SCNScene(named: "art.scnassets/bunny.dae")
+        objScene!.rootNode.position = SCNVector3(0.0, 0.0, -25.0)
+        mainScene.rootNode.addChildNode(objScene!.rootNode)
+    }
+    
+    
+    
+    @objc func handleTap(rec: UITapGestureRecognizer){
+        
+        if rec.state == .ended {
+            let location: CGPoint = rec.location(in: sceneView)
+            let hits = self.sceneView.hitTest(location, options: nil)
+            if !hits.isEmpty{
+                let tappedNode = hits.first?.node
+                print(tappedNode?.name!)
+            }
+        }
     }
     
     
@@ -124,11 +137,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
             timesArray.append(NSNumber(value: base))
             base += ( duration.floatValue / time )
         }
-        
-        // From documentation of 'CAKeyframeAnimation':
-        // the first value in the array must be 0.0 and the last value must be 1.0.
-        // The array should have one more entry than appears in the values array.
-        // For example, if there are two values, there should be three key times.
+    
         timesArray.append(NSNumber(value: 1.0))
         
         // Create animation
@@ -185,7 +194,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         // [+] if obj.lat/long < user.lat/long else [-] ?
         print("Inserting Object: " + String(contentObj.id))
 
-         let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+//         let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         // SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
 
 //        let valConv = ValConverters()
@@ -199,10 +208,22 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
 //        )
 //        let objScale: Double = contentObj.scale / distance
         
+        if contentObj.type.lowercased() == "text" {
+            let text = SCNText(string: contentObj.text+"!", extrusionDepth: 0.1)
+            text.alignmentMode = kCAAlignmentCenter
+            
+            let node = SCNNode(geometry: text)
+            node.physicsBody? = .static()
+            node.name = contentObj.name
+            node.position = SCNVector3(-2.0, 0.0, -5.0)
+            
+            mainScene.rootNode.addChildNode(node)
+        }
+        
         if fPath != "" {
             
             if contentObj.type.lowercased() == "image" {
-                print("IMAGE")
+                print("ADDING IMAGE TO SCENE")
                 
                 let img = UIImage(contentsOfFile: fPath)!
                 let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
@@ -211,27 +232,55 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 node.name = contentObj.name
                 node.geometry?.materials.first?.diffuse.contents = UIColor.white
                 node.geometry?.materials.first?.diffuse.contents = img
-                node.position = SCNVector3(0.0, 0.0, -3.0)
+                node.geometry?.materials.first?.isDoubleSided = true
+                node.position = SCNVector3(-1.0, 0.0, -3.0)
 
                 mainScene.rootNode.addChildNode(node)
             }
             
             if contentObj.type.lowercased() == "dae" {
-                let objScene = SCNScene(named: fPath)
-                mainScene.rootNode.addChildNode(objScene!.rootNode)
+                print("ADDING DAEOBJ TO SCENE")
+
+                print(fPath)
+                do {
+                    let objScene = try SCNScene(url: URL(fileURLWithPath: fPath))
+                    mainScene.rootNode.addChildNode(objScene.rootNode)
+                } catch {}
+                
             }
             
-        } else {
-            let text = SCNText(string: contentObj.text+"!", extrusionDepth: 0.1)
-            text.alignmentMode = kCAAlignmentCenter
-            
-            let node = SCNNode(geometry: text)
-            node.physicsBody? = .static()
-            node.name = contentObj.name
-            node.position = SCNVector3(0.0, 0.0, -5.0)
-            
-            mainScene.rootNode.addChildNode(node)
+            if contentObj.type.lowercased() == "gif" {
+                print("ADDING GIF TO SCENE")
+                
+//                let ani = createGIFAnimation(url: URL(fileURLWithPath: fPath) )
+//                let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
+                
+                let plane = SCNPlane(width: 2, height: 2)
+                
+                let animation : CAKeyframeAnimation = createGIFAnimation(url: URL(fileURLWithPath: fPath) )!
+                
+                let layer = CALayer()
+                
+                layer.bounds = CGRect(x: 0, y: 0, width:100, height:100)
+                
+                layer.add(animation, forKey: "contents")
+                
+                let newMaterial = SCNMaterial()
+                
+                newMaterial.isDoubleSided = true
+                
+                newMaterial.diffuse.contents = layer
+                
+                plane.materials = [newMaterial]
+                
+                let node = SCNNode(geometry: plane)
+                node.position = SCNVector3(2.0, 0.0, -5.0)
+
+                mainScene.rootNode.addChildNode(node)
+                
+            }
         }
+        
     }
     
     
@@ -305,6 +354,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
         
+        sceneView.addGestureRecognizer(tap)
+        
     }
     
     
@@ -317,7 +368,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         updateScene()
-        addDebugObj(objSize: 0.5)
+        // addDebugObj(objSize: 0.5)
     }
     
     

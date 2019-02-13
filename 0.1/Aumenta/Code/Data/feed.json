@@ -8,7 +8,7 @@
     
     "content": {
         
-        "name_b": {
+        "image_item": {
             "name":     "ImageItem",
             "id":       "12345",
             "type":     "image",
@@ -17,45 +17,86 @@
             "version":  12345,
             "info":     "Object info A",
             
-            "lat":      10,
-            "long":     10,
+            "lat":      70,
+            "Lng":     -6,
             "radius":   10,
-            
-            "x_pos":    0.0,
-            "y_pos":    0.0,
-            "z_pos":    0.0,
-            
-            "x_rot":    0.0,
-            "y_rot":    0.0,
-            "z_rot":    0.0,
             
             "scale":    1,
             
             "url":      "https://upload.wikimedia.org/wikipedia/commons/8/8d/Badge-150755_640.png"
         },
         
-        "name_c": {
+        "gif_item_a": {
+            "name":     "GifItem",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+            
+            "version":  12345,
+            "info":     "Object info bla",
+            
+            "lat":      71,
+            "Lng":     -6,
+            "radius":   11,
+            
+            "scale":    1,
+            
+            "url":      "https://upload.wikimedia.org/wikipedia/commons/b/bf/Duvor.gif"
+        },
+        
+        
+        "gif_item_b": {
+            "name":     "GifItem",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+            
+            "version":  12345,
+            "info":     "Object info bla",
+            
+            "lat":      73,
+            "Lng":     -6,
+            "radius":   12,
+            
+            "scale":    1,
+            
+            "url":      "https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif"
+        },
+        
+        
+        "obj_item": {
+            "name":     "ObjItem",
+            "id":       "12345",
+            "type":     "dae",
+            "style":     0,
+            
+            "version":  12345,
+            "info":     "Object info bla",
+            
+            "lat":      73,
+            "Lng":     -6,
+            "radius":   12,
+            
+            "scale":    1,
+            
+            "url":      "https://github.com/markbrown4/webgl-workshop/raw/master/models/stanford-bunny.dae"
+        },
+        
+        
+        "text_item": {
             "name":     "TextItem",
             "id":       "12345",
             "type":     "text",
-            "text":      "Some text to display"
-
+            "text":      "Some text to display",
+            
             "style":     0,
             
             "version":  12345,
             "info":     "Object info A",
             
-            "lat":      10,
-            "long":     10,
-            "radius":   10,
-            
-            "x_pos":    0.0,
-            "y_pos":    0.0,
-            "z_pos":    0.0,
-            
-            "x_rot":    0.0,
-            "y_rot":    0.0,
-            "z_rot":    0.0,
+            "lat":      74,
+            "Lng":     -6,
+            "radius":   13,
             
             "scale":    1
             

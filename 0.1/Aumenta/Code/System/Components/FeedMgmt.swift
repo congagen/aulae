@@ -30,14 +30,6 @@ extension MainVC {
                 rlmObj.lat = objInfo["lat"] as! Double
                 rlmObj.lng = objInfo["lng"] as! Double  // TODO: long -> lng
                 
-//                rlmObj.x_pos = objInfo["pos_x"] as! Double
-//                rlmObj.y_pos = objInfo["pos_y"] as! Double
-//                rlmObj.z_pos = objInfo["pos_z"] as! Double
-//
-//                rlmObj.x_rot = objInfo["rot_x"] as! Double
-//                rlmObj.y_rot = objInfo["rot_y"] as! Double
-//                rlmObj.z_rot = objInfo["rot_z"] as! Double
-                
                 rlmObj.scale = objInfo["scale"] as! Double
                 
                 realm.add(rlmObj)
@@ -67,14 +59,6 @@ extension MainVC {
                 
                 rlmObj.lat = objInfo["lat"] as! Double
                 rlmObj.lng = objInfo["lng"] as! Double // TODO: long -> lng
-                
-//                rlmObj.x_pos = objInfo["pos_x"] as! Double
-//                rlmObj.y_pos = objInfo["pos_y"] as! Double
-//                rlmObj.z_pos = objInfo["pos_z"] as! Double
-//
-//                rlmObj.x_rot = objInfo["rot_x"] as! Double
-//                rlmObj.y_rot = objInfo["rot_y"] as! Double
-//                rlmObj.z_rot = objInfo["rot_z"] as! Double
                 
                 rlmObj.scale = objInfo["scale"] as! Double
                 
@@ -138,14 +122,6 @@ extension MainVC {
                     "lat":    valueIfPresent(dict: feedContent, key: "lat",     placeHolderValue: 0.0),
                     "lng":    valueIfPresent(dict: feedContent, key: "long",    placeHolderValue: 0.0),
                     "radius": valueIfPresent(dict: feedContent, key: "radius",  placeHolderValue: 1.0),
-                    
-//                    "pos_x":  valueIfPresent(dict: feedContent, key: "x_pos",   placeHolderValue: 0.0),
-//                    "pos_y":  valueIfPresent(dict: feedContent, key: "y_pos",   placeHolderValue: 0.0),
-//                    "pos_z":  valueIfPresent(dict: feedContent, key: "z_pos",   placeHolderValue: 1.0),
-//
-//                    "rot_x":  valueIfPresent(dict: feedContent, key: "x_rot",   placeHolderValue: 0.0),
-//                    "rot_y":  valueIfPresent(dict: feedContent, key: "y_rot",   placeHolderValue: 0.0),
-//                    "rot_z":  valueIfPresent(dict: feedContent, key: "z_rot",   placeHolderValue: 0.0),
                     
                     "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
                 ]
