@@ -194,19 +194,20 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         // [+] if obj.lat/long < user.lat/long else [-] ?
         print("Inserting Object: " + String(contentObj.id))
 
-//         let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        // SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
-
-//        let valConv = ValConverters()
-//        let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0)
-
-//        let xPos = arPos[0] / 1000000
-//        let zPos = arPos[2] / 1000000
+         let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         
-//        let distance = devicePos.distance(
-//            from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
-//        )
-//        let objScale: Double = contentObj.scale / distance
+        //SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+
+        let valConv = ValConverters()
+        let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0)
+
+        let xPos = arPos[0] / 1000000
+        let zPos = arPos[2] / 1000000
+        
+        let distance = devicePos.distance(
+            from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
+        )
+        let objScale: Double = contentObj.scale / distance
         
         if contentObj.type.lowercased() == "text" {
             let text = SCNText(string: contentObj.text+"!", extrusionDepth: 0.1)
@@ -239,21 +240,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
             }
             
             if contentObj.type.lowercased() == "dae" {
-                print("ADDING DAEOBJ TO SCENE")
-
-                print(fPath)
+                print("ADDING DAEOBJ TO SCENE: " + fPath)
+                
                 do {
                     let objScene = try SCNScene(url: URL(fileURLWithPath: fPath))
                     mainScene.rootNode.addChildNode(objScene.rootNode)
-                } catch {}
+                } catch {
+                    print(error)
+                }
                 
             }
             
             if contentObj.type.lowercased() == "gif" {
                 print("ADDING GIF TO SCENE")
-                
-//                let ani = createGIFAnimation(url: URL(fileURLWithPath: fPath) )
-//                let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
                 
                 let plane = SCNPlane(width: 2, height: 2)
                 
@@ -261,9 +260,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 
                 let layer = CALayer()
                 
-                layer.bounds = CGRect(x: 0, y: 0, width:100, height:100)
+                layer.bounds = CGRect(x: 0, y: 0, width:500, height:500)
                 
                 layer.add(animation, forKey: "contents")
+                
+                layer.anchorPoint = CGPoint(x:0.0,y:1.0)
                 
                 let newMaterial = SCNMaterial()
                 
@@ -274,7 +275,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 plane.materials = [newMaterial]
                 
                 let node = SCNNode(geometry: plane)
-                node.position = SCNVector3(2.0, 0.0, -5.0)
+                node.position = SCNVector3(-xPos, 0.0, -zPos)
 
                 mainScene.rootNode.addChildNode(node)
                 
