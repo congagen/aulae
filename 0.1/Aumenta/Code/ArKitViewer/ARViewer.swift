@@ -194,33 +194,39 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         let valConv = ValConverters()
         let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0)
 
-        let xPos = arPos[2] / 1000000
-        let yPos = -1.0
-        let zPos = arPos[0] / 1000000
-        
         let distance = devicePos.distance(
             from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
         )
         let objScale: Double = contentObj.scale / distance
         
+        let xPos = arPos[0] / 1000000
+        let vertPos = 0.0
+        let zPos = arPos[1] / 1000000
         
+
         if contentObj.type.lowercased() == "text" {
             print("ADDING TEXT TO SCENE: " + contentObj.text)
 
-            let text = SCNText(string: contentObj.text + "123456789", extrusionDepth: 0.5)
+            let text = SCNText(string: contentObj.text + "123456789", extrusionDepth: 0.1)
             text.alignmentMode = kCAAlignmentCenter
+            text.chamferRadius = 5
+            text.isWrapped = true
+            text.font.withSize(5)
             
             let node = SCNNode(geometry: text)
+            
             node.physicsBody? = .static()
             node.name = contentObj.name
-            node.position = SCNVector3(0.0, 0.0, -5.0)
+            node.geometry?.materials.first?.diffuse.contents = UIColor.black
+            node.position = SCNVector3(xPos, vertPos, zPos)
+            node.constraints = [SCNBillboardConstraint()]
 
             mainScene.rootNode.addChildNode(node)
         }
         
         
         if fPath != "" {
-            
+
             if contentObj.type.lowercased() == "image" {
                 print("ADDING IMAGE TO SCENE")
                 
@@ -232,8 +238,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 node.geometry?.materials.first?.diffuse.contents = UIColor.white
                 node.geometry?.materials.first?.diffuse.contents = img
                 node.geometry?.materials.first?.isDoubleSided = true
-                node.position = SCNVector3(-xPos, yPos, -zPos)
-
+                node.position = SCNVector3(xPos, vertPos, zPos)
+                node.constraints = [SCNBillboardConstraint()]
+                
                 mainScene.rootNode.addChildNode(node)
             }
             
@@ -242,16 +249,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
             
                 let objNode =  loadCollada(path: fPath)
                 mainScene.rootNode.addChildNode(objNode)
-        
             }
             
             if contentObj.type.lowercased() == "gif" {
                 print("ADDING GIF TO SCENE")
                 
-                let gifPlane = SCNPlane(width: 2, height: 2)
+                let gifPlane = SCNPlane(width: 0.5, height: 0.5)
                 
-                let src = CGImageSourceCreateWithURL(URL(fileURLWithPath: fPath) as CFURL, nil)
-                let srcPro = CGImageSourceCopyPropertiesAtIndex(src!, 0, nil)
+//                let src = CGImageSourceCreateWithURL(URL(fileURLWithPath: fPath) as CFURL, nil)
+//                let srcProp = CGImageSourceCopyPropertiesAtIndex(src!, 0, nil)
                 
                 let animation : CAKeyframeAnimation = createGIFAnimation(
                     url: URL(fileURLWithPath: fPath), fDuration: 0.1 )!
@@ -268,13 +274,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 gifPlane.materials = [gifMaterial]
                 
                 let node = SCNNode(geometry: gifPlane)
-                node.position = SCNVector3(-xPos, yPos, -zPos)
+                node.position = SCNVector3(xPos, vertPos, zPos)
+                node.constraints = [SCNBillboardConstraint()]
 
                 mainScene.rootNode.addChildNode(node)
-                
             }
         }
-        
     }
     
     
