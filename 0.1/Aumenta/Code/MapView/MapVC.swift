@@ -159,6 +159,8 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                     let ano = MapAno()
                     ano.coordinate = CLLocationCoordinate2D(latitude: fo.lat, longitude: fo.lng)
                     
+                    ano.aType = fo.type
+                    
                     if objFeed.count > 0 {
                         ano.id = (objFeed.first?.name)!
                     } else {
