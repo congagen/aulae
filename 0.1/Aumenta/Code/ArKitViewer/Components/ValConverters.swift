@@ -6,7 +6,7 @@ import Foundation
 
 class ValConverters {
 
-    let R: Double = 6378137
+    let rad: Double = 6378137
     let f_inv: Double = 298.257224
 
 
@@ -40,9 +40,9 @@ class ValConverters {
         let c: Double = 1 / sqrt(cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat)
         let s: Double = (1 - f) * (1 - f) * c
 
-        let x = (R * c + altitude) * cosLat * cosLong
-        let y = (R * c + altitude) * cosLat * sinLong
-        let z = (R * s + altitude) * sinLat
+        let x = (rad * c + altitude) * cosLat * cosLong
+        let y = (rad * c + altitude) * cosLat * sinLong
+        let z = (rad * s + altitude) * sinLat
         
         return [x, y, z]
     }
@@ -60,9 +60,9 @@ class ValConverters {
 
         let cRef = 1 / sqrt(cosLatRef * cosLatRef + (1 - f) * (1 - f) * sinLatRef * sinLatRef)
 
-        let x0 = (R*cRef + altRef) * cosLatRef * cosLongRef
-        let y0 = (R*cRef + altRef) * cosLatRef * sinLongRef
-        let z0 = (R*cRef*(1-e2) + altRef) * sinLatRef
+        let x0 = (rad * cRef + altRef) * cosLatRef * cosLongRef
+        let y0 = (rad * cRef + altRef) * cosLatRef * sinLongRef
+        let z0 = (rad * cRef*(1-e2) + altRef) * sinLatRef
         
         let xEast = (-(x-x0) * sinLongRef) + ((y-y0)*cosLongRef)
         let yNorth = (-cosLongRef*sinLatRef*(x-x0)) - (sinLatRef*sinLongRef*(y-y0)) + (cosLatRef*(z-z0))

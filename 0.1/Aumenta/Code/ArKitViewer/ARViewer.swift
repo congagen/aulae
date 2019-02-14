@@ -32,27 +32,44 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     var updateTimer = Timer()
     var updateInterval: Double = 10
-    
+
     var mainScene = SCNScene()
-    
     
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         updateScene()
     }
     
+    @IBOutlet var sceneView: ARSCNView!
     
     @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
-        let capImg: UIImage = UIImage(cgImage: sceneView.snapshot().cgImage!)
+        // let capImg = UIImage(cgImage: sceneView.snapshot().cgImage!)
         
-        let imageToShare = [capImg]
+        let snapShot = try sceneView.snapshot()
+        //let jpg = UIImageJPEGRepresentation(snapShot, 1.0)
+        
+        let imageToShare = [snapShot]
         let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
+        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
         
         activityViewController.popoverPresentationController?.sourceView = self.view
-        self.present(activityViewController, animated: true)
+        self.present(activityViewController, animated: true, completion: nil)
+        
     }
     
     
-    @IBOutlet var sceneView: ARSCNView!
+    func sharePhoto(){
+        let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: [:])
+        renderer.scene = sceneView.scene
+        renderer.pointOfView = sceneView.pointOfView
+        let snapShot = renderer.snapshot(atTime: TimeInterval(0), with: CGSize(width: 100, height: 100), antialiasingMode: .none)
+        
+        let imageToShare = [snapShot]
+        let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
+        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
+
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
+    }
     
     
     func addDebugObj(objSize: Double)  {
@@ -204,25 +221,25 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         let zPos = arPos[1] / 1000000
         
 
-        if contentObj.type.lowercased() == "text" {
-            print("ADDING TEXT TO SCENE: " + contentObj.text)
-
-            let text = SCNText(string: contentObj.text + "123456789", extrusionDepth: 0.1)
-            text.alignmentMode = kCAAlignmentCenter
-            text.chamferRadius = 5
-            text.isWrapped = true
-            text.font.withSize(5)
-            
-            let node = SCNNode(geometry: text)
-            
-            node.physicsBody? = .static()
-            node.name = contentObj.name
-            node.geometry?.materials.first?.diffuse.contents = UIColor.black
-            node.position = SCNVector3(xPos, vertPos, zPos)
-            node.constraints = [SCNBillboardConstraint()]
-
-            mainScene.rootNode.addChildNode(node)
-        }
+//        if contentObj.type.lowercased() == "text" {
+//            print("ADDING TEXT TO SCENE: " + contentObj.text)
+//
+//            let text = SCNText(string: contentObj.text, extrusionDepth: 0.1)
+//            text.alignmentMode = kCAAlignmentCenter
+//            text.chamferRadius = 5
+//            text.isWrapped = true
+//            text.font.withSize(5)
+//
+//            let node = SCNNode(geometry: text)
+//
+//            node.physicsBody? = .static()
+//            node.name = contentObj.name
+//            node.geometry?.materials.first?.diffuse.contents = UIColor.black
+//            node.position = SCNVector3(0.0, 0.0, -200)
+//            node.constraints = [SCNBillboardConstraint()]
+//
+//            mainScene.rootNode.addChildNode(node)
+//        }
         
         
         if fPath != "" {
@@ -346,33 +363,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func initScene() {
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = .horizontal
-        
-        sceneView.delegate = self
-        sceneView.showsStatistics = true
-        
-        mainScene = SCNScene(named: "art.scnassets/main.scn")!
-        sceneView.scene = mainScene
-        
-        sceneView.addGestureRecognizer(tap)
-        
-    }
-    
-    
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        initScene()
-    }
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
-        updateScene()
-        // addDebugObj(objSize: 0.5)
-    }
-    
+
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         // Do something with the new transform
@@ -380,19 +372,48 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         if (!(camFrame != nil)) {
             camFrame = frame
         }
-        
+
         if (!(cam != nil)) {
             cam = frame.camera
         }
-        
+
         currentCamTransform = frame.camera.transform
+    }
+    
+    
+    func initScene() {
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
+        configuration.isAutoFocusEnabled = true
+        
+        sceneView.delegate = self
+        sceneView.showsStatistics = true
+        
+        mainScene = SCNScene(named: "art.scnassets/main.scn")!
+        sceneView.scene = mainScene
+        
+        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+
+        
+        sceneView.addGestureRecognizer(tap)
+        sceneView.session.run(configuration)
+    }
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        initScene()
+        updateScene()
+        // addDebugObj(objSize: 0.5)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let configuration = ARWorldTrackingConfiguration()
-        sceneView.session.run(configuration)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
