@@ -11,24 +11,7 @@ import Foundation
 
 class HttpDownloader {
     
-    
-    //    func verifyUrl (url: NSURL) -> Bool {
-    //        //Check for nil
-    //        var exists: Bool = false
-    //        let request: NSMutableURLRequest = NSMutableURLRequest(url: url as URL)
-    //        request.httpMethod = "HEAD"
-    //        let response: URLResponse = URLResponse()
-    //
-    //        if let httpResponse = response as? HTTPURLResponse {
-    //            if httpResponse.statusCode == 200 {
-    //                exists =  true
-    //            }else{
-    //                exists  = false
-    //            }
-    //        }
-    //        return exists
-    //    }
-    
+
     
     func deviceRemainingFreeSpaceInBytes() -> Int64? {
         let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last!
@@ -41,51 +24,13 @@ class HttpDownloader {
         return freeSize.int64Value
     }
     
-
-//    func downloadFileSync(fURL: String, filename: String) -> String {
-//
-//        let documentsUrl:URL =  (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first as URL?)!
-//        let destinationFileUrl = documentsUrl.appendingPathComponent(filename)
-//
-//        let fileURL = URL(string: fURL)
-//        
-//        let sessionConfig = URLSessionConfiguration.default
-//        let session = URLSession(configuration: sessionConfig)
-//        let request = URLRequest(url:fileURL!)
-//
-//        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
-//            if let tempLocalUrl = tempLocalUrl, error == nil {
-//
-//                if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-//                    print("Successfully downloaded. Status code: \(statusCode)")
-//                }
-//
-//                do {
-//                    try FileManager.default.copyItem(at: tempLocalUrl, to: destinationFileUrl)
-//
-//                } catch (let writeError) {
-//                    print("Error creating a file \(destinationFileUrl) : \(writeError)")
-//                }
-//
-//            } else {
-//                print("Error took place while downloading a file. Error description: %@", error?.localizedDescription as Any);
-//            }
-//        }
-//        task.resume()
-//
-//        if (destinationFileUrl.isFileURL) {
-//            return destinationFileUrl.absoluteString
-//        } else {
-//            return ""
-//        }
-//    }
     
     
     func loadFileAsync(url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
         let sessionConfig = URLSessionConfiguration.default
         let session = URLSession(configuration: sessionConfig)
         
-        let request = try! URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
+        let request = try! URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData) 
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
         
         if !(FileManager.default.fileExists(atPath: destinationUrl.path)) {

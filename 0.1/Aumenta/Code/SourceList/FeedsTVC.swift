@@ -138,7 +138,7 @@ class FeedsTVC: UITableViewController {
     }
     
     
-    func handleOk(alertView: UIAlertAction!)
+    func handleRenameOk(alertView: UIAlertAction!)
     {
         
         if selected != nil {
@@ -146,6 +146,9 @@ class FeedsTVC: UITableViewController {
                 try realm.write {
                     if textField?.text != nil {
                         selected?.name = (self.textField?.text)!
+                        
+                        // TODO: Update all assosiated FeedObjects["feedId"]
+                        
                     }
                 }
             } catch {
@@ -229,7 +232,7 @@ class FeedsTVC: UITableViewController {
         
         alert.addTextField(configurationHandler: renameConfigurationTextField)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:handleCancel))
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:handleOk))
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:handleRenameOk))
         alert.view.tintColor = UIColor.black
         
         self.present(alert, animated: true, completion: nil)

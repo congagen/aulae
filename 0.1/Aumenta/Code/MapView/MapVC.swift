@@ -33,9 +33,9 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     var textField: UITextField? = nil
 
-    @IBOutlet var addBtn: UIBarButtonItem!
-    @IBAction func addBtnAction(_ sender: UIBarButtonItem) {
-        showURLAlert(aMessage: "Yumm")
+    @IBOutlet var searchBtn: UIBarButtonItem!
+    @IBAction func searchBtnAction(_ sender: UIBarButtonItem) {
+        
     }
     
     @IBOutlet var reloadBtn: UIBarButtonItem!
@@ -92,9 +92,9 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     }
     
     
-    func showURLAlert(aMessage: String?){
+    func showSearchAlert(aMessage: String?){
         let alert = UIAlertController(
-            title: "Feed URL",
+            title: "",
             message: "",
             preferredStyle: UIAlertControllerStyle.alert
         )
@@ -102,6 +102,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         // TODO: Add Name Field
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
+        
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:handleCancel))
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:handleEnterURL))
         
@@ -149,15 +150,23 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 let filterA = mapView.annotations.filter( {$0.isKind(of: MapAno.self)} )
                 let fOnMap = filterA.filter( {$0.coordinate.latitude == fo.lat && $0.coordinate.longitude == fo.lng} )
                 
+                let objFeed = feeds.filter( {$0.id == fo.feedId && $0.deleted == false} )
+                
                 print("FeedObject: " + String(fo.lat) + ", " + String(fo.lng))
                 
                 if fOnMap.count == 0 {
                     print("Adding annotation: " + String(fo.id) )
                     let ano = MapAno()
                     ano.coordinate = CLLocationCoordinate2D(latitude: fo.lat, longitude: fo.lng)
+                    
+                    if objFeed.count > 0 {
+                        ano.id = (objFeed.first?.name)!
+                    } else {
+                        ano.id = fo.feedId
+                    }
+                    
                     ano.name = fo.name
-                    ano.id = fo.id
-                    ano.title = fo.feedId
+                    ano.title = ano.id + " - " + fo.name
                 
                     mapView.addAnnotation(ano)
                     //addRadiusOverlay(lat: fo.lat, long: fo.lng, radius: fo.radius) //TODO
@@ -197,31 +206,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     }
     
     
-    
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        
-        let reuseId = "pin"
-        
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-        pinView?.canShowCallout = true
-        pinView?.pinTintColor = UIColor.purple
-        
-        if pinView == nil {
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "Location")
-            pinView?.canShowCallout = false
-            pinView!.pinTintColor = UIColor.black
-        } else {
-            pinView?.pinTintColor = UIColor.purple
-            pinView!.annotation = MapAno()
-            pinView?.canShowCallout = false
-        }
-        
-        return pinView
-        
-    }
-    
-    
-    
     @objc func mainUpdate() {
         if session.count > 0 {
             if updateTimer.timeInterval != updateInterval {
@@ -240,6 +224,28 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     }
     
     
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation {
+            return nil
+        }
+        
+        let reuseId = "pin"
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKAnnotationView
+        
+        if pinView == nil {
+            pinView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+        }
+        else {
+            pinView?.annotation = annotation
+        }
+        
+        pinView?.image = UIImage(named: "star")
+        pinView?.canShowCallout = true
+        
+        return pinView
+    }
+    
+    
     func initMapView() {
         mapView.delegate = self
         mapView.showsUserLocation = true
@@ -247,6 +253,8 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         mapView.showsCompass = false
         mapView.showsScale = false
         mapView.userLocation.title = ""
+        mapView.tintColor = UIColor.black
+        mapView.backgroundColor = UIColor.black
         
         locationManager.requestAlwaysAuthorization()
         locationManager.delegate = self

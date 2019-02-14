@@ -31,7 +31,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     var cam: ARCamera? = nil
     
     var updateTimer = Timer()
-    let updateInterval: Double = 10
+    var updateInterval: Double = 10
     
     var mainScene = SCNScene()
     
@@ -333,6 +333,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
             if updateTimer.timeInterval != updateInterval {
                 updateTimer.invalidate()
             }
+            
+            updateInterval = session.first!.feedUpdateInterval
             
             if !updateTimer.isValid {
                 updateTimer = Timer.scheduledTimer(
