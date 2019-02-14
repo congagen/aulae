@@ -11,9 +11,9 @@ class ValConverters {
 
 
     let exampleCoords = [
-        [0,  45,  1000],
-        [45,  90,  2000],
-        [48.8567,  2.3508,  80],
+        [0.0,  45.0,  1000.0],
+        [45.0,  90.0,  2000.0],
+        [48.8567,  2.3508,  80.0],
         [61.4140105652, 23.7281341313,149.821],
     ]
 
@@ -31,18 +31,18 @@ class ValConverters {
     //    # h in meters
         let f = 1.0 / f_inv
         
-        let cosLat = cos(latitude * .pi / 180)
-        let sinLat = sin(latitude * .pi / 180)
+        let cosLat = cos(latitude * .pi / 180.0)
+        let sinLat = sin(latitude * .pi / 180.0)
 
-        let cosLong = cos(longitude * .pi / 180)
-        let sinLong = sin(longitude * .pi / 180)
+        let cosLong = cos(longitude * .pi / 180.0)
+        let sinLong = sin(longitude * .pi / 180.0)
 
-        let c: Double = 1 / sqrt(cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat)
+        let c: Double = 1 / sqrt(cosLat * cosLat + (1.0 - f) * (1.0 - f) * sinLat * sinLat)
         let s: Double = (1 - f) * (1 - f) * c
 
-        let x = (rad * c + altitude) * cosLat * cosLong
-        let y = (rad * c + altitude) * cosLat * sinLong
-        let z = (rad * s + altitude) * sinLat
+        let x = ((rad * c) + altitude) * cosLat * cosLong
+        let y = ((rad * c) + altitude) * cosLat * sinLong
+        let z = ((rad * s) + altitude) * sinLat
         
         return [x, y, z]
     }
@@ -50,21 +50,21 @@ class ValConverters {
 
     func ecef_to_enu(x:Double, y:Double, z:Double, latRef:Double, longRef:Double, altRef:Double) -> [Double] {
         let f = 1.0 / f_inv
-        let e2 = 1 - (1 - f) * (1 - f)
+        let e2 = 1.0 - (1.0 - f) * (1.0 - f)
         
-        let cosLatRef = cos(latRef * .pi / 180)
-        let sinLatRef = sin(latRef * .pi / 180)
+        let cosLatRef = cos(latRef * .pi / 180.0)
+        let sinLatRef = sin(latRef * .pi / 180.0)
         
-        let cosLongRef = cos(longRef * .pi / 180)
-        let sinLongRef = sin(longRef * .pi / 180)
+        let cosLongRef = cos(longRef * .pi / 180.0)
+        let sinLongRef = sin(longRef * .pi / 180.0)
 
-        let cRef = 1 / sqrt(cosLatRef * cosLatRef + (1 - f) * (1 - f) * sinLatRef * sinLatRef)
+        let cRef = 1.0 / sqrt(cosLatRef * cosLatRef + (1.0 - f) * (1.0 - f) * sinLatRef * sinLatRef)
 
         let x0 = (rad * cRef + altRef) * cosLatRef * cosLongRef
         let y0 = (rad * cRef + altRef) * cosLatRef * sinLongRef
         let z0 = (rad * cRef*(1-e2) + altRef) * sinLatRef
         
-        let xEast = (-(x-x0) * sinLongRef) + ((y-y0)*cosLongRef)
+        let xEast = (-(x-x0) * sinLongRef) + ((y-y0) * cosLongRef)
         let yNorth = (-cosLongRef*sinLatRef*(x-x0)) - (sinLatRef*sinLongRef*(y-y0)) + (cosLatRef*(z-z0))
         let zUp = (cosLatRef*cosLongRef*(x-x0)) + (cosLatRef*sinLongRef*(y-y0)) + (sinLatRef*(z-z0))
         

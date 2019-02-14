@@ -199,6 +199,25 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     }
     
     
+    func textNode(contentObj: RLM_Obj, extrusion:Double) -> SCNNode {
+        let text = SCNText(string: contentObj.text, extrusionDepth: 0.1)
+        text.alignmentMode = kCAAlignmentCenter
+        text.chamferRadius = 5
+//        text.isWrapped = true
+        text.font.withSize(5)
+        
+        let node = SCNNode(geometry: text)
+        
+        node.physicsBody? = .static()
+        node.name = contentObj.name
+        node.geometry?.materials.first?.diffuse.contents = UIColor.black
+        node.position = SCNVector3(0.0, 0.0, -200)
+        node.constraints = [SCNBillboardConstraint()]
+        
+        return node
+    }
+    
+    
     func addContentToScene(contentObj: RLM_Obj, fPath: String) {
         // Latitudes range from 0 to 90. Longitudes range from 0 to 180.
         // [+] if obj.lat/long < user.lat/long else [-] ?
@@ -209,38 +228,28 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         //SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
 
         let valConv = ValConverters()
-        let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0)
+        let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 1.0)
+        let arPos_b = valConv.ecef_to_enu(x: arPos[0], y: arPos[1], z: arPos[2], latRef: contentObj.lat, longRef: contentObj.lng, altRef: 1.0)
 
         let distance = devicePos.distance(
             from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
         )
-        let objScale: Double = contentObj.scale / distance
+        print(arPos)
+        print(arPos_b)
         
-        let xPos = arPos[0] / 1000000
-        let vertPos = 0.0
-        let zPos = arPos[1] / 1000000
+        let gpsXPos = arPos[1] / 100000.0
+        let gpsYPos = 0.0
+        let gpsZPos = (-arPos[0]) / 100000.0
         
-
-//        if contentObj.type.lowercased() == "text" {
-//            print("ADDING TEXT TO SCENE: " + contentObj.text)
-//
-//            let text = SCNText(string: contentObj.text, extrusionDepth: 0.1)
-//            text.alignmentMode = kCAAlignmentCenter
-//            text.chamferRadius = 5
-//            text.isWrapped = true
-//            text.font.withSize(5)
-//
-//            let node = SCNNode(geometry: text)
-//
-//            node.physicsBody? = .static()
-//            node.name = contentObj.name
-//            node.geometry?.materials.first?.diffuse.contents = UIColor.black
-//            node.position = SCNVector3(0.0, 0.0, -200)
-//            node.constraints = [SCNBillboardConstraint()]
-//
-//            mainScene.rootNode.addChildNode(node)
-//        }
+        let xPos = gpsXPos //+ ((distance * 0.00001))
+        let yPos = gpsYPos
+        let zPos = gpsZPos //+ ((distance * 0.00001))
         
+        print([xPos, yPos, zPos])
+        
+//        let xPos = contentObj.x_pos
+//        let yPos = contentObj.y_pos
+//        let zPos = contentObj.z_pos
         
         if fPath != "" {
 
@@ -255,7 +264,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 node.geometry?.materials.first?.diffuse.contents = UIColor.white
                 node.geometry?.materials.first?.diffuse.contents = img
                 node.geometry?.materials.first?.isDoubleSided = true
-                node.position = SCNVector3(xPos, vertPos, zPos)
+                node.position = SCNVector3(xPos, yPos, zPos)
                 node.constraints = [SCNBillboardConstraint()]
                 
                 mainScene.rootNode.addChildNode(node)
@@ -280,7 +289,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                     url: URL(fileURLWithPath: fPath), fDuration: 0.1 )!
                 
                 let layer = CALayer()
-                layer.bounds = CGRect(x: 0, y: 0, width:500, height:500)
+                layer.bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
                 layer.add(animation, forKey: "contents")
                 layer.anchorPoint = CGPoint(x:0.0,y:1.0)
                 
@@ -291,7 +300,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 gifPlane.materials = [gifMaterial]
                 
                 let node = SCNNode(geometry: gifPlane)
-                node.position = SCNVector3(xPos, vertPos, zPos)
+                node.position = SCNVector3(xPos, yPos, zPos)
                 node.constraints = [SCNBillboardConstraint()]
 
                 mainScene.rootNode.addChildNode(node)
@@ -366,36 +375,34 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
 
 
     
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        // Do something with the new transform
-        
-        if (!(camFrame != nil)) {
-            camFrame = frame
-        }
-
-        if (!(cam != nil)) {
-            cam = frame.camera
-        }
-
-        currentCamTransform = frame.camera.transform
-    }
+//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+//        // Do something with the new transform
+//
+//        if (!(camFrame != nil)) {
+//            camFrame = frame
+//        }
+//
+//        if (!(cam != nil)) {
+//            cam = frame.camera
+//        }
+//
+//        currentCamTransform = frame.camera.transform
+//    }
     
     
     func initScene() {
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal, .vertical]
-        configuration.isAutoFocusEnabled = true
+        let configuration = AROrientationTrackingConfiguration()
+        //configuration.planeDetection = [.horizontal, .vertical]
+        //configuration.isAutoFocusEnabled = false
         
         sceneView.delegate = self
-        sceneView.showsStatistics = true
+        sceneView.showsStatistics = false
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
         
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        //sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
 
-        
-        sceneView.addGestureRecognizer(tap)
         sceneView.session.run(configuration)
     }
     

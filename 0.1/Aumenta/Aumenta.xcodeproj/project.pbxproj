@@ -193,7 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				31AB869220B356C30038F4D5 /* Data */,
-				31AB868F20B352780038F4D5 /* ArKitViewer */,
+				31AB868F20B352780038F4D5 /* ARView */,
 				31AB868E20B352660038F4D5 /* SourceList */,
 				31AB868D20B3525E0038F4D5 /* MapView */,
 				318FE8F020B0BB5D0050528B /* System */,
@@ -278,14 +278,14 @@
 			path = SourceList;
 			sourceTree = "<group>";
 		};
-		31AB868F20B352780038F4D5 /* ArKitViewer */ = {
+		31AB868F20B352780038F4D5 /* ARView */ = {
 			isa = PBXGroup;
 			children = (
 				316B86B720D94B4E0076E63D /* Components */,
 				3177252220B03AD4009FA8B1 /* ViewerVC.swift */,
 				FA8B38692211D9CD0099A7A3 /* ARViewer.swift */,
 			);
-			path = ArKitViewer;
+			path = ARView;
 			sourceTree = "<group>";
 		};
 		31AB869220B356C30038F4D5 /* Data */ = {
