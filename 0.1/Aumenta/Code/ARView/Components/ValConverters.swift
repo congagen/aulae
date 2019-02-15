@@ -6,7 +6,7 @@ import Foundation
 
 class ValConverters {
 
-    let rad: Double = 6378137
+    let radi: Double = 6378137
     let f_inv: Double = 298.257224
 
 
@@ -31,18 +31,18 @@ class ValConverters {
     //    # h in meters
         let f = 1.0 / f_inv
         
-        let cosLat = cos(latitude * .pi / 180.0)
-        let sinLat = sin(latitude * .pi / 180.0)
+        let cosLat  = cos(latitude  * Double.pi / 180.0)
+        let sinLat  = sin(latitude  * Double.pi / 180.0)
 
-        let cosLong = cos(longitude * .pi / 180.0)
-        let sinLong = sin(longitude * .pi / 180.0)
+        let cosLong = cos(longitude * Double.pi / 180.0)
+        let sinLong = sin(longitude * Double.pi / 180.0)
 
-        let c: Double = 1 / sqrt(cosLat * cosLat + (1.0 - f) * (1.0 - f) * sinLat * sinLat)
-        let s: Double = (1 - f) * (1 - f) * c
+        let c: Double = 1.0 / (cosLat * cosLat + (1.0 - f) * (1.0 - f) * sinLat * sinLat).squareRoot()
+        let s: Double = (1.0 - f) * (1.0 - f) * c
 
-        let x = ((rad * c) + altitude) * cosLat * cosLong
-        let y = ((rad * c) + altitude) * cosLat * sinLong
-        let z = ((rad * s) + altitude) * sinLat
+        let x = ((radi * c) + altitude) * cosLat * cosLong
+        let y = ((radi * c) + altitude) * cosLat * sinLong
+        let z = ((radi * s) + altitude) * sinLat
         
         return [x, y, z]
     }
@@ -60,9 +60,9 @@ class ValConverters {
 
         let cRef = 1.0 / sqrt(cosLatRef * cosLatRef + (1.0 - f) * (1.0 - f) * sinLatRef * sinLatRef)
 
-        let x0 = (rad * cRef + altRef) * cosLatRef * cosLongRef
-        let y0 = (rad * cRef + altRef) * cosLatRef * sinLongRef
-        let z0 = (rad * cRef*(1-e2) + altRef) * sinLatRef
+        let x0 = (radi * cRef + altRef) * cosLatRef * cosLongRef
+        let y0 = (radi * cRef + altRef) * cosLatRef * sinLongRef
+        let z0 = (radi * cRef*(1-e2) + altRef) * sinLatRef
         
         let xEast = (-(x-x0) * sinLongRef) + ((y-y0) * cosLongRef)
         let yNorth = (-cosLongRef*sinLatRef*(x-x0)) - (sinLatRef*sinLongRef*(y-y0)) + (cosLatRef*(z-z0))

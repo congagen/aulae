@@ -139,7 +139,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     }
     
     
-    
     func updateObjectAnnotations(){
         print("updateObjectAnnotations")
         

@@ -228,18 +228,25 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         //SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
 
         let valConv = ValConverters()
-        let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 1.0)
+        
 
-//        let distance = devicePos.distance(
-//            from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
-//        )
+        let objXYZPos = valConv.gps_to_ecef(
+            latitude:  contentObj.lat,
+            longitude: contentObj.lng,
+            altitude: 0.01
+        )
         
-        let xPos = arPos[0] / 1000000.0
-        let yPos = 0.0
-        let zPos = arPos[1] / 1000000.0
+        let deviceXYZPos = valConv.gps_to_ecef(
+            latitude:  devicePos.coordinate.latitude,
+            longitude: devicePos.coordinate.longitude,
+            altitude: 0.01
+        )
+
+        let xPos = (objXYZPos[0] - deviceXYZPos[0]) / 1000000.0
+        let yPos = (objXYZPos[1] - deviceXYZPos[1]) / 1000000.0
+        let vPos = 0.0
         
-        print(arPos)
-        
+
         if fPath != "" {
             if contentObj.type.lowercased() == "image" {
                 print("ADDING IMAGE TO SCENE")
@@ -252,7 +259,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                     node.geometry?.materials.first?.diffuse.contents = UIColor.white
                     node.geometry?.materials.first?.diffuse.contents = img
                     node.geometry?.materials.first?.isDoubleSided = true
-                    node.position = SCNVector3(xPos, yPos, zPos)
+                    node.position = SCNVector3(xPos, vPos, yPos)
                     node.constraints = [SCNBillboardConstraint()]
                     
                     mainScene.rootNode.addChildNode(node)
@@ -286,7 +293,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 gifPlane.materials = [gifMaterial]
                 
                 let node = SCNNode(geometry: gifPlane)
-                node.position = SCNVector3(xPos, yPos, zPos)
+                node.position = SCNVector3(xPos, vPos, yPos)
                 node.constraints = [SCNBillboardConstraint()]
 
                 mainScene.rootNode.addChildNode(node)

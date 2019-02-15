@@ -170,6 +170,7 @@
 		3177251220B03AD4009FA8B1 = {
 			isa = PBXGroup;
 			children = (
+				FA482F672215ADE600D251AB /* Aumenta.entitlements */,
 				FAB2AE7922088315004D5819 /* TODO.swift */,
 				3177251D20B03AD4009FA8B1 /* Code */,
 				318FE90520B169C00050528B /* UI */,
@@ -223,7 +224,6 @@
 		318FE90320B1696E0050528B /* Internals */ = {
 			isa = PBXGroup;
 			children = (
-				FA482F672215ADE600D251AB /* Aumenta.entitlements */,
 				3177251E20B03AD4009FA8B1 /* AppDelegate.swift */,
 				3177252C20B03AD6009FA8B1 /* Info.plist */,
 				318FE8F820B0C3880050528B /* ArkitTest.entitlements */,

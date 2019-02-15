@@ -170,9 +170,8 @@ class FeedsTVC: UITableViewController {
                     if feeds.filter({$0.url == (self.textField?.text)! }).count == 0 {
                         
                         if (self.textField?.text)! != "" {
-//                            newFeed.id = (self.textField?.text)!
-//                            newFeed.name = (self.textField?.text)!
-
+                            
+                            newFeed.url = (self.textField?.text)!
                             newFeed.id = UUID().uuidString
                             newFeed.name = "Updating..."
                             
