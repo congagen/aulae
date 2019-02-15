@@ -84,6 +84,7 @@ class ValConverters {
         for co in exampleCoords {
             let xFyFzF = gps_to_ecef(latitude: co[0], longitude: co[1], altitude: co[2])
             print("ECEF: " + String(xFyFzF[0]) + " - " + String(xFyFzF[1]) + " - " + String(xFyFzF[2]) )
+            
             let xEyNzU = ecef_to_enu(x: xFyFzF[0], y: xFyFzF[1], z: xFyFzF[2], latRef: co[0], longRef: co[1], altRef: co[2])
             print("ENU:  " + String(xEyNzU[0]) + " - " + String(xEyNzU[1]) + " - " + String(xEyNzU[2]))
         }

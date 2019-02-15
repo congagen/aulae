@@ -229,45 +229,35 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
 
         let valConv = ValConverters()
         let arPos = valConv.gps_to_ecef(latitude: contentObj.lat, longitude: contentObj.lng, altitude: 1.0)
-        let arPos_b = valConv.ecef_to_enu(x: arPos[0], y: arPos[1], z: arPos[2], latRef: contentObj.lat, longRef: contentObj.lng, altRef: 1.0)
 
-        let distance = devicePos.distance(
-            from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
-        )
+//        let distance = devicePos.distance(
+//            from: CLLocation( latitude: contentObj.lat, longitude: contentObj.lng )
+//        )
+        
+        let xPos = arPos[0] / 1000000.0
+        let yPos = 0.0
+        let zPos = arPos[1] / 1000000.0
+        
         print(arPos)
-        print(arPos_b)
-        
-        let gpsXPos = arPos[1] / 100000.0
-        let gpsYPos = 0.0
-        let gpsZPos = (-arPos[0]) / 100000.0
-        
-        let xPos = gpsXPos //+ ((distance * 0.00001))
-        let yPos = gpsYPos
-        let zPos = gpsZPos //+ ((distance * 0.00001))
-        
-        print([xPos, yPos, zPos])
-        
-//        let xPos = contentObj.x_pos
-//        let yPos = contentObj.y_pos
-//        let zPos = contentObj.z_pos
         
         if fPath != "" {
-
             if contentObj.type.lowercased() == "image" {
                 print("ADDING IMAGE TO SCENE")
                 
-                let img = UIImage(contentsOfFile: fPath)!
-                let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
-                
-                node.physicsBody? = .static()
-                node.name = contentObj.name
-                node.geometry?.materials.first?.diffuse.contents = UIColor.white
-                node.geometry?.materials.first?.diffuse.contents = img
-                node.geometry?.materials.first?.isDoubleSided = true
-                node.position = SCNVector3(xPos, yPos, zPos)
-                node.constraints = [SCNBillboardConstraint()]
-                
-                mainScene.rootNode.addChildNode(node)
+                if let img = UIImage(contentsOfFile: fPath) {
+                    let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
+                    
+                    node.physicsBody? = .static()
+                    node.name = contentObj.name
+                    node.geometry?.materials.first?.diffuse.contents = UIColor.white
+                    node.geometry?.materials.first?.diffuse.contents = img
+                    node.geometry?.materials.first?.isDoubleSided = true
+                    node.position = SCNVector3(xPos, yPos, zPos)
+                    node.constraints = [SCNBillboardConstraint()]
+                    
+                    mainScene.rootNode.addChildNode(node)
+                }
+    
             }
             
             if contentObj.type.lowercased() == "dae" {
@@ -281,11 +271,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
                 print("ADDING GIF TO SCENE")
                 
                 let gifPlane = SCNPlane(width: 0.5, height: 0.5)
-                
-//                let src = CGImageSourceCreateWithURL(URL(fileURLWithPath: fPath) as CFURL, nil)
-//                let srcProp = CGImageSourceCopyPropertiesAtIndex(src!, 0, nil)
-                
-                let animation : CAKeyframeAnimation = createGIFAnimation(
+                let animation: CAKeyframeAnimation = createGIFAnimation(
                     url: URL(fileURLWithPath: fPath), fDuration: 0.1 )!
                 
                 let layer = CALayer()
@@ -310,7 +296,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     
     func updateScene() {
-        print("updateScene")
+        print("Update Scene")
         
         // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
@@ -372,55 +358,43 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     }
     
     
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        // Do something with the new transform
 
+        if (!(camFrame != nil)) {
+            camFrame = frame
+        }
 
-    
-//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-//        // Do something with the new transform
-//
-//        if (!(camFrame != nil)) {
-//            camFrame = frame
-//        }
-//
-//        if (!(cam != nil)) {
-//            cam = frame.camera
-//        }
-//
-//        currentCamTransform = frame.camera.transform
-//    }
+        if (!(cam != nil)) {
+            cam = frame.camera
+        }
+
+        currentCamTransform = frame.camera.transform
+    }
     
     
     func initScene() {
-        let configuration = AROrientationTrackingConfiguration()
-        //configuration.planeDetection = [.horizontal, .vertical]
-        //configuration.isAutoFocusEnabled = false
-        
         sceneView.delegate = self
         sceneView.showsStatistics = false
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
         
-        //sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-
-        sceneView.session.run(configuration)
+        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
     }
     
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
         initScene()
         updateScene()
-        // addDebugObj(objSize: 0.5)
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        print("viewWillAppear")
+//        super.viewWillAppear(animated)
+        
+        let configuration = AROrientationTrackingConfiguration()
+        sceneView.session.run(configuration)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

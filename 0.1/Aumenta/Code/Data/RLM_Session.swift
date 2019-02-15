@@ -11,6 +11,6 @@ class RLM_Session: Object {
     @objc dynamic var currentLat: Double = 0.0
     @objc dynamic var currentLng: Double = 0.0
     
-    @objc dynamic var debugUrl: String = "https://d3ae4faab9kxnf.cloudfront.net/demo.json"
+    @objc dynamic var debugUrl: String = "https://s3.amazonaws.com/abstra-dev/demo.json"
     
 }

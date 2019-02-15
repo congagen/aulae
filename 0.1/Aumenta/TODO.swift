@@ -2,8 +2,14 @@
 
 // ArKit -> SceneKit?
 
+// Feeds
+//    Update feed/items if deef version id !=
+//    Remove/Invalidate removed FeedItems
+
+
 // Load Dae:
-//      NSLocalizedRecoverySuggestion=Collada is not supported by this version of SceneKit
+//    NSLocalizedRecoverySuggestion=Collada is not supported by this version of SceneKit
+
 
 // ARView: Capture/Share Photo:
 //    SLRemoteComposeViewController: (this may be harmless) viewServiceDidTerminateWithError: Error Domain=_UIViewServiceErrorDomain Code=1 "(null)" UserInfo={Terminated=disconnect method}
