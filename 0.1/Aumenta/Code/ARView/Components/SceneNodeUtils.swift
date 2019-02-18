@@ -81,17 +81,44 @@ extension ARViewer {
     }
     
     
+    func loadCollada(path: String) -> SCNNode {
+        
+        let urlPath = URL(fileURLWithPath: path)
+        let fileName = urlPath.lastPathComponent
+        let fileDir = urlPath.deletingLastPathComponent().path
+        
+        print("Attempting to load DAE model: " + String(fileDir) + " Filename: " + String(fileName))
+        
+        do {
+            let scene = try SCNScene(url: urlPath, options: nil)
+            return scene.rootNode
+        } catch {
+            print(error)
+        }
+        
+        return SCNNode()
+    }
+    
+    
+    func daeNode(fPath: String, contentObj: RLM_Obj) -> SCNNode {
+        let node =  loadCollada(path: fPath)
+        node.name = contentObj.name
+        node.physicsBody? = .static()
+
+        return node
+    }
+    
+    
     func textNode(contentObj: RLM_Obj, extrusion:Double) -> SCNNode {
         let text = SCNText(string: contentObj.text, extrusionDepth: 0.1)
         text.alignmentMode = kCAAlignmentCenter
         text.font.withSize(5)
         
         let node = SCNNode(geometry: text)
-        
-        node.physicsBody? = .static()
         node.name = contentObj.name
+
+        node.physicsBody? = .static()
         node.geometry?.materials.first?.diffuse.contents = UIColor.black
-        node.position = SCNVector3(0.0, 0.0, -200)
         node.constraints = [SCNBillboardConstraint()]
         
         return node
@@ -134,19 +161,14 @@ extension ARViewer {
         
         let node = SCNNode(geometry: gifPlane)
         node.constraints = [SCNBillboardConstraint()]
-        
-        return node
-    }
-    
-    
-    func daeNode(fPath: String, contentObj: RLM_Obj) -> SCNNode {
-        let node =  loadCollada(path: fPath)
-//        mainScene.rootNode.addChildNode(objNode)
-        
-        return node
-    }
+        node.name = contentObj.name
 
- 
+        return node
+    }
+    
+    
+
+
     
     
 }

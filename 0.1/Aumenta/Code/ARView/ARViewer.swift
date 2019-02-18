@@ -57,7 +57,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
-        
     }
     
     
@@ -91,7 +90,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     
-    
     @objc func handleTap(rec: UITapGestureRecognizer){
         
         if rec.state == .ended {
@@ -104,25 +102,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         }
     }
     
-    
-    func loadCollada(path: String) -> SCNNode {
-
-        let urlPath = URL(fileURLWithPath: path)
-        let fileName = urlPath.lastPathComponent
-        let fileDir = urlPath.deletingLastPathComponent().path
-
-        print("Attempting to load model: " + String(fileDir) + " Filename: " + String(fileName))
-
-        do {
-            let scene = try SCNScene(url: urlPath, options: nil)
-            return scene.rootNode
-        } catch {
-            print(error)
-        }
-
-        return SCNNode()
-    }
-
 
     func obejctsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
         var objList: [RLM_Obj] = []
@@ -190,6 +169,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 node.position = SCNVector3(xPos, vPos, yPos)
                 mainScene.rootNode.addChildNode(node)
             }
+        } else {
+            // TODO: Add placeholder if allowed in settings
         }
     }
     
