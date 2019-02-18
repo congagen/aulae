@@ -1,6 +1,4 @@
 
-// https://stackoverflow.com/questions/18759601/converting-lla-to-xyz
-
 import Foundation
 
 
@@ -8,22 +6,6 @@ class ValConverters {
 
     let radi: Double = 6378137
     let f_inv: Double = 298.257224
-
-
-    let exampleCoords = [
-        [0.0,  45.0,  1000.0],
-        [45.0,  90.0,  2000.0],
-        [48.8567,  2.3508,  80.0],
-        [61.4140105652, 23.7281341313,149.821],
-    ]
-
-
-    func namegps_to_ecef_pyproj(lat:Double, lon:Double, alt:Double) -> [Double] {
-    //    ecef = pyproj.Proj(proj='geocent', ellps='WGS84', datum='WGS84')
-    //    lla = pyproj.Proj(proj='latlong', ellps='WGS84', datum='WGS84')
-    //    x, y, z = pyproj.transform(lla, ecef, lon, lat, alt, radians=False)
-        return [0,0,0]
-    }
 
 
     func gps_to_ecef(latitude: Double, longitude: Double, altitude: Double) -> [Double] {
@@ -77,17 +59,6 @@ class ValConverters {
         let rtv = ecef_to_enu(x: xyz[0], y: xyz[1], z: xyz[2], latRef: lat_ref, longRef: lon_ref, altRef: h_ref)
         
         return rtv
-    }
-
-
-    func test() {
-        for co in exampleCoords {
-            let xFyFzF = gps_to_ecef(latitude: co[0], longitude: co[1], altitude: co[2])
-            print("ECEF: " + String(xFyFzF[0]) + " - " + String(xFyFzF[1]) + " - " + String(xFyFzF[2]) )
-            
-            let xEyNzU = ecef_to_enu(x: xFyFzF[0], y: xFyFzF[1], z: xFyFzF[2], latRef: co[0], longRef: co[1], altRef: co[2])
-            print("ENU:  " + String(xEyNzU[0]) + " - " + String(xEyNzU[1]) + " - " + String(xEyNzU[2]))
-        }
     }
     
     

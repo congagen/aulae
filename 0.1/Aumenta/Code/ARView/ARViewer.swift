@@ -16,8 +16,8 @@ import Realm
 import RealmSwift
 
 
-class ARViewer: UIViewController, ARSCNViewDelegate {
-    
+
+class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
@@ -25,6 +25,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     var currentCamTransform: simd_float4x4 = simd_float4x4(float4(0), float4(0), float4(0), float4(0))
+    var currentCamEuler: vector_float3 = vector_float3(x:0, y:0, z:0)
+
     let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
 
     var camFrame: ARFrame? = nil
@@ -32,14 +34,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     var updateTimer = Timer()
     var updateInterval: Double = 10
-
+    
     var mainScene = SCNScene()
+    
     
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         updateScene()
     }
     
     @IBOutlet var sceneView: ARSCNView!
+    
     
     @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
         // let capImg = UIImage(cgImage: sceneView.snapshot().cgImage!)
@@ -101,72 +105,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func createGIFAnimation(url:URL, fDuration:Float) -> CAKeyframeAnimation? {
-        
-        guard let src = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
-        let frameCount = CGImageSourceGetCount(src)
-        
-        var time : Float = 0
-        
-        var framesArray = [AnyObject]()
-        var tempTimesArray = [NSNumber]()
-        
-        for i in 0..<frameCount {
-            
-            var frameDuration : Float = fDuration;
-            
-            let cfFrameProperties = CGImageSourceCopyPropertiesAtIndex(src, i, nil)
-            guard let framePrpoerties = cfFrameProperties as? [String:AnyObject] else {return nil}
-            guard let gifProperties = framePrpoerties[kCGImagePropertyGIFDictionary as String] as? [String:AnyObject]
-                else { return nil }
-            
-            // Use kCGImagePropertyGIFUnclampedDelayTime or kCGImagePropertyGIFDelayTime
-            if let delayTimeUnclampedProp = gifProperties[kCGImagePropertyGIFUnclampedDelayTime as String] as? NSNumber {
-                frameDuration = delayTimeUnclampedProp.floatValue
-            } else {
-                if let delayTimeProp = gifProperties[kCGImagePropertyGIFDelayTime as String] as? NSNumber {
-                    frameDuration = delayTimeProp.floatValue
-                }
-            }
-            
-            // Make sure its not too small
-            if frameDuration < 0.011 {
-                frameDuration = 0.100;
-            }
-            
-            // Add frame to array of frames
-            if let frame = CGImageSourceCreateImageAtIndex(src, i, nil) {
-                tempTimesArray.append(NSNumber(value: frameDuration))
-                framesArray.append(frame)
-            }
-            
-            // Compile total loop time
-            time = time + frameDuration
-        }
-        
-        var timesArray = [NSNumber]()
-        var base : Float = 0
-        for duration in tempTimesArray {
-            timesArray.append(NSNumber(value: base))
-            base += ( duration.floatValue / time )
-        }
-    
-        timesArray.append(NSNumber(value: 1.0))
-        
-        let animation = CAKeyframeAnimation(keyPath: "contents")
-        animation.beginTime = AVCoreAnimationBeginTimeAtZero
-        animation.duration = CFTimeInterval(time)
-        animation.repeatCount = Float.greatestFiniteMagnitude;
-        animation.isRemovedOnCompletion = false
-        animation.fillMode = kCAFillModeForwards
-        animation.values = framesArray
-        animation.keyTimes = timesArray
-        animation.calculationMode = kCAAnimationDiscrete
-        
-        return animation;
-    }
-    
-
     func loadCollada(path: String) -> SCNNode {
 
         let urlPath = URL(fileURLWithPath: path)
@@ -199,36 +137,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     }
     
     
-    func textNode(contentObj: RLM_Obj, extrusion:Double) -> SCNNode {
-        let text = SCNText(string: contentObj.text, extrusionDepth: 0.1)
-        text.alignmentMode = kCAAlignmentCenter
-        text.chamferRadius = 5
-//        text.isWrapped = true
-        text.font.withSize(5)
-        
-        let node = SCNNode(geometry: text)
-        
-        node.physicsBody? = .static()
-        node.name = contentObj.name
-        node.geometry?.materials.first?.diffuse.contents = UIColor.black
-        node.position = SCNVector3(0.0, 0.0, -200)
-        node.constraints = [SCNBillboardConstraint()]
-        
-        return node
-    }
-    
     
     func addContentToScene(contentObj: RLM_Obj, fPath: String) {
-        // Latitudes range from 0 to 90. Longitudes range from 0 to 180.
-        // [+] if obj.lat/long < user.lat/long else [-] ?
-        print("Inserting Object: " + String(contentObj.id))
-
-         let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        print("addContentToScene: " + String(contentObj.id))
         
-        //SceneXYZ <- let objPos = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        print(currentCamTransform)
+        print(currentCamEuler)
 
+        let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let valConv = ValConverters()
-        
 
         let objXYZPos = valConv.gps_to_ecef(
             latitude:  contentObj.lat,
@@ -245,57 +162,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
         let xPos = (objXYZPos[0] - deviceXYZPos[0]) / 1000000.0
         let yPos = (objXYZPos[1] - deviceXYZPos[1]) / 1000000.0
         let vPos = 0.0
-        
+
 
         if fPath != "" {
             if contentObj.type.lowercased() == "image" {
                 print("ADDING IMAGE TO SCENE")
                 
-                if let img = UIImage(contentsOfFile: fPath) {
-                    let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
-                    
-                    node.physicsBody? = .static()
-                    node.name = contentObj.name
-                    node.geometry?.materials.first?.diffuse.contents = UIColor.white
-                    node.geometry?.materials.first?.diffuse.contents = img
-                    node.geometry?.materials.first?.isDoubleSided = true
-                    node.position = SCNVector3(xPos, vPos, yPos)
-                    node.constraints = [SCNBillboardConstraint()]
-                    
-                    mainScene.rootNode.addChildNode(node)
-                }
-    
+                let node = imageNode(fPath: fPath, contentObj: contentObj)
+                node.position = SCNVector3(xPos, vPos, yPos)
+                
+                mainScene.rootNode.addChildNode(node)
             }
             
             if contentObj.type.lowercased() == "dae" {
                 print("ADDING DAEOBJ TO SCENE: " + fPath)
             
-                let objNode =  loadCollada(path: fPath)
-                mainScene.rootNode.addChildNode(objNode)
+                let node = daeNode(fPath: fPath, contentObj: contentObj)
+                node.position = SCNVector3(xPos, vPos, yPos)
+                
+                mainScene.rootNode.addChildNode(node)
             }
             
             if contentObj.type.lowercased() == "gif" {
                 print("ADDING GIF TO SCENE")
-                
-                let gifPlane = SCNPlane(width: 0.5, height: 0.5)
-                let animation: CAKeyframeAnimation = createGIFAnimation(
-                    url: URL(fileURLWithPath: fPath), fDuration: 0.1 )!
-                
-                let layer = CALayer()
-                layer.bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
-                layer.add(animation, forKey: "contents")
-                layer.anchorPoint = CGPoint(x:0.0,y:1.0)
-                
-                let gifMaterial = SCNMaterial()
-                gifMaterial.isDoubleSided = true
-                gifMaterial.diffuse.contents = layer
-                
-                gifPlane.materials = [gifMaterial]
-                
-                let node = SCNNode(geometry: gifPlane)
+            
+                let node = gifNode(fPath: fPath, contentObj: contentObj)
                 node.position = SCNVector3(xPos, vPos, yPos)
-                node.constraints = [SCNBillboardConstraint()]
-
                 mainScene.rootNode.addChildNode(node)
             }
         }
@@ -366,26 +258,28 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        // Do something with the new transform
+        camFrame = frame
+        cam = camFrame!.camera
 
-        if (!(camFrame != nil)) {
-            camFrame = frame
-        }
-
-        if (!(cam != nil)) {
-            cam = frame.camera
-        }
-
-        currentCamTransform = frame.camera.transform
+        currentCamTransform = cam!.transform
+        currentCamEuler = cam!.eulerAngles
+    }
+    
+    
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        print("renderer")
     }
     
     
     func initScene() {
         sceneView.delegate = self
-        sceneView.showsStatistics = false
+        sceneView.session.delegate = self
+        sceneView.showsStatistics = true
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
+        
+        sceneView.allowsCameraControl = true
         
         sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
     }
@@ -397,9 +291,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("viewWillAppear")
-//        super.viewWillAppear(animated)
-        
         let configuration = AROrientationTrackingConfiguration()
         sceneView.session.run(configuration)
     }
