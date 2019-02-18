@@ -16,7 +16,6 @@ import Realm
 import RealmSwift
 
 
-
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     let realm = try! Realm()
@@ -27,7 +26,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     var currentCamTransform: simd_float4x4 = simd_float4x4(float4(0), float4(0), float4(0), float4(0))
     var currentCamEuler: vector_float3 = vector_float3(x:0, y:0, z:0)
 
-    let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(rec:)))
 
     var camFrame: ARFrame? = nil
     var cam: ARCamera? = nil
@@ -48,7 +46,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
         // let capImg = UIImage(cgImage: sceneView.snapshot().cgImage!)
         
-        let snapShot = try sceneView.snapshot()
+        let snapShot = sceneView.snapshot()
         //let jpg = UIImageJPEGRepresentation(snapShot, 1.0)
         
         let imageToShare = [snapShot]
@@ -57,49 +55,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
-    }
-    
-    
-    func sharePhoto(){
-        let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: [:])
-        renderer.scene = sceneView.scene
-        renderer.pointOfView = sceneView.pointOfView
-        let snapShot = renderer.snapshot(atTime: TimeInterval(0), with: CGSize(width: 100, height: 100), antialiasingMode: .none)
-        
-        let imageToShare = [snapShot]
-        let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
-        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
-
-        activityViewController.popoverPresentationController?.sourceView = self.view
-        self.present(activityViewController, animated: true, completion: nil)
-    }
-    
-    
-    func addDebugObj(objSize: Double)  {
-        let node = SCNNode(geometry: SCNSphere(radius: CGFloat(objSize) ))
-        node.geometry?.materials.first?.diffuse.contents = UIColor.green
-        node.physicsBody? = .static()
-        node.name = "TestNode"
-        //node.geometry?.materials.first?.diffuse.contents = UIImage(named: "star")
-        node.position = SCNVector3(5.0, 0.0, -5.0)
-        mainScene.rootNode.addChildNode(node)
-        
-        let objScene = SCNScene(named: "art.scnassets/bunny.dae")
-        objScene!.rootNode.position = SCNVector3(0.0, 0.0, -25.0)
-        mainScene.rootNode.addChildNode(objScene!.rootNode)
-    }
-    
-    
-    @objc func handleTap(rec: UITapGestureRecognizer){
-        
-        if rec.state == .ended {
-            let location: CGPoint = rec.location(in: sceneView)
-            let hits = self.sceneView.hitTest(location, options: nil)
-            if !hits.isEmpty{
-                let tappedNode = hits.first?.node
-                print(tappedNode?.name!)
-            }
-        }
     }
     
 
@@ -116,7 +71,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     
-    
     func addContentToScene(contentObj: RLM_Obj, fPath: String) {
         print("addContentToScene: " + String(contentObj.id))
         
@@ -126,37 +80,28 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let valConv = ValConverters()
 
-        let objXYZPos = valConv.gps_to_ecef(
-            latitude:  contentObj.lat,
-            longitude: contentObj.lng,
-            altitude: 0.01
-        )
-        
-        let deviceXYZPos = valConv.gps_to_ecef(
-            latitude:  devicePos.coordinate.latitude,
-            longitude: devicePos.coordinate.longitude,
-            altitude: 0.01
-        )
+        let objXYZPos = valConv.gps_to_ecef( latitude:  contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
+        let deviceXYZPos = valConv.gps_to_ecef( latitude:  devicePos.coordinate.latitude, longitude: devicePos.coordinate.longitude, altitude: 0.01 )
 
         let xPos = (objXYZPos[0] - deviceXYZPos[0]) / 1000000.0
         let yPos = (objXYZPos[1] - deviceXYZPos[1]) / 1000000.0
         let vPos = 0.0
 
-
         if fPath != "" {
+            
+            if contentObj.type.lowercased() == "obj" {
+                print("ADDING OBJ TO SCENE: " + fPath)
+                
+                let node = objNode(fPath: fPath, contentObj: contentObj)
+                node.position = SCNVector3(xPos, vPos, yPos)
+
+                mainScene.rootNode.addChildNode(node)
+            }
+            
             if contentObj.type.lowercased() == "image" {
                 print("ADDING IMAGE TO SCENE")
                 
                 let node = imageNode(fPath: fPath, contentObj: contentObj)
-                node.position = SCNVector3(xPos, vPos, yPos)
-                
-                mainScene.rootNode.addChildNode(node)
-            }
-            
-            if contentObj.type.lowercased() == "dae" {
-                print("ADDING DAEOBJ TO SCENE: " + fPath)
-            
-                let node = daeNode(fPath: fPath, contentObj: contentObj)
                 node.position = SCNVector3(xPos, vPos, yPos)
                 
                 mainScene.rootNode.addChildNode(node)
@@ -201,7 +146,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                     print("FileManager.default.fileExists")
                     
-                    print("objsInScene.filter({$0.name == String(o.id)}).count == 0")
                     addContentToScene(contentObj: o, fPath: (destinationUrl?.path)! )
 
                 } else {
@@ -218,9 +162,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     @objc func mainUpdate() {
         print("mainUpdate: ARViewer")
-        
-        // updateScene()
-        
+
         if session.count > 0 {
             if updateTimer.timeInterval != updateInterval {
                 updateTimer.invalidate()
@@ -246,35 +188,38 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         currentCamEuler = cam!.eulerAngles
     }
     
-    
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        print("renderer")
-    }
-    
-    
+
     func initScene() {
+        print("initScene")
+        
         sceneView.delegate = self
         sceneView.session.delegate = self
-        sceneView.showsStatistics = true
+        
+        sceneView.showsStatistics = false
+        //sceneView.allowsCameraControl = true
+        //sceneView.cameraControlConfiguration.allowsTranslation = true
+        //sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
-        
-        sceneView.allowsCameraControl = true
-        
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
     }
     
     
     override func viewDidLoad() {
+        print("viewDidLoad")
+
         initScene()
         updateScene()
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
+        print("viewWillAppear")
+
         let configuration = AROrientationTrackingConfiguration()
         sceneView.session.run(configuration)
     }
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)

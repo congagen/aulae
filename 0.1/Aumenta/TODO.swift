@@ -9,7 +9,7 @@
 
 // Load Dae:
 //    NSLocalizedRecoverySuggestion=Collada is not supported by this version of SceneKit
-
+//    https://stackoverflow.com/questions/30097948/cant-display-3d-file-from-cache-directory
 
 // ARView: Capture/Share Photo:
 //    SLRemoteComposeViewController: (this may be harmless) viewServiceDidTerminateWithError: Error Domain=_UIViewServiceErrorDomain Code=1 "(null)" UserInfo={Terminated=disconnect method}

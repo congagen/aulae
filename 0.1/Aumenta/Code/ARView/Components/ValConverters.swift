@@ -44,11 +44,11 @@ class ValConverters {
 
         let x0 = (radi * cRef + altRef) * cosLatRef * cosLongRef
         let y0 = (radi * cRef + altRef) * cosLatRef * sinLongRef
-        let z0 = (radi * cRef*(1-e2) + altRef) * sinLatRef
+        let z0 = (radi * cRef * (1.0 - e2) + altRef) * sinLatRef
         
-        let xEast = (-(x-x0) * sinLongRef) + ((y-y0) * cosLongRef)
-        let yNorth = (-cosLongRef*sinLatRef*(x-x0)) - (sinLatRef*sinLongRef*(y-y0)) + (cosLatRef*(z-z0))
-        let zUp = (cosLatRef*cosLongRef*(x-x0)) + (cosLatRef*sinLongRef*(y-y0)) + (sinLatRef*(z-z0))
+        let xEast  = (-(x-x0) * sinLongRef)   + ((y - y0) * cosLongRef)
+        let yNorth = (-cosLongRef * sinLatRef * (x - x0)) - (sinLatRef * sinLongRef * (y - y0)) + (cosLatRef * (z-z0))
+        let zUp    = (cosLatRef*cosLongRef    * (x - x0)) + (cosLatRef * sinLongRef * (y - y0)) + (sinLatRef * (z-z0))
         
         return [xEast, yNorth, zUp]
     }

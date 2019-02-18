@@ -81,44 +81,39 @@ extension ARViewer {
     }
     
     
-    func loadCollada(path: String) -> SCNNode {
+    
+    
+    func objNode(fPath: String, contentObj: RLM_Obj) -> SCNNode {
         
-        let urlPath = URL(fileURLWithPath: path)
+        let urlPath = URL(fileURLWithPath: fPath)
         let fileName = urlPath.lastPathComponent
         let fileDir = urlPath.deletingLastPathComponent().path
+        print("Attempting to load OBJ model: " + String(fileDir) + " Filename: " + String(fileName))
         
-        print("Attempting to load DAE model: " + String(fileDir) + " Filename: " + String(fileName))
+        let objScene = SCNSceneSource(url: urlPath, options: nil)
         
         do {
-            let scene = try SCNScene(url: urlPath, options: nil)
-            return scene.rootNode
+            let a:SCNNode = try objScene!.scene().rootNode
+            return a
         } catch {
             print(error)
         }
         
         return SCNNode()
+ 
     }
-    
-    
-    func daeNode(fPath: String, contentObj: RLM_Obj) -> SCNNode {
-        let node =  loadCollada(path: fPath)
-        node.name = contentObj.name
-        node.physicsBody? = .static()
 
-        return node
-    }
     
     
-    func textNode(contentObj: RLM_Obj, extrusion:Double) -> SCNNode {
+    func textNode(contentObj: RLM_Obj, extrusion:Double, color:UIColor) -> SCNNode {
         let text = SCNText(string: contentObj.text, extrusionDepth: 0.1)
         text.alignmentMode = kCAAlignmentCenter
         text.font.withSize(5)
         
         let node = SCNNode(geometry: text)
         node.name = contentObj.name
-
         node.physicsBody? = .static()
-        node.geometry?.materials.first?.diffuse.contents = UIColor.black
+        node.geometry?.materials.first?.diffuse.contents = color
         node.constraints = [SCNBillboardConstraint()]
         
         return node
@@ -167,8 +162,21 @@ extension ARViewer {
     }
     
     
-
-
+    func addDebugObj(objSize: Double)  {
+        let node = SCNNode(geometry: SCNSphere(radius: CGFloat(objSize) ))
+        node.geometry?.materials.first?.diffuse.contents = UIColor.green
+        node.physicsBody? = .static()
+        node.name = "TestNode"
+        //node.geometry?.materials.first?.diffuse.contents = UIImage(named: "star")
+        node.position = SCNVector3(5.0, 0.0, -5.0)
+        mainScene.rootNode.addChildNode(node)
+        
+        let objScene = SCNScene(named: "art.scnassets/bunny.dae")
+        objScene!.rootNode.position = SCNVector3(0.0, 0.0, -25.0)
+        mainScene.rootNode.addChildNode(objScene!.rootNode)
+    }
+    
+    
     
     
 }
