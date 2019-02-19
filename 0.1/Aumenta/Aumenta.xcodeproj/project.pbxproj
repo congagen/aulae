@@ -45,6 +45,7 @@
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
 		FA8B387022120DD60099A7A3 /* ValConverters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B386F22120DD60099A7A3 /* ValConverters.swift */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
+		FAF37EB7221CA9680065B18A /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB6221CA9680065B18A /* File.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -103,6 +104,7 @@
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
 		FA8B386F22120DD60099A7A3 /* ValConverters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValConverters.swift; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
+		FAF37EB6221CA9680065B18A /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +135,7 @@
 				FA8B386F22120DD60099A7A3 /* ValConverters.swift */,
 				FA8275E9221AB650007B413B /* SceneNodeUtils.swift */,
 				FA8275EB221ABAD5007B413B /* SceneActions.swift */,
+				FAF37EB6221CA9680065B18A /* File.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 				316B86D920D955660076E63D /* LocationNode.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
+				FAF37EB7221CA9680065B18A /* File.swift in Sources */,
 				3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */,
 				316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
