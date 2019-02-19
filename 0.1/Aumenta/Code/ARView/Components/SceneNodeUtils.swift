@@ -81,8 +81,6 @@ extension ARViewer {
     }
     
     
-    
-    
     func objNode(fPath: String, contentObj: RLM_Obj) -> SCNNode {
         
         let urlPath = URL(fileURLWithPath: fPath)
@@ -93,12 +91,12 @@ extension ARViewer {
         let objScene = SCNSceneSource(url: urlPath, options: nil)
         
         do {
-            let a:SCNNode = try objScene!.scene().rootNode
-            return a
+            let n: SCNNode = try objScene!.scene().rootNode
+            return n
         } catch {
             print(error)
         }
-        
+
         return SCNNode()
  
     }
@@ -126,7 +124,7 @@ extension ARViewer {
         if let img = UIImage(contentsOfFile: fPath) {
             node.physicsBody? = .static()
             node.name = contentObj.name
-            node.geometry?.materials.first?.diffuse.contents = UIColor.white
+            node.geometry?.materials.first?.diffuse.contents = UIColor.clear
             node.geometry?.materials.first?.diffuse.contents = img
             node.geometry?.materials.first?.isDoubleSided = true
             node.constraints = [SCNBillboardConstraint()]
@@ -146,7 +144,7 @@ extension ARViewer {
         let layer = CALayer()
         layer.bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
         layer.add(animation, forKey: "contents")
-        layer.anchorPoint = CGPoint(x:0.0,y:1.0)
+        layer.anchorPoint = CGPoint(x:0.0, y:1.0)
         
         let gifMaterial = SCNMaterial()
         gifMaterial.isDoubleSided = true

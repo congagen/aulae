@@ -15,7 +15,6 @@ import ARKit
 import Realm
 import RealmSwift
 
-
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     let realm = try! Realm()
@@ -23,9 +22,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
+    let valConv = ValConverters()
+
+    var deviceHeading: Float = 0
+    var deviceHeadingNormal: Float = 0
     var currentCamTransform: simd_float4x4 = simd_float4x4(float4(0), float4(0), float4(0), float4(0))
     var currentCamEuler: vector_float3 = vector_float3(x:0, y:0, z:0)
-
 
     var camFrame: ARFrame? = nil
     var cam: ARCamera? = nil
@@ -58,9 +60,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
 
-    func obejctsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
+    func objectsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
         var objList: [RLM_Obj] = []
-
+        
         if (useManualRange) {
             objList = feedObjects.filter({ (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double(manualRange)) })
         } else {
@@ -70,23 +72,20 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         return objList
     }
     
-    
+  
     func addContentToScene(contentObj: RLM_Obj, fPath: String) {
         print("addContentToScene: " + String(contentObj.id))
-        
-        print(currentCamTransform)
         print(currentCamEuler)
-
+        
         let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        let valConv = ValConverters()
-
-        let objXYZPos = valConv.gps_to_ecef( latitude:  contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
+        
+        let objXYZPos    = valConv.gps_to_ecef( latitude:  contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
         let deviceXYZPos = valConv.gps_to_ecef( latitude:  devicePos.coordinate.latitude, longitude: devicePos.coordinate.longitude, altitude: 0.01 )
-
-        let xPos = (objXYZPos[0] - deviceXYZPos[0]) / 1000000.0
-        let yPos = (objXYZPos[1] - deviceXYZPos[1]) / 1000000.0
+        
+        let xPos = (((objXYZPos[0] - deviceXYZPos[0]) ) / 1000000.0)
+        let yPos = (((objXYZPos[1] - deviceXYZPos[1]) ) / 1000000.0)
         let vPos = 0.0
-
+        
         if fPath != "" {
             
             if contentObj.type.lowercased() == "obj" {
@@ -94,7 +93,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 
                 let node = objNode(fPath: fPath, contentObj: contentObj)
                 node.position = SCNVector3(xPos, vPos, yPos)
-
                 mainScene.rootNode.addChildNode(node)
             }
             
@@ -103,7 +101,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 
                 let node = imageNode(fPath: fPath, contentObj: contentObj)
                 node.position = SCNVector3(xPos, vPos, yPos)
-                
+
                 mainScene.rootNode.addChildNode(node)
             }
             
@@ -113,6 +111,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 let node = gifNode(fPath: fPath, contentObj: contentObj)
                 node.position = SCNVector3(xPos, vPos, yPos)
                 mainScene.rootNode.addChildNode(node)
+                
+                print((sceneView.pointOfView?.rotation)!)
+
             }
         } else {
             // TODO: Add placeholder if allowed in settings
@@ -123,17 +124,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     func updateScene() {
         print("Update Scene")
         
-        // Scenes in range
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         
         // TODO:  Get search range
-        let objsInRange = obejctsInRange(position: curPos, useManualRange: true, manualRange: 100000000000)
+        let objsInRange   = objectsInRange(position: curPos, useManualRange: true, manualRange: 100000000000)
+        let activeInRange = objsInRange.filter({$0.active && !$0.deleted})
         
         mainScene.rootNode.enumerateChildNodes { (node, stop) in
             node.removeFromParentNode()
         }
         
-        for o in objsInRange {
+        for o in activeInRange {
             print("Obj in range: ")
             
             if o.filePath != "" && !(o.type == "text") {
@@ -141,7 +142,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 let fileName = (URL(string: o.filePath)?.lastPathComponent)!
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                 
-                print("UpdateScene: objsInRange: " + String(o.id))
+                print("UpdateScene: activeInRange: " + String(o.id))
                 
                 if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                     print("FileManager.default.fileExists")
@@ -157,6 +158,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 }
             }
         }
+
     }
     
     
@@ -186,40 +188,47 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 
         currentCamTransform = cam!.transform
         currentCamEuler = cam!.eulerAngles
+        
+        if (cam != nil) {
+            deviceHeading = valConv.cameraHeading(camera: cam!)
+            deviceHeadingNormal = (( (deviceHeading + 0.00001) + .pi) / (2 * .pi) )
+            print("DeviceHeading: ")
+            print(deviceHeading)
+            print( deviceHeadingNormal * 360 )
+        }
     }
     
 
     func initScene() {
         print("initScene")
         
-        sceneView.delegate = self
-        sceneView.session.delegate = self
-        
-        sceneView.showsStatistics = false
-        //sceneView.allowsCameraControl = true
-        //sceneView.cameraControlConfiguration.allowsTranslation = true
-        //sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-        
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
+
+        sceneView.session.delegate = self
+        sceneView.delegate = self
+        sceneView.showsStatistics = false
     }
     
     
     override func viewDidLoad() {
         print("viewDidLoad")
-
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear")
+        print(currentCamEuler)
         initScene()
         updateScene()
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
-
+        
         let configuration = AROrientationTrackingConfiguration()
         sceneView.session.run(configuration)
     }
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)

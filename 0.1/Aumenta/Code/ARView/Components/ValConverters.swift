@@ -1,16 +1,93 @@
 
 import Foundation
-
+import SceneKit
+import ARKit
 
 class ValConverters {
 
     let radi: Double = 6378137
     let f_inv: Double = 298.257224
+    
+    
+    func deg2rad(_ number: Double) -> Double {
+        return number * (.pi / 180.0)
+    }
+    
+    
+    func cameraHeading(camera: ARCamera) -> Float {
+        let deviceRotationMatrix: GLKMatrix3    = GLKMatrix4GetMatrix3(SCNMatrix4ToGLKMatrix4(SCNMatrix4.init(camera.transform)))
+        let Q: GLKQuaternion = GLKQuaternionMakeWithMatrix3(deviceRotationMatrix);
+        let deviceZNormal: GLKVector3 = GLKQuaternionRotateVector3(Q, GLKVector3Make(0, 0, 1));
+        let deviceYNormal: GLKVector3 = GLKQuaternionRotateVector3(Q, GLKVector3Make(1, 0, 0));
+        
+        var zHeading: Float = atan2f(deviceZNormal.x, deviceZNormal.z);
+        let yHeading: Float = atan2f(deviceYNormal.x, deviceYNormal.z);
+        let isDownTilt: Bool = deviceYNormal.y > 0.0
+        
+        if (isDownTilt) {
+            zHeading = zHeading + .pi;
+            if (zHeading > .pi) {
+                zHeading -= 2.0 * .pi;
+            }
+        }
+        
+        let a: Float = fabs(camera.eulerAngles.x / .pi);
+        let heading: Float = a * yHeading + (1.0 - a) * zHeading;
+        
+        return heading
+    }
+    
+    
+    func eulerToQuaternion_b(yaw: Double, pitch: Double, roll: Double) -> SCNQuaternion {
+        var result = SCNQuaternion()
+        
+        let cy: Double = cos(yaw   * 0.5);
+        let sy: Double = sin(yaw   * 0.5);
+        let cp: Double = cos(pitch * 0.5);
+        let sp: Double = sin(pitch * 0.5);
+        let cr: Double = cos(roll  * 0.5);
+        let sr: Double = sin(roll  * 0.5);
 
+        result.w = Float(cy * cp * cr + sy * sp * sr)
+        result.x = Float(cy * cp * sr - sy * sp * cr)
+        result.y = Float(sy * cp * sr + cy * sp * cr)
+        result.z = Float(sy * cp * cr - cy * sp * sr)
+        
+        return result
+    }
+    
+    
+    func eulerToQuaternion(yaw: Double, pitch: Double, roll: Double) -> SCNQuaternion {
+        
+        let yawOver2 = yaw * 0.5
+        let cosYawOver2 = cos(yawOver2)
+        let sinYawOver2 = sin(yawOver2)
+        let pitchOver2 = pitch * 0.5
+        let cosPitchOver2 = cos(pitchOver2)
+        let sinPitchOver2 = sin(pitchOver2)
+        let rollOver2 = roll * 0.5
+        let cosRollOver2 = cos(rollOver2)
+        let sinRollOver2 = sin(rollOver2)
+        
+        var result: SCNQuaternion = SCNQuaternion()
+        
+        result.w = Float(cosYawOver2 * cosPitchOver2 * cosRollOver2 + sinYawOver2 * sinPitchOver2 * sinRollOver2)
+        result.x = Float(sinYawOver2 * cosPitchOver2 * cosRollOver2 + cosYawOver2 * sinPitchOver2 * sinRollOver2)
+        result.y = Float(cosYawOver2 * sinPitchOver2 * cosRollOver2 - sinYawOver2 * cosPitchOver2 * sinRollOver2)
+        result.z = Float(cosYawOver2 * cosPitchOver2 * sinRollOver2 - sinYawOver2 * sinPitchOver2 * cosRollOver2)
+        
+        return result
+        
+    }
+    
+    
+    
+    
 
     func gps_to_ecef(latitude: Double, longitude: Double, altitude: Double) -> [Double] {
-    //    # (lat, lon) in WSG-84 degrees
-    //    # h in meters
+        // (lat, lon) in WSG-84 degrees
+        // h in meters
+        
         let f = 1.0 / f_inv
         
         let cosLat  = cos(latitude  * Double.pi / 180.0)
@@ -60,6 +137,5 @@ class ValConverters {
         
         return rtv
     }
-    
     
 }
