@@ -1,18 +1,26 @@
-//
-//  SceneNodeUtils.swift
-//  Aumenta
-//
-//  Created by Tim Sandgren on 2019-02-18.
-//  Copyright © 2019 Abstraqata. All rights reserved.
-//
 
-import UIKit
 import SceneKit
-import Foundation
 import ARKit
+import CoreLocation
 
-
-extension ARViewer {
+class ContentNode: SCNNode {
+    
+    let title: String
+    var anchor: ARAnchor?
+    var location: CLLocation!
+    
+    init(title: String, location: CLLocation) {
+        self.title = title
+        super.init()
+        let billboardConstraint = SCNBillboardConstraint()
+        // billboardConstraint.freeAxes = SCNBillboardAxis.Y
+        constraints = [billboardConstraint]
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     
     func createGIFAnimation(url:URL, fDuration:Float) -> CAKeyframeAnimation? {
@@ -81,44 +89,49 @@ extension ARViewer {
     }
     
     
-    func objNode(fPath: String, contentObj: RLM_Obj) -> SCNNode {
-        
-        let urlPath = URL(fileURLWithPath: fPath)
-        let fileName = urlPath.lastPathComponent
-        let fileDir = urlPath.deletingLastPathComponent().path
-        print("Attempting to load OBJ model: " + String(fileDir) + " Filename: " + String(fileName))
-        
-        let objScene = SCNSceneSource(url: urlPath, options: nil)
-        
-        do {
-            let n: SCNNode = try objScene!.scene().rootNode
-            return n
-        } catch {
-            print(error)
-        }
-
-        return SCNNode()
- 
+    func createSphereNode(with radius: CGFloat, color: UIColor) -> SCNNode {
+        let geometry = SCNSphere(radius: radius)
+        geometry.firstMaterial?.diffuse.contents = color
+        let sphereNode = SCNNode(geometry: geometry)
+        return sphereNode
     }
-
     
     
-    func textNode(contentObj: RLM_Obj, extrusion:Double, color:UIColor) -> SCNNode {
-        let text = SCNText(string: contentObj.text, extrusionDepth: 0.1)
+    func addSphere(with radius: CGFloat, and color: UIColor) {
+        let sphereNode = createSphereNode(with: radius, color: color)
+        addChildNode(sphereNode)
+    }
+    
+    
+    func addDebugNode(with radius: CGFloat, and color: UIColor, and text: String) {
+        let sphereNode = createSphereNode(with: radius, color: color)
+        let newText = SCNText(string: title, extrusionDepth: 0.05)
+        newText.font = UIFont (name: "AvenirNext-Medium", size: 1)
+        newText.firstMaterial?.diffuse.contents = UIColor.red
+        let _textNode = SCNNode(geometry: newText)
+        let annotationNode = SCNNode()
+        annotationNode.addChildNode(_textNode)
+        annotationNode.position = sphereNode.position
+        addChildNode(sphereNode)
+        addChildNode(annotationNode)
+    }
+    
+    
+    func addText(nodeText: String, extrusion:Double, color:UIColor) {
+        let text = SCNText(string: nodeText, extrusionDepth: 0.1)
         text.alignmentMode = kCAAlignmentCenter
         text.font.withSize(5)
         
         let node = SCNNode(geometry: text)
-        node.name = contentObj.name
         node.physicsBody? = .static()
         node.geometry?.materials.first?.diffuse.contents = color
         node.constraints = [SCNBillboardConstraint()]
         
-        return node
+        addChildNode(node)
     }
     
     
-    func imageNode(fPath: String, contentObj: RLM_Obj) -> SCNNode {
+    func addImage(fPath: String, contentObj: RLM_Obj) {
         let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
         
         if let img = UIImage(contentsOfFile: fPath) {
@@ -132,19 +145,22 @@ extension ARViewer {
             // TODO: return Placeholder Obj?
         }
         
-        return node
+        addChildNode(node)
     }
     
     
-    func gifNode(fPath: String, contentObj: RLM_Obj) -> SCNNode {
+    func addGif(fPath: String, contentObj: RLM_Obj) {
         let gifPlane = SCNPlane(width: 0.5, height: 0.5)
+       
+        let layer = CALayer()
+        layer.bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
+        
         let animation: CAKeyframeAnimation = createGIFAnimation(
             url: URL(fileURLWithPath: fPath), fDuration: 0.1 )!
         
-        let layer = CALayer()
-        layer.bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
         layer.add(animation, forKey: "contents")
         layer.anchorPoint = CGPoint(x:0.0, y:1.0)
+        
         
         let gifMaterial = SCNMaterial()
         gifMaterial.isDoubleSided = true
@@ -156,26 +172,8 @@ extension ARViewer {
         
         node.constraints = [SCNBillboardConstraint()]
         node.name = contentObj.name
-
-        return node
-    }
-    
-    
-    func addDebugObj(objSize: Double)  {
-        let node = SCNNode(geometry: SCNSphere(radius: CGFloat(objSize) ))
-        node.geometry?.materials.first?.diffuse.contents = UIColor.green
-        node.physicsBody? = .static()
-        node.name = "TestNode"
-        //node.geometry?.materials.first?.diffuse.contents = UIImage(named: "star")
-        node.position = SCNVector3(5.0, 0.0, -5.0)
-        mainScene.rootNode.addChildNode(node)
         
-        let objScene = SCNScene(named: "art.scnassets/bunny.dae")
-        objScene!.rootNode.position = SCNVector3(0.0, 0.0, -25.0)
-        mainScene.rootNode.addChildNode(objScene!.rootNode)
+        addChildNode(node)
     }
-    
-    
-    
     
 }

@@ -1,3 +1,21 @@
+
+//    double rad = angle*M_PI/180;
+//
+//    newX = x * cos(rad) - y * sin(rad);
+//    newY = y * cos(rad) + x * sin(rad);
+
+
+//    func rotateLatLong(lat:Double, long:Double, angle: Double) -> CGPoint {
+//        let rad: Double = angle * (Double.pi / 180.0)
+//
+//        let newX = lat  * cos(rad) - long * sin(rad)
+//        let newY = long * cos(rad) + lat * sin(rad)
+//
+//        return CGPoint(x: newX, y: newY)
+//    }
+
+
+
 ////
 ////  ARViewer_.swift
 ////  Aumenta
