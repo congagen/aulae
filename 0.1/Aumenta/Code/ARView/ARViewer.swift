@@ -26,6 +26,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     var deviceHeading: Float = 0
     var deviceHeadingNormal: Float = 0
+    var deviceAngle:Double = 0
     var currentCamTransform: simd_float4x4 = simd_float4x4(float4(0), float4(0), float4(0), float4(0))
     var currentCamEuler: vector_float3 = vector_float3(x:0, y:0, z:0)
     
@@ -86,26 +87,89 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     
+//    double rad = angle*M_PI/180;
+//
+//    newX = x * cos(rad) - y * sin(rad);
+//    newY = y * cos(rad) + x * sin(rad);
+    
+    
+//    func rotateLatLong(lat:Double, long:Double, angle: Double) -> CGPoint {
+//        let rad: Double = angle * (Double.pi / 180.0)
+//
+//        let newX = lat  * cos(rad) - long * sin(rad)
+//        let newY = long * cos(rad) + lat * sin(rad)
+//
+//        return CGPoint(x: newX, y: newY)
+//    }
+    
+
+    func rotateLatLong(lat: Double, lon: Double, angle: Double, center: CGPoint) -> CGPoint {
+        
+        let a = Double(center.x) + (cos(deg2rad(angle)))
+        let b = Double(center.y) + (sin(deg2rad(angle)))
+        
+        let aa = Double(lat - Double(center.x)) - sin(deg2rad(angle))
+        let bb = Double(lat - Double(center.x)) - cos(deg2rad(angle))
+        
+        let latR = a * aa * (lon - Double(center.y))
+        let lonR = b * bb * (lon - Double(center.y))
+
+        return CGPoint(x: latR, y: lonR)
+    }
+    
+    func deg2rad(_ number: Double) -> Double {
+        return number * .pi / 180
+    }
+    
+    func rad2deg(radians: Double) -> Double {
+        return radians * 180.0 / Double.pi
+    }
+    
+    func cclBearing(point1 : CLLocation, point2 : CLLocation) -> Double {
+        // Returns a float with the angle between the two points
+        let x = point1.coordinate.longitude - point2.coordinate.longitude
+        let y = point1.coordinate.latitude - point2.coordinate.latitude
+        
+        return fmod(rad2deg(radians: atan2(y, x)), 360.0) + 90.0
+    }
+    
+    
+    
+    
     func addContentToScene(contentObj: RLM_Obj, fPath: String) {
         print("addContentToScene: " + String(contentObj.id))
-        let devicePos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         
-        let objectXYZPos = valConv.gps_to_ecef( latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
-        let deviceXYZPos = valConv.gps_to_ecef( latitude: devicePos.coordinate.latitude, longitude: devicePos.coordinate.longitude, altitude: 0.01 )
-
-        let xPos = (((objectXYZPos[0] - deviceXYZPos[0]) ) / 1000000.0)
-        let yPos = (((objectXYZPos[1] - deviceXYZPos[1]) ) / 1000000.0)
+        let rawDeviceGps    = CGPoint(x: (session.first?.currentLat)!, y: (session.first?.currentLng)!)
+        let rawObjectGps    = CGPoint(x: contentObj.lat, y: contentObj.lng)
+        
+        let rawDeviceGpsCCL = CLLocation(latitude: CLLocationDegrees(rawDeviceGps.x), longitude: CLLocationDegrees(rawDeviceGps.y))
+        let rawObjectGpsCCL = CLLocation(latitude: CLLocationDegrees(rawObjectGps.x), longitude: CLLocationDegrees(rawObjectGps.y))
+        
+        let objectDistance = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        print("Distance: "  + String(objectDistance))
+        
+        let objectBearing   = cclBearing(point1: rawDeviceGpsCCL, point2: rawObjectGpsCCL)
+        print("Bearing:  "  + String(objectBearing))
+        
+        let offsetPos = bearDist2LatLong(d: objectDistance, bearing: objectBearing)
+        print(rawObjectGps)
+        print(offsetPos)
+        
+//        let transObjectGps  = rotateLatLong(lat: Double(rawObjectGps.x), lon: Double(rawObjectGps.y), angle: deviceAngle, center: rawDeviceGps)
+//        print(transObjectGps)
+        
+        let deviceXYZPos    = valConv.gps_to_ecef( latitude: Double(rawDeviceGps.x), longitude: Double(rawDeviceGps.y), altitude: 0.01 )
+        let objectXYZPos    = valConv.gps_to_ecef( latitude: Double(rawObjectGps.x), longitude: Double(rawObjectGps.y), altitude: 0.01 )
+        
+        let compositeXY     = CGPoint(x: (objectXYZPos[0] - deviceXYZPos[0]) / 1000000.0, y: (objectXYZPos[1] - deviceXYZPos[1]) / 1000000.0 )
         let vPos = 0.0
         
-        let cPos = rotatePoint(target: CGPoint(x: xPos, y: yPos), aroundOrigin: CGPoint(x: 0, y: 0), byDegrees: CGFloat(deviceHeadingNormal * 360.0))
-        
         if fPath != "" {
-            
             if contentObj.type.lowercased() == "obj" {
                 print("ADDING OBJ TO SCENE: " + fPath)
                 
                 let node = objNode(fPath: fPath, contentObj: contentObj)
-                node.position = SCNVector3(cPos.x, CGFloat(vPos), cPos.y)
+                node.position = SCNVector3(compositeXY.x, CGFloat(vPos), compositeXY.y)
                 mainScene.rootNode.addChildNode(node)
             }
             
@@ -113,15 +177,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 print("ADDING IMAGE TO SCENE")
                 
                 let node = imageNode(fPath: fPath, contentObj: contentObj)
-                node.position = SCNVector3(cPos.x, CGFloat(vPos), cPos.y)
+                node.position = SCNVector3(compositeXY.x, CGFloat(vPos), compositeXY.y)
                 mainScene.rootNode.addChildNode(node)
             }
+        
             
             if contentObj.type.lowercased() == "gif" {
                 print("ADDING GIF TO SCENE")
                 
                 let node = gifNode(fPath: fPath, contentObj: contentObj)
-                node.position = SCNVector3(cPos.x, CGFloat(vPos), cPos.y)
+                node.position = SCNVector3(compositeXY.x, CGFloat(vPos), compositeXY.y)
                 mainScene.rootNode.addChildNode(node)
             }
         } else {
@@ -141,8 +206,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         sceneView.pointOfView?.rotate(by: SCNQuaternion(x: 0, y: 0, z: 0, w: 0), aroundTarget: (sceneView.pointOfView?.position)!)
         
+        for n in mainScene.rootNode.childNodes {
+            n.removeFromParentNode()
+        }
+        
         mainScene.rootNode.enumerateChildNodes { (node, stop) in
             node.removeFromParentNode()
+            node.removeAllActions()
         }
         
         for o in activeInRange {
@@ -203,9 +273,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         //deviceHeadingNormal = ((currentCamEuler.y + 0.00001) + .pi) / (2 * .pi)
         
         let h = valConv.cameraHeading(camera: cam!)
-        deviceHeadingNormal = ((h + 0.00001) + .pi) / (2 * .pi)
+        deviceHeadingNormal = Float((Double(h + 0.00001) + Double.pi) / (2 * .pi))
         
+        deviceAngle = 180.0 + (( Double(deviceHeading) / (2.0 * Double.pi) ) * 360.0)
+        
+        print("DeviceHeading:       " + String(deviceHeading))
         print("DeviceHeadingNormal: " + String(deviceHeadingNormal))
+        print("DeviceAngle:         " + String(deviceAngle))
         
     }
     
@@ -219,6 +293,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         sceneView.session.delegate = self
         sceneView.delegate = self
         sceneView.showsStatistics = false
+        
+        let configuration = AROrientationTrackingConfiguration()
+        sceneView.session.run(configuration)
     }
     
     
@@ -230,15 +307,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
         print(currentCamEuler)
-        initScene()
         updateScene()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
-        
-        let configuration = AROrientationTrackingConfiguration()
-        sceneView.session.run(configuration)
+        initScene()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

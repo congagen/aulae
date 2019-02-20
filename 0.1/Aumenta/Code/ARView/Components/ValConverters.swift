@@ -80,9 +80,6 @@ class ValConverters {
         
     }
     
-    
-    
-    
 
     func gps_to_ecef(latitude: Double, longitude: Double, altitude: Double) -> [Double] {
         // (lat, lon) in WSG-84 degrees
