@@ -34,7 +34,6 @@ extension CLLocation {
 }
 
 
-
 class ValConverters {
 
     let radi: Double = 6378137
@@ -42,8 +41,132 @@ class ValConverters {
     
     
     func deg2rad(_ number: Double) -> Double {
-        return number * (.pi / 180.0)
+        return number * Double.pi / 180.0
     }
+    
+    func rad2deg(radians: Double) -> Double {
+        return radians * 180.0 / Double.pi
+    }
+    
+    
+    func rotatePoint(target: CGPoint, aroundOrigin origin: CGPoint, byDegrees: CGFloat) -> CGPoint {
+        let dx = target.x - origin.x
+        let dy = target.y - origin.y
+        let radius = sqrt(dx * dx + dy * dy)
+        let azimuth = atan2(dy, dx)
+        let newAzimuth = azimuth + byDegrees * CGFloat(.pi / 180.0)
+        let x = origin.x + radius * cos(newAzimuth)
+        let y = origin.y + radius * sin(newAzimuth)
+        
+        return CGPoint(x: x, y: y)
+    }
+    
+    
+    func rotateLatLong(lat: Double, lon: Double, angle: Double, center: CGPoint) -> CGPoint {
+        
+        let a = Double(center.x) + (cos(deg2rad(angle)))
+        let b = Double(center.y) + (sin(deg2rad(angle)))
+        
+        let aa = Double(lat - Double(center.x)) - sin(deg2rad(angle))
+        let bb = Double(lat - Double(center.x)) - cos(deg2rad(angle))
+        
+        let latR = a * aa * (lon - Double(center.y))
+        let lonR = b * bb * (lon - Double(center.y))
+        
+        return CGPoint(x: latR, y: lonR)
+    }
+    
+    
+    func cclBearing(point1 : CLLocation, point2 : CLLocation) -> Double {
+        let x = point1.coordinate.longitude - point2.coordinate.longitude
+        let y = point1.coordinate.latitude  - point2.coordinate.latitude
+        
+        return fmod(rad2deg(radians: atan2(y, x)), 360.0) + 90.0
+    }
+    
+    
+    func locationWithBearing(bearing:Double, distanceMeters:Double, origin:CLLocationCoordinate2D) -> CLLocationCoordinate2D {
+        let distRadians = distanceMeters / (6372797.6)
+        
+        let lat1 = origin.latitude  * Double.pi / 180.0
+        let lon1 = origin.longitude * Double.pi / 180.0
+        
+        let lat2 = asin(sin(lat1) * cos(distRadians) + cos(lat1) * sin(distRadians) * cos(bearing))
+        let lon2 = lon1 + atan2(sin(bearing) * sin(distRadians) * cos(lat1), cos(distRadians) - sin(lat1) * sin(lat2))
+        
+        return CLLocationCoordinate2D(latitude: lat2 * 180 / Double.pi, longitude: lon2 * 180 / Double.pi)
+    }
+    
+    
+    static func translationMatrix_b(with matrix: matrix_float4x4, for translation : vector_float4) -> matrix_float4x4 {
+        var matrix = matrix
+        matrix.columns.3 = translation
+        return matrix
+    }
+    
+    
+    static func rotateAroundY_b(with matrix: matrix_float4x4, for degrees: Float) -> matrix_float4x4 {
+        var matrix : matrix_float4x4 = matrix
+        
+        matrix.columns.0.x = cos(degrees)
+        matrix.columns.0.z = -sin(degrees)
+        
+        matrix.columns.2.x = sin(degrees)
+        matrix.columns.2.z = cos(degrees)
+        return matrix.inverse
+    }
+    
+    
+    static func transformMatrix(for matrix: simd_float4x4, originLocation: CLLocation, location: CLLocation) -> simd_float4x4 {
+        let distance = Float(location.distance(from: originLocation))
+        let bearing = originLocation.bearingToLocationRadian(location)
+        let position = vector_float4(0.0, 0.0, -distance, 0.0)
+        let translationMatrix = translationMatrix_b(with: matrix_identity_float4x4, for: position)
+        let rotationMatrix = rotateAroundY_b(with: matrix_identity_float4x4, for: Float(bearing))
+        let transformMatrix = simd_mul(rotationMatrix, translationMatrix)
+        return simd_mul(matrix, transformMatrix)
+    }
+    
+    
+    func makeARAnchor(from location: CLLocation, to landmark: CLLocation, furthestAnchorDistance: Float) -> ARAnchor {
+        
+        // Calculate the displacement
+        let distance = location.distance(from: landmark)
+        let distanceTransform = simd_float4x4.translatingIdentity(x: 0, y: 0, z: -min(Float(distance), furthestAnchorDistance))
+        
+        // Calculate the horizontal rotation
+        let rotation = Matrix.angle(from: location, to: landmark)
+        
+        // Calculate the vertical tilt
+        let tilt = Matrix.angleOffHorizon(from: location, to: landmark)
+        
+        // Apply the transformations
+        let tiltedTransformation = Matrix.rotateVertically(matrix: distanceTransform, around: tilt)
+        let completedTransformation = Matrix.rotateHorizontally(matrix: tiltedTransformation, around: -rotation)
+        
+        return ARAnchor(transform: completedTransformation)
+    }
+    
+    
+    func transformLatLong(from location: CLLocation, to landmark: CLLocation, furthestAnchorDistance: Float) -> simd_float4x4 {
+        
+        // Calculate the displacement
+        let distance = location.distance(from: landmark)
+        let distanceTransform = simd_float4x4.translatingIdentity(x: 0, y: 0, z: -min(Float(distance), 1))
+        
+        // Calculate the horizontal rotation
+        let rotation = Matrix.angle(from: location, to: landmark)
+        
+        // Calculate the vertical tilt
+        let tilt = Matrix.angleOffHorizon(from: location, to: landmark)
+        
+        // Apply the transformations
+        let tiltedTransformation = Matrix.rotateVertically(matrix: distanceTransform, around: tilt)
+        let completedTransformation = Matrix.rotateHorizontally(matrix: tiltedTransformation, around: -rotation)
+        
+        return completedTransformation
+    }
+    
     
     
     func cameraHeading(camera: ARCamera) -> Float {

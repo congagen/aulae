@@ -3,11 +3,13 @@ import SceneKit
 import ARKit
 import CoreLocation
 
+
 class ContentNode: SCNNode {
     
     let title: String
     var anchor: ARAnchor?
     var location: CLLocation!
+    
     
     init(title: String, location: CLLocation) {
         self.title = title
@@ -128,6 +130,25 @@ class ContentNode: SCNNode {
         node.constraints = [SCNBillboardConstraint()]
         
         addChildNode(node)
+    }
+    
+    
+    func addObj(fPath: String, contentObj: RLM_Obj) {
+        
+        let urlPath = URL(fileURLWithPath: fPath)
+        let fileName = urlPath.lastPathComponent
+        let fileDir = urlPath.deletingLastPathComponent().path
+        print("Attempting to load OBJ model: " + String(fileDir) + " Filename: " + String(fileName))
+        
+        let objScene = SCNSceneSource(url: urlPath, options: nil)
+        
+        do {
+            let node: SCNNode = try objScene!.scene().rootNode
+            addChildNode(node)
+        } catch {
+            print(error)
+        }
+    
     }
     
     
