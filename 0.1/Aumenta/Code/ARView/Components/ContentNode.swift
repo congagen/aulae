@@ -134,21 +134,18 @@ class ContentNode: SCNNode {
     
     
     func addObj(fPath: String, contentObj: RLM_Obj) {
-        
+
         let urlPath = URL(fileURLWithPath: fPath)
-        let fileName = urlPath.lastPathComponent
-        let fileDir = urlPath.deletingLastPathComponent().path
-        print("Attempting to load OBJ model: " + String(fileDir) + " Filename: " + String(fileName))
-        
-        let objScene = SCNSceneSource(url: urlPath, options: nil)
-        
-        do {
-            let node: SCNNode = try objScene!.scene().rootNode
-            addChildNode(node)
-        } catch {
-            print(error)
+ 
+        if let objScene = SCNSceneSource(url: urlPath, options: nil) {
+            do {
+                let node: SCNNode = try objScene.scene().rootNode
+                addChildNode(node)
+            } catch {
+                print(error)
+            }
         }
-    
+        
     }
     
     
@@ -162,11 +159,11 @@ class ContentNode: SCNNode {
             node.geometry?.materials.first?.diffuse.contents = img
             node.geometry?.materials.first?.isDoubleSided = true
             node.constraints = [SCNBillboardConstraint()]
+            addChildNode(node)
         } else {
-            // TODO: return Placeholder Obj?
+            // TODO: Log Error?
         }
         
-        addChildNode(node)
     }
     
     
@@ -181,7 +178,6 @@ class ContentNode: SCNNode {
         
         layer.add(animation, forKey: "contents")
         layer.anchorPoint = CGPoint(x:0.0, y:1.0)
-        
         
         let gifMaterial = SCNMaterial()
         gifMaterial.isDoubleSided = true

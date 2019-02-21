@@ -2,6 +2,11 @@
 
 // ArKit -> SceneKit?
 
+
+// Beacon Icons
+// TabBar Icons: Map View Feeds Settings
+
+
 // Feeds
 //    Update feed/items if deef version id !=
 //    Remove/Invalidate removed FeedItems

@@ -43,7 +43,6 @@
 		FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA663146221DBD4B000FEF60 /* ContentNode.swift */; };
 		FA66314D221DF200000FEF60 /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314C221DF200000FEF60 /* Matrix.swift */; };
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
-		FA8275EA221AB650007B413B /* SceneNodeUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8275E9221AB650007B413B /* SceneNodeUtils.swift */; };
 		FA8275EC221ABAD5007B413B /* SceneActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8275EB221ABAD5007B413B /* SceneActions.swift */; };
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
 		FA8B387022120DD60099A7A3 /* ValConverters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B386F22120DD60099A7A3 /* ValConverters.swift */; };
@@ -106,7 +105,6 @@
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314C221DF200000FEF60 /* Matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
-		FA8275E9221AB650007B413B /* SceneNodeUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneNodeUtils.swift; sourceTree = "<group>"; };
 		FA8275EB221ABAD5007B413B /* SceneActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneActions.swift; sourceTree = "<group>"; };
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
 		FA8B386F22120DD60099A7A3 /* ValConverters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValConverters.swift; sourceTree = "<group>"; };
@@ -141,7 +139,6 @@
 			isa = PBXGroup;
 			children = (
 				FA8B386F22120DD60099A7A3 /* ValConverters.swift */,
-				FA8275E9221AB650007B413B /* SceneNodeUtils.swift */,
 				FA8275EB221ABAD5007B413B /* SceneActions.swift */,
 				FAF37EB8221D65610065B18A /* NodeAnimation.swift */,
 				FA663146221DBD4B000FEF60 /* ContentNode.swift */,
@@ -400,7 +397,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA8275EA221AB650007B413B /* SceneNodeUtils.swift in Sources */,
 				316B86D820D955660076E63D /* FloatingPoint+Radians.swift in Sources */,
 				FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */,
 				316B86DD20D955660076E63D /* LocationManager.swift in Sources */,

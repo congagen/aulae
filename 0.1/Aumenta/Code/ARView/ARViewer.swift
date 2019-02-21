@@ -20,21 +20,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     let valConv = ValConverters()
-    
-    var deviceHeading: Float = 0
-    var deviceHeadingNormal: Float = 0
-    var deviceAngle:Double = 0
-    var currentCamTransform: simd_float4x4 = simd_float4x4(float4(0), float4(0), float4(0), float4(0))
-    var currentCamEuler: vector_float3 = vector_float3(x:0, y:0, z:0)
-    
-    var camFrame: ARFrame? = nil
-    var cam: ARCamera? = nil
-    
+
     var updateTimer = Timer()
     var updateInterval: Double = 10
     
     var mainScene = SCNScene()
-    
     
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         updateScene()
@@ -44,11 +34,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     
     @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
-        // let capImg = UIImage(cgImage: sceneView.snapshot().cgImage!)
         
         let snapShot = sceneView.snapshot()
-        //let jpg = UIImageJPEGRepresentation(snapShot, 1.0)
-        
         let imageToShare = [snapShot]
         let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
@@ -83,10 +70,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / 1000000.0, y: Double(translationSCNV.z) / 1000000.0 )
 
         let vPos = 0.0
-        let basePos          = SCNVector3(normalisedTrans.x, CGFloat(vPos), normalisedTrans.y)
+        let latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(vPos), normalisedTrans.y)
 
         print("Distance:     " + String(objectDistance))
-        print("TrnsPos:      " + String(basePos.x) + ", " + String(basePos.y) + ", " + String(basePos.z))
+        print("TrnsPos:      " + String(latLongXyz.x) + ", " + String(latLongXyz.y) + ", " + String(latLongXyz.z))
         
         if fPath != "" {
             // let scale = (100 / Float(objectDistance)) + 1
@@ -94,29 +81,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             if contentObj.type.lowercased() == "obj" {
                 print("ADDING OBJ TO SCENE: " + fPath)
                 
-                let node = objNode(fPath: fPath, contentObj: contentObj)
-                //node.location = rawObjectGpsCCL
-                node.position = basePos
+                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+                node.addObj(fPath: fPath, contentObj: contentObj)
+                node.location = rawObjectGpsCCL
+                
+                node.position = latLongXyz
                 mainScene.rootNode.addChildNode(node)
             }
             
             if contentObj.type.lowercased() == "image" {
                 print("ADDING IMAGE TO SCENE")
                 
-                let node = imageNode(fPath: fPath, contentObj: contentObj)
+                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+                node.addImage(fPath: fPath, contentObj: contentObj)
+                node.location = rawObjectGpsCCL
                 
-                //node.location = rawObjectGpsCCL
-                node.position = basePos
+                node.position = latLongXyz
                 mainScene.rootNode.addChildNode(node)
             }
             
             if contentObj.type.lowercased() == "gif" {
                 print("ADDING GIF TO SCENE")
                 
-                let node = ContentNode(title: "GifNode", location: rawObjectGpsCCL)
+                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addGif(fPath: fPath, contentObj: contentObj)
                 node.location = rawObjectGpsCCL
-                node.position = basePos
+                node.position = latLongXyz
                 mainScene.rootNode.addChildNode(node)
             }
         } else {
@@ -193,27 +183,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        camFrame = frame
-        cam = camFrame!.camera
-        
-        currentCamTransform = cam!.transform
-        currentCamEuler = cam!.eulerAngles
-        deviceHeading = currentCamEuler.y
-        //deviceHeadingNormal = ((currentCamEuler.y + 0.00001) + .pi) / (2 * .pi)
-        
-        let h = valConv.cameraHeading(camera: cam!)
-        deviceHeadingNormal = Float((Double(h + 0.00001) + Double.pi) / (2 * .pi))
-        
-        deviceAngle = 180.0 + (( Double(deviceHeading) / (2.0 * Double.pi) ) * 360.0)
-        
-        print("DeviceHeading:       " + String(deviceHeading))
-        print("DeviceHeadingNormal: " + String(deviceHeadingNormal))
-        print("DeviceAngle:         " + String(deviceAngle))
-        
-    }
-    
-    
     func initScene() {
         print("initScene")
         
@@ -241,7 +210,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
-        print(currentCamEuler)
         updateScene()
     }
     
