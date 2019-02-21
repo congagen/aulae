@@ -8,7 +8,6 @@
 import Foundation
 import CoreLocation
 import ARKit
-
 import Realm
 import RealmSwift
 
@@ -19,8 +18,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
-    let valConv = ValConverters()
-
     var updateTimer = Timer()
     var updateInterval: Double = 10
     
@@ -75,8 +72,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         print("Distance:     " + String(objectDistance))
         print("TrnsPos:      " + String(latLongXyz.x) + ", " + String(latLongXyz.y) + ", " + String(latLongXyz.z))
         
-        if fPath != "" {
-            // let scale = (100 / Float(objectDistance)) + 1
+        if fPath != "" && contentObj.type.lowercased() != "text" {
             
             if contentObj.type.lowercased() == "obj" {
                 print("ADDING OBJ TO SCENE: " + fPath)
@@ -109,8 +105,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 node.position = latLongXyz
                 mainScene.rootNode.addChildNode(node)
             }
+            
         } else {
-            // TODO: Add placeholder if allowed in settings
+            
+            if (contentObj.type.lowercased() == "text") {
+                // TODO: Add placeholder if allowed in settings
+            } else {
+                // TODO: Add placeholder if allowed in settings
+            }
         }
     }
     
@@ -192,6 +194,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 //do something with tapped object
                 print(tappednode.name!)
                 print(tappednode.position)
+                
+                if !tappednode.hasActions {
+                    addHooverAnimation(node: tappednode)
+                } else {
+                    tappednode.removeAllActions()
+                }
+                
             }
         }
     }

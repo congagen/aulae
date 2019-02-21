@@ -7,10 +7,6 @@
 //
 
 import Foundation
-
-
-
-
 import UIKit
 import SceneKit
 import Foundation
@@ -19,7 +15,7 @@ import ARKit
 
 extension ARViewer {
     
-    func sharePhoto(){
+    func sharePhoto() {
         let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: [:])
         renderer.scene = sceneView.scene
         renderer.pointOfView = sceneView.pointOfView
@@ -32,5 +28,12 @@ extension ARViewer {
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
     }
+    
+    
+    func showNodeInfo(node:SCNNode) {
+        // TODO
+    }
+    
+    
 
 }

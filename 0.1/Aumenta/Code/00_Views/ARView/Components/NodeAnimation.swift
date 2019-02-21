@@ -13,7 +13,7 @@ import ARKit
 
 extension ARViewer {
     
-    func animateNode(node: SCNNode){
+    func addHooverAnimation(node: SCNNode){
         let moveUp = SCNAction.moveBy(x: 0, y: 1, z: 0, duration: 1)
         moveUp.timingMode = .easeInEaseOut;
         
@@ -25,5 +25,6 @@ extension ARViewer {
         
         node.runAction(moveLoop)
     }
+    
 
 }

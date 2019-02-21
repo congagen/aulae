@@ -41,7 +41,6 @@
 		FA1AAC442153E9D200EE494A /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC412153E9D200EE494A /* Realm.framework */; };
 		FA1AAC452153E9D200EE494A /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC412153E9D200EE494A /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA663146221DBD4B000FEF60 /* ContentNode.swift */; };
-		FA66314D221DF200000FEF60 /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314C221DF200000FEF60 /* Matrix.swift */; };
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
 		FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */; };
 		FA8275EC221ABAD5007B413B /* SceneActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8275EB221ABAD5007B413B /* SceneActions.swift */; };
@@ -104,7 +103,6 @@
 		FA1AAC412153E9D200EE494A /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		FA482F672215ADE600D251AB /* Aumenta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aumenta.entitlements; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
-		FA66314C221DF200000FEF60 /* Matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		FA8275EB221ABAD5007B413B /* SceneActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneActions.swift; sourceTree = "<group>"; };
@@ -144,7 +142,6 @@
 				FA8275EB221ABAD5007B413B /* SceneActions.swift */,
 				FAF37EB8221D65610065B18A /* NodeAnimation.swift */,
 				FA663146221DBD4B000FEF60 /* ContentNode.swift */,
-				FA66314C221DF200000FEF60 /* Matrix.swift */,
 				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 			);
 			path = Components;
@@ -427,7 +424,6 @@
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
 				FAF37EB7221CA9680065B18A /* Notes.swift in Sources */,
-				FA66314D221DF200000FEF60 /* Matrix.swift in Sources */,
 				3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */,
 				316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
