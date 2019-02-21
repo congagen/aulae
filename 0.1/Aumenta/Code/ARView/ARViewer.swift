@@ -94,6 +94,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let objectXYZPos     = valConv.gps_to_ecef( latitude: Double(rawObjectGps.x), longitude: Double(rawObjectGps.y), altitude: 0.01 )
         let compositeXY      = CGPoint(x: (objectXYZPos[0] - deviceXYZPos[0]) / 1000000.0, y: (objectXYZPos[1] - deviceXYZPos[1]) / 1000000.0 )
         
+        let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
+        let distance         = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         
         let vPos = 0.0
         
@@ -119,8 +121,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 
                 let node = ContentNode(title: "GifNode", location: rawObjectGpsCCL)
                 node.addGif(fPath: fPath, contentObj: contentObj)
+                node.location = rawObjectGpsCCL
                 
-                node.position = SCNVector3(compositeXY.x, CGFloat(vPos), compositeXY.y)
+                let scale = 100 / Float(distance)
+                node.scale = SCNVector3(x: scale, y: scale, z: scale)
+                
+                //node.position = SCNVector3(compositeXY.x, CGFloat(vPos), compositeXY.y)
+                node.position = SCNVector3.positionFromTransform(translation)
                 mainScene.rootNode.addChildNode(node)
             }
         } else {
