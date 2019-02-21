@@ -76,35 +76,44 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         let rawDeviceGps     = CGPoint(x: (session.first?.currentLat)!, y: (session.first?.currentLng)!)
         let rawObjectGps     = CGPoint(x: contentObj.lat, y: contentObj.lng)
-
+        
         let rawDeviceGpsCCL  = CLLocation(latitude: CLLocationDegrees(rawDeviceGps.x), longitude: CLLocationDegrees(rawDeviceGps.y))
         let rawObjectGpsCCL  = CLLocation(latitude: CLLocationDegrees(rawObjectGps.x), longitude: CLLocationDegrees(rawObjectGps.y))
         
+        let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
+        let translationSCNV  = SCNVector3.positionFromTransform(translation)
+        
+        let distance         = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+
         let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         let objectBearing    = valConv.cclBearing(point1: rawObjectGpsCCL, point2: rawDeviceGpsCCL)
         
         let offsetPos        = valConv.locationWithBearing(bearing: objectBearing, distanceMeters: objectDistance, origin: rawDeviceGpsCCL.coordinate )
+    
+        let deviceXYZPos     = valConv.gps_to_ecef( latitude: Double(rawDeviceGps.x), longitude: Double(rawDeviceGps.y), altitude: 0.01 )
+        let objectXYZPos     = valConv.gps_to_ecef( latitude: Double(rawObjectGps.x), longitude: Double(rawObjectGps.y), altitude: 0.01 )
         
+        let compositeXY      = CGPoint(x: (objectXYZPos[0] - deviceXYZPos[0]) / 1000000.0, y: (objectXYZPos[1] - deviceXYZPos[1]) / 1000000.0 )
+        let compositeXYTra   = CGPoint(x: Double(translationSCNV.x) / 1000000.0, y: Double(translationSCNV.z) / 1000000.0 )
+
+        let vPos = 0.0
+        let basePos          = SCNVector3(compositeXY.x,    CGFloat(vPos), compositeXY.y)
+        let basePosTra       = SCNVector3(compositeXYTra.x, CGFloat(vPos), compositeXYTra.y)
+
         print("Distance:     " + String(objectDistance))
         print("Bearing:      " + String(objectBearing))
         print("RawObjectGps: " + String(rawObjectGps.x.description) + ", " + String(rawObjectGps.y.description))
         print("BearingGPS:   " + String(offsetPos.latitude) + ", " + String(offsetPos.longitude))
         
-        let deviceXYZPos     = valConv.gps_to_ecef( latitude: Double(rawDeviceGps.x), longitude: Double(rawDeviceGps.y), altitude: 0.01 )
-        let objectXYZPos     = valConv.gps_to_ecef( latitude: Double(rawObjectGps.x), longitude: Double(rawObjectGps.y), altitude: 0.01 )
-        let compositeXY      = CGPoint(x: (objectXYZPos[0] - deviceXYZPos[0]) / 1000000.0, y: (objectXYZPos[1] - deviceXYZPos[1]) / 1000000.0 )
-        
-        let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
-        let distance         = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        
-        let vPos = 0.0
+        print("BasePos:      " + String(basePos.x) + ", " + String(basePos.y) + ", " + String(basePos.z))
+        print("TrnsPos:      " + String(basePosTra.x) + ", " + String(basePosTra.y) + ", " + String(basePosTra.z))
         
         if fPath != "" {
             if contentObj.type.lowercased() == "obj" {
                 print("ADDING OBJ TO SCENE: " + fPath)
                 
                 let node = objNode(fPath: fPath, contentObj: contentObj)
-                node.position = SCNVector3(compositeXY.x, CGFloat(vPos), compositeXY.y)
+                node.position = basePos
                 mainScene.rootNode.addChildNode(node)
             }
             
@@ -112,7 +121,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 print("ADDING IMAGE TO SCENE")
                 
                 let node = imageNode(fPath: fPath, contentObj: contentObj)
-                node.position = SCNVector3(compositeXY.x, CGFloat(vPos), compositeXY.y)
+                node.position = basePos
                 mainScene.rootNode.addChildNode(node)
             }
             
@@ -123,11 +132,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 node.addGif(fPath: fPath, contentObj: contentObj)
                 node.location = rawObjectGpsCCL
                 
-                let scale = 100 / Float(distance)
+                let scale = (100 / Float(distance)) + 1
                 node.scale = SCNVector3(x: scale, y: scale, z: scale)
                 
-                //node.position = SCNVector3(compositeXY.x, CGFloat(vPos), compositeXY.y)
-                node.position = SCNVector3.positionFromTransform(translation)
+                node.position = basePosTra
+                //node.position = SCNVector3.positionFromTransform(translation)
                 mainScene.rootNode.addChildNode(node)
             }
         } else {
@@ -237,7 +246,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         //let configuration = AROrientationTrackingConfiguration()
         let configuration = ARWorldTrackingConfiguration()
-        sceneView.session.run(configuration)
+        
+        configuration.worldAlignment = .gravityAndHeading
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        
+        //sceneView.session.run(configuration)
     }
     
     
