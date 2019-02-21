@@ -183,6 +183,20 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     
+    @objc func handleTap(rec: UITapGestureRecognizer){
+        if rec.state == .ended {
+            let location: CGPoint = rec.location(in: sceneView)
+            let hits = self.sceneView.hitTest(location, options: nil)
+            
+            if let tappednode = hits.first?.node {
+                //do something with tapped object
+                print(tappednode.name!)
+                print(tappednode.position)
+            }
+        }
+    }
+    
+    
     func initScene() {
         print("initScene")
         
@@ -198,6 +212,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         configuration.worldAlignment = .gravityAndHeading
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        sceneView.addGestureRecognizer(tapGestureRecognizer)
+        tapGestureRecognizer.cancelsTouchesInView = false
         
         //sceneView.session.run(configuration)
     }
