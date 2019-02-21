@@ -240,10 +240,20 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             pinView?.annotation = annotation
         }
         
-        pinView?.image = UIImage(named: "star")
+        pinView?.image = UIImage(named: "pin_ds")
         pinView?.canShowCallout = true
         
         return pinView
+    }
+    
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        view.image = UIImage(named: "pin_s")
+
+    }
+    
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        view.image = UIImage(named: "pin_ds")
     }
     
     
