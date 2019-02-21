@@ -1,4 +1,35 @@
 
+
+//func addContentToScene(contentObj: RLM_Obj, fPath: String) {
+//    print("addContentToScene: " + String(contentObj.id))
+//    
+//    let rawObjectGps     = CGPoint(x: contentObj.lat, y: contentObj.lng)
+//    
+//    let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)! )
+//    let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+//    
+//    let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
+//    let translationSCNV  = SCNVector3.positionFromTransform(translation)
+//    
+//    let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+//    
+//    let deviceXYZPos     = valConv.gps_to_ecef( latitude: Double(rawDeviceGpsCCL.coordinate.latitude), longitude: Double(rawDeviceGpsCCL.coordinate.longitude), altitude: 0.01 )
+//    let objectXYZPos     = valConv.gps_to_ecef( latitude: Double(rawObjectGpsCCL.coordinate.latitude), longitude: Double(rawObjectGpsCCL.coordinate.longitude), altitude: 0.01 )
+//    let compositeXY      = CGPoint(x: (objectXYZPos[0] - deviceXYZPos[0]) / 1000000.0, y: (objectXYZPos[1] - deviceXYZPos[1]) / 1000000.0 )
+//    
+//    let compositeXYTra   = CGPoint(x: Double(translationSCNV.x) / 1000000.0, y: Double(translationSCNV.z) / 1000000.0 )
+//    
+//    let vPos = 0.0
+//    let basePos          = SCNVector3(compositeXY.x,    CGFloat(vPos), compositeXY.y)
+//    let basePosTra       = SCNVector3(compositeXYTra.x, CGFloat(vPos), compositeXYTra.y)
+//    
+//    print("Distance:     " + String(objectDistance))
+//    print("RawObjectGps: " + String(rawObjectGps.x.description) + ", " + String(rawObjectGps.y.description))
+//    
+//    print("BasePos:      " + String(basePos.x) + ", " + String(basePos.y) + ", " + String(basePos.z))
+//    print("TrnsPos:      " + String(basePosTra.x) + ", " + String(basePosTra.y) + ", " + String(basePosTra.z))
+
+
 //    double rad = angle*M_PI/180;
 //
 //    newX = x * cos(rad) - y * sin(rad);
