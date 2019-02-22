@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3158C65A20B598D200E2F3FB /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 3158C65820B598D200E2F3FB /* star.png */; };
 		3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3164AF4920B47E79009EDA27 /* RLM_Obj.swift */; };
 		316B86B620D900940076E63D /* FeedsTVCMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86B520D900940076E63D /* FeedsTVCMain.swift */; };
 		316B86D520D955660076E63D /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CA20D955660076E63D /* SCNVector3+Extensions.swift */; };
@@ -67,7 +66,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3158C65820B598D200E2F3FB /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
 		3164AF4920B47E79009EDA27 /* RLM_Obj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Obj.swift; sourceTree = "<group>"; };
 		316B86B520D900940076E63D /* FeedsTVCMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsTVCMain.swift; sourceTree = "<group>"; };
 		316B86CA20D955660076E63D /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
@@ -101,7 +99,7 @@
 		31D284BE20D3B079004451A6 /* RLM_Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Feed.swift; sourceTree = "<group>"; };
 		FA1AAC402153E9D000EE494A /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		FA1AAC412153E9D200EE494A /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
-		FA482F672215ADE600D251AB /* Aumenta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aumenta.entitlements; sourceTree = "<group>"; };
+		FA482F672215ADE600D251AB /* Aumenta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Aumenta.entitlements; path = ../Aumenta.entitlements; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -175,7 +173,6 @@
 		3177251220B03AD4009FA8B1 = {
 			isa = PBXGroup;
 			children = (
-				FA482F672215ADE600D251AB /* Aumenta.entitlements */,
 				FAB2AE7922088315004D5819 /* TODO.swift */,
 				FAF37EB6221CA9680065B18A /* Notes.swift */,
 				3177251D20B03AD4009FA8B1 /* Code */,
@@ -228,6 +225,7 @@
 		318FE90320B1696E0050528B /* Internals */ = {
 			isa = PBXGroup;
 			children = (
+				FA482F672215ADE600D251AB /* Aumenta.entitlements */,
 				3177251E20B03AD4009FA8B1 /* AppDelegate.swift */,
 				3177252C20B03AD6009FA8B1 /* Info.plist */,
 				318FE8F820B0C3880050528B /* ArkitTest.entitlements */,
@@ -240,7 +238,6 @@
 			children = (
 				3177252020B03AD4009FA8B1 /* art.scnassets */,
 				3177252720B03AD6009FA8B1 /* Assets.xcassets */,
-				3158C65820B598D200E2F3FB /* star.png */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -400,7 +397,6 @@
 				319AA78320B4659200F99223 /* feed.json in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
-				3158C65A20B598D200E2F3FB /* star.png in Resources */,
 				3177252820B03AD6009FA8B1 /* Assets.xcassets in Resources */,
 				3177252620B03AD4009FA8B1 /* Main.storyboard in Resources */,
 			);

@@ -139,13 +139,45 @@ class ContentNode: SCNNode {
  
         if let objScene = SCNSceneSource(url: urlPath, options: nil) {
             do {
-                let node: SCNNode = try objScene.scene().rootNode
+                let node: SCNNode = try objScene.scene().rootNode.clone()
                 addChildNode(node)
             } catch {
                 print(error)
             }
         }
+    }
+    
+
+    func addUSDZ(fPath: String, contentObj: RLM_Obj, position: SCNVector3) {
         
+        let urlPath = URL(fileURLWithPath: fPath)
+        
+        if let objScene = SCNSceneSource(url: urlPath, options: nil) {
+            do {
+                let node: SCNNode = try objScene.scene().rootNode.clone()
+                node.scale = SCNVector3(x: 0.1, y: 0.1, z: 0.1)
+                addChildNode(node)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    
+    func addScene(fPath: String, contentObj: RLM_Obj) {
+        let node = SCNNode()
+        
+        let urlPath = URL(fileURLWithPath: fPath)
+        
+        if let objScene = SCNSceneSource(url: urlPath, options: nil) {
+            do {
+                for n in try! objScene.scene().rootNode.childNodes {
+                    node.addChildNode(n)
+                }
+            }
+        }
+        
+        addChildNode(node)
     }
     
     

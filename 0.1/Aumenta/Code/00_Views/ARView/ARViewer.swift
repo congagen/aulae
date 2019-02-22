@@ -55,17 +55,20 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     
-    func addContentToScene(contentObj: RLM_Obj, fPath: String) {
+    func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
         print("addContentToScene: " + String(contentObj.id))
         
         let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)! )
         let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        let distanceScale    = (objectDistance / scaleFactor) + 1000
 
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
-        let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / 1000000.0, y: Double(translationSCNV.z) / 1000000.0 )
-
+        
+//        let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / 1000000.0, y: Double(translationSCNV.z) / 1000000.0 )
+        let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / distanceScale, y: Double(translationSCNV.z) / distanceScale )
+        
         let vPos = 0.0
         let latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(vPos), normalisedTrans.y)
 
@@ -79,6 +82,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 
                 let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addObj(fPath: fPath, contentObj: contentObj)
+                node.location = rawObjectGpsCCL
+                
+                node.position = latLongXyz
+                mainScene.rootNode.addChildNode(node)
+            }
+
+            if contentObj.type.lowercased() == "usdz" {
+                print("ADDING USDZ TO SCENE: " + fPath)
+                
+                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+                node.addUSDZ(fPath: fPath, contentObj: contentObj, position: latLongXyz)
                 node.location = rawObjectGpsCCL
                 
                 node.position = latLongXyz
@@ -129,12 +143,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         sceneView.pointOfView?.rotate(by: SCNQuaternion(x: 0, y: 0, z: 0, w: 0), aroundTarget: (sceneView.pointOfView?.position)!)
         
         for n in mainScene.rootNode.childNodes {
-            n.removeFromParentNode()
+            //n.removeFromParentNode()
+            
+            if (n.name != "DefaultAmbientLight") {
+                n.removeFromParentNode()
+            }
         }
         
         mainScene.rootNode.enumerateChildNodes { (node, stop) in
-            node.removeFromParentNode()
-            node.removeAllActions()
+            if (node.name != "DefaultAmbientLight") {
+                node.removeFromParentNode()
+                node.removeAllActions()
+            }
         }
         
         for o in activeInRange {
@@ -150,14 +170,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                     print("FileManager.default.fileExists")
                     
-                    addContentToScene(contentObj: o, fPath: (destinationUrl?.path)! )
+                    addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: 5 )
                     
                 } else {
                     print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
                 }
             } else {
                 if (o.type == "text") {
-                    addContentToScene(contentObj: o, fPath:"" )
+                    addContentToScene(contentObj: o, fPath:"", scaleFactor: 5 )
                 }
             }
         }
