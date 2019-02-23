@@ -145,14 +145,14 @@
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
                     <navigationItem key="navigationItem" title="Argume" id="0Jn-a9-joB">
-                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="0vE-dQ-BcC">
-                            <connections>
-                                <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="dHf-hJ-ljZ"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="etU-3N-bVO">
+                        <barButtonItem key="leftBarButtonItem" systemItem="action" id="etU-3N-bVO">
                             <connections>
                                 <action selector="sharePhotoBtn:" destination="cNO-cb-Srl" id="p06-zG-iGc"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="0vE-dQ-BcC">
+                            <connections>
+                                <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="dHf-hJ-ljZ"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -186,14 +186,15 @@
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
                     <navigationItem key="navigationItem" title="Argume" id="jef-En-32s">
-                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="lp5-fg-UQE">
-                            <connections>
-                                <action selector="reloadBtnAction:" destination="shz-14-nLG" id="MV4-JY-nUe"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="tP4-NO-MBE">
+                        <barButtonItem key="leftBarButtonItem" systemItem="search" id="tP4-NO-MBE">
                             <connections>
                                 <action selector="searchBtnAction:" destination="shz-14-nLG" id="DoD-ie-dEq"/>
+                                <segue destination="Z9j-U6-ciR" kind="show" id="syp-hZ-XxQ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="lp5-fg-UQE">
+                            <connections>
+                                <action selector="reloadBtnAction:" destination="shz-14-nLG" id="MV4-JY-nUe"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -416,22 +417,39 @@
         <scene sceneID="1XM-Tk-eYm">
             <objects>
                 <tableViewController id="Z9j-U6-ciR" customClass="FeedSearchTVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="v8V-41-IIa">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="v8V-41-IIa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <searchBar key="tableHeaderView" contentMode="redraw" barStyle="black" searchBarStyle="prominent" id="WAW-wL-ehR">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="dr7-Nx-pFp">
-                                <rect key="frame" x="0.0" y="84" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="checkmark" indentationWidth="0.0" reuseIdentifier="cell" textLabel="1nz-Hp-hZc" detailTextLabel="n1q-Ys-Mur" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="dr7-Nx-pFp" userLabel="cell">
+                                <rect key="frame" x="0.0" y="84" width="375" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dr7-Nx-pFp" id="G07-Hs-FeJ">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="335" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1nz-Hp-hZc">
+                                            <rect key="frame" x="15" y="7.9999999999999982" width="33.333333333333336" height="20.333333333333332"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="n1q-Ys-Mur">
+                                            <rect key="frame" x="14.999999999999996" y="28.333333333333332" width="43.666666666666664" height="14.333333333333334"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -553,4 +571,7 @@
         <image name="TabBarIcon_02" width="20" height="21"/>
         <image name="TabBarIcon_03" width="19" height="16"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="SZc-Qf-Odg"/>
+    </inferredMetricsTieBreakers>
 </document>

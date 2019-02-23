@@ -246,7 +246,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 //                    public string greetingMsg = "Hello!";
 //                    public string fallbackMsg = "Wha?";
 
-                    let a = NetworkTools().postReq(apiHeaderValue: "", apiHeaderFeild: "", apiUrl: "", reqParams: [:])
+                    //let a = NetworkTools().postReq(apiHeaderValue: "", apiHeaderFeild: "", apiUrl: "", reqParams: [:])
                     
                 } else {
                     tappednode.removeAllActions()
