@@ -7,24 +7,66 @@
 //
 
 import UIKit
+import Realm
+import RealmSwift
+import Foundation
 
-class SettingsViewController: UIViewController {
 
+class SettingsViewController: UITableViewController {
+
+    
+    // SYSTEM
+    @IBOutlet var feedUpdateSpeedStepper: UIStepper!
+    @IBOutlet var feedUpdateSpeedDisplay: UITextField!
+    @IBAction func feedUpdateIntervalStepperAction(_ sender: UIStepper) {
+        print("Editing feedUpdateSpeedStepperAction")
+        print(sender.value)
+        
+        feedUpdateSpeedDisplay.text = String(Int(sender.value))
+    }
+    
+    
+    @IBOutlet var contentUpdateSpeedStepper: UIStepper!
+    @IBOutlet var contentUpdateSpeedDisplay: UITextField!
+    @IBAction func contentUpdateSpeedStepperAction(_ sender: UIStepper) {
+    }
+    
+    
+    @IBOutlet var autoUpdateSwitch: UISwitch!
+    @IBAction func autoUpdateSwitchAction(_ sender: UISwitch) {
+    }
+    
+    
+    @IBOutlet var gpsToggleSwitch: UISwitch!
+    @IBAction func gpsToggleSwitchAction(_ sender: UISwitch) {
+    }
+    
+    
+    // CONTENT
+    @IBOutlet var placeholderSwitch: UISwitch!
+    @IBAction func placeholderSwitchAction(_ sender: UISwitch) {
+    }
+    
+    @IBOutlet var animationToggleSwitch: UISwitch!
+    @IBAction func anitmationToggleSwitchAction(_ sender: UISwitch) {
+    }
+    
+    
+    
+    
+    func updateAll()  {
+        
+    }
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func viewWillAppear(_ animated: Bool) {
+        print("WILLAPPEAR")
     }
-    */
 
 }

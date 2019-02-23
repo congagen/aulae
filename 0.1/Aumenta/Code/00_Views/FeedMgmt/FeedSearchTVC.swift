@@ -80,9 +80,10 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         }
         
         print(currentSearchTerm)
-        tableView.reloadData()
-        tableView.reloadInputViews()
-        tableView.scrollToRow(at: IndexPath.init(item: 0, section: 1), at: .top, animated: false)
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
+        
+        
         view.endEditing(false)
         
     }
