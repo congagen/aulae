@@ -36,7 +36,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let snapShot = sceneView.snapshot()
         let imageToShare = [snapShot]
         let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
-        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
+        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
         
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
@@ -230,6 +230,24 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 
                 if !tappednode.hasActions {
                     addHooverAnimation(node: tappednode)
+//                    public string apiUrl = "https://zdyrbcgu1b.execute-api.us-east-1.amazonaws.com/Dev/misc";
+//                    public string payloadKey = "virtuapet";
+//
+//                    public List<string> apiHeaderKeys;
+//                    public List<string> apiHeaderVals;
+//
+//                    [Space(15)]
+//
+//                    public string userName = "User";
+//                    public string agentName = "Agent";
+//
+//                    [Space(15)]
+//
+//                    public string greetingMsg = "Hello!";
+//                    public string fallbackMsg = "Wha?";
+
+                    let a = NetworkTools().postReq(apiHeaderValue: "", apiHeaderFeild: "", apiUrl: "", reqParams: [:])
+                    
                 } else {
                     tappednode.removeAllActions()
                 }

@@ -10,8 +10,6 @@ import Foundation
 
 extension MainVC {
 
-
-    
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, originFeed:String) {
         let rlmObj = RLM_Obj()
         
@@ -240,6 +238,8 @@ extension MainVC {
             
         }
     }
+    
+    
     
     
     func updateFeeds() {

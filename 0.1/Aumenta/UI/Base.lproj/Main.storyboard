@@ -34,7 +34,7 @@
             </objects>
             <point key="canvasLocation" x="-866" y="114"/>
         </scene>
-        <!--Feeds-->
+        <!--Argume-->
         <scene sceneID="x9n-Rz-mVX">
             <objects>
                 <tableViewController id="4ZI-rx-Clo" customClass="FeedsTVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
@@ -106,7 +106,7 @@
                             <outlet property="delegate" destination="4ZI-rx-Clo" id="AYB-z0-Mok"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Feeds" id="Nhx-W2-kfA">
+                    <navigationItem key="navigationItem" title="Argume" id="Nhx-W2-kfA">
                         <barButtonItem key="leftBarButtonItem" systemItem="search" id="hIw-Fb-57X">
                             <connections>
                                 <segue destination="Z9j-U6-ciR" kind="show" id="SZc-Qf-Odg"/>
@@ -123,7 +123,7 @@
             </objects>
             <point key="canvasLocation" x="1660" y="1684"/>
         </scene>
-        <!--Viewer-->
+        <!--Argume-->
         <scene sceneID="9h0-ey-GEW">
             <objects>
                 <viewController id="cNO-cb-Srl" customClass="ARViewer" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
@@ -144,7 +144,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Viewer" id="0Jn-a9-joB">
+                    <navigationItem key="navigationItem" title="Argume" id="0Jn-a9-joB">
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="0vE-dQ-BcC">
                             <connections>
                                 <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="dHf-hJ-ljZ"/>
@@ -164,7 +164,7 @@
             </objects>
             <point key="canvasLocation" x="868" y="1685"/>
         </scene>
-        <!--Map-->
+        <!--Argume-->
         <scene sceneID="CcG-m6-yJt">
             <objects>
                 <viewController id="shz-14-nLG" customClass="MapVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
@@ -185,7 +185,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Map" id="jef-En-32s">
+                    <navigationItem key="navigationItem" title="Argume" id="jef-En-32s">
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="lp5-fg-UQE">
                             <connections>
                                 <action selector="reloadBtnAction:" destination="shz-14-nLG" id="MV4-JY-nUe"/>
@@ -208,7 +208,7 @@
             </objects>
             <point key="canvasLocation" x="116" y="1685"/>
         </scene>
-        <!--Settings-->
+        <!--Argume-->
         <scene sceneID="t3W-aA-OdL">
             <objects>
                 <viewController id="8ID-9l-soj" customClass="SettingsViewController" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
@@ -406,7 +406,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Zeb-QW-II6"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Settings" id="Uwb-vf-jzm"/>
+                    <navigationItem key="navigationItem" title="Argume" id="Uwb-vf-jzm"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C1D-rY-HJd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

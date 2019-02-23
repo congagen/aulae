@@ -82,10 +82,10 @@ class ContentNode: SCNNode {
         animation.duration = CFTimeInterval(time)
         animation.repeatCount = Float.greatestFiniteMagnitude;
         animation.isRemovedOnCompletion = false
-        animation.fillMode = kCAFillModeForwards
+        animation.fillMode = CAMediaTimingFillMode.forwards
         animation.values = framesArray
         animation.keyTimes = timesArray
-        animation.calculationMode = kCAAnimationDiscrete
+        animation.calculationMode = CAAnimationCalculationMode.discrete
         
         return animation;
     }
@@ -121,7 +121,7 @@ class ContentNode: SCNNode {
     
     func addText(nodeText: String, extrusion:Double, color:UIColor) {
         let text = SCNText(string: nodeText, extrusionDepth: 0.1)
-        text.alignmentMode = kCAAlignmentCenter
+        text.alignmentMode = convertFromCATextLayerAlignmentMode(CATextLayerAlignmentMode.center)
         text.font.withSize(5)
         
         let node = SCNNode(geometry: text)
@@ -225,4 +225,9 @@ class ContentNode: SCNNode {
         addChildNode(node)
     }
     
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCATextLayerAlignmentMode(_ input: CATextLayerAlignmentMode) -> String {
+	return input.rawValue
 }

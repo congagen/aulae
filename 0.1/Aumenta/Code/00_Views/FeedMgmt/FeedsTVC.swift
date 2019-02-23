@@ -196,14 +196,14 @@ class FeedsTVC: UITableViewController {
         let alert = UIAlertController(
             title: "Feed URL",
             message: "",
-            preferredStyle: UIAlertControllerStyle.alert
+            preferredStyle: UIAlertController.Style.alert
         )
         
         // TODO: Add Name Field
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:handleCancel))
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:handleEnterURL))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:handleCancel))
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler:handleEnterURL))
         
         alert.view.tintColor = UIColor.black
         
@@ -226,12 +226,12 @@ class FeedsTVC: UITableViewController {
         let alert = UIAlertController(
             title: "",
             message: "",
-            preferredStyle: UIAlertControllerStyle.alert
+            preferredStyle: UIAlertController.Style.alert
         )
         
         alert.addTextField(configurationHandler: renameConfigurationTextField)
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:handleCancel))
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:handleRenameOk))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:handleCancel))
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler:handleRenameOk))
         alert.view.tintColor = UIColor.black
         
         self.present(alert, animated: true, completion: nil)

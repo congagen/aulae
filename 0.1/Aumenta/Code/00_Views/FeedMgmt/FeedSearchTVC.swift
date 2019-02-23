@@ -20,6 +20,9 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
+    var apiHeaderValue = ""
+    var apiHeaderFeild = "Authorization"
+
     
     @IBOutlet var searchBar: UISearchBar!
     
@@ -30,9 +33,10 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         searchBar.delegate = self
     }
 
+    
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print(searchBar.text)
-        
+        print(searchBar.text!)
         view.endEditing(false)
     }
     

@@ -96,15 +96,15 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         let alert = UIAlertController(
             title: "",
             message: "",
-            preferredStyle: UIAlertControllerStyle.alert
+            preferredStyle: UIAlertController.Style.alert
         )
         
         // TODO: Add Name Field
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:handleCancel))
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler:handleEnterURL))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:handleCancel))
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler:handleEnterURL))
         
         alert.view.tintColor = UIColor.black
         
@@ -123,7 +123,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         
         if currentOverlays.count == 0 {
             let areaCircle = MKCircle(center: locat, radius: Double(radius))
-            mapView.add(areaCircle)
+            mapView.addOverlay(areaCircle)
         }
     }
     
