@@ -117,16 +117,16 @@ extension MainVC {
                     "type":         feedContent["type"] as! String,
                     "style":        feedContent["style"] as! Int,
                     
-                    "url":    valueIfPresent(dict: feedContent, key: "url",     placeHolderValue: ""),
+                    "url":    valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
                     
-                    "info":   valueIfPresent(dict: feedContent, key: "info",    placeHolderValue: ""),
-                    "text":   valueIfPresent(dict: feedContent, key: "text",    placeHolderValue: ""),
+                    "info":   valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
+                    "text":   valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
                     
-                    "lat":    valueIfPresent(dict: feedContent, key: "lat",     placeHolderValue: 0.0),
+                    "lat":    valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
                     "lng":    valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
                     "alt":    valueIfPresent(dict: feedContent, key: "alt",    placeHolderValue: 0.0),
 
-                    "radius": valueIfPresent(dict: feedContent, key: "radius",  placeHolderValue: 1.0),
+                    "radius": valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0),
                     "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
                 ]
                 

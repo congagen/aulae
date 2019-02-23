@@ -61,7 +61,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)! )
         let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
-        let rawObjectAlt     = 0.0
+        let objectAlt        = contentObj.alt
         
         let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         let distanceScale    = (objectDistance / scaleFactor) + 1000
@@ -74,13 +74,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         if (wordtrackError) {
             let objectXYZPos     = ValConverters().gps_to_ecef( latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
             let deviceXYZPos     = ValConverters().gps_to_ecef( latitude: rawDeviceGpsCCL.coordinate.latitude, longitude: rawDeviceGpsCCL.coordinate.longitude, altitude: 0.01 )
-            let xPos = (((objectXYZPos[0] - objectXYZPos[0]) ) / distanceScale)
-            let yPos = (((objectXYZPos[1] - objectXYZPos[1]) ) / distanceScale)
+            let xPos = (((objectXYZPos[0] - deviceXYZPos[0])) / distanceScale)
+            let yPos = (((objectXYZPos[1] - deviceXYZPos[1])) / distanceScale)
 
-            latLongXyz       = SCNVector3(xPos, rawObjectAlt, yPos)
+            latLongXyz       = SCNVector3(xPos, objectAlt, yPos)
         } else {
             let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / distanceScale, y: Double(translationSCNV.z) / distanceScale )
-            latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(rawObjectAlt), normalisedTrans.y)
+            latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(objectAlt), normalisedTrans.y)
         }
 
         print("Distance:     " + String(objectDistance))
@@ -94,7 +94,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addObj(fPath: fPath, contentObj: contentObj)
                 node.location = rawObjectGpsCCL
-                
                 node.position = latLongXyz
                 mainScene.rootNode.addChildNode(node)
             }
@@ -105,7 +104,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addUSDZ(fPath: fPath, contentObj: contentObj, position: latLongXyz)
                 node.location = rawObjectGpsCCL
-                
                 node.position = latLongXyz
                 mainScene.rootNode.addChildNode(node)
             }
@@ -116,7 +114,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addImage(fPath: fPath, contentObj: contentObj)
                 node.location = rawObjectGpsCCL
-                
                 node.position = latLongXyz
                 mainScene.rootNode.addChildNode(node)
             }
@@ -132,9 +129,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             }
             
         } else {
-            
             if (contentObj.type.lowercased() == "text") {
-                // TODO: Add placeholder if allowed in settings
+                print("ADDING TEXT TO SCENE")
+                
+                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+                node.addText(nodeText: contentObj.text, extrusion: 1, color: UIColor.black)
+                node.location = rawObjectGpsCCL
+                node.position = latLongXyz
+                mainScene.rootNode.addChildNode(node)
             } else {
                 // TODO: Add placeholder if allowed in settings
             }
@@ -250,6 +252,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         //let configuration = AROrientationTrackingConfiguration()
         let configuration = ARWorldTrackingConfiguration()
         
+        configuration.planeDetection = [.vertical, .horizontal]
         configuration.worldAlignment = .gravityAndHeading
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         

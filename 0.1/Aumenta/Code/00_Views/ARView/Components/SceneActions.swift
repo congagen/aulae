@@ -33,7 +33,6 @@ extension ARViewer {
     func showNodeInfo(node:SCNNode) {
         // TODO
     }
-    
-    
+
 
 }
