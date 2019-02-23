@@ -25,6 +25,8 @@ class RLM_Obj: Object {
 
     @objc dynamic var lat: Double = 59.292
     @objc dynamic var lng: Double = 18.102
+    @objc dynamic var alt: Double = 18.102
+
     @objc dynamic var radius: Double = 0.0
     
     @objc dynamic var x_pos: Double = 0.0

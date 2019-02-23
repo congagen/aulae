@@ -143,7 +143,6 @@
 //        let objectXYZPos = valConv.gps_to_ecef( latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
 //        let deviceXYZPos = valConv.gps_to_ecef( latitude: devicePos.coordinate.latitude, longitude: devicePos.coordinate.longitude, altitude: 0.01 )
 //        
-//        
 //        let xPos = (((objectXYZPos[0] - objectXYZPos[0]) ) / 1000000.0)
 //        let yPos = (((objectXYZPos[1] - objectXYZPos[1]) ) / 1000000.0)
 //        let vPos = 0.0

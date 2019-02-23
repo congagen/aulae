@@ -20,6 +20,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     var updateTimer = Timer()
     var updateInterval: Double = 10
+    var wordtrackError = false
     
     var mainScene = SCNScene()
     
@@ -60,17 +61,27 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)! )
         let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        let rawObjectAlt     = 0.0
+        
         let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         let distanceScale    = (objectDistance / scaleFactor) + 1000
 
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
         
-//        let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / 1000000.0, y: Double(translationSCNV.z) / 1000000.0 )
-        let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / distanceScale, y: Double(translationSCNV.z) / distanceScale )
+        var latLongXyz = SCNVector3(0, 0, 0)
         
-        let vPos = 0.0
-        let latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(vPos), normalisedTrans.y)
+        if (wordtrackError) {
+            let objectXYZPos     = ValConverters().gps_to_ecef( latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
+            let deviceXYZPos     = ValConverters().gps_to_ecef( latitude: rawDeviceGpsCCL.coordinate.latitude, longitude: rawDeviceGpsCCL.coordinate.longitude, altitude: 0.01 )
+            let xPos = (((objectXYZPos[0] - objectXYZPos[0]) ) / distanceScale)
+            let yPos = (((objectXYZPos[1] - objectXYZPos[1]) ) / distanceScale)
+
+            latLongXyz       = SCNVector3(xPos, rawObjectAlt, yPos)
+        } else {
+            let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / distanceScale, y: Double(translationSCNV.z) / distanceScale )
+            latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(rawObjectAlt), normalisedTrans.y)
+        }
 
         print("Distance:     " + String(objectDistance))
         print("TrnsPos:      " + String(latLongXyz.x) + ", " + String(latLongXyz.y) + ", " + String(latLongXyz.z))

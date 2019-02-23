@@ -29,8 +29,9 @@ extension MainVC {
                 rlmObj.style = objInfo["style"] as! Int
                 
                 rlmObj.lat = objInfo["lat"] as! Double
-                rlmObj.lng = objInfo["lng"] as! Double  // TODO: long -> lng
-                
+                rlmObj.lng = objInfo["lng"] as! Double
+                rlmObj.alt = objInfo["alt"] as! Double
+
                 rlmObj.scale = objInfo["scale"] as! Double
                 
                 realm.add(rlmObj)
@@ -44,7 +45,6 @@ extension MainVC {
     func storeFeedText(objInfo: [String : Any], originFeed:String) {
         let rlmObj = RLM_Obj()
         
-    
         do {
             try realm.write {
                 rlmObj.id = objInfo["id"] as! String
@@ -59,8 +59,9 @@ extension MainVC {
                 rlmObj.text = objInfo["text"] as! String
                 
                 rlmObj.lat = objInfo["lat"] as! Double
-                rlmObj.lng = objInfo["lng"] as! Double // TODO: long -> lng
-                
+                rlmObj.lng = objInfo["lng"] as! Double
+                rlmObj.alt = objInfo["alt"] as! Double
+
                 rlmObj.scale = objInfo["scale"] as! Double
                 
                 realm.add(rlmObj)
@@ -123,8 +124,9 @@ extension MainVC {
                     
                     "lat":    valueIfPresent(dict: feedContent, key: "lat",     placeHolderValue: 0.0),
                     "lng":    valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
+                    "alt":    valueIfPresent(dict: feedContent, key: "alt",    placeHolderValue: 0.0),
+
                     "radius": valueIfPresent(dict: feedContent, key: "radius",  placeHolderValue: 1.0),
-                    
                     "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
                 ]
                 

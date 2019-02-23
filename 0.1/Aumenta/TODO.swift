@@ -2,14 +2,18 @@
 
 // ArKit -> SceneKit?
 
+
 // System:
 //    Settings:                Feed Update Interval
-//    Settings:                Feed Update Interval
+//    Settings:                Content Refresh Interval
+
 
 // Feeds
 //    Feed Feeds / RSS / ?
+//    Object Altitude
 //    Update feed/items if deef version id !=
 //    Remove/Invalidate removed FeedItems
+
 
 // Feeds JSON SCHEMA:
 //     Object Settings:

@@ -1,105 +1,165 @@
 {
-    "id":          "12345678",
-    "name":        "12345678",
+    "id":          "DemoFeed_3",
+    "name":        "DemoFeed_3",
     "info":        "abcdefgh",
-    "version":     1234567891,
-    "updated_utx": 123456781,
+    "version":     3243243424,
+    "updated_utx": 143456781,
     
+    "demo_usd":"https://s3.amazonaws.com/abstra-dev/Content/cupandsaucer.usdz",
+    "demo_obj":"https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj",
+    "demo_scn":"https://s3.amazonaws.com/abstra-dev/Content/test.scn",
     
     "content": {
         
-        "image_item": {
-            "name":     "ImageItem",
-            "id":       "12345",
-            "type":     "image",
-            "style":     0,
-            
-            "version":  12345,
-            "info":     "Object info A",
-            
-            "lat":      70,
-            "Lng":     -6,
-            "radius":   10,
-            
-            "scale":    1,
-            
-            "url":      "https://upload.wikimedia.org/wikipedia/commons/8/8d/Badge-150755_640.png"
-        },
-        
-        "gif_item_a": {
-            "name":     "GifItem",
-            "id":       "12345",
-            "type":     "gif",
+        "OBJ_N": {
+            "name":     "N",
+            "id":       "12345a",
+            "type":     "obj",
             "style":     0,
             
             "version":  12345,
             "info":     "Object info bla",
             
             "lat":      71,
-            "Lng":     -6,
+            "lng":         19,
             "radius":   11,
             
             "scale":    1,
             
-            "url":      "https://upload.wikimedia.org/wikipedia/commons/b/bf/Duvor.gif"
+            "url":      "https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj"
         },
         
         
-        "gif_item_b": {
-            "name":     "GifItem",
-            "id":       "12345",
-            "type":     "gif",
+        
+        "OBJ_NE": {
+            "name":     "NE",
+            "id":       "12345b",
+            "type":     "obj",
             "style":     0,
             
             "version":  12345,
             "info":     "Object info bla",
             
-            "lat":      73,
-            "Lng":     -6,
+            "lat":      67,
+            "lng":      40,
             "radius":   12,
             
             "scale":    1,
             
-            "url":      "https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif"
+            "url":      "https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj"
         },
         
         
-        "obj_item": {
-            "name":     "ObjItem",
-            "id":       "12345",
-            "type":     "dae",
+        "OBJ_E": {
+            "name":     "E",
+            "id":       "12345c",
+            "type":     "obj",
             "style":     0,
             
             "version":  12345,
             "info":     "Object info bla",
             
-            "lat":      73,
-            "Lng":     -6,
-            "radius":   12,
+            "lat":      56,
+            "lng":      42,
+            "radius":   11,
             
             "scale":    1,
             
-            "url":      "https://github.com/markbrown4/webgl-workshop/raw/master/models/stanford-bunny.dae"
+            "url":      "https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj"
         },
         
-        
-        "text_item": {
-            "name":     "TextItem",
-            "id":       "12345",
-            "type":     "text",
-            "text":      "Some text to display",
-            
+        "OBJ_SE": {
+            "name":     "SE",
+            "id":       "12345d",
+            "type":     "obj",
             "style":     0,
             
             "version":  12345,
-            "info":     "Object info A",
+            "info":     "Object info bla",
             
-            "lat":      74,
-            "Lng":     -6,
-            "radius":   13,
+            "lat":      46,
+            "lng":      29,
+            "radius":   11,
             
-            "scale":    1
+            "scale":    1,
             
+            "url":      "https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj"
+        },
+        
+        "OBJ_S": {
+            "name":     "S",
+            "id":       "12345e",
+            "type":     "scn",
+            "style":     0,
+            
+            "version":  12345,
+            "info":     "Object info bla",
+            
+            "lat":      32,
+            "lng":      17,
+            "radius":   11,
+            
+            "scale":    1,
+            
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/test.scn"
+        },
+        
+        "OBJ_SW": {
+            "name":     "SW",
+            "id":       "12345",
+            "type":     "scn",
+            "style":     0,
+            
+            "version":  12345,
+            "info":     "Object info bla",
+            
+            "lat":      47,
+            "lng":      1.4,
+            "radius":   11,
+            
+            "scale":    1,
+            
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/test.scn"
+        },
+        
+        "OBJ_W": {
+            "name":     "W",
+            "id":       "12345",
+            "type":     "usdz",
+            "style":     0,
+            
+            "version":  12345,
+            "info":     "Object info bla",
+            
+            "lat":      59,
+            "lng":     -10,
+            "radius":   11,
+            
+            "scale":    1,
+            
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/cupandsaucer.usdz"
+        },
+        
+        "OBJ_NW": {
+            "name":     "NW",
+            "id":       "12345",
+            "type":     "usdz",
+            "style":     0,
+            
+            "version":  12345,
+            "info":     "Object info bla",
+            
+            "lat":      67,
+            "lng":      -2.5,
+            "radius":   11,
+            
+            "scale":    1,
+            
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/cupandsaucer.usdz"
         }
+        
+        
     }
+    
+    
 }
