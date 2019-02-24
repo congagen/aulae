@@ -1,4 +1,3 @@
-//
 //  NodeAnimation.swift
 //  Aumenta
 //
@@ -24,6 +23,19 @@ extension ARViewer {
         let moveLoop = SCNAction.repeatForever(moveSequence)
         
         node.runAction(moveLoop)
+    }
+    
+    
+    func rotateAnimation(node: SCNNode, xAmt: Float, yAmt: Float, zAmt: Float){
+        
+        let spin = CABasicAnimation(keyPath: "rotation")
+        spin.fromValue = NSValue(scnVector4: SCNVector4(x: xAmt, y: yAmt, z: zAmt, w: 0))
+        spin.toValue   = NSValue(scnVector4: SCNVector4(x: xAmt, y: yAmt, z: zAmt, w: 2 * Float(Double.pi)) )
+        
+        spin.duration  = 3
+        spin.repeatCount = .infinity
+        node.addAnimation(spin, forKey: "spin around")
+        
     }
     
 

@@ -36,13 +36,13 @@ class MainVC: UITabBarController {
         dbGc()
 
         if session.count > 0 {
-            if mainUpdateTimer.timeInterval != session.first?.contentUpdateSpeed {
+            if mainUpdateTimer.timeInterval != session.first?.contentUpdateInterval {
                 mainUpdateTimer.invalidate()
             }
             
             if !mainUpdateTimer.isValid {
                 mainUpdateTimer = Timer.scheduledTimer(
-                    timeInterval: session[0].contentUpdateSpeed,
+                    timeInterval: session[0].contentUpdateInterval,
                     target: self, selector: #selector(mainUpdate),
                     userInfo: nil, repeats: true)
             }

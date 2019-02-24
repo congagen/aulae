@@ -63,6 +63,14 @@ class SettingsViewController: UITableViewController {
     
     
     // CONTENT
+    let scaleFactorParamName = "scaleFactor"
+    @IBOutlet var scaleFactorStepper: UIStepper!
+    @IBOutlet var scaleFactorDisplay: UITextField!
+    @IBAction func scaleFactorStepperAction(_ sender: UIStepper) {
+        saveSettings(propName: scaleFactorParamName, propValue: Double(sender.value))
+        updateUI()
+    }
+    
     let useDistanceParamName = "useDistance"
     @IBOutlet var useDistanceSwitch: UISwitch!
     @IBAction func useDistanceSwitchAction(_ sender: UISwitch) {
@@ -95,28 +103,31 @@ class SettingsViewController: UITableViewController {
                     switch propName {
                         
                     case feeUpdateSpeedParamName:
-                        session.first!.feedUpdateSpeed    = propValue
+                        session.first!.feedUpdateInterval    = propValue
                         
                     case contentUpdateSpeedParamName:
-                        session.first!.contentUpdateSpeed = propValue
+                        session.first!.contentUpdateInterval = propValue
                         
                     case searchRadiusParamName:
-                        session.first!.searchRadius       = propValue
-                   
+                        session.first!.searchRadius          = propValue
+                        
+                    case scaleFactorParamName:
+                        session.first!.scaleFactor           = propValue
+                      
                     case useDistanceParamName:
-                        session.first!.distanceScale      = Int(propValue) == 1
+                        session.first!.distanceScale         = Int(propValue) == 1
                         
                     case autoUpdateParamName:
-                        session.first!.autoUpdate         = Int(propValue) == 1
+                        session.first!.autoUpdate            = Int(propValue) == 1
                         
                     case gpsToggleParamName:
-                        session.first!.backgroundGps      = Int(propValue) == 1
+                        session.first!.backgroundGps         = Int(propValue) == 1
                         
                     case showPlaceholderParamName:
-                        session.first!.showPlaceholders   = Int(propValue) == 1
+                        session.first!.showPlaceholders      = Int(propValue) == 1
                         
                     case animationToggleParamName:
-                        session.first!.allowAnimation     = Int(propValue) == 1
+                        session.first!.allowAnimation        = Int(propValue) == 1
     
                     default:
                         break
@@ -130,14 +141,17 @@ class SettingsViewController: UITableViewController {
     
 
     func updateUI()  {
-        feedUpdateSpeedDisplay.text      = String(Int(session.first!.feedUpdateSpeed))
-        feedUpdateSpeedStepper.value     = session.first!.feedUpdateSpeed
+        feedUpdateSpeedDisplay.text      = String(Int(session.first!.feedUpdateInterval))
+        feedUpdateSpeedStepper.value     = session.first!.feedUpdateInterval
         
-        contentUpdateSpeedDisplay.text   = String(Int(session.first!.contentUpdateSpeed))
-        contentUpdateSpeedStepper.value  = session.first!.contentUpdateSpeed
+        contentUpdateSpeedDisplay.text   = String(Int(session.first!.contentUpdateInterval))
+        contentUpdateSpeedStepper.value  = session.first!.contentUpdateInterval
         
         searchRadiusDisplay.text         = String(Int(session.first!.searchRadius))
         searchRadiusStepper.value        = session.first!.searchRadius
+        
+        scaleFactorDisplay.text         = String(Int(session.first!.scaleFactor))
+        scaleFactorStepper.value        = session.first!.scaleFactor
         
         useDistanceSwitch.isOn           = session.first!.distanceScale    == true
         autoUpdateSwitch.isOn            = session.first!.autoUpdate       == true

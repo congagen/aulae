@@ -18,7 +18,6 @@ import RealmSwift
 class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
     var updateTimer = Timer()
-    let updateInterval: Double = 10
     
     @IBOutlet var mapView: MKMapView!
     let locationManager = CLLocationManager()
@@ -209,13 +208,15 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     @objc func mainUpdate() {
         if session.count > 0 {
-            if updateTimer.timeInterval != updateInterval {
+            
+            
+            if updateTimer.timeInterval != (session.first?.mapUpdateInterval)!+1 {
                 updateTimer.invalidate()
             }
             
             if !updateTimer.isValid {
                 updateTimer = Timer.scheduledTimer(
-                    timeInterval: updateInterval,
+                    timeInterval: (session.first?.mapUpdateInterval)!+1,
                     target: self, selector: #selector(mainUpdate),
                     userInfo: nil, repeats: true)
             }

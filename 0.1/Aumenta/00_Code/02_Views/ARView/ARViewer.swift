@@ -18,6 +18,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
+    var trackingState = 0
+    
     var updateTimer = Timer()
     var updateInterval: Double = 10
     var wordtrackError = false
@@ -58,20 +60,24 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
         print("addContentToScene: " + String(contentObj.id))
+        var distanceScale: Double = 10000000 / scaleFactor
         
         let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)! )
         let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectAlt        = contentObj.alt
         
         let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        let distanceScale    = (objectDistance / scaleFactor) + 1000
-
+        
+        if (session.first?.distanceScale)! {
+            distanceScale    = (objectDistance / scaleFactor) + 1000
+        }
+        
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
         
         var latLongXyz = SCNVector3(0, 0, 0)
         
-        if (wordtrackError) {
+        if (trackingState == 3) {
             let objectXYZPos     = ValConverters().gps_to_ecef( latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
             let deviceXYZPos     = ValConverters().gps_to_ecef( latitude: rawDeviceGpsCCL.coordinate.latitude, longitude: rawDeviceGpsCCL.coordinate.longitude, altitude: 0.01 )
             let xPos = (((objectXYZPos[0] - deviceXYZPos[0])) / distanceScale)
@@ -149,26 +155,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         
-        let range = (session.first?.searchRadius)! * 100000
+        let range = (session.first?.searchRadius)! * 10000
         
         // TODO:  Get search range
         let objsInRange   = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
         let activeInRange = objsInRange.filter({$0.active && !$0.deleted})
-        
-//        sceneView.pointOfView?.rotate(by: SCNQuaternion(x: 0, y: 0, z: 0, w: 0), aroundTarget: (sceneView.pointOfView?.position)!)
         
         for n in mainScene.rootNode.childNodes {
             if (n.name != "DefaultAmbientLight") {
                 n.removeFromParentNode()
             }
         }
-        
-//        mainScene.rootNode.enumerateChildNodes { (node, stop) in
-//            if (node.name != "DefaultAmbientLight") {
-//                node.removeFromParentNode()
-//                node.removeAllActions()
-//            }
-//        }
         
         for o in activeInRange {
             print("Obj in range: ")
@@ -183,14 +180,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                     print("FileManager.default.fileExists")
                     
-                    addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: 5 )
+                    addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: (session.first?.scaleFactor)! )
                     
                 } else {
                     print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
                 }
             } else {
                 if (o.type == "text") {
-                    addContentToScene(contentObj: o, fPath:"", scaleFactor: 5 )
+                    addContentToScene(contentObj: o, fPath:"", scaleFactor: (session.first?.scaleFactor)! )
                 }
             }
         }
@@ -206,7 +203,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 updateTimer.invalidate()
             }
             
-            updateInterval = session.first!.feedUpdateSpeed
+            updateInterval = session.first!.feedUpdateInterval
             
             if !updateTimer.isValid {
                 updateTimer = Timer.scheduledTimer(
@@ -230,6 +227,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 
                 if !tappednode.hasActions {
                     addHooverAnimation(node: tappednode)
+                    //rotateAnimation(node: tappednode, xAmt: 0, yAmt: 1, zAmt: 0)
 //                    public string apiUrl = "https://zdyrbcgu1b.execute-api.us-east-1.amazonaws.com/Dev/misc";
 //                    public string payloadKey = "virtuapet";
 //
@@ -271,7 +269,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         let configuration = ARWorldTrackingConfiguration()
         
         configuration.planeDetection = [.vertical, .horizontal]
+        configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
+        configuration.isLightEstimationEnabled = true
+    
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -281,6 +282,21 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         //sceneView.session.run(configuration)
     }
     
+    
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        switch camera.trackingState {
+        case .notAvailable:
+            trackingState = 2
+            print("Tracking: not available: \(camera.trackingState)")
+        case .limited(let reason):
+            trackingState = 1
+            print("Tracking limited: ")
+            print(reason)
+        case .normal:
+            trackingState = 0
+            print("tracking normal: \(camera.trackingState)")
+        }
+    }
     
     override func viewDidLoad() {
         print("viewDidLoad")

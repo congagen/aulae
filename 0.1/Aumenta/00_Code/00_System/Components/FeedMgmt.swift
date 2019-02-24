@@ -240,12 +240,10 @@ extension MainVC {
     }
     
     
-    
-    
     func updateFeeds() {
         print("updateFeeds")
         
-        let updateInterval = Int((session.first?.feedUpdateSpeed)!) + 1
+        let updateInterval = Int((session.first?.feedUpdateInterval)!) + 1
         refreshObjects()
 
         for ob in feedObjects {
