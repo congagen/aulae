@@ -149,26 +149,26 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         
+        let range = (session.first?.searchRadius)! * 100000
+        
         // TODO:  Get search range
-        let objsInRange   = objectsInRange(position: curPos, useManualRange: true, manualRange: 100000000000)
+        let objsInRange   = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
         let activeInRange = objsInRange.filter({$0.active && !$0.deleted})
         
-        sceneView.pointOfView?.rotate(by: SCNQuaternion(x: 0, y: 0, z: 0, w: 0), aroundTarget: (sceneView.pointOfView?.position)!)
+//        sceneView.pointOfView?.rotate(by: SCNQuaternion(x: 0, y: 0, z: 0, w: 0), aroundTarget: (sceneView.pointOfView?.position)!)
         
         for n in mainScene.rootNode.childNodes {
-            //n.removeFromParentNode()
-            
             if (n.name != "DefaultAmbientLight") {
                 n.removeFromParentNode()
             }
         }
         
-        mainScene.rootNode.enumerateChildNodes { (node, stop) in
-            if (node.name != "DefaultAmbientLight") {
-                node.removeFromParentNode()
-                node.removeAllActions()
-            }
-        }
+//        mainScene.rootNode.enumerateChildNodes { (node, stop) in
+//            if (node.name != "DefaultAmbientLight") {
+//                node.removeFromParentNode()
+//                node.removeAllActions()
+//            }
+//        }
         
         for o in activeInRange {
             print("Obj in range: ")
@@ -206,7 +206,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 updateTimer.invalidate()
             }
             
-            updateInterval = session.first!.feedUpdateInterval
+            updateInterval = session.first!.feedUpdateSpeed
             
             if !updateTimer.isValid {
                 updateTimer = Timer.scheduledTimer(

@@ -179,7 +179,8 @@
 			children = (
 				FAB2AE7922088315004D5819 /* TODO.swift */,
 				FAF37EB6221CA9680065B18A /* Notes.swift */,
-				3177251D20B03AD4009FA8B1 /* Code */,
+				3177251D20B03AD4009FA8B1 /* 00_Code */,
+				31AB869220B356C30038F4D5 /* 01_Data */,
 				318FE90520B169C00050528B /* UI */,
 				318FE90420B1697D0050528B /* Assets */,
 				318FE90320B1696E0050528B /* Internals */,
@@ -196,23 +197,22 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3177251D20B03AD4009FA8B1 /* Code */ = {
+		3177251D20B03AD4009FA8B1 /* 00_Code */ = {
 			isa = PBXGroup;
 			children = (
-				FA6E5ACB221F1D7600A5DF17 /* 00_Views */,
-				31AB869220B356C30038F4D5 /* Data */,
-				318FE8F020B0BB5D0050528B /* System */,
+				318FE8F020B0BB5D0050528B /* 00_System */,
+				FA6E5ACB221F1D7600A5DF17 /* 02_Views */,
 			);
-			path = Code;
+			path = 00_Code;
 			sourceTree = "<group>";
 		};
-		318FE8F020B0BB5D0050528B /* System */ = {
+		318FE8F020B0BB5D0050528B /* 00_System */ = {
 			isa = PBXGroup;
 			children = (
 				319D3F2620D7963A007FEECA /* Components */,
 				319AA77E20B418E800F99223 /* MainVC.swift */,
 			);
-			path = System;
+			path = 00_System;
 			sourceTree = "<group>";
 		};
 		318FE8F320B0BDDD0050528B /* Frameworks */ = {
@@ -294,7 +294,7 @@
 			path = ARView;
 			sourceTree = "<group>";
 		};
-		31AB869220B356C30038F4D5 /* Data */ = {
+		31AB869220B356C30038F4D5 /* 01_Data */ = {
 			isa = PBXGroup;
 			children = (
 				319AA77C20B3FE0C00F99223 /* RLM_Session.swift */,
@@ -302,7 +302,7 @@
 				31D284BE20D3B079004451A6 /* RLM_Feed.swift */,
 				319AA78220B4659200F99223 /* feed.json */,
 			);
-			path = Data;
+			path = 01_Data;
 			sourceTree = "<group>";
 		};
 		FA6E5ACA221F1D4200A5DF17 /* Settings */ = {
@@ -313,7 +313,7 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
-		FA6E5ACB221F1D7600A5DF17 /* 00_Views */ = {
+		FA6E5ACB221F1D7600A5DF17 /* 02_Views */ = {
 			isa = PBXGroup;
 			children = (
 				31AB868D20B3525E0038F4D5 /* MapView */,
@@ -321,7 +321,7 @@
 				31AB868E20B352660038F4D5 /* FeedMgmt */,
 				FA6E5ACA221F1D4200A5DF17 /* Settings */,
 			);
-			path = 00_Views;
+			path = 02_Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

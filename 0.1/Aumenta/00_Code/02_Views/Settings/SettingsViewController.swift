@@ -1,0 +1,167 @@
+//
+//  SettingsViewController.swift
+//  Aumenta
+//
+//  Created by Tim Sandgren on 2019-02-21.
+//  Copyright © 2019 Abstraqata. All rights reserved.
+//
+
+import UIKit
+import Realm
+import RealmSwift
+import Foundation
+
+
+class SettingsViewController: UITableViewController {
+
+    let realm = try! Realm()
+    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    
+    // SYSTEM
+    let feeUpdateSpeedParamName = "feedUpdateSpeed"
+    @IBOutlet var feedUpdateSpeedStepper: UIStepper!
+    @IBOutlet var feedUpdateSpeedDisplay: UITextField!
+    @IBAction func feedUpdateIntervalStepperAction(_ sender: UIStepper) {
+        saveSettings(propName: feeUpdateSpeedParamName, propValue: Double(sender.value))
+        updateUI()
+    }
+    
+    let contentUpdateSpeedParamName = "contentUpdateSpeed"
+    @IBOutlet var contentUpdateSpeedStepper: UIStepper!
+    @IBOutlet var contentUpdateSpeedDisplay: UITextField!
+    @IBAction func contentUpdateSpeedStepperAction(_ sender: UIStepper) {
+        saveSettings(propName: contentUpdateSpeedParamName, propValue: Double(sender.value))
+        updateUI()
+    }
+    
+    let searchRadiusParamName = "searchRadius"
+    @IBOutlet var searchRadiusStepper: UIStepper!
+    @IBOutlet var searchRadiusDisplay: UITextField!
+    @IBAction func searchRadiusStepperAction(_ sender: UIStepper) {
+        saveSettings(propName: searchRadiusParamName, propValue: Double(sender.value))
+        updateUI()
+    }
+    
+    let autoUpdateParamName = "autoUpdate"
+    @IBOutlet var autoUpdateSwitch: UISwitch!
+    @IBAction func autoUpdateSwitchAction(_ sender: UISwitch) {
+        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+        saveSettings(propName: autoUpdateParamName, propValue: boolDouble)
+        updateUI()
+    }
+    
+    let gpsToggleParamName = "gpsToggle"
+    @IBOutlet var gpsToggleSwitch: UISwitch!
+    @IBAction func gpsToggleSwitchAction(_ sender: UISwitch) {
+        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+        saveSettings(propName: gpsToggleParamName, propValue: boolDouble)
+        updateUI()
+    }
+    
+    
+    // CONTENT
+    let useDistanceParamName = "useDistance"
+    @IBOutlet var useDistanceSwitch: UISwitch!
+    @IBAction func useDistanceSwitchAction(_ sender: UISwitch) {
+        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+        saveSettings(propName: useDistanceParamName, propValue: boolDouble)
+        updateUI()
+    }
+    
+    let showPlaceholderParamName = "showPlaceholders"
+    @IBOutlet var showPlaceholderSwitch: UISwitch!
+    @IBAction func showPlaceholderSwitchAction(_ sender: UISwitch) {
+        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+        saveSettings(propName: showPlaceholderParamName, propValue: boolDouble)
+        updateUI()
+    }
+    
+    let animationToggleParamName = "animationToggle"
+    @IBOutlet var animationToggleSwitch: UISwitch!
+    @IBAction func anitmationToggleSwitchAction(_ sender: UISwitch) {
+        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+        saveSettings(propName: animationToggleParamName, propValue: boolDouble)
+        updateUI()
+    }
+    
+    
+    func saveSettings(propName: String, propValue: Double) {
+        if session.count > 0 {
+            do {
+                try realm.write {
+                    switch propName {
+                        
+                    case feeUpdateSpeedParamName:
+                        session.first!.feedUpdateSpeed    = propValue
+                        
+                    case contentUpdateSpeedParamName:
+                        session.first!.contentUpdateSpeed = propValue
+                        
+                    case searchRadiusParamName:
+                        session.first!.searchRadius       = propValue
+                   
+                    case useDistanceParamName:
+                        session.first!.distanceScale      = Int(propValue) == 1
+                        
+                    case autoUpdateParamName:
+                        session.first!.autoUpdate         = Int(propValue) == 1
+                        
+                    case gpsToggleParamName:
+                        session.first!.backgroundGps      = Int(propValue) == 1
+                        
+                    case showPlaceholderParamName:
+                        session.first!.showPlaceholders   = Int(propValue) == 1
+                        
+                    case animationToggleParamName:
+                        session.first!.allowAnimation     = Int(propValue) == 1
+    
+                    default:
+                        break
+                    }
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+    }
+    
+
+    func updateUI()  {
+        feedUpdateSpeedDisplay.text      = String(Int(session.first!.feedUpdateSpeed))
+        feedUpdateSpeedStepper.value     = session.first!.feedUpdateSpeed
+        
+        contentUpdateSpeedDisplay.text   = String(Int(session.first!.contentUpdateSpeed))
+        contentUpdateSpeedStepper.value  = session.first!.contentUpdateSpeed
+        
+        searchRadiusDisplay.text         = String(Int(session.first!.searchRadius))
+        searchRadiusStepper.value        = session.first!.searchRadius
+        
+        useDistanceSwitch.isOn           = session.first!.distanceScale    == true
+        autoUpdateSwitch.isOn            = session.first!.autoUpdate       == true
+        gpsToggleSwitch.isOn             = session.first!.backgroundGps    == true
+        
+        showPlaceholderSwitch.isOn       = session.first!.showPlaceholders == true
+        animationToggleSwitch.isOn       = session.first!.allowAnimation   == true
+    }
+    
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateUI()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        updateUI()
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print("WILLAPPEAR")
+        updateUI()
+    }
+
+}
