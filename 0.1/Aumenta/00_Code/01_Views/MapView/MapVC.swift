@@ -15,7 +15,7 @@ import Realm
 import RealmSwift
 
 
-class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
 
     var updateTimer = Timer()
     
@@ -31,7 +31,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     var curLng = 0.0
     
     var textField: UITextField? = nil
-
+    
     @IBOutlet var searchBtn: UIBarButtonItem!
     @IBAction func searchBtnAction(_ sender: UIBarButtonItem) {
         
@@ -50,6 +50,40 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     func handleCancel(alertView: UIAlertAction!)
     {
         print(self.textField?.text! ?? "")
+    }
+    
+    
+    func updateSearchRadius(rDistance: Double) {
+        print(rDistance)
+        print(rDistance)
+        do {
+            try realm.write {
+               session.first?.searchRadius = rDistance
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    
+    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        guard gestureRecognizer.state != .ended else { return }
+        
+        let mapTouchLocation = gestureRecognizer.location(in: mapView)
+        
+        let touchLocationCoordinate = mapView.convert(
+            mapTouchLocation, toCoordinateFrom: mapView )
+        
+        let currentTouchLocation = CLLocation(
+            latitude: touchLocationCoordinate.latitude,
+            longitude: touchLocationCoordinate.longitude)
+        
+        let current = mapView!.userLocation.location
+        let d = current?.distance(from: currentTouchLocation)
+        
+        updateSearchRadius(rDistance: d!)
+        updateviewRadius()
+
     }
     
     
@@ -80,6 +114,35 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         mainUpdate()
 
     }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let circleRenderer = MKCircleRenderer(circle: overlay as! MKCircle)
+        circleRenderer.fillColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.05)
+        circleRenderer.strokeColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.5)
+        circleRenderer.lineWidth = 1
+        
+        return circleRenderer
+    }
+    
+    func updateviewRadius() {
+        
+        for o in mapView.overlays {
+            mapView.removeOverlay(o)
+        }
+        
+        let cLoc = CLLocationCoordinate2D(
+            latitude: mapView.userLocation.coordinate.latitude,
+            longitude: mapView.userLocation.coordinate.longitude
+        )
+        
+        let areaCircle = MKCircle(
+            center: cLoc, radius: Double((session.first?.searchRadius)!)
+        )
+        
+        mapView.addOverlay(areaCircle)
+        
+    }
+    
     
     
     func urlConfigurationTextField(textField: UITextField!)
@@ -274,12 +337,18 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
         locationManager.allowsBackgroundLocationUpdates = true
     }
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initMapView()
         mainUpdate()
+        
+        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(MapVC.handleLongPress(_:)))
+        lpgr.minimumPressDuration = 0.5
+        lpgr.delaysTouchesBegan = true
+        lpgr.delegate = self
+        self.mapView.addGestureRecognizer(lpgr)
     }
 
     

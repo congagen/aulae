@@ -23,8 +23,6 @@ class HttpDownloader {
         return freeSize.int64Value
     }
     
-    
-    
     func loadFileAsync(url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
         let sessionConfig = URLSessionConfiguration.default
         let session = URLSession(configuration: sessionConfig)

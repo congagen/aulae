@@ -201,7 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				318FE8F020B0BB5D0050528B /* 00_System */,
-				FA6E5ACB221F1D7600A5DF17 /* 02_Views */,
+				FA6E5ACB221F1D7600A5DF17 /* 01_Views */,
 			);
 			path = 00_Code;
 			sourceTree = "<group>";
@@ -313,7 +313,7 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
-		FA6E5ACB221F1D7600A5DF17 /* 02_Views */ = {
+		FA6E5ACB221F1D7600A5DF17 /* 01_Views */ = {
 			isa = PBXGroup;
 			children = (
 				31AB868D20B3525E0038F4D5 /* MapView */,
@@ -321,7 +321,7 @@
 				31AB868E20B352660038F4D5 /* FeedMgmt */,
 				FA6E5ACA221F1D4200A5DF17 /* Settings */,
 			);
-			path = 02_Views;
+			path = 01_Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
