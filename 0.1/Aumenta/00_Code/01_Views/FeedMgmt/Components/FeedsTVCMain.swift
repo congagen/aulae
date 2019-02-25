@@ -11,7 +11,7 @@ import Foundation
 extension FeedsTVC {
     
     
-    @objc func mainUpdate(){
+    @objc func mainUpdate() {
         
         tableView.reloadData()
         

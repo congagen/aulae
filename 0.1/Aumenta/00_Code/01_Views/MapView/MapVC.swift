@@ -54,8 +54,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     
     
     func updateSearchRadius(rDistance: Double) {
-        print(rDistance)
-        print(rDistance)
+       
         do {
             try realm.write {
                session.first?.searchRadius = rDistance

@@ -99,38 +99,32 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-       
         let keys: Array  = Array(searchResults.keys)
-        print(keys)
         
         if keys[indexPath.item] != loadingMsg && keys[indexPath.item] != noResultsMsg {
             let itemData: Dictionary<String, AnyObject> = searchResults[keys[indexPath.item]]! as! Dictionary<String, AnyObject>
             let itmUrl: String = itemData["url"] as! String
             
-            if feeds.filter( {$0.url == itmUrl} ).count < 1 {
+            if feeds.filter( {$0.url == itmUrl} ).count == 0 {
                 let newFeed = RLM_Feed()
-                print("Adding new feed...")
                 
                 do {
                     try realm.write {
-                        if feeds.filter({$0.url == itmUrl}).count == 0 {
-                            print("Exists == False...")
 
-                            if itmUrl != "" {
-                                newFeed.url  = itmUrl
-                                newFeed.id   = UUID().uuidString
-                                newFeed.name = "Updating..."
-                                
-                                self.realm.add(newFeed)
-                            }
-                        } else {
-                            print("Feed Added: " + itmUrl)
+                        if itmUrl != "" {
+                            newFeed.url  = itmUrl
+                            newFeed.id   = UUID().uuidString
+                            newFeed.name = "Updating..."
+                            
+                            self.realm.add(newFeed)
                         }
+                        
                     }
                 } catch {
                     print("Error: \(error)")
                 }
+            } else {
+                feeds.filter( {$0.url == itmUrl} ).first?
             }
         }
     
