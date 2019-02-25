@@ -201,7 +201,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     }
     
     
-    func updateObjectAnnotations(){
+    func updateObjectAnnotations() {
         print("updateObjectAnnotations")
         
         for fo in feedObjects {
@@ -266,6 +266,8 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         } catch {
             print("Error: \(error)")
         }
+        
+        updateviewRadius()
     }
     
     
@@ -336,6 +338,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
         locationManager.allowsBackgroundLocationUpdates = true
+
     }
 
     
@@ -349,6 +352,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         lpgr.delaysTouchesBegan = true
         lpgr.delegate = self
         self.mapView.addGestureRecognizer(lpgr)
+        
     }
 
     
@@ -360,7 +364,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )
         reloadAnnotations()
-
     }
 
 }

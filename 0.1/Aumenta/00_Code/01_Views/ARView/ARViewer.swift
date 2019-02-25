@@ -11,7 +11,8 @@ import ARKit
 import Realm
 import RealmSwift
 
-class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
+
+class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate {
     
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
@@ -19,6 +20,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     var trackingState = 0
+    
+    var contentZoom: Double = 1
     
     var updateTimer = Timer()
     var updateInterval: Double = 10
@@ -60,6 +63,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
         print("addContentToScene: " + String(contentObj.id))
+        
         var distanceScale: Double = 10000000 / scaleFactor
         
         let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)! )
@@ -154,8 +158,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         print("Update Scene")
         
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        
-        let range = (session.first?.searchRadius)! * 10000
+        let range = (session.first?.searchRadius)!
         
         // TODO:  Get search range
         let objsInRange   = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
@@ -195,26 +198,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     
-    @objc func mainUpdate() {
-        print("mainUpdate: ARViewer")
-        
-        if session.count > 0 {
-            if updateTimer.timeInterval != updateInterval {
-                updateTimer.invalidate()
-            }
-            
-            updateInterval = session.first!.feedUpdateInterval
-            
-            if !updateTimer.isValid {
-                updateTimer = Timer.scheduledTimer(
-                    timeInterval: updateInterval,
-                    target: self, selector: #selector(mainUpdate),
-                    userInfo: nil, repeats: true)
-            }
-        }
-    }
-    
-    
     @objc func handleTap(rec: UITapGestureRecognizer){
         if rec.state == .ended {
             let location: CGPoint = rec.location(in: sceneView)
@@ -226,28 +209,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 print(tappednode.position)
                 
                 if !tappednode.hasActions {
-                    addHooverAnimation(node: tappednode)
-                    //rotateAnimation(node: tappednode, xAmt: 0, yAmt: 1, zAmt: 0)
-//                    public string apiUrl = "https://zdyrbcgu1b.execute-api.us-east-1.amazonaws.com/Dev/misc";
-//                    public string payloadKey = "virtuapet";
-//
-//                    public List<string> apiHeaderKeys;
-//                    public List<string> apiHeaderVals;
-//
-//                    [Space(15)]
-//
-//                    public string userName = "User";
-//                    public string agentName = "Agent";
-//
-//                    [Space(15)]
-//
-//                    public string greetingMsg = "Hello!";
-//                    public string fallbackMsg = "Wha?";
-
-                    //let a = NetworkTools().postReq(apiHeaderValue: "", apiHeaderFeild: "", apiUrl: "", reqParams: [:])
-                    
+                    //addHooverAnimation(node: tappednode)
+                    rotateAnimation(node: tappednode, xAmt: 0, yAmt: 1, zAmt: 0)
                 } else {
-                    tappednode.removeAllActions()
+                    tappednode.removeAllAnimations()
                 }
                 
             }
@@ -287,24 +252,74 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         switch camera.trackingState {
         case .notAvailable:
             trackingState = 2
-            print("Tracking: not available: \(camera.trackingState)")
+            print("trackingState: not available")
+            updateScene()
         case .limited(let reason):
             trackingState = 1
-            print("Tracking limited: ")
+            print("trackingState: limited")
             print(reason)
         case .normal:
             trackingState = 0
-            print("tracking normal: \(camera.trackingState)")
+            print("trackingState: normal")
         }
     }
     
+    
+    @objc func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
+        guard gestureRecognizer.state != .ended else { return }
+        
+        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
+            print(gestureRecognizer.scale)
+            
+            for n in mainScene.rootNode.childNodes {
+                if (n.name != "DefaultAmbientLight") {
+                    n.scale = SCNVector3(
+                        Double(gestureRecognizer.scale),
+                        Double(gestureRecognizer.scale),
+                        Double(gestureRecognizer.scale))
+                }
+            }
+        }
+    }
+    
+    
+    @objc func mainTimerUpdate() {
+        print("mainUpdate: ARViewer")
+        
+        if session.count > 0 {
+            if updateTimer.timeInterval != updateInterval {
+                updateTimer.invalidate()
+            }
+            
+            updateInterval = session.first!.feedUpdateInterval
+            
+            if !updateTimer.isValid {
+                updateTimer = Timer.scheduledTimer(
+                    timeInterval: updateInterval,
+                    target: self, selector: #selector(mainTimerUpdate),
+                    userInfo: nil, repeats: true)
+            }
+        }
+        
+        updateScene()
+    }
+    
+    
     override func viewDidLoad() {
         print("viewDidLoad")
+        
+        let pinchGr = UIPinchGestureRecognizer(
+            target: self, action: #selector(ARViewer.handlePinch(_:))
+        )
+        pinchGr.delegate = self
+        view.addGestureRecognizer(pinchGr)
+        
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
+        contentZoom = 0
         updateScene()
     }
     
