@@ -117,13 +117,36 @@
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fEs-rS-yaY">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </arscnView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cVh-GF-OBP" userLabel="LoadingView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Updating Scene..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mak-KG-CXa">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mak-KG-CXa" secondAttribute="trailing" id="1ZB-l0-Xe7"/>
+                                    <constraint firstItem="mak-KG-CXa" firstAttribute="centerY" secondItem="cVh-GF-OBP" secondAttribute="centerY" id="9hb-o2-JLq"/>
+                                    <constraint firstItem="mak-KG-CXa" firstAttribute="leading" secondItem="cVh-GF-OBP" secondAttribute="leading" id="M29-EW-ZiT"/>
+                                    <constraint firstItem="mak-KG-CXa" firstAttribute="height" secondItem="cVh-GF-OBP" secondAttribute="height" id="iIU-wd-Yey"/>
+                                    <constraint firstItem="mak-KG-CXa" firstAttribute="width" secondItem="cVh-GF-OBP" secondAttribute="width" id="ylj-yg-MjC"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="centerX" secondItem="1yb-qm-Ox7" secondAttribute="centerX" id="2yY-TO-HhA"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="centerY" secondItem="1yb-qm-Ox7" secondAttribute="centerY" id="43F-n3-UPO"/>
+                            <constraint firstItem="cVh-GF-OBP" firstAttribute="leading" secondItem="fEs-rS-yaY" secondAttribute="leading" id="ELP-oY-jrl"/>
+                            <constraint firstItem="cVh-GF-OBP" firstAttribute="top" secondItem="fEs-rS-yaY" secondAttribute="top" id="H9b-tP-BUB"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="width" secondItem="1yb-qm-Ox7" secondAttribute="width" id="Xmw-bP-Xdr"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="height" secondItem="1yb-qm-Ox7" secondAttribute="height" id="YtK-It-447"/>
+                            <constraint firstItem="cVh-GF-OBP" firstAttribute="bottom" secondItem="fEs-rS-yaY" secondAttribute="bottom" id="go9-v8-Neu"/>
+                            <constraint firstItem="cVh-GF-OBP" firstAttribute="trailing" secondItem="fEs-rS-yaY" secondAttribute="trailing" id="m4E-V1-3LG"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
@@ -147,12 +170,13 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="loadingView" destination="cVh-GF-OBP" id="Mig-i4-6yC"/>
                         <outlet property="sceneView" destination="fEs-rS-yaY" id="cxZ-S7-Spe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0yF-0m-H2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1660" y="1685"/>
+            <point key="canvasLocation" x="1660" y="1684.729064039409"/>
         </scene>
         <!--Argume-->
         <scene sceneID="CcG-m6-yJt">
@@ -532,11 +556,11 @@
                             <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="checkmark" indentationWidth="0.0" reuseIdentifier="cell" textLabel="1nz-Hp-hZc" detailTextLabel="n1q-Ys-Mur" rowHeight="60" style="IBUITableViewCellStyleSubtitle" id="dr7-Nx-pFp" userLabel="cell">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="0.0" reuseIdentifier="cell" textLabel="1nz-Hp-hZc" detailTextLabel="j1N-1e-WUJ" rowHeight="60" style="IBUITableViewCellStyleSubtitle" id="dr7-Nx-pFp" userLabel="cell">
                                 <rect key="frame" x="0.0" y="84" width="375" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dr7-Nx-pFp" id="G07-Hs-FeJ">
-                                    <rect key="frame" x="0.0" y="0.0" width="335" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1nz-Hp-hZc">
@@ -546,7 +570,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="n1q-Ys-Mur">
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="j1N-1e-WUJ">
                                             <rect key="frame" x="14.999999999999996" y="33.333333333333329" width="43.666666666666664" height="14.333333333333334"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -658,6 +682,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="syp-hZ-XxQ"/>
-        <segue reference="aUW-k3-e0B"/>
+        <segue reference="Q9S-6L-g2l"/>
     </inferredMetricsTieBreakers>
 </document>

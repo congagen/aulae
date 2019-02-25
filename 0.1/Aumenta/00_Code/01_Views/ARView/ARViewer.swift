@@ -29,6 +29,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     var mainScene = SCNScene()
     
+    @IBOutlet var loadingView: UIView!
+    
+    
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         updateScene()
     }
@@ -253,13 +256,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         case .notAvailable:
             trackingState = 2
             print("trackingState: not available")
+            loadingView.isHidden = false
             updateScene()
         case .limited(let reason):
             trackingState = 1
+            loadingView.isHidden = false
             print("trackingState: limited")
             print(reason)
         case .normal:
             trackingState = 0
+            loadingView.isHidden = true
             print("trackingState: normal")
         }
     }
@@ -307,7 +313,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewDidLoad() {
         print("viewDidLoad")
-        
+        loadingView.isHidden = false
+
         let pinchGr = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
         )
@@ -319,18 +326,24 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
+        loadingView.isHidden = false
+
         contentZoom = 0
         updateScene()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
+        loadingView.isHidden = false
+
         initScene()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
+        loadingView.isHidden = false
+
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {

@@ -173,7 +173,6 @@ class FeedsTVC: UITableViewController {
                             
                             newFeed.url  = (self.textField?.text)!
                             newFeed.id   = UUID().uuidString
-
                             newFeed.name = "Updating..."
                             
                             self.realm.add(newFeed)

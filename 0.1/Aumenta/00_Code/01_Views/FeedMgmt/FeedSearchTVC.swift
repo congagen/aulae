@@ -30,25 +30,19 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     let noResultsMsg = "Searching..."
 
     var currentSearchTerm: String = "Demo"
-    var searchResults: [String] = []
+    var searchResults: Dictionary<String, AnyObject> = [:]
     
     @IBOutlet var searchBar: UISearchBar!
     
     
     func updateSearchResults(result: Dictionary<String, AnyObject> ) {
         print("updateSearchResults")
-        searchResults = []
         
-        if let feeds: NSArray = result["feeds"] as? NSArray {
-            if feeds.count > 0 {
-                for feed in feeds {
-                    searchResults.append(feed as! String)
-                }
-            } else {
-                searchResults.append(noResultsMsg)
-            }
+        if let resp = result["search_results"] as? Dictionary<String, AnyObject> {
+            searchResults = resp
+            print(searchResults)
         } else {
-            searchResults.append(noResultsMsg)
+            searchResults = [noResultsMsg: noResultsMsg] as Dictionary<String, AnyObject>
         }
         
         self.tableView.reloadData()
@@ -57,7 +51,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchResults = [loadingMsg]
+        searchResults = [loadingMsg: loadingMsg] as Dictionary<String, AnyObject>
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
         
@@ -106,26 +100,32 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let sUrl = self.searchResults[indexPath.item]
+       
+        let keys: Array  = Array(searchResults.keys)
+        print(keys)
         
-        if sUrl != noResultsMsg && sUrl != loadingMsg {
-            if feeds.filter({$0.url == sUrl}).count < 1 {
+        if keys[indexPath.item] != loadingMsg && keys[indexPath.item] != noResultsMsg {
+            let itemData: Dictionary<String, AnyObject> = searchResults[keys[indexPath.item]]! as! Dictionary<String, AnyObject>
+            let itmUrl: String = itemData["url"] as! String
+            
+            if feeds.filter( {$0.url == itmUrl} ).count < 1 {
                 let newFeed = RLM_Feed()
-                cell.contentView.backgroundColor = UIColor.blue
+                print("Adding new feed...")
                 
                 do {
                     try realm.write {
-                        if feeds.filter({$0.url == sUrl}).count == 0 {
-                            
-                            if sUrl != "" {
-                                newFeed.url  = sUrl
+                        if feeds.filter({$0.url == itmUrl}).count == 0 {
+                            print("Exists == False...")
+
+                            if itmUrl != "" {
+                                newFeed.url  = itmUrl
                                 newFeed.id   = UUID().uuidString
                                 newFeed.name = "Updating..."
                                 
                                 self.realm.add(newFeed)
                             }
                         } else {
-                            print("Feed Added: " + sUrl)
+                            print("Feed Added: " + itmUrl)
                         }
                     }
                 } catch {
@@ -146,24 +146,42 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     }
     
     
-    @objc func asyncUrlSearch(urlId: String) -> [RLM_Feed] {
-        return feeds.filter( {$0.url == urlId} )
+    @objc func asyncUrlSearch(cell: UITableViewCell, urlId: String) {
+        
+        if feeds.filter( {$0.url == urlId} ).count > 0 {
+            cell.textLabel?.textColor = UIColor.green
+        } else {
+            if cell.textLabel?.text != loadingMsg && cell.textLabel?.text != noResultsMsg {
+                cell.textLabel?.textColor = UIColor.black
+            }
+        }
+        
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        print("cellForRowAt")
         
-        cell.textLabel?.text       = searchResults[indexPath.item]
-        cell.detailTextLabel?.text = ""
+        let keys: Array  = Array(searchResults.keys)
+        print(keys)
         
-        // TODO: Realm Async Fix
-        if asyncUrlSearch(urlId: (cell.textLabel?.text)!).count > 0 {
-            cell.textLabel?.textColor = UIColor.green
-        } else {
-            if cell.textLabel?.text != loadingMsg && cell.textLabel?.text != noResultsMsg {
-                cell.textLabel?.textColor = UIColor.blue
+        if keys[indexPath.item] != loadingMsg && keys[indexPath.item] != noResultsMsg {
+            let itemData: Dictionary<String, AnyObject> = searchResults[keys[indexPath.item]]! as! Dictionary<String, AnyObject>
+            print(itemData)
+            
+            if let itmUrl = itemData["url"] as! String? {
+                cell.textLabel?.text = keys[indexPath.item]
+                cell.detailTextLabel?.text = itmUrl
+                
+                DispatchQueue.main.async {
+                    self.asyncUrlSearch(cell: cell, urlId: itmUrl)
+                }
             }
+        } else {
+            cell.textLabel?.text       = keys[indexPath.item]
+            cell.detailTextLabel?.text = ""
+            cell.textLabel?.textColor  = UIColor.white
         }
         
         return cell
