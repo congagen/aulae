@@ -87,34 +87,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     }
     
     
-    func handleEnterURL(alertView: UIAlertAction!) {
-        let newFeed = RLM_Feed()
-        
-        do {
-            try realm.write {
-                if textField?.text != nil {
-                    if feeds.filter({$0.url == (self.textField?.text)! }).count == 0 {
-                        
-                        if (self.textField?.text)! != "" {
-                            newFeed.id   = (textField?.text)!
-                            newFeed.name = "Updating..."
-                            
-                            self.realm.add(newFeed)
-                        }
-                        
-                    } else {
-                        print("feeds.filter({$0.id == (self.textField?.text)! }).count > 0")
-                    }
-                }
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-        mainUpdate()
-
-    }
-    
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circleRenderer = MKCircleRenderer(circle: overlay as! MKCircle)
         circleRenderer.fillColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.05)
@@ -151,26 +123,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
             self.textField = textField!
             textField.text! = (session.first?.debugUrl)!
         }
-    }
-    
-    
-    func showSearchAlert(aMessage: String?){
-        let alert = UIAlertController(
-            title: "",
-            message: "",
-            preferredStyle: UIAlertController.Style.alert
-        )
-        
-        // TODO: Add Name Field
-        
-        alert.addTextField(configurationHandler: urlConfigurationTextField)
-        
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:handleCancel))
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler:handleEnterURL))
-        
-        alert.view.tintColor = UIColor.black
-        
-        self.present(alert, animated: true, completion: nil)
     }
     
     
@@ -338,7 +290,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
         locationManager.allowsBackgroundLocationUpdates = true
-
     }
 
     
@@ -352,7 +303,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         lpgr.delaysTouchesBegan = true
         lpgr.delegate = self
         self.mapView.addGestureRecognizer(lpgr)
-        
     }
 
     

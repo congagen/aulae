@@ -115,11 +115,11 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
                 
                 do {
                     try realm.write {
-                        if feeds.filter({$0.url == sUrl }).count == 0 {
+                        if feeds.filter({$0.url == sUrl}).count == 0 {
                             
                             if sUrl != "" {
                                 newFeed.url  = sUrl
-                                newFeed.id   = sUrl
+                                newFeed.id   = UUID().uuidString
                                 newFeed.name = "Updating..."
                                 
                                 self.realm.add(newFeed)

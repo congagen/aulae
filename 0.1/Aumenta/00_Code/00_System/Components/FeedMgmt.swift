@@ -13,22 +13,21 @@ extension MainVC {
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, originFeed:String) {
         let rlmObj = RLM_Obj()
         
-
         do {
             try realm.write {
-                rlmObj.id = objInfo["id"] as! String
-                rlmObj.feedId = originFeed
+                rlmObj.id       = objInfo["id"] as! String
+                rlmObj.feedId   = originFeed
 
-                rlmObj.name = objInfo["name"] as! String
-                rlmObj.info = objInfo["info"] as! String
+                rlmObj.name     = objInfo["name"] as! String
+                rlmObj.info     = objInfo["info"] as! String
                 rlmObj.filePath = objFilePath.absoluteString
                 
-                rlmObj.type = objInfo["type"] as! String
-                rlmObj.style = objInfo["style"] as! Int
+                rlmObj.type     = objInfo["type"] as! String
+                rlmObj.style    = objInfo["style"] as! Int
                 
-                rlmObj.lat = objInfo["lat"] as! Double
-                rlmObj.lng = objInfo["lng"] as! Double
-                rlmObj.alt = objInfo["alt"] as! Double
+                rlmObj.lat      = objInfo["lat"] as! Double
+                rlmObj.lng      = objInfo["lng"] as! Double
+                rlmObj.alt      = objInfo["alt"] as! Double
 
                 rlmObj.scale = objInfo["scale"] as! Double
                 
@@ -45,22 +44,20 @@ extension MainVC {
         
         do {
             try realm.write {
-                rlmObj.id = objInfo["id"] as! String
+                rlmObj.id     = objInfo["id"] as! String
                 rlmObj.feedId = originFeed
+                rlmObj.name   = objInfo["name"] as! String
+                rlmObj.info   = objInfo["info"] as! String
+                rlmObj.type   = objInfo["type"] as! String
                 
-                rlmObj.name = objInfo["name"] as! String
-                rlmObj.info = objInfo["info"] as! String
+                rlmObj.style  = objInfo["style"] as! Int
+                rlmObj.text   = objInfo["text"] as! String
                 
-                rlmObj.type = objInfo["type"] as! String
-                rlmObj.style = objInfo["style"] as! Int
-                
-                rlmObj.text = objInfo["text"] as! String
-                
-                rlmObj.lat = objInfo["lat"] as! Double
-                rlmObj.lng = objInfo["lng"] as! Double
-                rlmObj.alt = objInfo["alt"] as! Double
+                rlmObj.lat    = objInfo["lat"] as! Double
+                rlmObj.lng    = objInfo["lng"] as! Double
+                rlmObj.alt    = objInfo["alt"] as! Double
 
-                rlmObj.scale = objInfo["scale"] as! Double
+                rlmObj.scale  = objInfo["scale"] as! Double
                 
                 realm.add(rlmObj)
             }
