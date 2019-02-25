@@ -96,7 +96,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
                     if feeds.filter({$0.url == (self.textField?.text)! }).count == 0 {
                         
                         if (self.textField?.text)! != "" {
-                            newFeed.id = UUID().uuidString
+                            newFeed.id   = (textField?.text)!
                             newFeed.name = "Updating..."
                             
                             self.realm.add(newFeed)

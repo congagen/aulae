@@ -171,8 +171,8 @@ class FeedsTVC: UITableViewController {
                         
                         if (self.textField?.text)! != "" {
                             
-                            newFeed.url = (self.textField?.text)!
-                            newFeed.id = UUID().uuidString
+                            newFeed.url  = (self.textField?.text)!
+                            newFeed.id   = (self.textField?.text)!
                             newFeed.name = "Updating..."
                             
                             self.realm.add(newFeed)
@@ -198,8 +198,6 @@ class FeedsTVC: UITableViewController {
             message: "",
             preferredStyle: UIAlertController.Style.alert
         )
-        
-        // TODO: Add Name Field
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:handleCancel))
@@ -236,6 +234,7 @@ class FeedsTVC: UITableViewController {
         
         self.present(alert, animated: true, completion: nil)
     }
+    
     
     func shareURLAction(url: String) {
         
@@ -279,7 +278,7 @@ class FeedsTVC: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return screenHeight * 0.15
+        return screenHeight * 0.1
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
