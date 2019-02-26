@@ -29,6 +29,8 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
 
     var curLat = 0.0
     var curLng = 0.0
+    var curAlt = 0.0
+
     
     var textField: UITextField? = nil
     
@@ -208,11 +210,13 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         
         curLat = (locations.last?.coordinate.latitude)!
         curLng = (locations.last?.coordinate.longitude)!
+        curAlt = (locations.last?.altitude)!
         
         do {
             try realm.write {
                 session.first?.currentLat = curLat
                 session.first?.currentLng = curLng
+                session.first?.currentAlt = curAlt
             }
         } catch {
             print("Error: \(error)")
@@ -284,7 +288,13 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         mapView.tintColor = UIColor.black
         mapView.backgroundColor = UIColor.black
         
-        locationManager.requestAlwaysAuthorization()
+        if (session.first?.backgroundGps)! {
+            locationManager.requestAlwaysAuthorization()
+        }
+//        else {
+//            locationManager.requestWhenInUseAuthorization()
+//        }
+
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()

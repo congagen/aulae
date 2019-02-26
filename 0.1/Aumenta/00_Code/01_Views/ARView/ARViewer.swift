@@ -22,8 +22,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var trackingState = 0
     var contentZoom: Double = 1
     var updateTimer = Timer()
-    var updateInterval: Double = 10
-    var wordtrackError = false
     
     var mainScene = SCNScene()
     
@@ -32,8 +30,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
-
-        initScene()
+//        initScene()
         updateScene()
     }
     
@@ -65,76 +62,62 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
-        print("addContentToScene: " + String(contentObj.id))
+    func getNodeWorldPosition(contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
         
-        var distanceScale: Double = 10000000 / scaleFactor
-        
-        let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)! )
+        let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
-        let objectAlt        = contentObj.alt
+
         let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        var objectScale: Double = 10000000 / scaleFactor
         
         if (session.first?.distanceScale)! {
-            distanceScale    = (objectDistance / scaleFactor) + 1000
+            objectScale    = (objectDistance / scaleFactor) + 1000
         }
         
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
-        
-        var latLongXyz = SCNVector3(0, 0, 0)
-        
-        if (trackingState == 3) {
-            let objectXYZPos = ValConverters().gps_to_ecef( latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
-            let deviceXYZPos = ValConverters().gps_to_ecef( latitude: rawDeviceGpsCCL.coordinate.latitude, longitude: rawDeviceGpsCCL.coordinate.longitude, altitude: 0.01 )
-            let xPos         = (((objectXYZPos[0] - deviceXYZPos[0])) / distanceScale)
-            let yPos         = (((objectXYZPos[1] - deviceXYZPos[1])) / distanceScale)
 
-            latLongXyz       = SCNVector3(xPos, objectAlt, yPos)
-        } else {
-            let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / distanceScale, y: Double(translationSCNV.z) / distanceScale )
-            latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(objectAlt), normalisedTrans.y)
+        let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / objectScale, y: Double(translationSCNV.z) / objectScale )
+        let latLongXyz       = SCNVector3(normalisedTrans.x, 0, normalisedTrans.y)
+    
+        return latLongXyz
+    }
+    
+    
+    func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
+        print("addContentToScene: " + String(contentObj.id))
+        var latLongXyz = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
+        
+        if contentObj.useWorldPosition {
+            latLongXyz = getNodeWorldPosition(contentObj: contentObj, scaleFactor: scaleFactor)
         }
-
-        let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+       
+        let rawObjectGpsCCL = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        let ctNode          = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
 
         if fPath != "" && contentObj.type.lowercased() != "text" {
             print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
 
             if contentObj.type.lowercased() == "obj" {
-                node.addObj(fPath: fPath, contentObj: contentObj)
-                node.location = rawObjectGpsCCL
-                node.position = latLongXyz
-                mainScene.rootNode.addChildNode(node)
+                ctNode.addObj(fPath: fPath, contentObj: contentObj)
             }
 
             if contentObj.type.lowercased() == "usdz" {
-                node.addUSDZ(fPath: fPath, contentObj: contentObj, position: latLongXyz)
-                node.location = rawObjectGpsCCL
-                node.position = latLongXyz
-                mainScene.rootNode.addChildNode(node)
+                ctNode.addUSDZ(fPath: fPath, contentObj: contentObj, position: latLongXyz)
             }
             
             if contentObj.type.lowercased() == "image" {
-                node.addImage(fPath: fPath, contentObj: contentObj)
-                node.location = rawObjectGpsCCL
-                node.position = latLongXyz
-                mainScene.rootNode.addChildNode(node)
+                ctNode.addImage(fPath: fPath, contentObj: contentObj)
             }
             
             if contentObj.type.lowercased() == "gif" {
-                node.addGif(fPath: fPath, contentObj: contentObj)
-                node.location = rawObjectGpsCCL
-                node.position = latLongXyz
-                mainScene.rootNode.addChildNode(node)
+                ctNode.addGif(fPath: fPath, contentObj: contentObj)
             }
-            
+        
         } else {
-            if (contentObj.type.lowercased() == "text") {
-                node.addText(nodeText: contentObj.text, extrusion: 1, color: UIColor.black)
-                node.location = rawObjectGpsCCL
-                node.position = latLongXyz
-                mainScene.rootNode.addChildNode(node)
+            
+            if contentObj.type.lowercased() == "text" {
+                ctNode.addText(nodeText: contentObj.text, extrusion: 1, color: UIColor.black)
             } else {
                 if (session.first?.showPlaceholders)! {
                     let node = SCNNode(geometry: SCNSphere(radius: CGFloat(1) ))
@@ -143,6 +126,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             }
         }
+        
+        ctNode.location = rawObjectGpsCCL
+        ctNode.position = latLongXyz
+        mainScene.rootNode.addChildNode(ctNode)
+        
     }
     
     
@@ -157,7 +145,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let activeInRange = objsInRange.filter({$0.active && !$0.deleted})
         
         for n in mainScene.rootNode.childNodes {
-            if (n.name != "DefaultAmbientLight") {
+            if (n.name != "DefaultAmbientLight") && n.name != "camera" {
                 n.removeFromParentNode()
             }
         }
@@ -176,8 +164,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     print("FileManager.default.fileExists")
                     
                     addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: (session.first?.scaleFactor)! )
-                    
                 } else {
+                    // TODO: Increment Feed Error Count
                     print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
                 }
             } else {
@@ -213,7 +201,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func initScene() {
         print("initScene")
-        
+        loadingView.isHidden = false
+
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
         
@@ -229,7 +218,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isLightEstimationEnabled = true
     
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        sceneView.session.run(configuration)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         sceneView.addGestureRecognizer(tapGestureRecognizer)
@@ -264,7 +252,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print(gestureRecognizer.scale)
             
             for n in mainScene.rootNode.childNodes {
-                if (n.name != "DefaultAmbientLight") {
+                if (n.name != "DefaultAmbientLight") && n.name != "camera" {
                     n.scale = SCNVector3(
                         Double(gestureRecognizer.scale),
                         Double(gestureRecognizer.scale),
@@ -279,15 +267,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("mainUpdate: ARViewer")
         
         if session.count > 0 {
-            if updateTimer.timeInterval != updateInterval {
+            if updateTimer.timeInterval != session.first!.feedUpdateInterval {
                 updateTimer.invalidate()
             }
             
-            updateInterval = session.first!.feedUpdateInterval
-            
             if !updateTimer.isValid {
                 updateTimer = Timer.scheduledTimer(
-                    timeInterval: updateInterval,
+                    timeInterval: session.first!.feedUpdateInterval,
                     target: self, selector: #selector(mainTimerUpdate),
                     userInfo: nil, repeats: true)
             }
@@ -297,16 +283,43 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    func worldUpdate(anchors: [ARAnchor]) {
+
+        for a in anchors {
+            if let planeAnchor = a as? ARPlaneAnchor {
+                print(planeAnchor.center)
+            }
+
+            if let wallAnchor = a as? ARObjectAnchor {
+                print(wallAnchor)
+            }
+        }
+
+    }
+    
+//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+//        let currentTransform = frame.camera.transform
+//        print(currentTransform)
+//    }
+//
+//    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+//        worldUpdate(anchors: anchors)
+//    }
+//
+//    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+//        worldUpdate(anchors: anchors)
+//    }
+    
     override func viewDidLoad() {
         print("viewDidLoad")
         loadingView.isHidden = false
 
-        let pinchGr = UIPinchGestureRecognizer(
+        let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
         )
         
-        pinchGr.delegate = self
-        view.addGestureRecognizer(pinchGr)
+        pinchGR.delegate = self
+        view.addGestureRecognizer(pinchGR)
     }
     
     
@@ -315,12 +328,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         loadingView.isHidden = false
 
         contentZoom = 0
+        
+        initScene()
         updateScene()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
         loadingView.isHidden = false
+        initScene()
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {

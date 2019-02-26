@@ -22,42 +22,20 @@ extension MainVC {
                 rlmObj.info     = objInfo["info"] as! String
                 rlmObj.filePath = objFilePath.absoluteString
                 
+                rlmObj.useWorldPosition = objInfo["useWorldPosition"] as! Bool
+                
                 rlmObj.type     = objInfo["type"] as! String
                 rlmObj.style    = objInfo["style"] as! Int
                 
                 rlmObj.lat      = objInfo["lat"] as! Double
                 rlmObj.lng      = objInfo["lng"] as! Double
                 rlmObj.alt      = objInfo["alt"] as! Double
+                
+                rlmObj.x_pos    = objInfo["x_pos"] as! Double
+                rlmObj.y_pos    = objInfo["y_pos"] as! Double
+                rlmObj.z_pos    = objInfo["y_pos"] as! Double
 
                 rlmObj.scale = objInfo["scale"] as! Double
-                
-                realm.add(rlmObj)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-    }
-    
-    
-    func storeFeedText(objInfo: [String : Any], originFeed:String) {
-        let rlmObj = RLM_Obj()
-        
-        do {
-            try realm.write {
-                rlmObj.id     = objInfo["id"] as! String
-                rlmObj.feedId = originFeed
-                rlmObj.name   = objInfo["name"] as! String
-                rlmObj.info   = objInfo["info"] as! String
-                rlmObj.type   = objInfo["type"] as! String
-                
-                rlmObj.style  = objInfo["style"] as! Int
-                rlmObj.text   = objInfo["text"] as! String
-                
-                rlmObj.lat    = objInfo["lat"] as! Double
-                rlmObj.lng    = objInfo["lng"] as! Double
-                rlmObj.alt    = objInfo["alt"] as! Double
-
-                rlmObj.scale  = objInfo["scale"] as! Double
                 
                 realm.add(rlmObj)
             }
@@ -73,14 +51,17 @@ extension MainVC {
         for k in keyList {
             if dict.keys.contains(k) == false {
                 valid = false
+            } else {
+                print("Valid: " + valid.description)
             }
         }
         
         return valid
+        
     }
     
     
-    func valueIfPresent(dict:Dictionary<String, AnyObject>, key: String, placeHolderValue: Any) -> Any {
+    func valueIfPresent(dict: Dictionary<String, AnyObject>, key: String, placeHolderValue: Any) -> Any {
         
         if dict.keys.contains(key) {
             return dict[key]!
@@ -104,22 +85,28 @@ extension MainVC {
                 
                 let objData: [String : Any] = [
                     "name":         feedContent["name"] as! String,
-                    "id":           feedContent["id"] as! String,
+                    "id":           feedContent["id"]   as! String,
                     "feed_id":      feedId,
 
                     "version":      feedContent["version"] as! Int,
                     
-                    "type":         feedContent["type"] as! String,
+                    "type":         feedContent["type"]  as! String,
                     "style":        feedContent["style"] as! Int,
                     
                     "url":    valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
-                    
+
                     "info":   valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
                     "text":   valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
+                    
+                    "useWorldPosition": valueIfPresent(dict: feedContent, key: "useWorldPosition", placeHolderValue: true),
                     
                     "lat":    valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
                     "lng":    valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
                     "alt":    valueIfPresent(dict: feedContent, key: "alt",    placeHolderValue: 0.0),
+                    
+                    "x_pos":  valueIfPresent(dict: feedContent, key: "x_pos", placeHolderValue: 0.0),
+                    "y_pos":  valueIfPresent(dict: feedContent, key: "y_pos", placeHolderValue: 0.0),
+                    "z_pos":  valueIfPresent(dict: feedContent, key: "z_pos", placeHolderValue: 0.0),
 
                     "radius": valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0),
                     "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
@@ -136,10 +123,6 @@ extension MainVC {
                             url: URL as URL, destinationUrl: destinationUrl!,
                             completion: { DispatchQueue.main.async {
                                 self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, originFeed: feedId )} })
-                    }
-                } else {
-                    if feedContent["type"] as! String == "text" {
-                        self.storeFeedText(objInfo: objData, originFeed: feedId)
                     }
                 }
             } else {
