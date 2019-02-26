@@ -30,7 +30,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
-//        initScene()
+        initScene()
         updateScene()
     }
     
@@ -38,7 +38,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
-        
         let snapShot = sceneView.snapshot()
         let imageToShare = [snapShot]
         let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
@@ -60,7 +59,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         return objList
     }
-    
+
     
     func getNodeWorldPosition(contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
         
@@ -68,24 +67,26 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
 
         let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var objectScale: Double = 10000000 / scaleFactor
+        var scaleDivider: Double = (10000000 / scaleFactor) + 10000
         
         if (session.first?.distanceScale)! {
-            objectScale      = (objectDistance / scaleFactor) + 1000
+            scaleDivider     = (objectDistance / scaleFactor) + 10000
         }
         
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
 
-        let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / objectScale, y: Double(translationSCNV.z) / objectScale )
-        let latLongXyz       = SCNVector3(normalisedTrans.x, 0, normalisedTrans.y)
+        let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / scaleDivider, y: Double(translationSCNV.z) / scaleDivider )
+        let latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(contentObj.alt), normalisedTrans.y)
     
         return latLongXyz
     }
     
     
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
-        print("addContentToScene: " + String(contentObj.id))
+        print("AddContentToScene: " + String(contentObj.id))
+        print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
+
         var latLongXyz = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         
         if contentObj.useWorldPosition {
@@ -96,20 +97,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         if fPath != "" && contentObj.type.lowercased() != "text" {
             let ctNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
-            print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
 
             if contentObj.type.lowercased() == "obj" {
                 ctNode.addObj(fPath: fPath, contentObj: contentObj)
             }
-
             if contentObj.type.lowercased() == "usdz" {
                 ctNode.addUSDZ(fPath: fPath, contentObj: contentObj, position: latLongXyz)
             }
-            
             if contentObj.type.lowercased() == "image" {
                 ctNode.addImage(fPath: fPath, contentObj: contentObj)
             }
-            
             if contentObj.type.lowercased() == "gif" {
                 ctNode.addGif(fPath: fPath, contentObj: contentObj)
             }
@@ -120,7 +117,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } else {
             if contentObj.type.lowercased() == "text" {
                 let textNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
-                textNode.addText(nodeText: contentObj.text, extrusion: 1, fontSize: 2, color: UIColor.black)
+                textNode.addText(nodeText: contentObj.text, extrusion: 1, fontSize: CGFloat(contentObj.scale + 2), color: UIColor.black)
                 textNode.location = rawObjectGpsCCL
                 textNode.position = latLongXyz
                 mainScene.rootNode.addChildNode(textNode)
@@ -166,7 +163,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     
                     addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: (session.first?.scaleFactor)! )
                 } else {
-                    // TODO: Increment Feed Error Count
+                    // TODO: Increment Feed Error Count -> [If VAL > THRESH] -> contentObj.active = false
                     print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
                 }
             } else {
@@ -175,7 +172,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             }
         }
-        
     }
     
     

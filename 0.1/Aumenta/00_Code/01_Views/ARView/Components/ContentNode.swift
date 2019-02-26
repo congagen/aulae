@@ -15,7 +15,7 @@ class ContentNode: SCNNode {
         self.title = title
         super.init()
         let billboardConstraint = SCNBillboardConstraint()
-        // billboardConstraint.freeAxes = SCNBillboardAxis.Y
+        billboardConstraint.freeAxes = SCNBillboardAxis.Y
         constraints = [billboardConstraint]
     }
     

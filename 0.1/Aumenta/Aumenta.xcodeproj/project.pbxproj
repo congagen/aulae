@@ -34,6 +34,7 @@
 		31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869520B3FB040038F4D5 /* MapVC.swift */; };
 		31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D284BE20D3B079004451A6 /* RLM_Feed.swift */; };
 		FA1934E422247D2B00457C6E /* FeedActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1934E322247D2B00457C6E /* FeedActions.swift */; };
+		FA1934E72225BD0000457C6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA1934E62225BD0000457C6E /* Assets.xcassets */; };
 		FA1AAC422153E9D200EE494A /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC402153E9D000EE494A /* RealmSwift.framework */; };
 		FA1AAC432153E9D200EE494A /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC402153E9D000EE494A /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FA1AAC442153E9D200EE494A /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC412153E9D200EE494A /* Realm.framework */; };
@@ -41,7 +42,6 @@
 		FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA663146221DBD4B000FEF60 /* ContentNode.swift */; };
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
 		FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */; };
-		FA789D1F2220567B009DC15F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA789D1E2220567B009DC15F /* Assets.xcassets */; };
 		FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA789D202221629F009DC15F /* FeedSearchTVC.swift */; };
 		FA8275EC221ABAD5007B413B /* SceneActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8275EB221ABAD5007B413B /* SceneActions.swift */; };
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
@@ -98,13 +98,13 @@
 		31AB869520B3FB040038F4D5 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
 		31D284BE20D3B079004451A6 /* RLM_Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Feed.swift; sourceTree = "<group>"; };
 		FA1934E322247D2B00457C6E /* FeedActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedActions.swift; sourceTree = "<group>"; };
+		FA1934E62225BD0000457C6E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA1AAC402153E9D000EE494A /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		FA1AAC412153E9D200EE494A /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		FA482F672215ADE600D251AB /* Aumenta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Aumenta.entitlements; path = ../Aumenta.entitlements; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		FA789D1E2220567B009DC15F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA789D202221629F009DC15F /* FeedSearchTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSearchTVC.swift; sourceTree = "<group>"; };
 		FA8275EB221ABAD5007B413B /* SceneActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneActions.swift; sourceTree = "<group>"; };
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
@@ -241,7 +241,7 @@
 		318FE90420B1697D0050528B /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				FA789D1E2220567B009DC15F /* Assets.xcassets */,
+				FA1934E62225BD0000457C6E /* Assets.xcassets */,
 				3177252020B03AD4009FA8B1 /* art.scnassets */,
 			);
 			path = Assets;
@@ -411,8 +411,8 @@
 			files = (
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
+				FA1934E72225BD0000457C6E /* Assets.xcassets in Resources */,
 				3177252620B03AD4009FA8B1 /* Main.storyboard in Resources */,
-				FA789D1F2220567B009DC15F /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

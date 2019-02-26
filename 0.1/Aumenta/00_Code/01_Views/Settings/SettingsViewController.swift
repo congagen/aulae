@@ -139,12 +139,12 @@ class SettingsViewController: UITableViewController {
         scaleFactorDisplay.text          = String(Int(session.first!.scaleFactor))
         scaleFactorStepper.value         = session.first!.scaleFactor
         
-        useDistanceSwitch.isOn           = session.first!.distanceScale    == true
-        autoUpdateSwitch.isOn            = session.first!.autoUpdate       == true
-        gpsToggleSwitch.isOn             = session.first!.backgroundGps    == true
+        useDistanceSwitch.isOn           = session.first!.distanceScale    == session.first?.distanceScale
+        autoUpdateSwitch.isOn            = session.first!.autoUpdate       == session.first?.autoUpdate
+        gpsToggleSwitch.isOn             = session.first!.backgroundGps    == session.first?.backgroundGps
         
-        showPlaceholderSwitch.isOn       = session.first!.showPlaceholders == true
-        animationToggleSwitch.isOn       = session.first!.allowAnimation   == true
+        showPlaceholderSwitch.isOn       = session.first!.showPlaceholders == session.first?.showPlaceholders
+        animationToggleSwitch.isOn       = session.first!.allowAnimation   == session.first?.allowAnimation
     }
     
     

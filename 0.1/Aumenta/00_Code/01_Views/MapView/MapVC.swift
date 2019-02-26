@@ -27,6 +27,8 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
+    var selected: RLM_Obj? = nil
+    
     var curLat = 0.0
     var curLng = 0.0
     var curAlt = 0.0
@@ -97,6 +99,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         return circleRenderer
     }
     
+    
     func updateviewRadius() {
         
         for o in mapView.overlays {
@@ -108,14 +111,17 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
             longitude: mapView.userLocation.coordinate.longitude
         )
         
-        let areaCircle = MKCircle(
-            center: cLoc, radius: Double((session.first?.searchRadius)!)
-        )
+        var areaCircle: MKCircle
+        
+        if (session.first?.searchRadius)! >= 11000 {
+            areaCircle = MKCircle(center: cLoc, radius: Double( (session.first?.searchRadius)! - 10000 ))
+        } else {
+            areaCircle = MKCircle(center: cLoc, radius: Double( (session.first?.searchRadius)! ))
+        }
         
         mapView.addOverlay(areaCircle)
         
     }
-    
     
     
     func urlConfigurationTextField(textField: UITextField!)
@@ -125,7 +131,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
             textField.text! = (session.first?.debugUrl)!
         }
     }
-    
     
     
     func addRadiusOverlay(lat:Double, long:Double, radius:Double) {
@@ -174,16 +179,16 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
                     ano.coordinate = CLLocationCoordinate2D(latitude: fo.lat, longitude: fo.lng)
                     
                     ano.aType = fo.type
+
+                    ano.id = fo.id
+                    ano.name = fo.name
                     
                     if objFeed.count > 0 {
-                        ano.id = (objFeed.first?.name)!
+                        ano.title = (objFeed.first?.name)! + " - " + fo.name
                     } else {
-                        ano.id = fo.feedId
+                        ano.title = fo.name
                     }
                     
-                    ano.name = fo.name
-                    ano.title = ano.id + " - " + fo.name
-                
                     mapView.addAnnotation(ano)
                     // TODO? Radius Overlay?
                 } 
@@ -229,7 +234,6 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     @objc func mainUpdate() {
         if session.count > 0 {
             
-            
             if updateTimer.timeInterval != (session.first?.mapUpdateInterval)!+1 {
                 updateTimer.invalidate()
             }
@@ -268,13 +272,44 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     }
     
     
+    func getAnoObj(view: MKAnnotationView) -> RLM_Obj? {
+        if let a: MapAno = view.annotation as? MapAno {
+            let id      = a.id
+            let results = feedObjects.filter({$0.id == id})
+            
+            if results.count > 0 {
+                return results.first
+            }
+        }
+        return nil
+    }
+    
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if getAnoObj(view: view) != nil {
+            selected = getAnoObj(view: view)!
+            print(selected!)
+        }
+    }
+    
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         view.image = UIImage(named: "pin_s")
-
+        
+        if getAnoObj(view: view) != nil {
+            selected = getAnoObj(view: view)!
+            print(selected!)
+        }
     }
+    
     
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         view.image = UIImage(named: "pin_ds")
+        
+        if getAnoObj(view: view) != nil {
+            selected = getAnoObj(view: view)!
+            print(selected!)
+        }
     }
     
     
@@ -290,10 +325,9 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         
         if (session.first?.backgroundGps)! {
             locationManager.requestAlwaysAuthorization()
+        } else {
+            locationManager.requestWhenInUseAuthorization()
         }
-//        else {
-//            locationManager.requestWhenInUseAuthorization()
-//        }
 
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
