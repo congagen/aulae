@@ -71,7 +71,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         var objectScale: Double = 10000000 / scaleFactor
         
         if (session.first?.distanceScale)! {
-            objectScale    = (objectDistance / scaleFactor) + 1000
+            objectScale      = (objectDistance / scaleFactor) + 1000
         }
         
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
@@ -93,9 +93,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
        
         let rawObjectGpsCCL = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
-        let ctNode          = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
 
         if fPath != "" && contentObj.type.lowercased() != "text" {
+            let ctNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
             print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
 
             if contentObj.type.lowercased() == "obj" {
@@ -113,11 +113,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             if contentObj.type.lowercased() == "gif" {
                 ctNode.addGif(fPath: fPath, contentObj: contentObj)
             }
-        
-        } else {
             
+            ctNode.location = rawObjectGpsCCL
+            ctNode.position = latLongXyz
+            mainScene.rootNode.addChildNode(ctNode)
+        } else {
             if contentObj.type.lowercased() == "text" {
-                ctNode.addText(nodeText: contentObj.text, extrusion: 1, color: UIColor.black)
+                let textNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+                textNode.addText(nodeText: contentObj.text, extrusion: 1, fontSize: 2, color: UIColor.black)
+                textNode.location = rawObjectGpsCCL
+                textNode.position = latLongXyz
+                mainScene.rootNode.addChildNode(textNode)
             } else {
                 if (session.first?.showPlaceholders)! {
                     let node = SCNNode(geometry: SCNSphere(radius: CGFloat(1) ))
@@ -126,11 +132,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             }
         }
-        
-        ctNode.location = rawObjectGpsCCL
-        ctNode.position = latLongXyz
-        mainScene.rootNode.addChildNode(ctNode)
-        
     }
     
     

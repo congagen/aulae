@@ -119,10 +119,10 @@ class ContentNode: SCNNode {
     }
     
     
-    func addText(nodeText: String, extrusion:Double, color:UIColor) {
-        let text = SCNText(string: nodeText, extrusionDepth: 0.1)
+    func addText(nodeText: String, extrusion: CGFloat, fontSize: CGFloat, color:UIColor) {
+        let text = SCNText(string: nodeText, extrusionDepth: extrusion)
         text.alignmentMode = convertFromCATextLayerAlignmentMode(CATextLayerAlignmentMode.center)
-        text.font.withSize(5)
+        text.font.withSize(fontSize)
         
         let node = SCNNode(geometry: text)
         node.physicsBody? = .static()
