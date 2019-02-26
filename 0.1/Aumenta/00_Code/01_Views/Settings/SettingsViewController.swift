@@ -37,14 +37,6 @@ class SettingsViewController: UITableViewController {
         updateUI()
     }
     
-    let searchRadiusParamName = "searchRadius"
-    @IBOutlet var searchRadiusStepper: UIStepper!
-    @IBOutlet var searchRadiusDisplay: UITextField!
-    @IBAction func searchRadiusStepperAction(_ sender: UIStepper) {
-        saveSettings(propName: searchRadiusParamName, propValue: Double(sender.value))
-        updateUI()
-    }
-    
     let autoUpdateParamName = "autoUpdate"
     @IBOutlet var autoUpdateSwitch: UISwitch!
     @IBAction func autoUpdateSwitchAction(_ sender: UISwitch) {
@@ -108,9 +100,6 @@ class SettingsViewController: UITableViewController {
                     case contentUpdateSpeedParamName:
                         session.first!.contentUpdateInterval = propValue
                         
-                    case searchRadiusParamName:
-                        session.first!.searchRadius          = propValue
-                        
                     case scaleFactorParamName:
                         session.first!.scaleFactor           = propValue
                       
@@ -147,11 +136,8 @@ class SettingsViewController: UITableViewController {
         contentUpdateSpeedDisplay.text   = String(Int(session.first!.contentUpdateInterval))
         contentUpdateSpeedStepper.value  = session.first!.contentUpdateInterval
         
-        searchRadiusDisplay.text         = String(Int(session.first!.searchRadius))
-        searchRadiusStepper.value        = session.first!.searchRadius
-        
-        scaleFactorDisplay.text         = String(Int(session.first!.scaleFactor))
-        scaleFactorStepper.value        = session.first!.scaleFactor
+        scaleFactorDisplay.text          = String(Int(session.first!.scaleFactor))
+        scaleFactorStepper.value         = session.first!.scaleFactor
         
         useDistanceSwitch.isOn           = session.first!.distanceScale    == true
         autoUpdateSwitch.isOn            = session.first!.autoUpdate       == true

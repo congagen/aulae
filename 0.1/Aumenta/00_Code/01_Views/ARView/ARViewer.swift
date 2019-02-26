@@ -20,9 +20,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     var trackingState = 0
-    
     var contentZoom: Double = 1
-    
     var updateTimer = Timer()
     var updateInterval: Double = 10
     var wordtrackError = false
@@ -33,6 +31,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
+        loadingView.isHidden = false
+
+        initScene()
         updateScene()
     }
     
@@ -72,7 +73,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)! )
         let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectAlt        = contentObj.alt
-        
         let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         
         if (session.first?.distanceScale)! {
@@ -85,10 +85,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         var latLongXyz = SCNVector3(0, 0, 0)
         
         if (trackingState == 3) {
-            let objectXYZPos     = ValConverters().gps_to_ecef( latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
-            let deviceXYZPos     = ValConverters().gps_to_ecef( latitude: rawDeviceGpsCCL.coordinate.latitude, longitude: rawDeviceGpsCCL.coordinate.longitude, altitude: 0.01 )
-            let xPos = (((objectXYZPos[0] - deviceXYZPos[0])) / distanceScale)
-            let yPos = (((objectXYZPos[1] - deviceXYZPos[1])) / distanceScale)
+            let objectXYZPos = ValConverters().gps_to_ecef( latitude: contentObj.lat, longitude: contentObj.lng, altitude: 0.01 )
+            let deviceXYZPos = ValConverters().gps_to_ecef( latitude: rawDeviceGpsCCL.coordinate.latitude, longitude: rawDeviceGpsCCL.coordinate.longitude, altitude: 0.01 )
+            let xPos         = (((objectXYZPos[0] - deviceXYZPos[0])) / distanceScale)
+            let yPos         = (((objectXYZPos[1] - deviceXYZPos[1])) / distanceScale)
 
             latLongXyz       = SCNVector3(xPos, objectAlt, yPos)
         } else {
@@ -96,15 +96,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(objectAlt), normalisedTrans.y)
         }
 
-        print("Distance:     " + String(objectDistance))
-        print("TrnsPos:      " + String(latLongXyz.x) + ", " + String(latLongXyz.y) + ", " + String(latLongXyz.z))
-        
+        let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+
         if fPath != "" && contentObj.type.lowercased() != "text" {
-            
+            print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
+
             if contentObj.type.lowercased() == "obj" {
-                print("ADDING OBJ TO SCENE: " + fPath)
-                
-                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addObj(fPath: fPath, contentObj: contentObj)
                 node.location = rawObjectGpsCCL
                 node.position = latLongXyz
@@ -112,9 +109,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
 
             if contentObj.type.lowercased() == "usdz" {
-                print("ADDING USDZ TO SCENE: " + fPath)
-                
-                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addUSDZ(fPath: fPath, contentObj: contentObj, position: latLongXyz)
                 node.location = rawObjectGpsCCL
                 node.position = latLongXyz
@@ -122,9 +116,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             
             if contentObj.type.lowercased() == "image" {
-                print("ADDING IMAGE TO SCENE")
-                
-                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addImage(fPath: fPath, contentObj: contentObj)
                 node.location = rawObjectGpsCCL
                 node.position = latLongXyz
@@ -132,9 +123,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             
             if contentObj.type.lowercased() == "gif" {
-                print("ADDING GIF TO SCENE")
-                
-                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addGif(fPath: fPath, contentObj: contentObj)
                 node.location = rawObjectGpsCCL
                 node.position = latLongXyz
@@ -143,15 +131,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
         } else {
             if (contentObj.type.lowercased() == "text") {
-                print("ADDING TEXT TO SCENE")
-                
-                let node = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
                 node.addText(nodeText: contentObj.text, extrusion: 1, color: UIColor.black)
                 node.location = rawObjectGpsCCL
                 node.position = latLongXyz
                 mainScene.rootNode.addChildNode(node)
             } else {
-                // TODO: Add placeholder if allowed in settings
+                if (session.first?.showPlaceholders)! {
+                    let node = SCNNode(geometry: SCNSphere(radius: CGFloat(1) ))
+                    node.position = latLongXyz
+                    mainScene.rootNode.addChildNode(node)
+                }
             }
         }
     }
@@ -163,7 +152,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let range = (session.first?.searchRadius)!
         
-        // TODO:  Get search range
+        // TODO: Get search range
         let objsInRange   = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
         let activeInRange = objsInRange.filter({$0.active && !$0.deleted})
         
@@ -207,7 +196,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             let hits = self.sceneView.hitTest(location, options: nil)
             
             if let tappednode = hits.first?.node {
-                //do something with tapped object
                 print(tappednode.name!)
                 print(tappednode.position)
                 
@@ -233,7 +221,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         sceneView.delegate = self
         sceneView.showsStatistics = false
         
-        //let configuration = AROrientationTrackingConfiguration()
         let configuration = ARWorldTrackingConfiguration()
         
         configuration.planeDetection = [.vertical, .horizontal]
@@ -242,31 +229,30 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isLightEstimationEnabled = true
     
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        sceneView.session.run(configuration)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         sceneView.addGestureRecognizer(tapGestureRecognizer)
         tapGestureRecognizer.cancelsTouchesInView = false
-        
-        //sceneView.session.run(configuration)
     }
     
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         switch camera.trackingState {
         case .notAvailable:
-            trackingState = 2
             print("trackingState: not available")
+            trackingState = 2
             loadingView.isHidden = false
             updateScene()
         case .limited(let reason):
+            print("trackingState: limited")
             trackingState = 1
             loadingView.isHidden = false
-            print("trackingState: limited")
             print(reason)
         case .normal:
+            print("trackingState: normal")
             trackingState = 0
             loadingView.isHidden = true
-            print("trackingState: normal")
         }
     }
     
@@ -318,9 +304,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let pinchGr = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
         )
+        
         pinchGr.delegate = self
         view.addGestureRecognizer(pinchGr)
-        
     }
     
     
@@ -335,15 +321,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
         loadingView.isHidden = false
-
-        initScene()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
         loadingView.isHidden = false
-
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {

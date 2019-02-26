@@ -20,6 +20,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
+    let feedAct = FeedActions()
+
     let apiUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev"
     var apiHeaderValue = ""
     var apiHeaderFeild = "Authorization"
@@ -103,28 +105,15 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         
         if keys[indexPath.item] != loadingMsg && keys[indexPath.item] != noResultsMsg {
             let itemData: Dictionary<String, AnyObject> = searchResults[keys[indexPath.item]]! as! Dictionary<String, AnyObject>
+            
+            let itmTitle: String = keys[indexPath.item]
             let itmUrl: String = itemData["url"] as! String
             
             if feeds.filter( {$0.url == itmUrl} ).count == 0 {
-                let newFeed = RLM_Feed()
-                
-                do {
-                    try realm.write {
-
-                        if itmUrl != "" {
-                            newFeed.url  = itmUrl
-                            newFeed.id   = UUID().uuidString
-                            newFeed.name = "Updating..."
-                            
-                            self.realm.add(newFeed)
-                        }
-                        
-                    }
-                } catch {
-                    print("Error: \(error)")
-                }
+                feedAct.showAddSearchFeedAlert(feedTitle: itmTitle, feedUrl: itmUrl, message: "Add this feed?", rootView: self)
             } else {
-                feeds.filter( {$0.url == itmUrl} ).first?
+                // TODO: Delete?
+                //feedAct.deleteFeed(feedId: (feeds.filter( {$0.url == itmUrl} ).first?.id)!, deleteFeedObjects: true)
             }
         }
     

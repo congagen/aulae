@@ -183,7 +183,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
                     ano.title = ano.id + " - " + fo.name
                 
                     mapView.addAnnotation(ano)
-                    //addRadiusOverlay(lat: fo.lat, long: fo.lng, radius: fo.radius) //TODO
+                    // TODO? Radius Overlay?
                 } 
             }
         }
@@ -191,7 +191,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         
         for a in mapView.annotations {
             let objAtAnnotationLocation = feedObjects.filter( {$0.lat == a.coordinate.latitude && $0.lng == a.coordinate.longitude} )
-            //let activeInDB = objAtAnnotationLocation.filter({ !$0.active || $0.deleted })
+            // TODO?: let activeInDB = objAtAnnotationLocation.filter({ !$0.active || $0.deleted })
             
             if objAtAnnotationLocation.count == 0 {
                 print("Removing: " + String(a.coordinate.latitude))

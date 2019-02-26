@@ -272,6 +272,7 @@
 		31AB868D20B3525E0038F4D5 /* MapView */ = {
 			isa = PBXGroup;
 			children = (
+				FA1934E5222567D100457C6E /* Components */,
 				31AB869520B3FB040038F4D5 /* MapVC.swift */,
 				319AA78020B4356500F99223 /* MapAno.swift */,
 			);
@@ -306,6 +307,13 @@
 				319AA78220B4659200F99223 /* feed.json */,
 			);
 			path = 01_Data;
+			sourceTree = "<group>";
+		};
+		FA1934E5222567D100457C6E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		FA6E5ACA221F1D4200A5DF17 /* Settings */ = {

@@ -1,7 +1,14 @@
 
+// URGENT:
+//    Name?
+//    Target: Info: URL Types
+//    Feed Modes:  Floor / Wall / World Position / Static
+//    Feed Search: Refresh / Alert
+
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 // ArKit -> SceneKit?
-
 
 // System:
 //    Settings:                Feed Update Interval

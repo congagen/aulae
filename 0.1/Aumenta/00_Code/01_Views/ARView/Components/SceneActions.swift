@@ -30,7 +30,7 @@ extension ARViewer {
     }
     
     
-    func showNodeInfo(node:SCNNode) {
+    func showNodeInfo(node: SCNNode) {
         // TODO
     }
 

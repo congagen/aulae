@@ -25,6 +25,8 @@ class FeedsTVC: UITableViewController {
     var textField: UITextField? = nil
     var selected: RLM_Feed? = nil
     
+    let feedAct = FeedActions()
+    
     
     public var screenHeight: CGFloat {
         return UIScreen.main.bounds.height
@@ -91,8 +93,8 @@ class FeedsTVC: UITableViewController {
             cell.textLabel?.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             cell.detailTextLabel?.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         } else {
-            cell.textLabel?.textColor = UIColor.black
-            cell.detailTextLabel?.textColor = UIColor.black
+            cell.textLabel?.textColor = UIColor.white
+            cell.detailTextLabel?.textColor = UIColor.white
         }
         
         return cell
@@ -108,21 +110,7 @@ class FeedsTVC: UITableViewController {
         let section = indexP.section
         let feed = feeds[section]
         
-        do {
-            try realm.write {
-                for obj in feedObjects.filter( {$0.id == feed.id} ) {
-                    obj.deleted = true
-                    obj.active = false
-                }
-                
-                feed.deleted = true
-                feed.active = false
-                
-                realm.delete(feed)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
+        feedAct.deleteFeed(feedId: feed.id, deleteFeedObjects: true)
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
@@ -138,17 +126,14 @@ class FeedsTVC: UITableViewController {
     }
     
     
-    func handleRenameOk(alertView: UIAlertAction!)
-    {
-        
+    func handleRenameOk(alertView: UIAlertAction!) {
+        // TODO: Update all assosiated FeedObjects["feedId"]
+
         if selected != nil {
             do {
                 try realm.write {
                     if textField?.text != nil {
                         selected?.name = (self.textField?.text)!
-                        
-                        // TODO: Update all assosiated FeedObjects["feedId"]
-                        
                     }
                 }
             } catch {
@@ -162,29 +147,9 @@ class FeedsTVC: UITableViewController {
     
     
     func handleEnterURL(alertView: UIAlertAction!) {
-        let newFeed = RLM_Feed()
         
-        do {
-            try realm.write {
-                if textField?.text != nil {
-                    if feeds.filter({$0.url == (self.textField?.text)! }).count == 0 {
-                        
-                        if (self.textField?.text)! != "" {
-                            
-                            newFeed.url  = (self.textField?.text)!
-                            newFeed.id   = UUID().uuidString
-                            newFeed.name = "Updating..."
-                            
-                            self.realm.add(newFeed)
-                        }
-                        
-                    } else {
-                        print("feeds.filter({$0.id == (self.textField?.text)! }).count > 0")
-                    }
-                }
-            }
-        } catch {
-            print("Error: \(error)")
+        if textField?.text != nil {
+            feedAct.addFeed(feedUrl: (self.textField?.text)!, refreshExisting: true)
         }
         
         self.tableView.reloadData()
