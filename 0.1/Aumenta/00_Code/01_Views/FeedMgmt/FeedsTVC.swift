@@ -28,8 +28,6 @@ class FeedsTVC: UITableViewController {
     let feedAct = FeedActions()
     
     
-    
-    
     public var screenHeight: CGFloat {
         return UIScreen.main.bounds.height
     }
@@ -65,7 +63,6 @@ class FeedsTVC: UITableViewController {
         do {
             try realm.write {
                 feed.active = !feed.active
-                
             }
         } catch {
             print("Error: \(error)")
@@ -266,8 +263,36 @@ class FeedsTVC: UITableViewController {
         return 1
     }
     
+    
+    @objc func manualUpdate() {
+        for f in feeds {
+            do {
+                try realm.write {
+                    print(f.name)
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
+        
+        if self.refreshControl != nil {
+            self.refreshControl!.endRefreshing()
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = view.superview?.tintColor
+        tableView.addSubview(refreshControl)
+
+        refreshControl.addTarget(self, action: #selector(FeedsTVC.manualUpdate), for: .valueChanged)
+
         mainUpdate()
     }
     

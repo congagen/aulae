@@ -61,9 +61,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
 
     
-    func getNodeWorldPosition(contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
-        
-        let minDistance: Double = 1
+    func getNodeWorldPosition(baseOffset: Double, contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
+        var xPos: Double = 0
+        var yPos: Double = 0
         
         let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
@@ -74,12 +74,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         var scaleDivider: Double = (10000000 / scaleFactor)
         
-        if (session.first?.distanceScale)! {
-            scaleDivider     = (objectDistance / scaleFactor)
+        if (session.first?.distanceScale)! { scaleDivider     = (objectDistance / scaleFactor) }
+   
+        if translationSCNV.x < 0 {
+            xPos = Double(Double(translationSCNV.x) / scaleDivider) - baseOffset
+        } else {
+            xPos = Double(Double(translationSCNV.x) / scaleDivider) + baseOffset
         }
         
-        let xPos = minDistance + (Double(translationSCNV.x) / scaleDivider)
-        let yPos = minDistance + (Double(translationSCNV.z) / scaleDivider)
+        if translationSCNV.z < 0 {
+            yPos = Double(Double(translationSCNV.z) / scaleDivider) - baseOffset
+        } else {
+            yPos = Double(Double(translationSCNV.z) / scaleDivider) + baseOffset
+        }
 
         let normalisedTrans  = CGPoint(x: xPos, y: yPos )
         let latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(contentObj.alt), normalisedTrans.y)
@@ -94,8 +101,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         var latLongXyz = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         
-        if contentObj.useWorldPosition {
-            latLongXyz = getNodeWorldPosition(contentObj: contentObj, scaleFactor: scaleFactor)
+        if contentObj.useWorldPosition { latLongXyz = getNodeWorldPosition(
+                baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor
+            )
         }
        
         let rawObjectGpsCCL = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
@@ -119,13 +127,39 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             ctNode.location = rawObjectGpsCCL
             ctNode.position = latLongXyz
             mainScene.rootNode.addChildNode(ctNode)
+            
+            if contentObj.style == 0 {
+                ctNode.constraints = [SCNBillboardConstraint()]
+            }
+            
         } else {
             if contentObj.type.lowercased() == "text" {
-                let textNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
-                textNode.addText(nodeText: contentObj.text, extrusion: 1, fontSize: CGFloat(contentObj.scale + 2), color: UIColor.black)
-                textNode.location = rawObjectGpsCCL
-                textNode.position = latLongXyz
-                mainScene.rootNode.addChildNode(textNode)
+                print("TEXT")
+                print(contentObj.text)
+                
+                var nText = "?" 
+                
+                if contentObj.text != "" {
+                    nText = contentObj.text
+                }
+                
+                let ctNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+                
+                ctNode.addText(
+                    nodeText: nText, extrusion: CGFloat(contentObj.scale * 0.1),
+                    fontSize: CGFloat(contentObj.scale), color: (view.superview?.tintColor)!
+                )
+                
+                ctNode.location = rawObjectGpsCCL
+                ctNode.position = latLongXyz
+                mainScene.rootNode.addChildNode(ctNode)
+                
+                if contentObj.style == 0 {
+                    let constraint = SCNBillboardConstraint()
+                    constraint.freeAxes = [.Y]
+                    ctNode.constraints = [constraint]
+                }
+                
             } else {
                 if (session.first?.showPlaceholders)! {
                     let node = SCNNode(geometry: SCNSphere(radius: CGFloat(1) ))
@@ -191,8 +225,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             let hits = self.sceneView.hitTest(location, options: nil)
             
             if let tappednode = hits.first?.node {
-                print(tappednode.name!)
-                print(tappednode.position)
+                if tappednode.name != nil {
+                    print(tappednode.name!)
+                }
+                
+                if tappednode.position != nil {
+                    print(tappednode.position)
+                }
                 
                 if !tappednode.hasActions {
                     //addHooverAnimation(node: tappednode)

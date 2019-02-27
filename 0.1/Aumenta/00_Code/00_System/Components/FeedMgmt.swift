@@ -26,7 +26,8 @@ extension MainVC {
                 
                 rlmObj.type     = objInfo["type"] as! String
                 rlmObj.style    = objInfo["style"] as! Int
-                
+                rlmObj.text     = objInfo["text"] as! String
+
                 rlmObj.lat      = objInfo["lat"] as! Double
                 rlmObj.lng      = objInfo["lng"] as! Double
                 rlmObj.alt      = objInfo["alt"] as! Double

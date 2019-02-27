@@ -269,7 +269,6 @@
 			children = (
 				FA1934E5222567D100457C6E /* Components */,
 				31AB869520B3FB040038F4D5 /* MapVC.swift */,
-				319AA78020B4356500F99223 /* MapAno.swift */,
 			);
 			path = MapView;
 			sourceTree = "<group>";
@@ -306,6 +305,7 @@
 		FA1934E5222567D100457C6E /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				319AA78020B4356500F99223 /* MapAno.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";

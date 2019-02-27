@@ -14,9 +14,7 @@ class ContentNode: SCNNode {
     init(title: String, location: CLLocation) {
         self.title = title
         super.init()
-        let billboardConstraint = SCNBillboardConstraint()
-        billboardConstraint.freeAxes = SCNBillboardAxis.Y
-        constraints = [billboardConstraint]
+
     }
     
     
@@ -119,15 +117,25 @@ class ContentNode: SCNNode {
     }
     
     
-    func addText(nodeText: String, extrusion: CGFloat, fontSize: CGFloat, color:UIColor) {
+    func addText(nodeText: String, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
         let text = SCNText(string: nodeText, extrusionDepth: extrusion)
-        text.alignmentMode = convertFromCATextLayerAlignmentMode(CATextLayerAlignmentMode.center)
-        text.font.withSize(fontSize)
-        
+        text.alignmentMode = CATextLayerAlignmentMode.center.rawValue
+        text.firstMaterial?.isDoubleSided = true
+        text.chamferRadius = extrusion
+        text.font = UIFont (name: "AvenirNext-Medium", size: fontSize)
+        text.firstMaterial?.diffuse.contents = color
+
         let node = SCNNode(geometry: text)
-        node.physicsBody? = .static()
+        
+        let max = text.boundingBox.max
+        let min = text.boundingBox.min
+        
+        let tx = (max.x - min.x) / 2.0
+        let ty = min.y
+        let tz = Float(extrusion) / 2.0
+        
+        node.pivot = SCNMatrix4MakeTranslation(tx, ty, tz)
         node.geometry?.materials.first?.diffuse.contents = color
-        node.constraints = [SCNBillboardConstraint()]
         
         addChildNode(node)
     }
@@ -140,6 +148,7 @@ class ContentNode: SCNNode {
         if let objScene = SCNSceneSource(url: urlPath, options: nil) {
             do {
                 let node: SCNNode = try objScene.scene().rootNode.clone()
+
                 addChildNode(node)
             } catch {
                 print(error)
@@ -155,12 +164,15 @@ class ContentNode: SCNNode {
         if let objScene = SCNSceneSource(url: urlPath, options: nil) {
             do {
                 let node: SCNNode = try objScene.scene().rootNode.clone()
-                node.scale = SCNVector3(x: 0.1, y: 0.1, z: 0.1)
+                let s:Float = Float(0.1 * contentObj.scale)
+                node.scale = SCNVector3(x: s, y: s, z: s)
                 addChildNode(node)
             } catch {
                 print(error)
             }
         }
+        
+
     }
     
     
@@ -190,12 +202,9 @@ class ContentNode: SCNNode {
             node.geometry?.materials.first?.diffuse.contents = UIColor.clear
             node.geometry?.materials.first?.diffuse.contents = img
             node.geometry?.materials.first?.isDoubleSided = true
-            node.constraints = [SCNBillboardConstraint()]
+            
             addChildNode(node)
-        } else {
-            // TODO: Log Error?
         }
-        
     }
     
     
@@ -219,7 +228,6 @@ class ContentNode: SCNNode {
         
         let node = SCNNode(geometry: gifPlane)
         
-        node.constraints = [SCNBillboardConstraint()]
         node.name = contentObj.name
         
         addChildNode(node)
