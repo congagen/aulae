@@ -45,6 +45,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     @IBAction func reloadBtnAction(_ sender: UIBarButtonItem) {
         initMapView()
         mainUpdate()
+        reloadAnnotations()
     }
     
     
@@ -233,14 +234,15 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     
     @objc func mainUpdate() {
         if session.count > 0 {
+            let uIv = (session.first?.mapUpdateInterval)! + 1
             
-            if updateTimer.timeInterval != (session.first?.mapUpdateInterval)!+1 {
+            if updateTimer.timeInterval != uIv {
                 updateTimer.invalidate()
             }
             
             if !updateTimer.isValid {
                 updateTimer = Timer.scheduledTimer(
-                    timeInterval: (session.first?.mapUpdateInterval)!+1,
+                    timeInterval: uIv,
                     target: self, selector: #selector(mainUpdate),
                     userInfo: nil, repeats: true)
             }
@@ -320,7 +322,7 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         mapView.showsCompass = false
         mapView.showsScale = false
         mapView.userLocation.title = ""
-        mapView.tintColor = UIColor.black
+        mapView.tintColor = view.superview?.tintColor
         mapView.backgroundColor = UIColor.black
         
         if (session.first?.backgroundGps)! {
@@ -353,6 +355,11 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         super.didReceiveMemoryWarning()
     }
 
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+    }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )

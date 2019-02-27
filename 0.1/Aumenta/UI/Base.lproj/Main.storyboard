@@ -89,7 +89,7 @@
                     <navigationItem key="navigationItem" title="Feeds" id="Nhx-W2-kfA">
                         <barButtonItem key="leftBarButtonItem" image="TabBarIcon_03" id="ayD-K4-8Qr">
                             <connections>
-                                <segue destination="CjR-vc-y1M" kind="show" id="pCq-sO-rbF"/>
+                                <segue destination="CjR-vc-y1M" kind="show" animates="NO" id="pCq-sO-rbF"/>
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
@@ -100,7 +100,7 @@
                             </barButtonItem>
                             <barButtonItem systemItem="search" id="hIw-Fb-57X">
                                 <connections>
-                                    <segue destination="Z9j-U6-ciR" kind="show" id="SZc-Qf-Odg"/>
+                                    <segue destination="Z9j-U6-ciR" kind="show" animates="NO" id="SZc-Qf-Odg"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -166,7 +166,7 @@
                                     <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="dHf-hJ-ljZ"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="action" id="etU-3N-bVO">
+                            <barButtonItem systemItem="camera" id="etU-3N-bVO">
                                 <connections>
                                     <action selector="sharePhotoBtn:" destination="cNO-cb-Srl" id="p06-zG-iGc"/>
                                 </connections>
@@ -206,7 +206,7 @@
                     <navigationItem key="navigationItem" title="Map" id="jef-En-32s">
                         <barButtonItem key="leftBarButtonItem" image="TabBarIcon_03" id="SvZ-XF-1hu">
                             <connections>
-                                <segue destination="CjR-vc-y1M" kind="show" id="aUW-k3-e0B"/>
+                                <segue destination="CjR-vc-y1M" kind="show" animates="NO" id="aUW-k3-e0B"/>
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
@@ -218,7 +218,7 @@
                             <barButtonItem systemItem="search" id="tP4-NO-MBE">
                                 <connections>
                                     <action selector="searchBtnAction:" destination="shz-14-nLG" id="DoD-ie-dEq"/>
-                                    <segue destination="Z9j-U6-ciR" kind="show" id="syp-hZ-XxQ"/>
+                                    <segue destination="Z9j-U6-ciR" kind="show" animates="NO" id="syp-hZ-XxQ"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -503,7 +503,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aqq-r3-8tt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1660" y="2538.9162561576354"/>
+            <point key="canvasLocation" x="1660" y="2539"/>
         </scene>
         <!--Feed SearchTVC-->
         <scene sceneID="1XM-Tk-eYm">
@@ -646,7 +646,7 @@
         <image name="TabBarIcon_03" width="19" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SZc-Qf-Odg"/>
+        <segue reference="syp-hZ-XxQ"/>
         <segue reference="pCq-sO-rbF"/>
     </inferredMetricsTieBreakers>
 </document>

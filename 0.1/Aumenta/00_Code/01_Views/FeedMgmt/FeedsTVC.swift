@@ -28,6 +28,8 @@ class FeedsTVC: UITableViewController {
     let feedAct = FeedActions()
     
     
+    
+    
     public var screenHeight: CGFloat {
         return UIScreen.main.bounds.height
     }

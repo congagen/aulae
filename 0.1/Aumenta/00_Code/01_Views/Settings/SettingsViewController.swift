@@ -139,14 +139,13 @@ class SettingsViewController: UITableViewController {
         scaleFactorDisplay.text          = String(Int(session.first!.scaleFactor))
         scaleFactorStepper.value         = session.first!.scaleFactor
         
-        useDistanceSwitch.isOn           = session.first!.distanceScale    == session.first?.distanceScale
-        autoUpdateSwitch.isOn            = session.first!.autoUpdate       == session.first?.autoUpdate
-        gpsToggleSwitch.isOn             = session.first!.backgroundGps    == session.first?.backgroundGps
+        useDistanceSwitch.isOn           = session.first!.distanceScale    == true
+        autoUpdateSwitch.isOn            = session.first!.autoUpdate       == true
+        gpsToggleSwitch.isOn             = session.first!.backgroundGps    == true
         
-        showPlaceholderSwitch.isOn       = session.first!.showPlaceholders == session.first?.showPlaceholders
-        animationToggleSwitch.isOn       = session.first!.allowAnimation   == session.first?.allowAnimation
+        showPlaceholderSwitch.isOn       = session.first!.showPlaceholders == true
+        animationToggleSwitch.isOn       = session.first!.allowAnimation   == true
     }
-    
     
     
     override func viewDidLoad() {
@@ -156,6 +155,13 @@ class SettingsViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         updateUI()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        print("SETTINGSVIEW: viewDidDisappear")
+        self.navigationController?.popViewController(animated: true)
+//        self.removeFromParent()
+
     }
     
     
