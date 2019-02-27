@@ -91,7 +91,8 @@ extension MainVC {
                     "version":      feedContent["version"] as! Int,
                     
                     "type":         feedContent["type"]  as! String,
-                    "style":        feedContent["style"] as! Int,
+                    "style":  valueIfPresent(dict: feedContent, key: "style", placeHolderValue:  1) as! Int,
+                    "mode":   valueIfPresent(dict: feedContent, key: "mode", placeHolderValue:   "free"),
                     
                     "url":    valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
 
@@ -124,6 +125,9 @@ extension MainVC {
                             completion: { DispatchQueue.main.async {
                                 self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, originFeed: feedId )} })
                     }
+                } else {
+                    let placeholderUrl = URL(fileURLWithPath: "")
+                    storeFeedObject(objInfo: objData, objFilePath: placeholderUrl, originFeed: feedId)
                 }
             } else {
                 print("ERROR: MALFORMED FEED ITEM: ")

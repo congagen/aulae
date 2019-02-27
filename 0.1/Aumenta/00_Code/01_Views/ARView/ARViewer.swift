@@ -63,20 +63,25 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func getNodeWorldPosition(contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
         
+        let minDistance: Double = 1
+        
         let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
 
-        let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var scaleDivider: Double = (10000000 / scaleFactor) + 10000
-        
-        if (session.first?.distanceScale)! {
-            scaleDivider     = (objectDistance / scaleFactor) + 10000
-        }
-        
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
+        
+        let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        var scaleDivider: Double = (10000000 / scaleFactor)
+        
+        if (session.first?.distanceScale)! {
+            scaleDivider     = (objectDistance / scaleFactor)
+        }
+        
+        let xPos = minDistance + (Double(translationSCNV.x) / scaleDivider)
+        let yPos = minDistance + (Double(translationSCNV.z) / scaleDivider)
 
-        let normalisedTrans  = CGPoint(x: Double(translationSCNV.x) / scaleDivider, y: Double(translationSCNV.z) / scaleDivider )
+        let normalisedTrans  = CGPoint(x: xPos, y: yPos )
         let latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(contentObj.alt), normalisedTrans.y)
     
         return latLongXyz
@@ -163,8 +168,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     
                     addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: (session.first?.scaleFactor)! )
                 } else {
-                    // TODO: Increment Feed Error Count -> [If VAL > THRESH] -> contentObj.active = false
-                    print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
+                    if o.type == "text" {
+                        addContentToScene(contentObj: o, fPath: "", scaleFactor: (session.first?.scaleFactor)! )
+                    } else {
+                        // TODO: Increment Feed Error Count -> [If VAL > THRESH] -> contentObj.active = false
+                        print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
+                    }
+ 
                 }
             } else {
                 if (o.type == "text") {

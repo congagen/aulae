@@ -48,7 +48,6 @@
 		FA8B387022120DD60099A7A3 /* ValConverters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B386F22120DD60099A7A3 /* ValConverters.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
-		FAF37EB7221CA9680065B18A /* Notes.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB6221CA9680065B18A /* Notes.swift */; };
 		FAF37EB9221D65610065B18A /* NodeAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* NodeAnimation.swift */; };
 /* End PBXBuildFile section */
 
@@ -111,7 +110,6 @@
 		FA8B386F22120DD60099A7A3 /* ValConverters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValConverters.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
-		FAF37EB6221CA9680065B18A /* Notes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notes.swift; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* NodeAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAnimation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -179,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				FAB2AE7922088315004D5819 /* TODO.swift */,
-				FAF37EB6221CA9680065B18A /* Notes.swift */,
 				3177251D20B03AD4009FA8B1 /* 00_Code */,
 				31AB869220B356C30038F4D5 /* 01_Data */,
 				318FE90520B169C00050528B /* UI */,
@@ -434,7 +431,6 @@
 				FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
-				FAF37EB7221CA9680065B18A /* Notes.swift in Sources */,
 				3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */,
 				316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
