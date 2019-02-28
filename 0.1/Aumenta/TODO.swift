@@ -1,9 +1,10 @@
 
 // URGENT:
 //    Name?
+//    Feed Search: Refresh / Alert
+//    Feed Update Timeout
 //    Extensions: Target: Info: URL Types
 //    Feed Modes:  Floor / Wall / World Position / Static
-//    Feed Search: Refresh / Alert
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

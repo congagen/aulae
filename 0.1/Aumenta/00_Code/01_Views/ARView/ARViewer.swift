@@ -24,6 +24,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var updateTimer = Timer()
     
     var mainScene = SCNScene()
+    var selectedNode = SCNNode()
+    var currentPlanes: [SCNNode]? = nil
     
     @IBOutlet var loadingView: UIView!
     
@@ -125,7 +127,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             
             ctNode.location = rawObjectGpsCCL
-            ctNode.position = latLongXyz
+            
             mainScene.rootNode.addChildNode(ctNode)
             
             if contentObj.style == 0 {
@@ -205,7 +207,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     if o.type == "text" {
                         addContentToScene(contentObj: o, fPath: "", scaleFactor: (session.first?.scaleFactor)! )
                     } else {
-                        // TODO: Increment Feed Error Count -> [If VAL > THRESH] -> contentObj.active = false
+                        // TODO: Increment Feed Error Count -> [If VAL > THRESH] -> feed.active = false
                         print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
                     }
  
@@ -229,9 +231,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     print(tappednode.name!)
                 }
                 
-                if tappednode.position != nil {
-                    print(tappednode.position)
-                }
+                print(tappednode.position)
                 
                 if !tappednode.hasActions {
                     //addHooverAnimation(node: tappednode)
@@ -254,7 +254,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         sceneView.session.delegate = self
         sceneView.delegate = self
-        sceneView.showsStatistics = false
+        sceneView.showsStatistics = true
+        sceneView.debugOptions = [.showBoundingBoxes, .showSkeletons, .showConstraints, .showPhysicsFields, .showConstraints, .showCreases, .showFeaturePoints]
         
         let configuration = ARWorldTrackingConfiguration()
         
@@ -331,30 +332,53 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func worldUpdate(anchors: [ARAnchor]) {
 
-        for a in anchors {
-            if let planeAnchor = a as? ARPlaneAnchor {
-                print(planeAnchor.center)
-            }
-
-            if let wallAnchor = a as? ARObjectAnchor {
-                print(wallAnchor)
-            }
-        }
+//        for a in anchors {
+//            if let planeAnchor = a as? ARPlaneAnchor {
+//            }
+//
+//            if let wallAnchor = a as? ARObjectAnchor {
+//            }
+//        }
 
     }
     
-//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-//        let currentTransform = frame.camera.transform
-//        print(currentTransform)
-//    }
-//
-//    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-//        worldUpdate(anchors: anchors)
-//    }
-//
-//    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-//        worldUpdate(anchors: anchors)
-//    }
+    
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        let currentTransform = frame.camera.transform
+        print(currentTransform)
+    }
+
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+        let width = CGFloat(planeAnchor.extent.x)
+        let height = CGFloat(planeAnchor.extent.z)
+        let plane = SCNPlane(width: width, height: height)
+        
+        plane.materials.first?.diffuse.contents = UIColor.green
+        
+        let planeNode = SCNNode(geometry: plane)
+        let x = CGFloat(planeAnchor.center.x)
+        let y = CGFloat(planeAnchor.center.y)
+        let z = CGFloat(planeAnchor.center.z)
+        
+        planeNode.position = SCNVector3(x,y,z)
+        planeNode.eulerAngles.x = -.pi / 2
+        
+        currentPlanes?.append(planeNode)
+        node.addChildNode(planeNode)
+    }
+    
+
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+
+        worldUpdate(anchors: anchors)
+    }
+    
+
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        worldUpdate(anchors: anchors)
+    }
+    
     
     override func viewDidLoad() {
         print("viewDidLoad")

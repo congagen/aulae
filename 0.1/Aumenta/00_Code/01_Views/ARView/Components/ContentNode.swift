@@ -14,7 +14,6 @@ class ContentNode: SCNNode {
     init(title: String, location: CLLocation) {
         self.title = title
         super.init()
-
     }
     
     

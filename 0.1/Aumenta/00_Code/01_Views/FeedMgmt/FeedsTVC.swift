@@ -25,6 +25,8 @@ class FeedsTVC: UITableViewController {
     var textField: UITextField? = nil
     var selected: RLM_Feed? = nil
     
+    private let rCtrl = UIRefreshControl()
+
     let feedAct = FeedActions()
     
     
@@ -63,6 +65,7 @@ class FeedsTVC: UITableViewController {
         do {
             try realm.write {
                 feed.active = !feed.active
+                feed.errors = 0
             }
         } catch {
             print("Error: \(error)")
@@ -275,23 +278,23 @@ class FeedsTVC: UITableViewController {
             }
         }
         
+        if rCtrl != nil {
+            rCtrl.endRefreshing()
+            
+        }
+        
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
         
-        if self.refreshControl != nil {
-            self.refreshControl!.endRefreshing()
-        }
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let refreshControl = UIRefreshControl()
-        refreshControl.tintColor = view.superview?.tintColor
-        tableView.addSubview(refreshControl)
-
-        refreshControl.addTarget(self, action: #selector(FeedsTVC.manualUpdate), for: .valueChanged)
+        rCtrl.tintColor = view.superview?.tintColor
+        tableView.addSubview(rCtrl)
+        rCtrl.addTarget(self, action: #selector(FeedsTVC.manualUpdate), for: .valueChanged)
 
         mainUpdate()
     }

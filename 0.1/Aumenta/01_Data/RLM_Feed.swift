@@ -6,9 +6,10 @@ class RLM_Feed: Object {
     
     @objc dynamic var active: Bool = true
     @objc dynamic var deleted: Bool = false
-    
-    @objc dynamic var installed: Bool = false
+    @objc dynamic var errors: Int = 0
 
+    @objc dynamic var installed: Bool = false
+    
     @objc dynamic var name: String = ""
     @objc dynamic var id: String = ""
     
@@ -17,7 +18,6 @@ class RLM_Feed: Object {
     @objc dynamic var updatedUtx: Int = 0
     
     @objc dynamic var objectCount: Int = 0
-    @objc dynamic var errors: Int = 0
     @objc dynamic var jsonPath: String = ""
     
     @objc dynamic var lat: Double = 0

@@ -78,6 +78,19 @@ class MainVC: UITabBarController {
     }
     
     
+    func resetErrCounts()  {
+        for f in feeds {
+            do {
+                try realm.write {
+                    f.errors = 0
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+    }
+    
+    
     func initSession(){
         dbGc()
         
@@ -93,9 +106,9 @@ class MainVC: UITabBarController {
             }
         }
         
+        resetErrCounts()
         mainUpdate()
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -237,16 +237,24 @@ extension MainVC {
         
         for fe in feeds {
             // Download if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
+            // TODO IF ERRCOUNT > THRESH -> Disable
 
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
             let deleted = fe.deleted
-            let active = fe.active
+            
+            do {
+                try realm.write {
+                    fe.active = fe.errors < session.first!.feedErrorThreshold
+                }
+            } catch {
+                print("Error: \(error)")
+            }
             
             print("Time Since Update: " + String(timeSinceUpdate))
             print(String(fe.id) + " " + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
             print("FeedObjectCount: " + String(feedObjects.count))
             
-            if active && !deleted {
+            if fe.active && !deleted {
                 let fileName = fe.id + ".json"
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
