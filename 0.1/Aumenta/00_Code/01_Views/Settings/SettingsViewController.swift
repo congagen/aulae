@@ -160,8 +160,6 @@ class SettingsViewController: UITableViewController {
     override func viewDidDisappear(_ animated: Bool) {
         print("SETTINGSVIEW: viewDidDisappear")
         self.navigationController?.popViewController(animated: true)
-//        self.removeFromParent()
-
     }
     
     

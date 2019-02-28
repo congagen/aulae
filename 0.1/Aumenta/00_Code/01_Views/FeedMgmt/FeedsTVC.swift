@@ -100,8 +100,8 @@ class FeedsTVC: UITableViewController {
             cell.textLabel?.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             cell.detailTextLabel?.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         } else {
-            cell.textLabel?.textColor = UIColor.white
-            cell.detailTextLabel?.textColor = UIColor.white
+            cell.textLabel?.textColor = UIColor.black
+            cell.detailTextLabel?.textColor = UIColor.black
         }
         
         return cell
