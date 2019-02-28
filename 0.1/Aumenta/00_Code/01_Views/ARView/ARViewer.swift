@@ -12,6 +12,24 @@ import Realm
 import RealmSwift
 
 
+extension UIColor {
+    convenience init(hexColor: String) {
+        let scannHex = Scanner(string: hexColor)
+        var rgbValue: UInt64 = 0
+        scannHex.scanLocation = 0
+        scannHex.scanHexInt64(&rgbValue)
+        let r = (rgbValue & 0xff0000) >> 16
+        let g = (rgbValue & 0xff00) >> 8
+        let b = rgbValue & 0xff
+        self.init(
+            red: CGFloat(r) / 0xff,
+            green: CGFloat(g) / 0xff,
+            blue: CGFloat(b) / 0xff, alpha: 1
+        )
+    }
+}
+
+
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate {
     
     let realm = try! Realm()
@@ -67,20 +85,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     func getNodeWorldPosition(baseOffset: Double, contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
         print("getNodeWorldPosition")
         
-        var xPos: Double = 0
-        var yPos: Double = 0
-        
-        let rawDeviceGpsCCL  = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        let rawObjectGpsCCL  = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        let rawDeviceGpsCCL      = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        let rawObjectGpsCCL      = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        let objectDistance       = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        var scaleDivider: Double = (10000000 / scaleFactor)
 
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
         
-        let objectDistance   = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var scaleDivider: Double = (10000000 / scaleFactor)
-        
-        if (session.first?.distanceScale)! { scaleDivider     = (objectDistance / scaleFactor) }
+        if (session.first?.distanceScale)! { scaleDivider = (objectDistance / scaleFactor) }
    
+        var xPos: Double = 0
+        var yPos: Double = 0
+        
         if translationSCNV.x < 0 {
             xPos = Double(Double(translationSCNV.x) / scaleDivider) - baseOffset
         } else {
@@ -100,56 +117,23 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func scaledTextNode(contentObj: RLM_Obj, latLongXyz: SCNVector3, rawObjectGpsCCL: CLLocation) -> ContentNode {
-        print("placeText")
-        let color = UIColor.green
-        var nText = "?"
-        
-        if contentObj.text != "" {
-            nText = contentObj.text
-        }
-        print("scaledTextNode: 1")
-        
-        let ctNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
-        print("scaledTextNode: 2")
-
-        ctNode.addText(
-            nodeText: nText, extrusion: CGFloat(contentObj.scale * 0.1),
-            fontSize: CGFloat(contentObj.scale), color: color
-        )
-        print("scaledTextNode: 3")
-
-        ctNode.location = rawObjectGpsCCL
-        ctNode.position = latLongXyz
-        print("scaledTextNode: 4")
-
-        if contentObj.style == 0 {
-            let constraint = SCNBillboardConstraint()
-            constraint.freeAxes = [.Y]
-            ctNode.constraints = [constraint]
-        }
-        print("scaledTextNode: 5")
-        
-        return ctNode
-    }
-    
-    
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(contentObj.id))
         print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
-
-        var latLongXyz = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         
+        let rawDeviceGpsCCL = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        let rawObjectGpsCCL = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        let objectDistance  = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        var latLongXyz      = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
+        let nodeSize        = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance)+100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+
         if contentObj.useWorldPosition {
-            latLongXyz = getNodeWorldPosition(
-                baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor
-            )
+            latLongXyz = getNodeWorldPosition(baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor)
         }
        
-        let rawObjectGpsCCL = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
-
+        let ctNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+        
         if fPath != "" && contentObj.type.lowercased() != "text" {
-            let ctNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
 
             if contentObj.type.lowercased() == "obj" {
                 ctNode.addObj(fPath: fPath, contentObj: contentObj)
@@ -164,29 +148,27 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addGif(fPath: fPath, contentObj: contentObj)
             }
             
-            ctNode.location = rawObjectGpsCCL
-            ctNode.position = latLongXyz
-
-            if contentObj.style == 0 {
-                ctNode.constraints = [SCNBillboardConstraint()]
-            }
-            
-            mainScene.rootNode.addChildNode(ctNode)
         } else {
             if contentObj.type.lowercased() == "text" {
-                let txtN = scaledTextNode(contentObj: contentObj, latLongXyz: latLongXyz, rawObjectGpsCCL: rawObjectGpsCCL)
-                mainScene.rootNode.addChildNode(txtN)
-            } else {
-                if (session.first?.showPlaceholders)! {
-                    let node = SCNNode(geometry: SCNSphere(radius: CGFloat(1) ))
-                    node.position = latLongXyz
-                    mainScene.rootNode.addChildNode(node)
-                }
+                ctNode.addText(
+                    contentObj: contentObj, extrusion: CGFloat(contentObj.scale * 0.1),
+                    fontSize: 1,
+                    color: UIColor(hexColor: contentObj.hex_color)
+                )
             }
         }
         
-        print("Text added 2")
-
+        ctNode.scale = SCNVector3(nodeSize, nodeSize, nodeSize)
+        ctNode.location = rawObjectGpsCCL
+        ctNode.position = latLongXyz
+        
+        if contentObj.style == 0 {
+            let constraint = SCNBillboardConstraint()
+            constraint.freeAxes = [.Y]
+            ctNode.constraints = [constraint]
+        }
+        
+        mainScene.rootNode.addChildNode(ctNode)
     }
     
     

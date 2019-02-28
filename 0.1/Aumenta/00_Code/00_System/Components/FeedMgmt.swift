@@ -23,13 +23,13 @@ extension MainVC {
                 rlmObj.name     = objInfo["name"] as! String
                 rlmObj.info     = objInfo["info"] as! String
                 rlmObj.filePath = objFilePath.absoluteString
-                
                 rlmObj.useWorldPosition = objInfo["useWorldPosition"] as! Bool
                 
                 rlmObj.type     = objInfo["type"] as! String
                 rlmObj.style    = objInfo["style"] as! Int
                 rlmObj.text     = objInfo["text"] as! String
-
+                rlmObj.hex_color = objInfo["hex_color"] as! String
+                
                 rlmObj.lat      = objInfo["lat"] as! Double
                 rlmObj.lng      = objInfo["lng"] as! Double
                 rlmObj.alt      = objInfo["alt"] as! Double
@@ -89,33 +89,34 @@ extension MainVC {
             if valid {
                 
                 let objData: [String : Any] = [
-                    "name":         feedContent["name"] as! String,
-                    "id":           feedContent["id"]   as! String,
-                    "feed_id":      feedId,
+                    "name":             feedContent["name"] as! String,
+                    "id":               feedContent["id"]   as! String,
+                    "feed_id":          feedId,
 
-                    "version":      feedContent["version"] as! Int,
+                    "version":          feedContent["version"] as! Int,
                     
-                    "type":         feedContent["type"]  as! String,
-                    "style":  valueIfPresent(dict: feedContent, key: "style", placeHolderValue:  1) as! Int,
-                    "mode":   valueIfPresent(dict: feedContent, key: "mode", placeHolderValue:   "free"),
-                    
-                    "url":    valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
+                    "type":             feedContent["type"]  as! String,
+                    "style":            valueIfPresent(dict: feedContent, key: "style", placeHolderValue:  1) as! Int,
+                    "mode":             valueIfPresent(dict: feedContent, key: "mode", placeHolderValue:   "free"),
+                    "hex_color":        valueIfPresent(dict: feedContent, key: "hex_color", placeHolderValue:   "7259ff"),
 
-                    "info":   valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
-                    "text":   valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
+                    "url":              valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
+
+                    "info":             valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
+                    "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
                     
                     "useWorldPosition": valueIfPresent(dict: feedContent, key: "useWorldPosition", placeHolderValue: true),
                     
-                    "lat":    valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
-                    "lng":    valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
-                    "alt":    valueIfPresent(dict: feedContent, key: "alt",    placeHolderValue: 0.0),
+                    "lat":              valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
+                    "lng":              valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
+                    "alt":              valueIfPresent(dict: feedContent, key: "alt",    placeHolderValue: 0.0),
                     
-                    "x_pos":  valueIfPresent(dict: feedContent, key: "x_pos", placeHolderValue: 0.0),
-                    "y_pos":  valueIfPresent(dict: feedContent, key: "y_pos", placeHolderValue: 0.0),
-                    "z_pos":  valueIfPresent(dict: feedContent, key: "z_pos", placeHolderValue: 0.0),
+                    "x_pos":            valueIfPresent(dict: feedContent, key: "x_pos",  placeHolderValue: 0.0),
+                    "y_pos":            valueIfPresent(dict: feedContent, key: "y_pos",  placeHolderValue: 0.0),
+                    "z_pos":            valueIfPresent(dict: feedContent, key: "z_pos",  placeHolderValue: 0.0),
 
-                    "radius": valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0),
-                    "scale":  valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
+                    "radius":           valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0),
+                    "scale":            valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
                 ]
                 
                 if feedContent.keys.contains("url") {

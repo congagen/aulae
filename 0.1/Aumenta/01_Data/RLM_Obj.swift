@@ -13,9 +13,10 @@ class RLM_Obj: Object {
     @objc dynamic var url:      String  = ""
     
     @objc dynamic var type:     String = ""
-    @objc dynamic var mode:     String = "free"
     @objc dynamic var style:    Int = 0
-    
+    @objc dynamic var mode:     String = "free"
+    @objc dynamic var hex_color:String = "7259ff"
+
     @objc dynamic var text:     String = ""
     
     @objc dynamic var active:   Bool = true

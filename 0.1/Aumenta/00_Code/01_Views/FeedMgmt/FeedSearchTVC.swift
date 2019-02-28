@@ -38,7 +38,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     @IBOutlet var searchBar: UISearchBar!
     
     
-    func updateSearchResults(result: Dictionary<String, AnyObject> ) {
+    @objc func updateSearchResults(result: Dictionary<String, AnyObject> ) {
         print("updateSearchResults")
         
         if let resp = result["search_results"] as? Dictionary<String, AnyObject> {

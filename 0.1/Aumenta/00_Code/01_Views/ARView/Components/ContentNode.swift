@@ -116,16 +116,22 @@ class ContentNode: SCNNode {
     }
     
     
-    func addText(nodeText: String, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
-        let text = SCNText(string: nodeText, extrusionDepth: extrusion)
+    func addText(contentObj: RLM_Obj, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
+        
+        var nText = "?"
+        
+        if contentObj.text != "" {
+            nText = contentObj.text
+        }
+        
+        let text = SCNText(string: nText, extrusionDepth: extrusion)
         text.alignmentMode = CATextLayerAlignmentMode.center.rawValue
         text.firstMaterial?.isDoubleSided = true
         text.chamferRadius = extrusion
         text.font = UIFont (name: "AvenirNext-Medium", size: fontSize)
         text.firstMaterial?.diffuse.contents = color
 
-        let node = SCNNode(geometry: text)
-        
+        let ctNode = SCNNode(geometry: text)
         let max = text.boundingBox.max
         let min = text.boundingBox.min
         
@@ -133,10 +139,9 @@ class ContentNode: SCNNode {
         let ty = min.y
         let tz = Float(extrusion) / 2.0
         
-        node.pivot = SCNMatrix4MakeTranslation(tx, ty, tz)
-        node.geometry?.materials.first?.diffuse.contents = color
+        ctNode.pivot = SCNMatrix4MakeTranslation(tx, ty, tz)
         
-        addChildNode(node)
+        addChildNode(ctNode)
     }
     
     
