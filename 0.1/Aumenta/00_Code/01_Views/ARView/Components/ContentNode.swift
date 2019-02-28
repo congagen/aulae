@@ -23,7 +23,7 @@ class ContentNode: SCNNode {
     
     
     func createGIFAnimation(url:URL, fDuration:Float) -> CAKeyframeAnimation? {
-        
+        print("createGIFAnimation")
         guard let src = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
         let frameCount = CGImageSourceGetCount(src)
         
@@ -170,27 +170,8 @@ class ContentNode: SCNNode {
                 print(error)
             }
         }
-        
+    }
 
-    }
-    
-    
-    func addScene(fPath: String, contentObj: RLM_Obj) {
-        let node = SCNNode()
-        
-        let urlPath = URL(fileURLWithPath: fPath)
-        
-        if let objScene = SCNSceneSource(url: urlPath, options: nil) {
-            do {
-                for n in try! objScene.scene().rootNode.childNodes {
-                    node.addChildNode(n)
-                }
-            }
-        }
-        
-        addChildNode(node)
-    }
-    
     
     func addImage(fPath: String, contentObj: RLM_Obj) {
         let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))

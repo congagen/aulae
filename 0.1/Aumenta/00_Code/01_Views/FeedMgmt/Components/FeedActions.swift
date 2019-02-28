@@ -47,7 +47,7 @@ class FeedActions {
             )
         )
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,  handler: nil ))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil ))
 
         alert.view.tintColor = UIColor.black
         rootView.present(
@@ -62,6 +62,7 @@ class FeedActions {
     
     
     func addFeed(feedUrl: String, refreshExisting: Bool) {
+        print("addFeed")
         let newFeed = RLM_Feed()
 
         if refreshExisting {
@@ -98,7 +99,7 @@ class FeedActions {
                     if (deleteFeedObjects) {
                         for obj in feedObjects.filter( {$0.id == feedId} ) {
                             obj.deleted = true
-                            obj.active = false
+                            obj.active  = false
                         }
                     }
                     

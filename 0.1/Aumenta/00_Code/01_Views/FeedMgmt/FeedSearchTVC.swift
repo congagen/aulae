@@ -21,7 +21,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
     let feedAct = FeedActions()
-    private let rCtrl = UIRefreshControl()
+//    private let rCtrl = UIRefreshControl()
 
     let apiUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev"
     var apiHeaderValue = ""
@@ -54,6 +54,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print("searchBarSearchButtonClicked")
+        
         searchResults = [loadingMsg: loadingMsg] as Dictionary<String, AnyObject>
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
@@ -168,7 +170,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     @objc func pullRefresh()  {
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
-        rCtrl.endRefreshing()
+//        rCtrl.endRefreshing()
     }
     
     
@@ -179,9 +181,9 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         super.viewDidLoad()
         searchBar.delegate = self
         
-        rCtrl.tintColor = view.superview?.tintColor
-        tableView.addSubview(rCtrl)
-        rCtrl.addTarget(self, action: #selector(pullRefresh), for: .valueChanged)
+//        rCtrl.tintColor = view.superview?.tintColor
+//        tableView.addSubview(rCtrl)
+//        rCtrl.addTarget(self, action: #selector(pullRefresh), for: .valueChanged)
         
     }
     

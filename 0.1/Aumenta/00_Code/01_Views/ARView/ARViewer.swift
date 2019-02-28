@@ -28,8 +28,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var currentPlanes: [SCNNode]? = nil
     
     @IBOutlet var loadingView: UIView!
-    
-    
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
         initScene()
@@ -40,6 +38,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
+        print("sharePhotoBtn")
+
         let snapShot = sceneView.snapshot()
         let imageToShare = [snapShot]
         let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
@@ -51,6 +51,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func objectsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
+        print("objectsInRange")
         var objList: [RLM_Obj] = []
         
         if (useManualRange) {
@@ -64,6 +65,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
     
     func getNodeWorldPosition(baseOffset: Double, contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
+        print("getNodeWorldPosition")
+        
         var xPos: Double = 0
         var yPos: Double = 0
         
@@ -97,13 +100,48 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    func scaledTextNode(contentObj: RLM_Obj, latLongXyz: SCNVector3, rawObjectGpsCCL: CLLocation) -> ContentNode {
+        print("placeText")
+        let color = UIColor.green
+        var nText = "?"
+        
+        if contentObj.text != "" {
+            nText = contentObj.text
+        }
+        print("scaledTextNode: 1")
+        
+        let ctNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+        print("scaledTextNode: 2")
+
+        ctNode.addText(
+            nodeText: nText, extrusion: CGFloat(contentObj.scale * 0.1),
+            fontSize: CGFloat(contentObj.scale), color: color
+        )
+        print("scaledTextNode: 3")
+
+        ctNode.location = rawObjectGpsCCL
+        ctNode.position = latLongXyz
+        print("scaledTextNode: 4")
+
+        if contentObj.style == 0 {
+            let constraint = SCNBillboardConstraint()
+            constraint.freeAxes = [.Y]
+            ctNode.constraints = [constraint]
+        }
+        print("scaledTextNode: 5")
+        
+        return ctNode
+    }
+    
+    
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(contentObj.id))
         print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
 
         var latLongXyz = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         
-        if contentObj.useWorldPosition { latLongXyz = getNodeWorldPosition(
+        if contentObj.useWorldPosition {
+            latLongXyz = getNodeWorldPosition(
                 baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor
             )
         }
@@ -127,41 +165,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             
             ctNode.location = rawObjectGpsCCL
-            
-            mainScene.rootNode.addChildNode(ctNode)
-            
+            ctNode.position = latLongXyz
+
             if contentObj.style == 0 {
                 ctNode.constraints = [SCNBillboardConstraint()]
             }
             
+            mainScene.rootNode.addChildNode(ctNode)
         } else {
             if contentObj.type.lowercased() == "text" {
-                print("TEXT")
-                print(contentObj.text)
-                
-                var nText = "?" 
-                
-                if contentObj.text != "" {
-                    nText = contentObj.text
-                }
-                
-                let ctNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
-                
-                ctNode.addText(
-                    nodeText: nText, extrusion: CGFloat(contentObj.scale * 0.1),
-                    fontSize: CGFloat(contentObj.scale), color: (view.superview?.tintColor)!
-                )
-                
-                ctNode.location = rawObjectGpsCCL
-                ctNode.position = latLongXyz
-                mainScene.rootNode.addChildNode(ctNode)
-                
-                if contentObj.style == 0 {
-                    let constraint = SCNBillboardConstraint()
-                    constraint.freeAxes = [.Y]
-                    ctNode.constraints = [constraint]
-                }
-                
+                let txtN = scaledTextNode(contentObj: contentObj, latLongXyz: latLongXyz, rawObjectGpsCCL: rawObjectGpsCCL)
+                mainScene.rootNode.addChildNode(txtN)
             } else {
                 if (session.first?.showPlaceholders)! {
                     let node = SCNNode(geometry: SCNSphere(radius: CGFloat(1) ))
@@ -170,6 +184,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             }
         }
+        
+        print("Text added 2")
+
     }
     
     
@@ -192,7 +209,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         for o in activeInRange {
             print("Obj in range: ")
             
-            if o.filePath != "" && !(o.type == "text") {
+            if o.filePath != "" && o.type.lowercased() != "text" {
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let fileName = (URL(string: o.filePath)?.lastPathComponent)!
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
@@ -201,19 +218,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 
                 if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                     print("FileManager.default.fileExists")
-                    
                     addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: (session.first?.scaleFactor)! )
                 } else {
-                    if o.type == "text" {
-                        addContentToScene(contentObj: o, fPath: "", scaleFactor: (session.first?.scaleFactor)! )
-                    } else {
-                        // TODO: Increment Feed Error Count -> [If VAL > THRESH] -> feed.active = false
-                        print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
-                    }
- 
+                    // TODO: Increment Feed Error Count -> [If VAL > THRESH] -> feed.active = false
+                    print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
                 }
             } else {
-                if (o.type == "text") {
+                if (o.type.lowercased() == "text") {
                     addContentToScene(contentObj: o, fPath:"", scaleFactor: (session.first?.scaleFactor)! )
                 }
             }
@@ -239,55 +250,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 } else {
                     tappednode.removeAllAnimations()
                 }
-                
             }
-        }
-    }
-    
-    
-    func initScene() {
-        print("initScene")
-        loadingView.isHidden = false
-
-        mainScene = SCNScene(named: "art.scnassets/main.scn")!
-        sceneView.scene = mainScene
-        
-        sceneView.session.delegate = self
-        sceneView.delegate = self
-        sceneView.showsStatistics = true
-        sceneView.debugOptions = [.showBoundingBoxes, .showSkeletons, .showConstraints, .showPhysicsFields, .showConstraints, .showCreases, .showFeaturePoints]
-        
-        let configuration = ARWorldTrackingConfiguration()
-        
-        configuration.planeDetection = [.vertical, .horizontal]
-        configuration.isAutoFocusEnabled = true
-        configuration.worldAlignment = .gravityAndHeading
-        configuration.isLightEstimationEnabled = true
-    
-        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        sceneView.addGestureRecognizer(tapGestureRecognizer)
-        tapGestureRecognizer.cancelsTouchesInView = false
-    }
-    
-    
-    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        switch camera.trackingState {
-        case .notAvailable:
-            print("trackingState: not available")
-            trackingState = 2
-            loadingView.isHidden = false
-            updateScene()
-        case .limited(let reason):
-            print("trackingState: limited")
-            trackingState = 1
-            loadingView.isHidden = false
-            print(reason)
-        case .normal:
-            print("trackingState: normal")
-            trackingState = 0
-            loadingView.isHidden = true
         }
     }
     
@@ -330,53 +293,56 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func worldUpdate(anchors: [ARAnchor]) {
-
-//        for a in anchors {
-//            if let planeAnchor = a as? ARPlaneAnchor {
-//            }
-//
-//            if let wallAnchor = a as? ARObjectAnchor {
-//            }
-//        }
-
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        print("cameraDidChangeTrackingState")
+        
+        switch camera.trackingState {
+        case .notAvailable:
+            print("trackingState: not available")
+            trackingState = 2
+            loadingView.isHidden = false
+            updateScene()
+        case .limited(let reason):
+            print("trackingState: limited")
+            trackingState = 1
+            loadingView.isHidden = false
+            print(reason)
+        case .normal:
+            print("trackingState: normal")
+            trackingState = 0
+            loadingView.isHidden = true
+        }
     }
     
     
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        let currentTransform = frame.camera.transform
-        print(currentTransform)
-    }
-
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        let width = CGFloat(planeAnchor.extent.x)
-        let height = CGFloat(planeAnchor.extent.z)
-        let plane = SCNPlane(width: width, height: height)
+    func initScene() {
+        print("initScene")
+        loadingView.isHidden = false
         
-        plane.materials.first?.diffuse.contents = UIColor.green
+        mainScene = SCNScene(named: "art.scnassets/main.scn")!
+        sceneView.scene = mainScene
         
-        let planeNode = SCNNode(geometry: plane)
-        let x = CGFloat(planeAnchor.center.x)
-        let y = CGFloat(planeAnchor.center.y)
-        let z = CGFloat(planeAnchor.center.z)
+        sceneView.session.delegate = self
+        sceneView.delegate = self
         
-        planeNode.position = SCNVector3(x,y,z)
-        planeNode.eulerAngles.x = -.pi / 2
+//        sceneView.showsStatistics = true
+//        sceneView.debugOptions = [
+//            .showBoundingBoxes, .showSkeletons, .showConstraints,
+//            .showPhysicsFields, .showConstraints, .showCreases, .showFeaturePoints
+//        ]
         
-        currentPlanes?.append(planeNode)
-        node.addChildNode(planeNode)
-    }
-    
-
-    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-
-        worldUpdate(anchors: anchors)
-    }
-    
-
-    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        worldUpdate(anchors: anchors)
+        let configuration = ARWorldTrackingConfiguration()
+        
+        configuration.planeDetection = [.vertical, .horizontal]
+        configuration.isAutoFocusEnabled = true
+        configuration.worldAlignment = .gravityAndHeading
+        configuration.isLightEstimationEnabled = true
+        
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        sceneView.addGestureRecognizer(tapGestureRecognizer)
+        tapGestureRecognizer.cancelsTouchesInView = false
     }
     
     
@@ -406,8 +372,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
         loadingView.isHidden = false
-        initScene()
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -416,18 +380,71 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         loadingView.isHidden = false
     }
     
+    
     func session(_ session: ARSession, didFailWithError error: Error) {
-        print(error)
         print("ArKit ViewerVC: didFailWithError")
+        print(error)
     }
+    
     
     func sessionWasInterrupted(_ session: ARSession) {
         print("ArKit ViewerVC: sessionWasInterrupted")
     }
     
+    
     func sessionInterruptionEnded(_ session: ARSession) {
         print("ArKit ViewerVC: sessionInterruptionEnded")
     }
     
+    
 }
 
+
+
+//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+//        let currentTransform = frame.camera.transform
+//        print(currentTransform)
+//    }
+
+
+//    func worldUpdate(anchors: [ARAnchor]) {
+//
+//        for a in anchors {
+//            if let planeAnchor = a as? ARPlaneAnchor {
+//            }
+//
+//            if let wallAnchor = a as? ARObjectAnchor {
+//            }
+//        }
+//
+//    }
+
+//    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+//        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+//        let width = CGFloat(planeAnchor.extent.x)
+//        let height = CGFloat(planeAnchor.extent.z)
+//        let plane = SCNPlane(width: width, height: height)
+//
+//        plane.materials.first?.diffuse.contents = UIColor.green
+//
+//        let planeNode = SCNNode(geometry: plane)
+//        let x = CGFloat(planeAnchor.center.x)
+//        let y = CGFloat(planeAnchor.center.y)
+//        let z = CGFloat(planeAnchor.center.z)
+//
+//        planeNode.position = SCNVector3(x,y,z)
+//        planeNode.eulerAngles.x = -.pi / 2
+//
+//        currentPlanes?.append(planeNode)
+//        node.addChildNode(planeNode)
+//    }
+//
+//
+//    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+//        worldUpdate(anchors: anchors)
+//    }
+//
+//
+//    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+//        worldUpdate(anchors: anchors)
+//    }

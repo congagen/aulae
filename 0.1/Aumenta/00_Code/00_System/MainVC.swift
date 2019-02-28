@@ -56,7 +56,8 @@ class MainVC: UITabBarController {
     
     
     func dbGc(){
-        
+        print("dbGc")
+
         do {
             try realm.write {
                 for f in feeds {
@@ -79,6 +80,7 @@ class MainVC: UITabBarController {
     
     
     func resetErrCounts()  {
+        print("resetErrCounts")
         for f in feeds {
             do {
                 try realm.write {

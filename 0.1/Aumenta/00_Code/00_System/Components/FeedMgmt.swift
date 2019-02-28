@@ -11,6 +11,8 @@ import Foundation
 extension MainVC {
 
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, originFeed:String) {
+        print("storeFeedObject")
+        
         let rlmObj = RLM_Obj()
         
         do {
@@ -47,6 +49,8 @@ extension MainVC {
 
     
     func validateObj(keyList: [String], dict: Dictionary<String, AnyObject>) -> Bool {
+        print("validateObj")
+
         var valid = true
         
         for k in keyList {
@@ -153,9 +157,9 @@ extension MainVC {
             
             let sInfo: String = valueIfPresent(dict: feedSpec, key: "info", placeHolderValue: "") as! String
             
-            // let date = Date()
-            // let currentUtx = Int(date.timeIntervalSince1970)
-            
+            let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(feedDbItem.updatedUtx)))
+            print(timeSinceUpdate)
+
             do {
                 try realm.write {
                     feedDbItem.id = sID
@@ -168,6 +172,13 @@ extension MainVC {
                 print("Error: \(error)")
             }
         } else {
+            do {
+                try realm.write {
+                    feedDbItem.errors += 1
+                }
+            } catch {
+                print("Error: \(error)")
+            }
             print("Feed Validation Error: " + String(feedDbItem.url))
         }
         
@@ -189,6 +200,7 @@ extension MainVC {
                             updateFeedObjects(feedList: jsonResult, feedId: feedDbItem.id)
                         }
                     } else {
+                        feedDbItem.errors += 1
                         updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
                         updateFeedObjects(feedList: jsonResult, feedId: feedDbItem.id)
                         
@@ -199,28 +211,6 @@ extension MainVC {
             } catch {
                 print(error)
             }
-        }
-    }
-    
-    
-    func refreshObjects() {
-        for o in feedObjects {
-            let objectFeeds = feeds.filter({ $0.id == o.feedId })
-            
-            do {
-                try realm.write {
-                    if objectFeeds.count > 0 {
-                        o.deleted = (objectFeeds.first?.deleted)!
-                        o.active  = (objectFeeds.first?.active)!
-                    } else {
-                        o.deleted = true
-                        o.active  = false
-                    }
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-            
         }
     }
     
@@ -240,11 +230,12 @@ extension MainVC {
             // TODO IF ERRCOUNT > THRESH -> Disable
 
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
-            let deleted = fe.deleted
             
             do {
                 try realm.write {
-                    fe.active = fe.errors < session.first!.feedErrorThreshold
+                    if fe.errors > session.first!.feedErrorThreshold && !fe.deleted {
+                        fe.active = false
+                    }
                 }
             } catch {
                 print("Error: \(error)")
@@ -254,7 +245,7 @@ extension MainVC {
             print(String(fe.id) + " " + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
             print("FeedObjectCount: " + String(feedObjects.count))
             
-            if fe.active && !deleted {
+            if fe.active && !fe.deleted {
                 let fileName = fe.id + ".json"
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
@@ -275,5 +266,27 @@ extension MainVC {
         }
     }
     
+    
+    func refreshObjects() {
+        print("refreshObjects")
+        for o in feedObjects {
+            let objectFeeds = feeds.filter({ $0.id == o.feedId })
+            
+            do {
+                try realm.write {
+                    if objectFeeds.count > 0 {
+                        o.deleted = (objectFeeds.first?.deleted)!
+                        o.active  = (objectFeeds.first?.active)!
+                    } else {
+                        o.deleted = true
+                        o.active  = false
+                    }
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+            
+        }
+    }
     
 }
