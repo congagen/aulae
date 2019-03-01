@@ -12,24 +12,6 @@ import Realm
 import RealmSwift
 
 
-extension UIColor {
-    convenience init(hexColor: String) {
-        let scannHex = Scanner(string: hexColor)
-        var rgbValue: UInt64 = 0
-        scannHex.scanLocation = 0
-        scannHex.scanHexInt64(&rgbValue)
-        let r = (rgbValue & 0xff0000) >> 16
-        let g = (rgbValue & 0xff00) >> 8
-        let b = rgbValue & 0xff
-        self.init(
-            red: CGFloat(r) / 0xff,
-            green: CGFloat(g) / 0xff,
-            blue: CGFloat(b) / 0xff, alpha: 1
-        )
-    }
-}
-
-
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate {
     
     let realm = try! Realm()
@@ -125,7 +107,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let rawObjectGpsCCL = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance  = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         var latLongXyz      = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
-        let nodeSize        = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance)+100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+        let nodeSize        = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
 
         if contentObj.useWorldPosition {
             latLongXyz = getNodeWorldPosition(baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor)
@@ -152,8 +134,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             if contentObj.type.lowercased() == "text" {
                 ctNode.addText(
                     contentObj: contentObj, extrusion: CGFloat(contentObj.scale * 0.1),
-                    fontSize: 1,
-                    color: UIColor(hexColor: contentObj.hex_color)
+                    fontSize: 1, color: UIColor(hexColor: contentObj.hex_color)
                 )
             }
         }
@@ -183,7 +164,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let activeInRange = objsInRange.filter({$0.active && !$0.deleted})
         
         for n in mainScene.rootNode.childNodes {
-            if (n.name != "DefaultAmbientLight") && n.name != "camera" {
+            if !n.isKind(of: SKLightNode.self) && !n.isKind(of: ARCamera.self) {
                 n.removeFromParentNode()
             }
         }
@@ -225,10 +206,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
                 
                 print(tappednode.position)
+                selectedNode = tappednode
                 
-                if !tappednode.hasActions {
+                if tappednode.animationKeys.count == 0 {
                     //addHooverAnimation(node: tappednode)
                     rotateAnimation(node: tappednode, xAmt: 0, yAmt: 1, zAmt: 0)
+                    
                 } else {
                     tappednode.removeAllAnimations()
                 }
@@ -319,6 +302,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
+        configuration.maximumNumberOfTrackedImages = 99
+        
         
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         

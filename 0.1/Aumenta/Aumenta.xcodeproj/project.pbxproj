@@ -48,7 +48,7 @@
 		FA8B387022120DD60099A7A3 /* ValConverters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B386F22120DD60099A7A3 /* ValConverters.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
-		FAF37EB9221D65610065B18A /* NodeAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* NodeAnimation.swift */; };
+		FAF37EB9221D65610065B18A /* ContentAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* ContentAppearance.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -110,7 +110,7 @@
 		FA8B386F22120DD60099A7A3 /* ValConverters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValConverters.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
-		FAF37EB8221D65610065B18A /* NodeAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAnimation.swift; sourceTree = "<group>"; };
+		FAF37EB8221D65610065B18A /* ContentAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentAppearance.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +141,7 @@
 			children = (
 				FA8B386F22120DD60099A7A3 /* ValConverters.swift */,
 				FA8275EB221ABAD5007B413B /* SceneActions.swift */,
-				FAF37EB8221D65610065B18A /* NodeAnimation.swift */,
+				FAF37EB8221D65610065B18A /* ContentAppearance.swift */,
 				FA663146221DBD4B000FEF60 /* ContentNode.swift */,
 				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 			);
@@ -447,7 +447,7 @@
 				3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */,
 				319AA77F20B418E800F99223 /* MainVC.swift in Sources */,
 				316B86DA20D955660076E63D /* CGPoint+Extensions.swift in Sources */,
-				FAF37EB9221D65610065B18A /* NodeAnimation.swift in Sources */,
+				FAF37EB9221D65610065B18A /* ContentAppearance.swift in Sources */,
 				316B86DC20D955660076E63D /* SceneLocationView.swift in Sources */,
 				FA8275EC221ABAD5007B413B /* SceneActions.swift in Sources */,
 				316B86D620D955660076E63D /* SceneLocationEstimate.swift in Sources */,

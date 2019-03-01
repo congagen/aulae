@@ -10,13 +10,31 @@ import SceneKit
 import ARKit
 
 
+extension UIColor {
+    convenience init(hexColor: String) {
+        let scannHex = Scanner(string: hexColor)
+        var rgbValue: UInt64 = 0
+        scannHex.scanLocation = 0
+        scannHex.scanHexInt64(&rgbValue)
+        let r = (rgbValue & 0xff0000) >> 16
+        let g = (rgbValue & 0xff00) >> 8
+        let b = rgbValue & 0xff
+        self.init(
+            red: CGFloat(r) / 0xff,
+            green: CGFloat(g) / 0xff,
+            blue: CGFloat(b) / 0xff, alpha: 1
+        )
+    }
+}
+
+
 extension ARViewer {
     
-    func addHooverAnimation(node: SCNNode){
-        let moveUp = SCNAction.moveBy(x: 0, y: 1, z: 0, duration: 1)
+    func addHooverAnimation(node: SCNNode, distance: CGFloat, speed: CGFloat){
+        let moveUp = SCNAction.moveBy(x: 0, y: distance, z: 0, duration: TimeInterval(speed))
         moveUp.timingMode = .easeInEaseOut;
         
-        let moveDown = SCNAction.moveBy(x: 0, y: -1, z: 0, duration: 1)
+        let moveDown = SCNAction.moveBy(x: 0, y: -distance, z: 0, duration: TimeInterval(speed))
         moveDown.timingMode = .easeInEaseOut;
         
         let moveSequence = SCNAction.sequence([moveUp, moveDown])

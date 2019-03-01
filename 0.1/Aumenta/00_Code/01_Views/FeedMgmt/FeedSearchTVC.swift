@@ -21,7 +21,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
     let feedAct = FeedActions()
-//    private let rCtrl = UIRefreshControl()
+    private let rCtrl = UIRefreshControl()
 
     let apiUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev"
     var apiHeaderValue = ""
@@ -67,8 +67,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         if currentSearchTerm != "" {
             let payload = [
                 searchTermRequestKey: currentSearchTerm,
-                "lat":  "",
-                "long": ""
+                "lat":  "", "long": ""
             ]
             
             NetworkTools().postReq(
@@ -80,6 +79,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         
         print(currentSearchTerm)
         view.endEditing(false)
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
         
     }
     
@@ -135,6 +136,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             }
         }
         
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
     }
 
     
@@ -170,20 +173,25 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     @objc func pullRefresh()  {
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
-//        rCtrl.endRefreshing()
+        rCtrl.endRefreshing()
     }
     
     
     // --------------------------------------------------------------------------------------------------------
     
     
+    override func viewDidDisappear(_ animated: Bool) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
         
-//        rCtrl.tintColor = view.superview?.tintColor
-//        tableView.addSubview(rCtrl)
-//        rCtrl.addTarget(self, action: #selector(pullRefresh), for: .valueChanged)
+        rCtrl.tintColor = view.superview?.tintColor
+        tableView.addSubview(rCtrl)
+        rCtrl.addTarget(self, action: #selector(pullRefresh), for: .valueChanged)
         
     }
     

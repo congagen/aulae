@@ -24,6 +24,7 @@ class ContentNode: SCNNode {
     
     func createGIFAnimation(url:URL, fDuration:Float) -> CAKeyframeAnimation? {
         print("createGIFAnimation")
+        
         guard let src = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
         let frameCount = CGImageSourceGetCount(src)
         
@@ -41,7 +42,6 @@ class ContentNode: SCNNode {
             guard let gifProperties = framePrpoerties[kCGImagePropertyGIFDictionary as String] as? [String:AnyObject]
                 else { return nil }
             
-            // Use kCGImagePropertyGIFUnclampedDelayTime or kCGImagePropertyGIFDelayTime
             if let delayTimeUnclampedProp = gifProperties[kCGImagePropertyGIFUnclampedDelayTime as String] as? NSNumber {
                 frameDuration = delayTimeUnclampedProp.floatValue
             } else {
@@ -50,18 +50,15 @@ class ContentNode: SCNNode {
                 }
             }
             
-            // Make sure its not too small
             if frameDuration < 0.011 {
                 frameDuration = 0.100;
             }
             
-            // Add frame to array of frames
             if let frame = CGImageSourceCreateImageAtIndex(src, i, nil) {
                 tempTimesArray.append(NSNumber(value: frameDuration))
                 framesArray.append(frame)
             }
             
-            // Compile total loop time
             time = time + frameDuration
         }
         

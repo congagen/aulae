@@ -25,7 +25,7 @@ class FeedsTVC: UITableViewController {
     var textField: UITextField? = nil
     var selected: RLM_Feed? = nil
     
-//    private let rCtrl = UIRefreshControl()
+    private let rCtrl = UIRefreshControl()
 
     let feedAct = FeedActions()
     
@@ -283,7 +283,7 @@ class FeedsTVC: UITableViewController {
             }
         }
         
-//        rCtrl.endRefreshing()
+        rCtrl.endRefreshing()
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
@@ -294,9 +294,9 @@ class FeedsTVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        rCtrl.tintColor = view.superview?.tintColor
-//        tableView.addSubview(rCtrl)
-//        rCtrl.addTarget(self, action: #selector(FeedsTVC.manualUpdate), for: .valueChanged)
+        rCtrl.tintColor = view.superview?.tintColor
+        tableView.addSubview(rCtrl)
+        rCtrl.addTarget(self, action: #selector(FeedsTVC.manualUpdate), for: .valueChanged)
 
         mainUpdate()
     }
