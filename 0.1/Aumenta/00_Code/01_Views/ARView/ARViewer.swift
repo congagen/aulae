@@ -19,10 +19,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
+    var audioSource: SCNAudioSource!
+    
     var trackingState = 0
     var contentZoom: Double = 1
     var updateTimer = Timer()
-    
+    var audioListener: SCNNode? { return mainScene.rootNode }
+
     var mainScene = SCNScene()
     var selectedNode: ContentNode? = nil
     var currentPlanes: [SCNNode]? = nil
@@ -126,11 +129,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("AddContentToScene: " + String(contentObj.id))
         print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
         
+        let audioRangeRadius: Double = 100
+        
         let rawDeviceGpsCCL = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let rawObjectGpsCCL = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance  = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var latLongXyz      = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         let nodeSize        = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+
+        var latLongXyz      = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
 
         if contentObj.useWorldPosition {
             latLongXyz = getNodeWorldPosition(baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor)
@@ -153,9 +159,28 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addGif(fPath: fPath, contentObj: contentObj)
             }
             if contentObj.type.lowercased() == "audio" {
-                ctNode.addAudio(fPath: fPath, contentObj: contentObj)
+                if objectDistance < audioRangeRadius {
+                    let dupli = mainScene.rootNode.audioPlayers.filter({$0.accessibilityLabel == contentObj.id})
+                    
+                    if dupli.count != 0 {
+                        for d in dupli {
+                            mainScene.rootNode.removeAudioPlayer(d)
+                        }
+                    }
+                    
+                    let asrc = SCNAudioSource(url: URL(fileURLWithPath: fPath))
+                    asrc!.loops = true
+                    asrc?.isPositional = true
+                    asrc?.volume = Float(1.0 / objectDistance)
+                    asrc!.load()
+                    let player = SCNAudioPlayer(source: asrc!)
+                    player.accessibilityLabel = contentObj.id
+                    mainScene.rootNode.addAudioPlayer(player)
+                
+                } else {
+                    print("Audiosource outside listener scope")
+                }
             }
-            
         } else {
             if contentObj.type.lowercased() == "text" {
                 ctNode.addText(
@@ -166,7 +191,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         ctNode.scale = SCNVector3(nodeSize, nodeSize, nodeSize)
-        ctNode.position = latLongXyz
+        // ctNode.position = latLongXyz
+        ctNode.position = mainScene.rootNode.position
 
         if contentObj.style == 0 {
             let constraint = SCNBillboardConstraint()
@@ -189,10 +215,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let activeInRange = objsInRange.filter({$0.active && !$0.deleted})
         
         for n in mainScene.rootNode.childNodes {
-            if !n.isKind(of: SKLightNode.self) && !n.isKind(of: ARCamera.self) {
-                n.removeAllActions()
-                n.removeAllAnimations()
-                n.removeAllAudioPlayers()
+            if !n.isKind(of: SKLightNode.self) && !n.isKind(of: ARCamera.self) && !n.isKind(of: SCNAudioPlayer.self) {
                 n.removeFromParentNode()
             }
         }
@@ -257,7 +280,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print(gestureRecognizer.scale)
             
             for n in mainScene.rootNode.childNodes {
-                if (n.name != "DefaultAmbientLight") && n.name != "camera" {
+                if !n.isKind(of: SKLightNode.self) && !n.isKind(of: ARCamera.self) {
                     n.scale = SCNVector3(
                         Double(gestureRecognizer.scale),
                         Double(gestureRecognizer.scale),
@@ -320,7 +343,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         sceneView.session.delegate = self
         sceneView.delegate = self
         sceneView.audioListener = mainScene.rootNode
-    
+        
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.vertical, .horizontal]
         configuration.isAutoFocusEnabled = true
@@ -355,10 +378,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         loadingView.isHidden = false
 
         contentZoom = 0
-        
         initScene()
         updateScene()
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
@@ -368,6 +391,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
+        mainScene.rootNode.removeAllAudioPlayers()
+
         loadingView.isHidden = false
     }
     

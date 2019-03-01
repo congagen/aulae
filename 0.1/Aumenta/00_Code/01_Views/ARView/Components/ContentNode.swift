@@ -10,6 +10,7 @@ class ContentNode: SCNNode {
     let title: String
     let feedId: String
     var anchor: ARAnchor?
+    var audioSource: SCNAudioSource!
     var location: CLLocation!
     
     
@@ -165,27 +166,26 @@ class ContentNode: SCNNode {
     
     
     func addAudio(fPath: String, contentObj: RLM_Obj) {
-        let geometry = SCNSphere(radius: CGFloat(contentObj.scale))
+        let geometry = SCNPyramid(width: CGFloat(contentObj.scale*0.5), height: CGFloat(contentObj.scale*0.5), length: CGFloat(contentObj.scale))
         geometry.firstMaterial?.diffuse.contents = UIColor(hexColor: contentObj.hex_color)
         let node = SCNNode(geometry: geometry)
         
         let urlPath = URL(fileURLWithPath: fPath)
         
         if let aSource: SCNAudioSource = SCNAudioSource(url: urlPath) {
-            print("aSource OK")
-            aSource.volume = 1
+            print("Adding aSource: " + fPath)
+            aSource.volume = 1.0
             aSource.loops  = true
-            aSource.isPositional = false
+            aSource.isPositional = true
             aSource.shouldStream = false
             aSource.load()
+            
             let player = SCNAudioPlayer(source: aSource)
             node.addAudioPlayer(player)
             
             addChildNode(node)
-        } else {
-            print(urlPath)
         }
-        
+
     }
     
 
@@ -238,9 +238,7 @@ class ContentNode: SCNNode {
         gifMaterial.diffuse.contents = layer
         
         gifPlane.materials = [gifMaterial]
-        
         let node = SCNNode(geometry: gifPlane)
-        
         node.name = contentObj.name
         
         addChildNode(node)
