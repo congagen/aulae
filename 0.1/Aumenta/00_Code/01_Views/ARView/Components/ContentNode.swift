@@ -6,13 +6,19 @@ import CoreLocation
 
 class ContentNode: SCNNode {
     
+    let id: String
     let title: String
+    let feedId: String
     var anchor: ARAnchor?
     var location: CLLocation!
     
     
-    init(title: String, location: CLLocation) {
+    init(id: String, title: String, feedId:String, location: CLLocation) {
+        self.id = id
         self.title = title
+        self.feedId = feedId
+        self.location = location
+
         super.init()
     }
     
@@ -155,6 +161,31 @@ class ContentNode: SCNNode {
                 print(error)
             }
         }
+    }
+    
+    
+    func addAudio(fPath: String, contentObj: RLM_Obj) {
+        let geometry = SCNSphere(radius: CGFloat(contentObj.scale))
+        geometry.firstMaterial?.diffuse.contents = UIColor(hexColor: contentObj.hex_color)
+        let node = SCNNode(geometry: geometry)
+        
+        let urlPath = URL(fileURLWithPath: fPath)
+        
+        if let aSource: SCNAudioSource = SCNAudioSource(url: urlPath) {
+            print("aSource OK")
+            aSource.volume = 1
+            aSource.loops  = true
+            aSource.isPositional = false
+            aSource.shouldStream = false
+            aSource.load()
+            let player = SCNAudioPlayer(source: aSource)
+            node.addAudioPlayer(player)
+            
+            addChildNode(node)
+        } else {
+            print(urlPath)
+        }
+        
     }
     
 

@@ -24,7 +24,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var updateTimer = Timer()
     
     var mainScene = SCNScene()
-    var selectedNode = SCNNode()
+    var selectedNode: ContentNode? = nil
     var currentPlanes: [SCNNode]? = nil
     
     @IBOutlet var loadingView: UIView!
@@ -46,6 +46,29 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
         
         activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+    
+    
+    @IBAction func shareFeedsInView(_ sender: UIBarButtonItem) {
+        if selectedNode != nil {
+            let selectedFeed = feeds.filter((selectedNode?.feedId)!)
+            
+            if selectedFeed.count > 0 {
+                shareURLAction(url: (selectedFeed.first?.url)!)
+            }
+        }
+        
+    }
+    
+    
+    func shareURLAction(url: String) {
+        
+        let textToShare = [ url ]
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+        // activityViewController.excludedActivityTypes = [ UIActivityType.airDrop ]
+        
         self.present(activityViewController, animated: true, completion: nil)
     }
     
@@ -113,7 +136,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             latLongXyz = getNodeWorldPosition(baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor)
         }
        
-        let ctNode = ContentNode(title: contentObj.name, location: rawObjectGpsCCL)
+        let ctNode = ContentNode(id: contentObj.id, title: contentObj.name, feedId: contentObj.feedId, location: rawObjectGpsCCL)
         
         if fPath != "" && contentObj.type.lowercased() != "text" {
 
@@ -129,20 +152,22 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             if contentObj.type.lowercased() == "gif" {
                 ctNode.addGif(fPath: fPath, contentObj: contentObj)
             }
+            if contentObj.type.lowercased() == "audio" {
+                ctNode.addAudio(fPath: fPath, contentObj: contentObj)
+            }
             
         } else {
             if contentObj.type.lowercased() == "text" {
                 ctNode.addText(
                     contentObj: contentObj, extrusion: CGFloat(contentObj.scale * 0.1),
-                    fontSize: 1, color: UIColor(hexColor: contentObj.hex_color)
+                    fontSize: CGFloat(contentObj.scale), color: UIColor(hexColor: contentObj.hex_color)
                 )
             }
         }
         
         ctNode.scale = SCNVector3(nodeSize, nodeSize, nodeSize)
-        ctNode.location = rawObjectGpsCCL
         ctNode.position = latLongXyz
-        
+
         if contentObj.style == 0 {
             let constraint = SCNBillboardConstraint()
             constraint.freeAxes = [.Y]
@@ -165,6 +190,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         for n in mainScene.rootNode.childNodes {
             if !n.isKind(of: SKLightNode.self) && !n.isKind(of: ARCamera.self) {
+                n.removeAllActions()
+                n.removeAllAnimations()
+                n.removeAllAudioPlayers()
                 n.removeFromParentNode()
             }
         }
@@ -206,17 +234,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
                 
                 print(tappednode.position)
-                selectedNode = tappednode
                 
-                if tappednode.animationKeys.count == 0 {
-                    //addHooverAnimation(node: tappednode)
-                    rotateAnimation(node: tappednode, xAmt: 0, yAmt: 1, zAmt: 0)
-                    
-                } else {
-                    tappednode.removeAllAnimations()
+                for n in mainScene.rootNode.childNodes {
+                    n.removeAllAnimations()
                 }
+                
+                if tappednode.isKind(of: ContentNode.self) {
+                    selectedNode = (tappednode as! ContentNode)
+                    rotateAnimation(node: selectedNode!, xAmt: 0, yAmt: 1, zAmt: 0)
+                }
+       
             }
         }
+        
     }
     
     
@@ -289,22 +319,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         sceneView.session.delegate = self
         sceneView.delegate = self
-        
-//        sceneView.showsStatistics = true
-//        sceneView.debugOptions = [
-//            .showBoundingBoxes, .showSkeletons, .showConstraints,
-//            .showPhysicsFields, .showConstraints, .showCreases, .showFeaturePoints
-//        ]
-        
+        sceneView.audioListener = mainScene.rootNode
+    
         let configuration = ARWorldTrackingConfiguration()
-        
         configuration.planeDetection = [.vertical, .horizontal]
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
         configuration.maximumNumberOfTrackedImages = 99
-        
-        
+        configuration.environmentTexturing = .automatic
+
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))

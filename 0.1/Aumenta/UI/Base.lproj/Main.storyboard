@@ -153,11 +153,18 @@
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
                     <navigationItem key="navigationItem" title="Viewer" id="0Jn-a9-joB">
-                        <barButtonItem key="leftBarButtonItem" image="TabBarIcon_03" id="Bi4-h3-vTk">
-                            <connections>
-                                <segue destination="CjR-vc-y1M" kind="show" id="Q9S-6L-g2l"/>
-                            </connections>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem image="TabBarIcon_03" id="Bi4-h3-vTk">
+                                <connections>
+                                    <segue destination="CjR-vc-y1M" kind="show" id="Q9S-6L-g2l"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="action" id="Sni-r1-h8p">
+                                <connections>
+                                    <action selector="shareFeedsInView:" destination="cNO-cb-Srl" id="hcM-af-gJ7"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="refresh" id="0vE-dQ-BcC">
                                 <connections>
@@ -663,6 +670,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="SZc-Qf-Odg"/>
-        <segue reference="pCq-sO-rbF"/>
+        <segue reference="Q9S-6L-g2l"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -140,10 +140,10 @@
 			isa = PBXGroup;
 			children = (
 				FA8B386F22120DD60099A7A3 /* ValConverters.swift */,
+				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 				FA8275EB221ABAD5007B413B /* SceneActions.swift */,
 				FAF37EB8221D65610065B18A /* ContentAppearance.swift */,
 				FA663146221DBD4B000FEF60 /* ContentNode.swift */,
-				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
