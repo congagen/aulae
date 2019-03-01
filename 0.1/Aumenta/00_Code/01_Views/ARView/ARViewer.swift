@@ -160,25 +160,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             if contentObj.type.lowercased() == "audio" {
                 if objectDistance < audioRangeRadius {
-                    let dupli = mainScene.rootNode.audioPlayers.filter({$0.accessibilityLabel == contentObj.id})
-                    
-                    if dupli.count != 0 {
-                        for d in dupli {
-                            mainScene.rootNode.removeAudioPlayer(d)
-                        }
-                    }
-                    
-                    let asrc = SCNAudioSource(url: URL(fileURLWithPath: fPath))
-                    asrc!.loops = true
-                    asrc?.isPositional = true
-                    asrc?.volume = Float(1.0 / objectDistance)
-                    asrc!.load()
-                    let player = SCNAudioPlayer(source: asrc!)
-                    player.accessibilityLabel = contentObj.id
-                    mainScene.rootNode.addAudioPlayer(player)
-                
-                } else {
-                    print("Audiosource outside listener scope")
+                    ctNode.addAudio(fPath: fPath, contentObj: contentObj)
                 }
             }
         } else {
@@ -190,17 +172,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        ctNode.scale = SCNVector3(nodeSize, nodeSize, nodeSize)
-        // ctNode.position = latLongXyz
-        ctNode.position = mainScene.rootNode.position
+        //ctNode!.scale = SCNVector3(nodeSize, nodeSize, nodeSize)
+        ctNode.position = latLongXyz
 
+//        ctNode!.position = (sceneView.pointOfView?.position)!
+        
         if contentObj.style == 0 {
             let constraint = SCNBillboardConstraint()
             constraint.freeAxes = [.Y]
             ctNode.constraints = [constraint]
         }
         
-        mainScene.rootNode.addChildNode(ctNode)
+        sceneView.scene.rootNode.addChildNode(ctNode)
     }
     
     
@@ -360,6 +343,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    private func setUpCamera() {
+        guard let camera = sceneView.pointOfView?.camera else {
+            fatalError("Expected a valid `pointOfView` from the scene.")
+        }
+        // Enable HDR camera settings for the most realistic appearance
+        // with environmental lighting and physically based materials.
+        camera.wantsHDR = true
+        camera.exposureOffset = -1
+        camera.minimumExposure = -1
+        camera.maximumExposure = 3
+    }
+    
+    
     override func viewDidLoad() {
         print("viewDidLoad")
         loadingView.isHidden = false
@@ -391,7 +387,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
-        mainScene.rootNode.removeAllAudioPlayers()
+//        mainScene.rootNode.removeAllAudioPlayers()
 
         loadingView.isHidden = false
     }
@@ -414,6 +410,35 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
 }
+
+
+
+
+
+//                if objectDistance < audioRangeRadius {
+//                    let dupli = mainScene.rootNode.audioPlayers.filter( {$0.accessibilityLabel == contentObj.id} )
+//
+//                    if dupli.count != 0 {
+//                        for d in dupli {
+//                            mainScene.rootNode.removeAudioPlayer(d)
+//                        }
+//                    }
+//
+//                    let asrc = SCNAudioSource(url: URL(fileURLWithPath: fPath))
+//                    asrc!.loops = true
+//                    asrc?.isPositional = true
+//                    asrc?.volume = Float(1.0 / objectDistance)
+//                    asrc!.load()
+//                    let player = SCNAudioPlayer(source: asrc!)
+//                    player.accessibilityLabel = contentObj.id
+//                    mainScene.rootNode.addAudioPlayer(player)
+//
+//                } else {
+//                    print("Audiosource outside listener scope")
+//                }
+
+
+
 
 
 

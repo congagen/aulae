@@ -166,26 +166,22 @@ class ContentNode: SCNNode {
     
     
     func addAudio(fPath: String, contentObj: RLM_Obj) {
-        let geometry = SCNPyramid(width: CGFloat(contentObj.scale*0.5), height: CGFloat(contentObj.scale*0.5), length: CGFloat(contentObj.scale))
+        print("Adding aSource: " + fPath)
+
+        let geometry = SCNPyramid(width: CGFloat(contentObj.scale*0.5), height: CGFloat(contentObj.scale), length: CGFloat(contentObj.scale*0.5))
         geometry.firstMaterial?.diffuse.contents = UIColor(hexColor: contentObj.hex_color)
-        let node = SCNNode(geometry: geometry)
+        let icon = SCNNode(geometry: geometry)
+        icon.removeAllAudioPlayers()
+        addChildNode(icon)
         
         let urlPath = URL(fileURLWithPath: fPath)
+        self.audioSource = SCNAudioSource(url: urlPath)
+        self.audioSource.volume = 1
+        self.audioSource.loops  = true
+        self.audioSource.isPositional = false
+        self.audioSource.load()
         
-        if let aSource: SCNAudioSource = SCNAudioSource(url: urlPath) {
-            print("Adding aSource: " + fPath)
-            aSource.volume = 1.0
-            aSource.loops  = true
-            aSource.isPositional = true
-            aSource.shouldStream = false
-            aSource.load()
-            
-            let player = SCNAudioPlayer(source: aSource)
-            node.addAudioPlayer(player)
-            
-            addChildNode(node)
-        }
-
+        self.addAudioPlayer(SCNAudioPlayer(source: self.audioSource))
     }
     
 
