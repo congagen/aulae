@@ -23,8 +23,9 @@ extension MainVC {
                 rlmObj.name     = objInfo["name"] as! String
                 rlmObj.info     = objInfo["info"] as! String
                 rlmObj.filePath = objFilePath.absoluteString
-                rlmObj.useWorldPosition = objInfo["useWorldPosition"] as! Bool
-                
+                rlmObj.world_position = objInfo["world_position"] as! Bool
+                rlmObj.world_scale = objInfo["world_scale"] as! Bool
+
                 rlmObj.type     = objInfo["type"] as! String
                 rlmObj.style    = objInfo["style"] as! Int
                 rlmObj.text     = objInfo["text"] as! String
@@ -105,7 +106,8 @@ extension MainVC {
                     "info":             valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
                     "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
                     
-                    "useWorldPosition": valueIfPresent(dict: feedContent, key: "useWorldPosition", placeHolderValue: true),
+                    "world_position": valueIfPresent(dict: feedContent, key: "world_position", placeHolderValue: true),
+                    "world_scale":    valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: true),
                     
                     "lat":              valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
                     "lng":              valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),

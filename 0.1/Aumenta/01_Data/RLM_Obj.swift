@@ -25,8 +25,12 @@ class RLM_Obj: Object {
     @objc dynamic var fileName: String = ""
     @objc dynamic var filePath: String = ""
     
-    @objc dynamic var useWorldPosition: Bool = true
+    @objc dynamic var radius:   Double = 10
+    @objc dynamic var scale:    Double = 1.0
     
+    @objc dynamic var world_position: Bool = true
+    @objc dynamic var world_scale: Bool = true
+
     @objc dynamic var lat:      Double = 0
     @objc dynamic var lng:      Double = 0
     @objc dynamic var alt:      Double = 0
@@ -34,8 +38,5 @@ class RLM_Obj: Object {
     @objc dynamic var x_pos:    Double = 0
     @objc dynamic var y_pos:    Double = 0
     @objc dynamic var z_pos:    Double = 0
-    
-    @objc dynamic var radius:   Double = 10
-    @objc dynamic var scale:    Double = 1.0
     
 }

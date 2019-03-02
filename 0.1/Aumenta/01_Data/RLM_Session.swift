@@ -5,6 +5,8 @@ import Foundation
 class RLM_Session: Object {
 
     @objc dynamic var hibernated: Bool = false
+    @objc dynamic var muteAudio:  Bool = true
+
     @objc dynamic var feedErrorThreshold: Int = 10
     
     @objc dynamic var currentLat: Double = 0.0

@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Feeds-->
+        <!--Sources-->
         <scene sceneID="x9n-Rz-mVX">
             <objects>
                 <tableViewController id="4ZI-rx-Clo" customClass="FeedsTVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
@@ -84,7 +84,7 @@
                             <outlet property="delegate" destination="4ZI-rx-Clo" id="AYB-z0-Mok"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Feeds" id="Nhx-W2-kfA">
+                    <navigationItem key="navigationItem" title="Sources" id="Nhx-W2-kfA">
                         <barButtonItem key="leftBarButtonItem" image="TabBarIcon_03" id="ayD-K4-8Qr">
                             <connections>
                                 <segue destination="CjR-vc-y1M" kind="show" id="pCq-sO-rbF"/>
@@ -108,7 +108,7 @@
             </objects>
             <point key="canvasLocation" x="910" y="1685"/>
         </scene>
-        <!--Viewer-->
+        <!--View-->
         <scene sceneID="9h0-ey-GEW">
             <objects>
                 <viewController id="cNO-cb-Srl" customClass="ARViewer" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
@@ -122,7 +122,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cVh-GF-OBP" userLabel="LoadingView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Updating Scene..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mak-KG-CXa">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recovering from interruption..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="7" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mak-KG-CXa">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -152,16 +152,16 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Viewer" id="0Jn-a9-joB">
+                    <navigationItem key="navigationItem" title="View" id="0Jn-a9-joB">
                         <leftBarButtonItems>
                             <barButtonItem image="TabBarIcon_03" id="Bi4-h3-vTk">
                                 <connections>
                                     <segue destination="CjR-vc-y1M" kind="show" id="Q9S-6L-g2l"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="action" id="Sni-r1-h8p">
+                            <barButtonItem title="Audio Toggle Button" image="mute_btn_a" id="Sni-r1-h8p">
                                 <connections>
-                                    <action selector="shareFeedsInView:" destination="cNO-cb-Srl" id="hcM-af-gJ7"/>
+                                    <action selector="muteToggleBtn:" destination="cNO-cb-Srl" id="LY0-6u-oDq"/>
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
@@ -180,6 +180,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="loadingView" destination="cVh-GF-OBP" id="Mig-i4-6yC"/>
+                        <outlet property="loadingViewLabel" destination="mak-KG-CXa" id="ObG-sf-0Us"/>
                         <outlet property="sceneView" destination="fEs-rS-yaY" id="cxZ-S7-Spe"/>
                     </connections>
                 </viewController>
@@ -457,7 +458,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Show Missing" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gg1-Rp-j3t">
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Show Icons" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gg1-Rp-j3t">
                                                     <rect key="frame" x="16" y="20.000000000000114" width="189" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <nil key="textColor"/>
@@ -604,11 +605,11 @@
             </objects>
             <point key="canvasLocation" x="910" y="98"/>
         </scene>
-        <!--Feeds-->
+        <!--Sources-->
         <scene sceneID="cD3-xi-SHa">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Be5-wM-mQA" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Feeds" image="TabBarIcon_02" selectedImage="TabBarIcon_02" id="iA0-4h-1mo"/>
+                    <tabBarItem key="tabBarItem" title="Sources" image="TabBarIcon_02" selectedImage="TabBarIcon_02" id="iA0-4h-1mo"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="HI8-YY-PZD">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
@@ -623,11 +624,11 @@
             </objects>
             <point key="canvasLocation" x="911" y="895"/>
         </scene>
-        <!--Viewer-->
+        <!--View-->
         <scene sceneID="Dcz-FS-Ctx">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JOM-kR-ElJ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Viewer" image="TabBarIcon_01" selectedImage="TabBarIcon_01" id="6rL-SB-oHT"/>
+                    <tabBarItem key="tabBarItem" title="View" image="TabBarIcon_01" selectedImage="TabBarIcon_01" id="6rL-SB-oHT"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="eCX-mI-7aa">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
@@ -667,6 +668,7 @@
         <image name="TabBarIcon_01" width="26" height="16"/>
         <image name="TabBarIcon_02" width="20" height="21"/>
         <image name="TabBarIcon_03" width="19" height="16"/>
+        <image name="mute_btn_a" width="18" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="SZc-Qf-Odg"/>

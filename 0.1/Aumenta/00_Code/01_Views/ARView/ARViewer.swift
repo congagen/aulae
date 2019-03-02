@@ -30,6 +30,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var selectedNode: ContentNode? = nil
     var currentPlanes: [SCNNode]? = nil
     
+    @IBOutlet var loadingViewLabel: UILabel!
     @IBOutlet var loadingView: UIView!
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
@@ -53,15 +54,23 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    @IBAction func shareFeedsInView(_ sender: UIBarButtonItem) {
-        if selectedNode != nil {
-            let selectedFeed = feeds.filter((selectedNode?.feedId)!)
-            
-            if selectedFeed.count > 0 {
-                shareURLAction(url: (selectedFeed.first?.url)!)
+    @IBAction func muteToggleBtn(_ sender: UIBarButtonItem) {
+        do {
+            try realm.write {
+                session.first?.muteAudio = !(session.first?.muteAudio)!
+                print("Muted: " + (session.first?.muteAudio.description)!)
+                
+                if (session.first?.muteAudio)! {
+                    sender.image = UIImage(named: "mute_btn_a")
+                    mainScene.rootNode.removeAllAudioPlayers()
+                } else {
+                    sender.image = UIImage(named: "mute_btn_b")
+                }
+                
             }
+        } catch {
+            print("Error: \(error)")
         }
-        
     }
     
     
@@ -88,6 +97,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         return objList
     }
+    
+    
+    func addAudio(contentObj: RLM_Obj, objectDistance: Double, audioRangeRadius: Double, fPath: String){
+        if objectDistance < audioRangeRadius {
+            let dupli = mainScene.rootNode.audioPlayers.filter( {$0.accessibilityLabel == contentObj.id} )
+            
+            if dupli.count != 0 {
+                for d in dupli {
+                    mainScene.rootNode.removeAudioPlayer(d)
+                }
+            }
+            
+            let asrc = SCNAudioSource(url: URL(fileURLWithPath: fPath))
+            asrc!.loops = true
+            asrc?.isPositional = true
+            asrc?.volume = Float(1.0 / objectDistance)
+            asrc!.load()
+            let player = SCNAudioPlayer(source: asrc!)
+            player.accessibilityLabel = contentObj.id
+            mainScene.rootNode.addAudioPlayer(player)
+            
+        } else {
+            print("Audiosource outside listener scope")
+        }
+        
+    }
 
     
     func getNodeWorldPosition(baseOffset: Double, contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
@@ -96,53 +131,39 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let rawDeviceGpsCCL      = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let rawObjectGpsCCL      = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance       = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var scaleDivider: Double = (10000000 / scaleFactor)
+        let scaleDivider: Double = (objectDistance / scaleFactor)
 
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
         
-        if (session.first?.distanceScale)! { scaleDivider = (objectDistance / scaleFactor) }
-   
-        var xPos: Double = 0
-        var yPos: Double = 0
-        
-        if translationSCNV.x < 0 {
-            xPos = Double(Double(translationSCNV.x) / scaleDivider) - baseOffset
-        } else {
-            xPos = Double(Double(translationSCNV.x) / scaleDivider) + baseOffset
-        }
-        
-        if translationSCNV.z < 0 {
-            yPos = Double(Double(translationSCNV.z) / scaleDivider) - baseOffset
-        } else {
-            yPos = Double(Double(translationSCNV.z) / scaleDivider) + baseOffset
-        }
-
-        let normalisedTrans  = CGPoint(x: xPos, y: yPos )
-        let latLongXyz       = SCNVector3(normalisedTrans.x, CGFloat(contentObj.alt), normalisedTrans.y)
+        let xPos = Double(Double(translationSCNV.x) / scaleDivider) + baseOffset
+        let zPos = Double(Double(translationSCNV.z) / scaleDivider) + baseOffset
     
-        return latLongXyz
+        return SCNVector3(xPos, contentObj.alt, zPos)
     }
-    
+  
     
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(contentObj.id))
         print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
         
-        let audioRangeRadius: Double = 100
+        let audioRangeRadius: Double = 1000
         
-        let rawDeviceGpsCCL = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        let rawObjectGpsCCL = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
-        let objectDistance  = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        let nodeSize        = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
-
-        var latLongXyz      = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
-
-        if contentObj.useWorldPosition {
+        let rawDeviceGpsCCL   = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        let rawObjectGpsCCL   = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        var nodeSize: CGFloat = 1
+        var latLongXyz        = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
+        
+        if contentObj.world_position {
             latLongXyz = getNodeWorldPosition(baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor)
         }
-       
+        if (session.first?.distanceScale)! && contentObj.world_scale {
+            nodeSize = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+        }
+        
         let ctNode = ContentNode(id: contentObj.id, title: contentObj.name, feedId: contentObj.feedId, location: rawObjectGpsCCL)
+        ctNode.removeAllAudioPlayers()
         
         if fPath != "" && contentObj.type.lowercased() != "text" {
 
@@ -159,8 +180,22 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addGif(fPath: fPath, contentObj: contentObj)
             }
             if contentObj.type.lowercased() == "audio" {
-                if objectDistance < audioRangeRadius {
-                    ctNode.addAudio(fPath: fPath, contentObj: contentObj)
+                if objectDistance < audioRangeRadius && !(session.first?.muteAudio)! {
+                    
+                    if (session.first?.showPlaceholders)! {
+                        ctNode.addSphere(radius: 0.025 + (nodeSize * 0.01), and: UIColor(hexColor: contentObj.hex_color))
+                        addHooverAnimation(node: ctNode, distance: 1, speed: 1)
+                    }
+                    
+                    let urlPath = URL(fileURLWithPath: fPath)
+                    let asrc = SCNAudioSource(url: urlPath)
+                    asrc!.volume = Float(1.0 / objectDistance)
+                    asrc!.loops  = true
+                    asrc!.isPositional = true
+                    asrc!.load()
+                    
+                    mainScene.rootNode.addAudioPlayer(SCNAudioPlayer(source: asrc!))
+                    print("Distance: " + String(1.0 / objectDistance))
                 }
             }
         } else {
@@ -172,10 +207,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        //ctNode!.scale = SCNVector3(nodeSize, nodeSize, nodeSize)
+        ctNode.scale    = SCNVector3(nodeSize, nodeSize, nodeSize)
         ctNode.position = latLongXyz
-
-//        ctNode!.position = (sceneView.pointOfView?.position)!
         
         if contentObj.style == 0 {
             let constraint = SCNBillboardConstraint()
@@ -202,6 +235,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 n.removeFromParentNode()
             }
         }
+        
+        mainScene.rootNode.removeAllAudioPlayers()
         
         for o in activeInRange {
             print("Obj in range: ")
@@ -247,9 +282,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 
                 if tappednode.isKind(of: ContentNode.self) {
                     selectedNode = (tappednode as! ContentNode)
-                    rotateAnimation(node: selectedNode!, xAmt: 0, yAmt: 1, zAmt: 0)
+                    rotateAnimation(node: selectedNode!, xAmt: 0, yAmt: 1, zAmt: 0, speed: 1)
                 }
-       
             }
         }
         
@@ -295,25 +329,34 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        print("cameraDidChangeTrackingState")
-        
+        let message: String
+        // Inform the user of the camera tracking state
         switch camera.trackingState {
         case .notAvailable:
-            print("trackingState: not available")
+            message = "Tracking unavailable"
             trackingState = 2
             loadingView.isHidden = false
             updateScene()
-        case .limited(let reason):
-            print("trackingState: limited")
-            trackingState = 1
-            loadingView.isHidden = false
-            print(reason)
         case .normal:
-            print("trackingState: normal")
+            message = "Tracking normal"
             trackingState = 0
             loadingView.isHidden = true
+//            endRelocalization()
+        case .limited(.excessiveMotion):
+            message = "Try slowing down your movement..."
+            trackingState = 1
+            loadingView.isHidden = false
+        case .limited(.insufficientFeatures):
+            message = "Try pointing at a flat surface, or reset the session."
+        case .limited(.initializing):
+            message = "Initializing..."
+        case .limited(.relocalizing):
+//            beginRelocalization()
+            message = "Recovering from interruption..."
         }
+        loadingViewLabel.text = message
     }
+    
     
     
     func initScene() {
@@ -343,7 +386,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    private func setUpCamera() {
+    private func optimizeCam() {
         guard let camera = sceneView.pointOfView?.camera else {
             fatalError("Expected a valid `pointOfView` from the scene.")
         }
@@ -366,6 +409,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         pinchGR.delegate = self
         view.addGestureRecognizer(pinchGR)
+        optimizeCam()
     }
     
     
@@ -387,7 +431,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
-//        mainScene.rootNode.removeAllAudioPlayers()
+        mainScene.rootNode.removeAllAudioPlayers()
 
         loadingView.isHidden = false
     }

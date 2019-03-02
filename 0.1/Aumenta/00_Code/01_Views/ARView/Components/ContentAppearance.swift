@@ -31,10 +31,10 @@ extension UIColor {
 extension ARViewer {
     
     func addHooverAnimation(node: SCNNode, distance: CGFloat, speed: CGFloat){
-        let moveUp = SCNAction.moveBy(x: 0, y: distance, z: 0, duration: TimeInterval(speed))
+        let moveUp   = SCNAction.moveBy(x: 0, y: distance, z: 0, duration: TimeInterval(1/speed))
         moveUp.timingMode = .easeInEaseOut;
         
-        let moveDown = SCNAction.moveBy(x: 0, y: -distance, z: 0, duration: TimeInterval(speed))
+        let moveDown = SCNAction.moveBy(x: 0, y: -distance, z: 0, duration: TimeInterval(1/speed))
         moveDown.timingMode = .easeInEaseOut;
         
         let moveSequence = SCNAction.sequence([moveUp, moveDown])
@@ -44,13 +44,13 @@ extension ARViewer {
     }
     
     
-    func rotateAnimation(node: SCNNode, xAmt: Float, yAmt: Float, zAmt: Float){
+    func rotateAnimation(node: SCNNode, xAmt: Float, yAmt: Float, zAmt: Float, speed: Double) {
         
         let spin = CABasicAnimation(keyPath: "rotation")
         spin.fromValue = NSValue(scnVector4: SCNVector4(x: xAmt, y: yAmt, z: zAmt, w: 0))
         spin.toValue   = NSValue(scnVector4: SCNVector4(x: xAmt, y: yAmt, z: zAmt, w: 2 * Float(Double.pi)) )
         
-        spin.duration  = 3
+        spin.duration  = 1 / speed
         spin.repeatCount = .infinity
         node.addAnimation(spin, forKey: "spin around")
         
