@@ -14,7 +14,6 @@ class NetworkTools {
     func postReq(completion: @escaping (_ resp: Dictionary<String, AnyObject>) -> (), apiHeaderValue: String, apiHeaderFeild: String, apiUrl: String, reqParams: Dictionary<String, String>) {
         print("postReq")
 
-        var resp: Dictionary<String, AnyObject> = [:]
         var request = URLRequest(url: URL(string: apiUrl)!)
         
         if (apiHeaderValue != "" && apiHeaderFeild != "") {
@@ -27,15 +26,15 @@ class NetworkTools {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            
             do {
                 if data != nil {
                     let json = try JSONSerialization.jsonObject(with: data!)
-                    resp = json as! Dictionary<String, AnyObject>
-                    completion(resp)
+                    if let resp = json as? Dictionary<String, AnyObject> {
+                        completion(resp)
+                    }
                 }
             } catch {
-                print("error")
+                print(error)
             }
             
         })

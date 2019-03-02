@@ -53,24 +53,41 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         self.present(activityViewController, animated: true, completion: nil)
     }
     
+    @IBOutlet var muteBarButton: UIBarButtonItem!
     
     @IBAction func muteToggleBtn(_ sender: UIBarButtonItem) {
+         resetAudioNodes(mute: !(session.first?.muteAudio)!)
+        
+        if (session.first?.muteAudio)! {
+            updateScene()
+        }
+    }
+    
+    
+    func resetAudioNodes(mute: Bool) {
+        print("resetAudioNodes")
+        
         do {
             try realm.write {
-                session.first?.muteAudio = !(session.first?.muteAudio)!
+                session.first?.muteAudio = mute
                 print("Muted: " + (session.first?.muteAudio.description)!)
-                
-                if (session.first?.muteAudio)! {
-                    sender.image = UIImage(named: "mute_btn_a")
-                    mainScene.rootNode.removeAllAudioPlayers()
-                } else {
-                    sender.image = UIImage(named: "mute_btn_b")
-                }
-                
             }
         } catch {
             print("Error: \(error)")
         }
+        
+        if (session.first?.muteAudio)! {
+            muteBarButton.image = UIImage(named: "mute_btn_a")
+            
+            for a in mainScene.rootNode.audioPlayers {
+                a.audioSource?.volume = 0
+            }
+            
+            mainScene.rootNode.removeAllAudioPlayers()
+        } else {
+            muteBarButton.image = UIImage(named: "mute_btn_b")
+        }
+
     }
     
     
@@ -236,7 +253,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        mainScene.rootNode.removeAllAudioPlayers()
+        resetAudioNodes(mute: (session.first?.muteAudio)!)
         
         for o in activeInRange {
             print("Obj in range: ")
@@ -363,6 +380,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("initScene")
         loadingView.isHidden = false
         
+        if (session.first?.muteAudio)! {
+            muteBarButton.image = UIImage(named: "mute_btn_a")
+            resetAudioNodes(mute: true)
+        } else {
+            muteBarButton.image = UIImage(named: "mute_btn_b")
+        }
+        
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
         
@@ -393,9 +417,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         // Enable HDR camera settings for the most realistic appearance
         // with environmental lighting and physically based materials.
         camera.wantsHDR = true
-        camera.exposureOffset = -1
-        camera.minimumExposure = -1
-        camera.maximumExposure = 3
+//        camera.exposureOffset = -1
+//        camera.minimumExposure = -1
+//        camera.maximumExposure = 3
     }
     
     
@@ -431,8 +455,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
-        mainScene.rootNode.removeAllAudioPlayers()
-
+        resetAudioNodes(mute: true)
+        
         loadingView.isHidden = false
     }
     
