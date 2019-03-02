@@ -122,9 +122,9 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cVh-GF-OBP" userLabel="LoadingView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recovering from interruption..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="7" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mak-KG-CXa">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recovering from interruption..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="7" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mak-KG-CXa">
+                                        <rect key="frame" x="31" y="0.0" width="312" height="812"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -133,9 +133,9 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mak-KG-CXa" secondAttribute="trailing" id="1ZB-l0-Xe7"/>
                                     <constraint firstItem="mak-KG-CXa" firstAttribute="centerY" secondItem="cVh-GF-OBP" secondAttribute="centerY" id="9hb-o2-JLq"/>
-                                    <constraint firstItem="mak-KG-CXa" firstAttribute="leading" secondItem="cVh-GF-OBP" secondAttribute="leading" id="M29-EW-ZiT"/>
+                                    <constraint firstItem="mak-KG-CXa" firstAttribute="leading" secondItem="cVh-GF-OBP" secondAttribute="leading" constant="31" id="M29-EW-ZiT"/>
                                     <constraint firstItem="mak-KG-CXa" firstAttribute="height" secondItem="cVh-GF-OBP" secondAttribute="height" id="iIU-wd-Yey"/>
-                                    <constraint firstItem="mak-KG-CXa" firstAttribute="width" secondItem="cVh-GF-OBP" secondAttribute="width" id="ylj-yg-MjC"/>
+                                    <constraint firstItem="mak-KG-CXa" firstAttribute="width" secondItem="cVh-GF-OBP" secondAttribute="width" constant="-63" id="ylj-yg-MjC"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -590,7 +590,7 @@
         <scene sceneID="1XM-Tk-eYm">
             <objects>
                 <tableViewController extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="Z9j-U6-ciR" customClass="FeedSearchTVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="v8V-41-IIa">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="v8V-41-IIa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

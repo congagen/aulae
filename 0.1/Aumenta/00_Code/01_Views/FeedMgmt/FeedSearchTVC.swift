@@ -24,7 +24,6 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     var apiHeaderFeild = "Authorization"
 
     let searchTermRequestKey = "search_term"
-    
     let searchStatus = "Searching..."
 
     var currentSearchTerm: String = "Demo"
@@ -33,9 +32,10 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     @IBOutlet var searchBar: UISearchBar!
     
     
-    @objc func updateSearchResults(result: Dictionary<String, AnyObject> ) {
+    
+    @objc func refrgah(result: Dictionary<String, AnyObject>) {
         print("updateSearchResults")
-
+        
         if let resp = result["search_results"] as? Dictionary<String, AnyObject> {
             searchResults = resp
             print(searchResults)
@@ -43,8 +43,47 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             searchResults = [:]
         }
         
-        self.tableView.reloadData()
         self.tableView.reloadInputViews()
+        self.tableView.reloadData()
+    }
+    
+    
+    @objc func updateSearchResults(result: Dictionary<String, AnyObject> ) {
+        
+        DispatchQueue.main.async {
+            self.refrgah(result: result)
+        }
+
+    }
+    
+    
+    func showAddSearchFeedAlert(feedTitle: String, feedUrl: String?, message: String){
+        let alert = UIAlertController(
+            title: feedTitle,
+            message: message,
+            preferredStyle: UIAlertController.Style.alert
+        )
+        
+        alert.addAction(
+            UIAlertAction(
+                title: "Ok",
+                style: UIAlertAction.Style.default,
+                handler: { _ in self.feedAct.addFeed(feedUrl: feedUrl!, refreshExisting: true) }
+            )
+        )
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil ))
+        alert.view.tintColor = UIColor.black
+        
+        self.present(
+            alert,
+            animated: true,
+            completion: {
+                self.reloadInputViews()
+                self.tableView.reloadData()
+                self.tableView.reloadInputViews()
+            }
+        )
     }
     
     
@@ -108,12 +147,12 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             let itmUrl: String = itemData["url"] as! String
             
             if feeds.filter( {$0.url == itmUrl} ).count == 0 {
-                feedAct.showAddSearchFeedAlert(feedTitle: itmTitle, feedUrl: itmUrl, message: "Add this feed?", rootView: self)
+                showAddSearchFeedAlert(feedTitle: itmTitle, feedUrl: itmUrl, message: "Add this feed?")
             }
         }
     
-        self.tableView.reloadData()
         self.tableView.reloadInputViews()
+        self.tableView.reloadData()
     }
 
     
@@ -125,8 +164,6 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             cell.textLabel?.textColor = UIColor.lightGray
         }
         
-        self.tableView.reloadData()
-        self.tableView.reloadInputViews()
     }
 
     
@@ -144,9 +181,9 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
                 cell.textLabel?.text = keys[indexPath.item]
                 cell.detailTextLabel?.text = itmUrl
                 
-//                DispatchQueue.main.async {
-//                    self.asyncUrlSearch(cell: cell, urlId: itmUrl)
-//                }
+                DispatchQueue.main.async {
+                    self.asyncUrlSearch(cell: cell, urlId: itmUrl)
+                }
             }
         } else {
             cell.textLabel?.text       = searchStatus
@@ -157,12 +194,6 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         return cell
     }
     
-    
-//    @objc func pullRefresh()  {
-//        self.tableView.reloadData()
-//        self.tableView.reloadInputViews()
-//        rCtrl.endRefreshing()
-//    }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         if searchBar.text != nil {

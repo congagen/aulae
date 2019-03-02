@@ -32,35 +32,6 @@ class FeedActions {
     }
     
     
-    func showAddSearchFeedAlert(feedTitle: String, feedUrl: String?, message: String, rootView: UITableViewController){
-        let alert = UIAlertController(
-            title: feedTitle,
-            message: message,
-            preferredStyle: UIAlertController.Style.alert
-        )
-        
-        alert.addAction(
-            UIAlertAction(
-                title: "Ok",
-                style: UIAlertAction.Style.default,
-                handler: { _ in self.addFeed(feedUrl: feedUrl!, refreshExisting: true) }
-            )
-        )
-        
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil ))
-
-        alert.view.tintColor = UIColor.black
-        rootView.present(
-            alert,
-            animated: true,
-            completion: {
-                rootView.tableView.reloadData();
-                rootView.reloadInputViews()
-        }
-        )
-    }
-    
-    
     func addFeed(feedUrl: String, refreshExisting: Bool) {
         print("addFeed")
         let newFeed = RLM_Feed()

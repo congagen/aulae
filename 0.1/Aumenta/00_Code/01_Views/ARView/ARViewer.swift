@@ -153,9 +153,21 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
         
-        let xPos = Double(Double(translationSCNV.x) / scaleDivider) + baseOffset
-        let zPos = Double(Double(translationSCNV.z) / scaleDivider) + baseOffset
-    
+        var xPos: Double = 0
+        var zPos: Double = 0
+        
+        if translationSCNV.x < 0 {
+            xPos = Double(Double(translationSCNV.x) / scaleDivider) - baseOffset
+        } else {
+            xPos = Double(Double(translationSCNV.x) / scaleDivider) + baseOffset
+        }
+        
+        if translationSCNV.z < 0 {
+            zPos = Double(Double(translationSCNV.z) / scaleDivider) - baseOffset
+        } else {
+            zPos = Double(Double(translationSCNV.z) / scaleDivider) + baseOffset
+        }
+        
         return SCNVector3(xPos, contentObj.alt, zPos)
     }
   
@@ -282,7 +294,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @objc func handleTap(rec: UITapGestureRecognizer){
+        
         if rec.state == .ended {
+            for n in mainScene.rootNode.childNodes {
+                n.removeAllAnimations()
+                for cn in n.childNodes {
+                    cn.removeAllActions()
+                    cn.removeAllAnimations()
+                }
+            }
+            
             let location: CGPoint = rec.location(in: sceneView)
             let hits = self.sceneView.hitTest(location, options: nil)
             
@@ -291,16 +312,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     print(tappednode.name!)
                 }
                 
-                print(tappednode.position)
-                
-                for n in mainScene.rootNode.childNodes {
-                    n.removeAllAnimations()
+                if tappednode.childNodes.count > 0 {
+                    if (tappednode.childNodes.first?.isKind(of: ContentNode.self))! {
+                        selectedNode = (tappednode.childNodes.first as! ContentNode)
+                    } else {
+                        print("NOPE")
+                    }
+                    
                 }
                 
-                if tappednode.isKind(of: ContentNode.self) {
-                    selectedNode = (tappednode as! ContentNode)
-                    rotateAnimation(node: selectedNode!, xAmt: 0, yAmt: 1, zAmt: 0, speed: 1)
-                }
+                addHooverAnimation(node: tappednode, distance: 0.1, speed: 3)
             }
         }
         
