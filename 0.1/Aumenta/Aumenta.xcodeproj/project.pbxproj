@@ -50,6 +50,8 @@
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
 		FAF37EB9221D65610065B18A /* ContentAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* ContentAppearance.swift */; };
 		FAF793632229955800280208 /* o.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FAF793622229955800280208 /* o.mp3 */; };
+		FAF7936A222C124A00280208 /* NavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF79369222C124A00280208 /* NavBar.swift */; };
+		FAF7936C222C132700280208 /* UiNavCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF7936B222C132700280208 /* UiNavCtrl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -113,6 +115,8 @@
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* ContentAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentAppearance.swift; sourceTree = "<group>"; };
 		FAF793622229955800280208 /* o.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = o.mp3; sourceTree = "<group>"; };
+		FAF79369222C124A00280208 /* NavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBar.swift; sourceTree = "<group>"; };
+		FAF7936B222C132700280208 /* UiNavCtrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UiNavCtrl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -259,10 +263,12 @@
 		319D3F2620D7963A007FEECA /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				FAF79369222C124A00280208 /* NavBar.swift */,
 				318FE8F120B0BB730050528B /* HttpDownloader.swift */,
 				3196C88620B6AB1500468B4D /* ObjectLoader.swift */,
 				319D3F2720D7965B007FEECA /* FeedMgmt.swift */,
 				FA9E933E222183AC00346073 /* NetworkTools.swift */,
+				FAF7936B222C132700280208 /* UiNavCtrl.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -426,9 +432,11 @@
 			files = (
 				316B86D820D955660076E63D /* FloatingPoint+Radians.swift in Sources */,
 				FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */,
+				FAF7936C222C132700280208 /* UiNavCtrl.swift in Sources */,
 				316B86DD20D955660076E63D /* LocationManager.swift in Sources */,
 				316B86DB20D955660076E63D /* CLLocation+Extensions.swift in Sources */,
 				FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */,
+				FAF7936A222C124A00280208 /* NavBar.swift in Sources */,
 				FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */,
 				31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */,
 				316B86D920D955660076E63D /* LocationNode.swift in Sources */,
