@@ -21,7 +21,7 @@ class RLM_Session: Object {
     @objc dynamic var scaleFactor:   Double = 5
     @objc dynamic var distanceScale: Bool = true
     @objc dynamic var autoUpdate:    Bool = true
-    @objc dynamic var backgroundGps: Bool = true
+    @objc dynamic var backgroundGps: Bool = false
 
     @objc dynamic var showPlaceholders: Bool = false
     @objc dynamic var allowAnimation:   Bool = true

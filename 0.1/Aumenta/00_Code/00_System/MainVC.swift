@@ -8,15 +8,17 @@
 
 import UIKit
 import Realm
+import MapKit
 import RealmSwift
 
-class MainVC: UITabBarController {
+class MainVC: UITabBarController, CLLocationManagerDelegate {
 
     lazy var realm = try! Realm()
-    
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    let locationManager = CLLocationManager()
     
     let validObjectJsonKeys = ["name", "id", "version", "type", "style"]
     
@@ -92,6 +94,38 @@ class MainVC: UITabBarController {
         }
     }
     
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("locationManager")
+
+        do {
+            try realm.write {
+                session.first?.currentLat = (locations.last?.coordinate.latitude)!
+                session.first?.currentLng = (locations.last?.coordinate.longitude)!
+                session.first?.currentAlt = (locations.last?.altitude)!
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+    }
+    
+    
+    func initLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+        
+        if (session.first?.backgroundGps)! {
+            locationManager.requestAlwaysAuthorization()
+            locationManager.allowsBackgroundLocationUpdates = true
+        } else {
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.allowsBackgroundLocationUpdates = false
+        }
+        
+    }
+    
     
     func initSession(){
         dbGc()
@@ -110,7 +144,9 @@ class MainVC: UITabBarController {
         
         resetErrCounts()
         mainUpdate()
+        initLocation()
     }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()

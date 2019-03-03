@@ -14,13 +14,13 @@ import Foundation
 import Realm
 import RealmSwift
 
-
-class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
+//class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
+class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
     var updateTimer = Timer()
     
     @IBOutlet var mapView: MKMapView!
-    let locationManager = CLLocationManager()
+    //let locationManager = CLLocationManager()
 
     lazy var realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
@@ -211,25 +211,25 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
     }
     
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("locationManager")
-        
-        curLat = (locations.last?.coordinate.latitude)!
-        curLng = (locations.last?.coordinate.longitude)!
-        curAlt = (locations.last?.altitude)!
-        
-        do {
-            try realm.write {
-                session.first?.currentLat = curLat
-                session.first?.currentLng = curLng
-                session.first?.currentAlt = curAlt
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-        updateviewRadius()
-    }
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        print("locationManager")
+//
+//        curLat = (locations.last?.coordinate.latitude)!
+//        curLng = (locations.last?.coordinate.longitude)!
+//        curAlt = (locations.last?.altitude)!
+//
+//        do {
+//            try realm.write {
+//                session.first?.currentLat = curLat
+//                session.first?.currentLng = curLng
+//                session.first?.currentAlt = curAlt
+//            }
+//        } catch {
+//            print("Error: \(error)")
+//        }
+//
+//        updateviewRadius()
+//    }
     
     
     @objc func mainUpdate() {
@@ -325,16 +325,18 @@ class MapVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIG
         mapView.tintColor = view.superview?.tintColor
         mapView.backgroundColor = UIColor.black
         
-        if (session.first?.backgroundGps)! {
-            locationManager.requestAlwaysAuthorization()
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-        }
+//        if (session.first?.backgroundGps)! {
+//            locationManager.requestAlwaysAuthorization()
+//            locationManager.allowsBackgroundLocationUpdates = true
+//        } else {
+//            locationManager.requestWhenInUseAuthorization()
+//            locationManager.allowsBackgroundLocationUpdates = false
+//        }
+//
+//        locationManager.delegate = self
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//        locationManager.startUpdatingLocation()
 
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
-        locationManager.allowsBackgroundLocationUpdates = true
     }
 
     

@@ -293,6 +293,27 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    func showNodeInfo(nodeName: String, nodeInfo: String, nodeUrl: String) {
+        let alert = UIAlertController(
+            title: nodeName,
+            message: nodeInfo,
+            preferredStyle: UIAlertController.Style.alert
+        )
+        
+        if nodeUrl != "" {
+            alert.addAction(UIAlertAction(title: "Website", style: UIAlertAction.Style.cancel, handler: nil))
+        }
+        
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
+
+        alert.view.tintColor = UIColor.black
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
     @objc func handleTap(rec: UITapGestureRecognizer){
         
         if rec.state == .ended {
@@ -315,13 +336,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 if tappednode.childNodes.count > 0 {
                     if (tappednode.childNodes.first?.isKind(of: ContentNode.self))! {
                         selectedNode = (tappednode.childNodes.first as! ContentNode)
-                    } else {
-                        print("NOPE")
+                        showNodeInfo(
+                            nodeName: (selectedNode?.name)!, nodeInfo: (selectedNode?.feedId)!, nodeUrl: (selectedNode?.feedId)!
+                        )
+                        addHooverAnimation(node: tappednode, distance: 0.1, speed: 3)
                     }
-                    
+                } else {
+                    print(tappednode)
+                    print("tappednode.childNodes.count == 0")
+                    print(tappednode.isKind(of: ContentNode.self))
                 }
-                
-                addHooverAnimation(node: tappednode, distance: 0.1, speed: 3)
             }
         }
         
