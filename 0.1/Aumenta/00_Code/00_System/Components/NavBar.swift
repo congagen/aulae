@@ -18,12 +18,5 @@ class NavBar: UINavigationBar {
     }
     */
     
-    override func didMoveToWindow() {
-        self.setBackgroundImage(UIImage(), for: .default)
-        self.shadowImage = UIImage()
-        
-        self.backgroundColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.3)
-        self.isTranslucent = true
-    }
-
+    
 }

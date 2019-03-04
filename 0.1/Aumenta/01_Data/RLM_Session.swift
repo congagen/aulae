@@ -23,7 +23,7 @@ class RLM_Session: Object {
     @objc dynamic var autoUpdate:    Bool = true
     @objc dynamic var backgroundGps: Bool = false
 
-    @objc dynamic var showPlaceholders: Bool = false
+    @objc dynamic var showPlaceholders: Bool = true
     @objc dynamic var allowAnimation:   Bool = true
     
     @objc dynamic var debugUrl: String = "https://s3.amazonaws.com/abstra-dev/demo.json"

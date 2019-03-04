@@ -328,24 +328,33 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             let location: CGPoint = rec.location(in: sceneView)
             let hits = self.sceneView.hitTest(location, options: nil)
             
-            if let tappednode = hits.first?.node {
-                if tappednode.name != nil {
-                    print(tappednode.name!)
+            if let tappedNode = hits.first?.node {
+                if tappedNode.name != nil {
+                    print(tappedNode.name!)
                 }
                 
-                if tappednode.childNodes.count > 0 {
-                    if (tappednode.childNodes.first?.isKind(of: ContentNode.self))! {
-                        selectedNode = (tappednode.childNodes.first as! ContentNode)
-                        showNodeInfo(
-                            nodeName: (selectedNode?.name)!, nodeInfo: (selectedNode?.feedId)!, nodeUrl: (selectedNode?.feedId)!
-                        )
-                        addHooverAnimation(node: tappednode, distance: 0.1, speed: 3)
-                    }
-                } else {
-                    print(tappednode)
-                    print("tappednode.childNodes.count == 0")
-                    print(tappednode.isKind(of: ContentNode.self))
+                if (tappedNode.parent!.isKind(of: ContentNode.self)) {
+                    
+                    print("tappednode.isKind")
                 }
+                
+                if (tappedNode.parent!.isKind(of: ContentNode.self)) {
+                    selectedNode = (tappedNode.parent! as! ContentNode)
+                    
+                    print(selectedNode!.name!)
+                    print(selectedNode!.feedId)
+                    
+                    print(selectedNode?.childNodes.count)
+                    
+//                    showNodeInfo(
+//                        nodeName: (selectedNode?.name)!,
+//                        nodeInfo: (selectedNode?.feedId)!,
+//                        nodeUrl:  (selectedNode?.feedId)!
+//                    )
+                    
+                    addHooverAnimation(node: tappedNode, distance: 0.1, speed: 3)
+                }
+
             }
         }
         

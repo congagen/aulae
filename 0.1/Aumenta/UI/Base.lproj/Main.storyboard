@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Sources-->
+        <!--Augmia-->
         <scene sceneID="x9n-Rz-mVX">
             <objects>
                 <tableViewController extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="4ZI-rx-Clo" customClass="FeedsTVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
@@ -84,7 +84,7 @@
                             <outlet property="delegate" destination="4ZI-rx-Clo" id="AYB-z0-Mok"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Sources" id="Nhx-W2-kfA">
+                    <navigationItem key="navigationItem" title="Augmia" id="Nhx-W2-kfA">
                         <barButtonItem key="leftBarButtonItem" image="TabBarIcon_03" id="ayD-K4-8Qr">
                             <connections>
                                 <segue destination="CjR-vc-y1M" kind="show" id="pCq-sO-rbF"/>
@@ -152,7 +152,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Augmyr" id="0Jn-a9-joB">
+                    <navigationItem key="navigationItem" title="Augmia" id="0Jn-a9-joB">
                         <leftBarButtonItems>
                             <barButtonItem image="TabBarIcon_03" id="Bi4-h3-vTk">
                                 <connections>
@@ -189,7 +189,7 @@
             </objects>
             <point key="canvasLocation" x="1660" y="1684.729064039409"/>
         </scene>
-        <!--Map-->
+        <!--Augmia-->
         <scene sceneID="CcG-m6-yJt">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="shz-14-nLG" customClass="MapVC" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
@@ -210,7 +210,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Map" id="jef-En-32s">
+                    <navigationItem key="navigationItem" title="Augmia" id="jef-En-32s">
                         <barButtonItem key="leftBarButtonItem" image="TabBarIcon_03" id="SvZ-XF-1hu">
                             <connections>
                                 <segue destination="CjR-vc-y1M" kind="show" id="aUW-k3-e0B"/>
@@ -666,7 +666,8 @@
         <!--Sources-->
         <scene sceneID="cD3-xi-SHa">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Be5-wM-mQA" customClass="UiNavCtrl" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="Be5-wM-mQA" customClass="UiNavCtrl" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBarItem key="tabBarItem" title="Sources" image="TabBarIcon_02" selectedImage="TabBarIcon_02" id="iA0-4h-1mo"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="HI8-YY-PZD">
@@ -682,11 +683,12 @@
             </objects>
             <point key="canvasLocation" x="911" y="895"/>
         </scene>
-        <!--Augmyr-->
+        <!--Scene-->
         <scene sceneID="Dcz-FS-Ctx">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JOM-kR-ElJ" customClass="UiNavCtrl" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Augmyr" image="TabBarIcon_01" selectedImage="TabBarIcon_01" id="6rL-SB-oHT"/>
+                <navigationController id="JOM-kR-ElJ" customClass="UiNavCtrl" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <tabBarItem key="tabBarItem" title="Scene" image="TabBarIcon_01" selectedImage="TabBarIcon_01" id="6rL-SB-oHT"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="eCX-mI-7aa">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
@@ -704,10 +706,11 @@
         <!--Map-->
         <scene sceneID="gVn-bR-ibz">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="D9j-4D-fYI" customClass="UiNavCtrl" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="D9j-4D-fYI" customClass="UiNavCtrl" customModule="Aumenta" customModuleProvider="target" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBarItem key="tabBarItem" title="Map" image="TabBarIcon_00" selectedImage="TabBarIcon_00" id="Mbm-ZF-o7g"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="cXX-bG-5u8">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="cXX-bG-5u8" customClass="NavBar" customModule="Aumenta" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -729,7 +732,7 @@
         <image name="mute_btn_a" width="17" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="syp-hZ-XxQ"/>
-        <segue reference="aUW-k3-e0B"/>
+        <segue reference="SZc-Qf-Odg"/>
+        <segue reference="Q9S-6L-g2l"/>
     </inferredMetricsTieBreakers>
 </document>

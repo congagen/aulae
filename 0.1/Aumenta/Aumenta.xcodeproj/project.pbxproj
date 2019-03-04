@@ -263,11 +263,11 @@
 		319D3F2620D7963A007FEECA /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				FAF79369222C124A00280208 /* NavBar.swift */,
 				318FE8F120B0BB730050528B /* HttpDownloader.swift */,
 				3196C88620B6AB1500468B4D /* ObjectLoader.swift */,
 				319D3F2720D7965B007FEECA /* FeedMgmt.swift */,
 				FA9E933E222183AC00346073 /* NetworkTools.swift */,
+				FAF79369222C124A00280208 /* NavBar.swift */,
 				FAF7936B222C132700280208 /* UiNavCtrl.swift */,
 			);
 			path = Components;
