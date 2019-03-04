@@ -43,12 +43,11 @@
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
 		FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */; };
 		FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA789D202221629F009DC15F /* FeedSearchTVC.swift */; };
-		FA8275EC221ABAD5007B413B /* SceneActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8275EB221ABAD5007B413B /* SceneActions.swift */; };
+		FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88CBFC222DBBD90078E48A /* NodeActions.swift */; };
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
-		FA8B387022120DD60099A7A3 /* ValConverters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B386F22120DD60099A7A3 /* ValConverters.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
-		FAF37EB9221D65610065B18A /* ContentAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* ContentAppearance.swift */; };
+		FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* NodeAppearance.swift */; };
 		FAF793632229955800280208 /* o.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FAF793622229955800280208 /* o.mp3 */; };
 		FAF7936A222C124A00280208 /* NavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF79369222C124A00280208 /* NavBar.swift */; };
 		FAF7936C222C132700280208 /* UiNavCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF7936B222C132700280208 /* UiNavCtrl.swift */; };
@@ -108,12 +107,11 @@
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		FA789D202221629F009DC15F /* FeedSearchTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSearchTVC.swift; sourceTree = "<group>"; };
-		FA8275EB221ABAD5007B413B /* SceneActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneActions.swift; sourceTree = "<group>"; };
+		FA88CBFC222DBBD90078E48A /* NodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeActions.swift; sourceTree = "<group>"; };
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
-		FA8B386F22120DD60099A7A3 /* ValConverters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValConverters.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
-		FAF37EB8221D65610065B18A /* ContentAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentAppearance.swift; sourceTree = "<group>"; };
+		FAF37EB8221D65610065B18A /* NodeAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAppearance.swift; sourceTree = "<group>"; };
 		FAF793622229955800280208 /* o.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = o.mp3; sourceTree = "<group>"; };
 		FAF79369222C124A00280208 /* NavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBar.swift; sourceTree = "<group>"; };
 		FAF7936B222C132700280208 /* UiNavCtrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UiNavCtrl.swift; sourceTree = "<group>"; };
@@ -145,11 +143,10 @@
 		316B86B720D94B4E0076E63D /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				FA8B386F22120DD60099A7A3 /* ValConverters.swift */,
 				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
-				FA8275EB221ABAD5007B413B /* SceneActions.swift */,
-				FAF37EB8221D65610065B18A /* ContentAppearance.swift */,
 				FA663146221DBD4B000FEF60 /* ContentNode.swift */,
+				FAF37EB8221D65610065B18A /* NodeAppearance.swift */,
+				FA88CBFC222DBBD90078E48A /* NodeActions.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -445,6 +442,7 @@
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
 				3196C88720B6AB1500468B4D /* ObjectLoader.swift in Sources */,
 				316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */,
+				FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
 				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
 				FAB2AE7A22088315004D5819 /* TODO.swift in Sources */,
@@ -454,14 +452,12 @@
 				FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */,
 				316B86D720D955660076E63D /* SceneLocationEstimate+Extensions.swift in Sources */,
 				316B86D520D955660076E63D /* SCNVector3+Extensions.swift in Sources */,
-				FA8B387022120DD60099A7A3 /* ValConverters.swift in Sources */,
 				FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */,
 				3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */,
 				319AA77F20B418E800F99223 /* MainVC.swift in Sources */,
 				316B86DA20D955660076E63D /* CGPoint+Extensions.swift in Sources */,
-				FAF37EB9221D65610065B18A /* ContentAppearance.swift in Sources */,
+				FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */,
 				316B86DC20D955660076E63D /* SceneLocationView.swift in Sources */,
-				FA8275EC221ABAD5007B413B /* SceneActions.swift in Sources */,
 				316B86D620D955660076E63D /* SceneLocationEstimate.swift in Sources */,
 				319D3F2820D7965B007FEECA /* FeedMgmt.swift in Sources */,
 				318FE8F220B0BB730050528B /* HttpDownloader.swift in Sources */,

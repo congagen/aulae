@@ -172,7 +172,7 @@
                                     <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="dHf-hJ-ljZ"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="camera" id="etU-3N-bVO">
+                            <barButtonItem systemItem="action" id="etU-3N-bVO">
                                 <connections>
                                     <action selector="sharePhotoBtn:" destination="cNO-cb-Srl" id="p06-zG-iGc"/>
                                 </connections>
@@ -737,6 +737,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="SZc-Qf-Odg"/>
-        <segue reference="pCq-sO-rbF"/>
+        <segue reference="Q9S-6L-g2l"/>
     </inferredMetricsTieBreakers>
 </document>

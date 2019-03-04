@@ -32,10 +32,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     var curLat = 0.0
     var curLng = 0.0
     var curAlt = 0.0
-
     
     var textField: UITextField? = nil
-    
     @IBOutlet var searchBtn: UIBarButtonItem!
     @IBAction func searchBtnAction(_ sender: UIBarButtonItem) {
         
@@ -209,27 +207,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         mapView.updateFocusIfNeeded()
     }
-    
-    
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        print("locationManager")
-//
-//        curLat = (locations.last?.coordinate.latitude)!
-//        curLng = (locations.last?.coordinate.longitude)!
-//        curAlt = (locations.last?.altitude)!
-//
-//        do {
-//            try realm.write {
-//                session.first?.currentLat = curLat
-//                session.first?.currentLng = curLng
-//                session.first?.currentAlt = curAlt
-//            }
-//        } catch {
-//            print("Error: \(error)")
-//        }
-//
-//        updateviewRadius()
-//    }
     
     
     @objc func mainUpdate() {

@@ -8,6 +8,7 @@
 import Foundation
 import SceneKit
 import ARKit
+import CoreLocation
 
 
 extension UIColor {
@@ -29,6 +30,37 @@ extension UIColor {
 
 
 extension ARViewer {
+    
+    
+    func getNodeWorldPosition(baseOffset: Double, contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
+        print("getNodeWorldPosition")
+        
+        let rawDeviceGpsCCL      = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        let rawObjectGpsCCL      = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        let objectDistance       = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        let scaleDivider: Double = (objectDistance / scaleFactor)
+        
+        let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
+        let translationSCNV  = SCNVector3.positionFromTransform(translation)
+        
+        var xPos: Double = 0
+        var zPos: Double = 0
+        
+        if translationSCNV.x < 0 {
+            xPos = Double(Double(translationSCNV.x) / scaleDivider) - baseOffset
+        } else {
+            xPos = Double(Double(translationSCNV.x) / scaleDivider) + baseOffset
+        }
+        
+        if translationSCNV.z < 0 {
+            zPos = Double(Double(translationSCNV.z) / scaleDivider) - baseOffset
+        } else {
+            zPos = Double(Double(translationSCNV.z) / scaleDivider) + baseOffset
+        }
+        
+        return SCNVector3(xPos, contentObj.alt, zPos)
+    }
+    
     
     func addHooverAnimation(node: SCNNode, distance: CGFloat, speed: CGFloat){
         let moveUp   = SCNAction.moveBy(x: 0, y: distance, z: 0, duration: TimeInterval(1/speed))
