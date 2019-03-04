@@ -93,17 +93,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
 
     }
-    
-    
-    func shareURLAction(url: String) {
-        
-        let textToShare = [ url ]
-        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-        // activityViewController.excludedActivityTypes = [ UIActivityType.airDrop ]
-        
-        self.present(activityViewController, animated: true, completion: nil)
-    }
+
     
     
     func objectsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
@@ -301,27 +291,54 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func getRoot(for node: SCNNode) -> SCNNode? {
-        if let node = node.parent {
-            return getRoot(for: node)
-        }
-        else {
-            return node
-        }
+    func shareURLAction(url: String) {
+        
+        let textToShare = [ url ]
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+        // activityViewController.excludedActivityTypes = [ UIActivityType.airDrop ]
+        
+        self.present(activityViewController, animated: true, completion: nil)
+        
+        resetSeletion()
     }
     
     
-    func showSeletedNodeActions() {
+    func openUrl(scheme: String) {
+        if let url = URL(string: scheme) {
+            if #available(iOS 10, *) {
+                UIApplication.shared.open(url, options: [:],
+                                          completionHandler: {
+                                            (success) in
+                                            print("Open \(scheme): \(success)")
+                })
+            } else {
+                let success = UIApplication.shared.openURL(url)
+                print("Open \(scheme): \(success)")
+            }
+        }
+    }
+    
+    func showSeletedNodeActions(objData: RLM_Obj) {
+        let selFeeds = feeds.filter({$0.id == self.selectedNode?.feedId})
         
         if selectedNode != nil {
             let alert =  UIAlertController(
-                title:   "Feed: " + (selectedNode?.feedId)!,
-                message: "Object: " + (selectedNode?.title)!,
-                preferredStyle: UIAlertController.Style.alert
+                title:   (selectedNode?.feedId)!,
+                message: (selectedNode?.title)!,
+                preferredStyle: UIAlertController.Style.actionSheet
             )
             
-            alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.resetSeletion() } ))
-            alert.addAction(UIAlertAction(title: "Share Feed", style: UIAlertAction.Style.default, handler: { _ in self.resetSeletion() } ))
+            if (objData.contentLink) != "" {
+                alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (objData.contentLink)) } ))
+            }
+            
+            if selFeeds.count > 0 {
+                if selFeeds.first?.url != "" {
+                    alert.addAction(UIAlertAction(title: "Share Source",  style: UIAlertAction.Style.default, handler: { _ in self.shareURLAction(url: (selFeeds.first?.url)!) } ))
+                }
+            }
+            
             alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.cancel,  handler: { _ in self.resetSeletion() } ))
             alert.view.tintColor = UIColor.black
             
@@ -387,7 +404,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         if (sn.isKind(of: ContentNode.self)) {
                             
                             if selectedNode == (sNodes.first as! ContentNode) {
-                                showSeletedNodeActions()
+                                showSeletedNodeActions(objData: matchingObjs.first!)
+                                highlightSelected(hideOther: true)
+
                             } else {
                                 selectedNode = (sNodes.first as! ContentNode)
                                 highlightSelected(hideOther: true)
@@ -395,10 +414,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         }
                     }
                 }
-            
             }
         }
-        
     }
     
     
@@ -442,7 +459,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         let message: String
-        // Inform the user of the camera tracking state
+        
         switch camera.trackingState {
         case .notAvailable:
             message = "Tracking unavailable"
@@ -455,16 +472,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             loadingView.isHidden = true
 //            endRelocalization()
         case .limited(.excessiveMotion):
-            message = "Try slowing down your movement..."
+            message = "Try slowing down your movement"
             trackingState = 1
             loadingView.isHidden = false
         case .limited(.insufficientFeatures):
-            message = "Try pointing at a flat surface, or reset the session."
+            message = "Try pointing at a flat surface, or refresh the session"
         case .limited(.initializing):
             message = "Initializing..."
         case .limited(.relocalizing):
 //            beginRelocalization()
-            message = "Recovering from interruption..."
+            message = "Callibrating..."
         }
         loadingViewLabel.text = message
     }

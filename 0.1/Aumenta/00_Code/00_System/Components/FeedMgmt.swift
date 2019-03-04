@@ -25,12 +25,15 @@ extension MainVC {
                 rlmObj.name       = objInfo["name"] as! String
                 rlmObj.info       = objInfo["info"] as! String
                 rlmObj.filePath   = objFilePath.absoluteString
+                
+                // rlmObj.contentLink = objInfo["content_link"] as! String
+                rlmObj.contentLink = "https://www.google.com"
+                
+                rlmObj.text       = objInfo["text"] as! String
                 rlmObj.world_position = objInfo["world_position"] as! Bool
                 rlmObj.world_scale = objInfo["world_scale"] as! Bool
-
                 rlmObj.type       = objInfo["type"] as! String
                 rlmObj.style      = objInfo["style"] as! Int
-                rlmObj.text       = objInfo["text"] as! String
                 rlmObj.hex_color  = objInfo["hex_color"] as! String
                 
                 rlmObj.lat        = objInfo["lat"] as! Double
@@ -106,6 +109,7 @@ extension MainVC {
                     "hex_color":        valueIfPresent(dict: feedContent, key: "hex_color", placeHolderValue: "7259ff"),
 
                     "url":              valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
+                    "content_link":     valueIfPresent(dict: feedContent, key: "content_link", placeHolderValue: ""),
 
                     "info":             valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
                     "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),

@@ -89,12 +89,12 @@ class FeedsTVC: UITableViewController {
         let feed = feeds[section]
         
         cell.textLabel?.text = String(feed.name)
-        cell.detailTextLabel?.text = "Feed: " + String(feed.url)
+        cell.detailTextLabel?.text = "Source: " + String(feed.url)
 
         cell.restorationIdentifier = feed.id
         cell.backgroundColor = UIColor.clear
         cell.contentView.backgroundColor = UIColor.clear
-        cell.accessibilityHint = String(feed.name) + " Feed: " + String(feed.url)
+        cell.accessibilityHint = String(feed.name) + " Source: " + String(feed.url)
         
         if !feed.active {
             cell.textLabel?.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)

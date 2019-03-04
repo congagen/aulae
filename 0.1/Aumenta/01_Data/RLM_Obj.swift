@@ -9,6 +9,7 @@ class RLM_Obj: Object {
     @objc dynamic var uuid:     String = ""
 
     @objc dynamic var contentUrl: String = ""
+    @objc dynamic var contentLink: String = ""
 
     @objc dynamic var version:  Int = 0
     @objc dynamic var info:     String = ""
