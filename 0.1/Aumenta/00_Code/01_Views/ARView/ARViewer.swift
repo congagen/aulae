@@ -38,10 +38,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         updateScene()
     }
     
-    @IBOutlet var contentInfoView: UIView!
-    @IBOutlet var contentInfoNameLabel: UILabel!
-    
-    
     @IBOutlet var sceneView: ARSCNView!
     
     
@@ -325,12 +321,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         if selectedNode != nil {
             let alert =  UIAlertController(
                 title:   (selectedNode?.feedId)!,
-                message: (selectedNode?.title)!,
+                message: nil,
                 preferredStyle: UIAlertController.Style.actionSheet
             )
             
             if (objData.contentLink) != "" {
-                alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (objData.contentLink)) } ))
+                alert.addAction(UIAlertAction(title:     "Object Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (objData.contentLink)) } ))
             }
             
             if selFeeds.count > 0 {
@@ -371,24 +367,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             }
         }
+        
         addHooverAnimation(node: selectedNode!, distance: 0.2, speed: 3)
-
     }
     
     
     @objc func handleTap(rec: UITapGestureRecognizer){
-        contentInfoView.isHidden = true
-        
+
         for n in mainScene.rootNode.childNodes {
             n.removeAllAnimations()
             n.removeAllActions()
             n.isHidden = false
         }
         
-        if (selectedNode != nil) {
-            selectedNode?.removeAllAnimations()
-        }
-
         if rec.state == .ended {
 
             let location: CGPoint = rec.location(in: sceneView)
@@ -414,6 +405,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         }
                     }
                 }
+            } else {
+                if (selectedNode != nil) {
+                    selectedNode?.removeAllAnimations()
+                }
+                
+                selectedNode = nil
+                
             }
         }
     }
@@ -458,16 +456,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        let message: String
+        var message: String = ""
         
         switch camera.trackingState {
         case .notAvailable:
-            message = "Tracking unavailable"
+            message = "Tracking error, try reloading the scene"
             trackingState = 2
             loadingView.isHidden = false
-            updateScene()
+//            updateScene()
         case .normal:
-            message = "Tracking normal"
+            message = "Calibrating..."
             trackingState = 0
             loadingView.isHidden = true
 //            endRelocalization()
@@ -476,12 +474,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             trackingState = 1
             loadingView.isHidden = false
         case .limited(.insufficientFeatures):
-            message = "Try pointing at a flat surface, or refresh the session"
+            trackingState = 1
+
+            message = "Try pointing at a flat surface or refreshing the scene"
         case .limited(.initializing):
-            message = "Initializing..."
+            trackingState = 1
+
+            message = "Calibrating..."
         case .limited(.relocalizing):
+            trackingState = 2
+
 //            beginRelocalization()
-            message = "Callibrating..."
+            message = "Calibrating..."
         }
         loadingViewLabel.text = message
     }
@@ -531,14 +535,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         camera.wantsHDR = true
         camera.exposureOffset = -1
         camera.minimumExposure = 0
-//        camera.maximumExposure = 3
+        camera.maximumExposure = 1
     }
     
     
     override func viewDidLoad() {
         print("viewDidLoad")
         loadingView.isHidden = false
-        contentInfoView.isHidden = true
 
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
@@ -562,7 +565,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
-        contentInfoView.isHidden = true
         loadingView.isHidden = false
     }
     

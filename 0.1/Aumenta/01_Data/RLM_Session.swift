@@ -19,7 +19,7 @@ class RLM_Session: Object {
     @objc dynamic var searchRadius: Double = 1000000000
 
     @objc dynamic var scaleFactor:   Double = 5
-    @objc dynamic var distanceScale: Bool = true
+    @objc dynamic var distanceScale: Bool = false
     @objc dynamic var autoUpdate:    Bool = true
     @objc dynamic var backgroundGps: Bool = false
 

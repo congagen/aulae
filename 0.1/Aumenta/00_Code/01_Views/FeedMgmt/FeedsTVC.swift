@@ -100,8 +100,8 @@ class FeedsTVC: UITableViewController {
             cell.textLabel?.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             cell.detailTextLabel?.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         } else {
-            cell.textLabel?.textColor = UIColor.black
-            cell.detailTextLabel?.textColor = UIColor.black
+            cell.textLabel?.textColor = UIColor.white
+            cell.detailTextLabel?.textColor = UIColor.white
         }
         
         return cell
@@ -174,7 +174,6 @@ class FeedsTVC: UITableViewController {
         alert.addTextField(configurationHandler: urlConfigurationTextField)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:handleCancel))
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler:handleEnterURL))
-        
         alert.view.tintColor = UIColor.black
         
         self.present(alert, animated: true, completion: nil)
@@ -229,17 +228,17 @@ class FeedsTVC: UITableViewController {
         let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (rowAction, indexPath) in
             self.shareURLAction(url: (self.selected?.url)!)
         }
-        shareAction.backgroundColor = UIColor(red: 0.0, green: 0.5, blue: 1, alpha: 0.75)
+        shareAction.backgroundColor = self.view.superview?.tintColor
         
         let renameAction = UITableViewRowAction(style: .normal, title: "Rename") { (rowAction, indexPath) in
             self.showRenameAlert(aMessage: self.selected?.name)
         }
-        renameAction.backgroundColor = UIColor(red: 0.0, green: 0.2, blue: 1, alpha: 0.75)
+        renameAction.backgroundColor = self.view.superview?.tintColor
         
         let deleteAction = UITableViewRowAction(style: .normal, title: "Delete") { (rowAction, indexPath) in
             self.removeFeed(indexP: indexPath)
         }
-        deleteAction.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.75)
+        deleteAction.backgroundColor = self.view.superview?.tintColor
         
         return [shareAction, renameAction, deleteAction]
     }

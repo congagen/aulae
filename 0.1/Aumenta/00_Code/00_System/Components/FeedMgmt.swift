@@ -27,7 +27,7 @@ extension MainVC {
                 rlmObj.filePath   = objFilePath.absoluteString
                 
                 // rlmObj.contentLink = objInfo["content_link"] as! String
-                rlmObj.contentLink = "https://www.google.com"
+                rlmObj.contentLink = objInfo["content_link"] as! String
                 
                 rlmObj.text       = objInfo["text"] as! String
                 rlmObj.world_position = objInfo["world_position"] as! Bool
@@ -115,7 +115,7 @@ extension MainVC {
                     "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
                     
                     "world_position":   valueIfPresent(dict: feedContent, key: "world_position", placeHolderValue: true),
-                    "world_scale":      valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: false),
+                    "world_scale":      valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: true),
                     
                     "lat":              valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
                     "lng":              valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
