@@ -10,36 +10,38 @@ import Foundation
 
 extension MainVC {
 
-    func storeFeedObject(objInfo: [String : Any], objFilePath: URL, originFeed:String) {
+    func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
         print("storeFeedObject")
         
         let rlmObj = RLM_Obj()
         
         do {
             try realm.write {
-                rlmObj.id       = objInfo["id"] as! String
-                rlmObj.feedId   = originFeed
+                rlmObj.id         = objInfo["id"] as! String
+                rlmObj.feedId     = feedId
+                rlmObj.contentUrl = objInfo["url"] as! String
+                rlmObj.uuid       = objInfo["uuid"] as! String
 
-                rlmObj.name     = objInfo["name"] as! String
-                rlmObj.info     = objInfo["info"] as! String
-                rlmObj.filePath = objFilePath.absoluteString
+                rlmObj.name       = objInfo["name"] as! String
+                rlmObj.info       = objInfo["info"] as! String
+                rlmObj.filePath   = objFilePath.absoluteString
                 rlmObj.world_position = objInfo["world_position"] as! Bool
                 rlmObj.world_scale = objInfo["world_scale"] as! Bool
 
-                rlmObj.type     = objInfo["type"] as! String
-                rlmObj.style    = objInfo["style"] as! Int
-                rlmObj.text     = objInfo["text"] as! String
-                rlmObj.hex_color = objInfo["hex_color"] as! String
+                rlmObj.type       = objInfo["type"] as! String
+                rlmObj.style      = objInfo["style"] as! Int
+                rlmObj.text       = objInfo["text"] as! String
+                rlmObj.hex_color  = objInfo["hex_color"] as! String
                 
-                rlmObj.lat      = objInfo["lat"] as! Double
-                rlmObj.lng      = objInfo["lng"] as! Double
-                rlmObj.alt      = objInfo["alt"] as! Double
+                rlmObj.lat        = objInfo["lat"] as! Double
+                rlmObj.lng        = objInfo["lng"] as! Double
+                rlmObj.alt        = objInfo["alt"] as! Double
                 
-                rlmObj.x_pos    = objInfo["x_pos"] as! Double
-                rlmObj.y_pos    = objInfo["y_pos"] as! Double
-                rlmObj.z_pos    = objInfo["y_pos"] as! Double
+                rlmObj.x_pos      = objInfo["x_pos"] as! Double
+                rlmObj.y_pos      = objInfo["y_pos"] as! Double
+                rlmObj.z_pos      = objInfo["y_pos"] as! Double
 
-                rlmObj.scale = objInfo["scale"] as! Double
+                rlmObj.scale      = objInfo["scale"] as! Double
                 
                 realm.add(rlmObj)
             }
@@ -80,34 +82,36 @@ extension MainVC {
     func updateFeedObjects(feedList: Dictionary<String, AnyObject>, feedId: String) {
         print("! updateFeedObjects !")
         
-        
         for k in (feedList["content"]?.allKeys)! {
             
             let feedContent = feedList["content"]![k] as! Dictionary<String, AnyObject>
             let valid = validateObj(keyList: validObjectJsonKeys, dict: feedContent)
+            let objUid = UUID().uuidString
             
-            // updated_utx
+        
+            // TODO: updated_utx
             if valid {
                 
                 let objData: [String : Any] = [
                     "name":             feedContent["name"] as! String,
+                    "version":          feedContent["version"] as! Int,
+
+                    "uuid":             objUid,
                     "id":               feedContent["id"]   as! String,
                     "feed_id":          feedId,
-
-                    "version":          feedContent["version"] as! Int,
                     
                     "type":             feedContent["type"]  as! String,
                     "style":            valueIfPresent(dict: feedContent, key: "style", placeHolderValue:  1) as! Int,
                     "mode":             valueIfPresent(dict: feedContent, key: "mode", placeHolderValue:   "free"),
-                    "hex_color":        valueIfPresent(dict: feedContent, key: "hex_color", placeHolderValue:   "7259ff"),
+                    "hex_color":        valueIfPresent(dict: feedContent, key: "hex_color", placeHolderValue: "7259ff"),
 
                     "url":              valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
 
                     "info":             valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
                     "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
                     
-                    "world_position": valueIfPresent(dict: feedContent, key: "world_position", placeHolderValue: true),
-                    "world_scale":    valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: true),
+                    "world_position":   valueIfPresent(dict: feedContent, key: "world_position", placeHolderValue: true),
+                    "world_scale":      valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: false),
                     
                     "lat":              valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
                     "lng":              valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
@@ -131,11 +135,16 @@ extension MainVC {
                         let _ = httpDl.loadFileAsync(
                             url: URL as URL, destinationUrl: destinationUrl!,
                             completion: { DispatchQueue.main.async {
-                                self.storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, originFeed: feedId )} })
+                                self.storeFeedObject(
+                                    objInfo: objData,
+                                    objFilePath: destinationUrl!,
+                                    feedId: feedId)
+                            }}
+                        )
                     }
                 } else {
                     let placeholderUrl = URL(fileURLWithPath: "")
-                    storeFeedObject(objInfo: objData, objFilePath: placeholderUrl, originFeed: feedId)
+                    storeFeedObject(objInfo: objData, objFilePath: placeholderUrl, feedId: feedId)
                 }
             } else {
                 print("ERROR: MALFORMED FEED ITEM: ")

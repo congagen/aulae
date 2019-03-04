@@ -38,6 +38,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         updateScene()
     }
     
+    @IBOutlet var contentInfoView: UIView!
+    @IBOutlet var contentInfoNameLabel: UILabel!
+    
+    
     @IBOutlet var sceneView: ARSCNView!
     
     
@@ -182,10 +186,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let rawObjectGpsCCL   = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         var nodeSize: CGFloat = 1
-        var latLongXyz        = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
+        var contentPos        = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         
         if contentObj.world_position {
-            latLongXyz = getNodeWorldPosition(baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor)
+            contentPos = getNodeWorldPosition(baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor)
         }
         if (session.first?.distanceScale)! && contentObj.world_scale {
             nodeSize = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
@@ -200,7 +204,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addObj(fPath: fPath, contentObj: contentObj)
             }
             if contentObj.type.lowercased() == "usdz" {
-                ctNode.addUSDZ(fPath: fPath, contentObj: contentObj, position: latLongXyz)
+                ctNode.addUSDZ(fPath: fPath, contentObj: contentObj)
             }
             if contentObj.type.lowercased() == "image" {
                 ctNode.addImage(fPath: fPath, contentObj: contentObj)
@@ -213,7 +217,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     
                     if (session.first?.showPlaceholders)! {
                         ctNode.addSphere(radius: 0.025 + (nodeSize * 0.01), and: UIColor(hexColor: contentObj.hex_color))
-                        addHooverAnimation(node: ctNode, distance: 1, speed: 1)
+                        addHooverAnimation(node: ctNode, distance: 0.1, speed: 1)
                     }
                     
                     let urlPath = URL(fileURLWithPath: fPath)
@@ -230,14 +234,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } else {
             if contentObj.type.lowercased() == "text" {
                 ctNode.addText(
-                    contentObj: contentObj, extrusion: CGFloat(contentObj.scale * 0.1),
+                    objText: contentObj.text, extrusion: CGFloat(contentObj.scale * 0.1),
                     fontSize: CGFloat(contentObj.scale), color: UIColor(hexColor: contentObj.hex_color)
                 )
             }
         }
         
         ctNode.scale    = SCNVector3(nodeSize, nodeSize, nodeSize)
-        ctNode.position = latLongXyz
+        ctNode.position = contentPos
+        ctNode.tagComponents(nodeTag: contentObj.uuid)
+        ctNode.name = contentObj.uuid
+        
+        // ctNode.addText(objText: contentObj.name, extrusion: 0.1, fontSize: 0.1, color: UIColor.green)
         
         if contentObj.style == 0 {
             let constraint = SCNBillboardConstraint()
@@ -293,68 +301,101 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func showNodeInfo(nodeName: String, nodeInfo: String, nodeUrl: String) {
-        let alert = UIAlertController(
-            title: nodeName,
-            message: nodeInfo,
-            preferredStyle: UIAlertController.Style.alert
-        )
-        
-        if nodeUrl != "" {
-            alert.addAction(UIAlertAction(title: "Website", style: UIAlertAction.Style.cancel, handler: nil))
+    func getRoot(for node: SCNNode) -> SCNNode? {
+        if let node = node.parent {
+            return getRoot(for: node)
         }
-        
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
-
-        alert.view.tintColor = UIColor.black
-        
-        self.present(alert, animated: true, completion: nil)
+        else {
+            return node
+        }
     }
     
     
-    
-    @objc func handleTap(rec: UITapGestureRecognizer){
+    func showSeletedNodeActions() {
         
-        if rec.state == .ended {
+        if selectedNode != nil {
+            let alert =  UIAlertController(
+                title:   "Feed: " + (selectedNode?.feedId)!,
+                message: "Object: " + (selectedNode?.title)!,
+                preferredStyle: UIAlertController.Style.alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.resetSeletion() } ))
+            alert.addAction(UIAlertAction(title: "Share Feed", style: UIAlertAction.Style.default, handler: { _ in self.resetSeletion() } ))
+            alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.cancel,  handler: { _ in self.resetSeletion() } ))
+            alert.view.tintColor = UIColor.black
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    
+    @objc func resetSeletion() {
+        for n in mainScene.rootNode.childNodes {
+            n.removeAllAnimations()
+            n.removeAllActions()
+            n.isHidden = false
+        }
+        
+        if (selectedNode != nil) {
+            selectedNode?.removeAllAnimations()
+        }
+        
+        selectedNode = nil
+    }
+    
+    
+    func highlightSelected(hideOther: Bool) {
+        
+        if hideOther {
             for n in mainScene.rootNode.childNodes {
-                n.removeAllAnimations()
-                for cn in n.childNodes {
-                    cn.removeAllActions()
-                    cn.removeAllAnimations()
+                if n != selectedNode && !(n.isKind(of: SKLightNode.self)) && !(n.isKind(of: SCNLight.self)) {
+                    n.isHidden = true
                 }
             }
-            
+        }
+        addHooverAnimation(node: selectedNode!, distance: 0.2, speed: 3)
+
+    }
+    
+    
+    @objc func handleTap(rec: UITapGestureRecognizer){
+        contentInfoView.isHidden = true
+        
+        for n in mainScene.rootNode.childNodes {
+            n.removeAllAnimations()
+            n.removeAllActions()
+            n.isHidden = false
+        }
+        
+        if (selectedNode != nil) {
+            selectedNode?.removeAllAnimations()
+        }
+
+        if rec.state == .ended {
+
             let location: CGPoint = rec.location(in: sceneView)
             let hits = self.sceneView.hitTest(location, options: nil)
-            
+   
             if let tappedNode = hits.first?.node {
-                if tappedNode.name != nil {
-                    print(tappedNode.name!)
-                }
+                let matchingObjs = feedObjects.filter({$0.uuid == tappedNode.name})
                 
-                if (tappedNode.parent!.isKind(of: ContentNode.self)) {
+                if matchingObjs.count > 0 {
+                    let sNodes = mainScene.rootNode.childNodes.filter( {$0.name == matchingObjs.first?.uuid} )
                     
-                    print("tappednode.isKind")
+                    for sn in sNodes {
+                        if (sn.isKind(of: ContentNode.self)) {
+                            
+                            if selectedNode == (sNodes.first as! ContentNode) {
+                                showSeletedNodeActions()
+                            } else {
+                                selectedNode = (sNodes.first as! ContentNode)
+                                highlightSelected(hideOther: true)
+                            }
+                        }
+                    }
                 }
-                
-                if (tappedNode.parent!.isKind(of: ContentNode.self)) {
-                    selectedNode = (tappedNode.parent! as! ContentNode)
-                    
-                    print(selectedNode!.name!)
-                    print(selectedNode!.feedId)
-                    
-                    print(selectedNode?.childNodes.count)
-                    
-//                    showNodeInfo(
-//                        nodeName: (selectedNode?.name)!,
-//                        nodeInfo: (selectedNode?.feedId)!,
-//                        nodeUrl:  (selectedNode?.feedId)!
-//                    )
-                    
-                    addHooverAnimation(node: tappedNode, distance: 0.1, speed: 3)
-                }
-
+            
             }
         }
         
@@ -471,8 +512,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         // Enable HDR camera settings for the most realistic appearance
         // with environmental lighting and physically based materials.
         camera.wantsHDR = true
-//        camera.exposureOffset = -1
-//        camera.minimumExposure = -1
+        camera.exposureOffset = -1
+        camera.minimumExposure = 0
 //        camera.maximumExposure = 3
     }
     
@@ -480,6 +521,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewDidLoad() {
         print("viewDidLoad")
         loadingView.isHidden = false
+        contentInfoView.isHidden = true
 
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
@@ -503,6 +545,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
+        contentInfoView.isHidden = true
         loadingView.isHidden = false
     }
     

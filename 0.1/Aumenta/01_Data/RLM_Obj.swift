@@ -6,12 +6,12 @@ class RLM_Obj: Object {
     @objc dynamic var name:     String = ""
     @objc dynamic var id:       String = ""
     @objc dynamic var feedId:   String = ""
-    @objc dynamic var contentUrl:   String = ""
-    
+    @objc dynamic var uuid:     String = ""
+
+    @objc dynamic var contentUrl: String = ""
+
     @objc dynamic var version:  Int = 0
     @objc dynamic var info:     String = ""
-    
-    @objc dynamic var url:      String  = ""
     
     @objc dynamic var type:     String = ""
     @objc dynamic var style:    Int = 0
@@ -30,7 +30,7 @@ class RLM_Obj: Object {
     @objc dynamic var scale:    Double = 1.0
     
     @objc dynamic var world_position: Bool = true
-    @objc dynamic var world_scale: Bool = true
+    @objc dynamic var world_scale: Bool = false
 
     @objc dynamic var lat:      Double = 0
     @objc dynamic var lng:      Double = 0

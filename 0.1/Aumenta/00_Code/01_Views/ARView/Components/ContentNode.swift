@@ -10,7 +10,6 @@ class ContentNode: SCNNode {
     let title: String
     let feedId: String
     var anchor: ARAnchor?
-    var audioSource: SCNAudioSource!
     var location: CLLocation!
     
     
@@ -34,11 +33,10 @@ class ContentNode: SCNNode {
         
         guard let src = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
         let frameCount = CGImageSourceGetCount(src)
-        
         var time : Float = 0
-        
         var framesArray = [AnyObject]()
         var tempTimesArray = [NSNumber]()
+        
         
         for i in 0..<frameCount {
             
@@ -92,6 +90,25 @@ class ContentNode: SCNNode {
     }
     
     
+    func tagComponents(nodeTag: String)  {
+        for n in self.childNodes {
+            n.name = nodeTag
+            
+            for cn in n.childNodes {
+                cn.name = nodeTag
+                
+                for ccn in cn.childNodes {
+                    ccn.name = nodeTag
+                    
+                    for cccn in ccn.childNodes {
+                        cccn.name = nodeTag
+                    }
+                }
+            }
+        }
+    }
+    
+    
     func createSphereNode(with radius: CGFloat, color: UIColor) -> SCNNode {
         let geometry = SCNSphere(radius: radius)
         geometry.firstMaterial?.diffuse.contents = color
@@ -104,6 +121,7 @@ class ContentNode: SCNNode {
         let sphereNode = createSphereNode(with: radius, color: color)
         addChildNode(sphereNode)
     }
+    
     
     
     func addDebugNode(with radius: CGFloat, and color: UIColor, and text: String) {
@@ -120,12 +138,12 @@ class ContentNode: SCNNode {
     }
     
     
-    func addText(contentObj: RLM_Obj, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
+    func addText(objText: String, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
         
         var nText = "?"
         
-        if contentObj.text != "" {
-            nText = contentObj.text
+        if objText != "" {
+            nText = objText
         }
         
         let text = SCNText(string: nText, extrusionDepth: extrusion)
@@ -186,15 +204,15 @@ class ContentNode: SCNNode {
     }
     
 
-    func addUSDZ(fPath: String, contentObj: RLM_Obj, position: SCNVector3) {
+    func addUSDZ(fPath: String, contentObj: RLM_Obj) {
         
         let urlPath = URL(fileURLWithPath: fPath)
         
         if let objScene = SCNSceneSource(url: urlPath, options: nil) {
             do {
                 let node: SCNNode = try objScene.scene().rootNode.clone()
-                let s:Float = Float(0.1 * contentObj.scale)
-                node.scale = SCNVector3(x: s, y: s, z: s)
+                let s: Float      = Float(0.1 * contentObj.scale)
+                node.scale        = SCNVector3(x: s, y: s, z: s)
                 addChildNode(node)
             } catch {
                 print(error)
@@ -219,7 +237,7 @@ class ContentNode: SCNNode {
     
     
     func addGif(fPath: String, contentObj: RLM_Obj) {
-        let gifPlane = SCNPlane(width: 0.5, height: 0.5)
+        let gifPlane = SCNPlane(width: CGFloat(contentObj.scale), height: CGFloat(contentObj.scale))
        
         let layer = CALayer()
         layer.bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
