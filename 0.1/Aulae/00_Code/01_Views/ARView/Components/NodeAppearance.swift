@@ -57,7 +57,7 @@ extension ARViewer {
         } else {
             zPos = Double(Double(translationSCNV.z) / scaleDivider) + baseOffset
         }
-        
+                
         return SCNVector3(xPos, contentObj.alt, zPos)
     }
     

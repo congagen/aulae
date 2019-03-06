@@ -21,7 +21,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     var audioSource: SCNAudioSource!
     
-    var trackingState = 0
+    var trackingState = 3
     var contentZoom: Double = 1
     var updateTimer = Timer()
     var audioListener: SCNNode? { return mainScene.rootNode }
@@ -138,12 +138,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let rawDeviceGpsCCL   = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let rawObjectGpsCCL   = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var nodeSize: CGFloat = 1
-        var contentPos        = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         
+        var contentPos        = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         if contentObj.world_position {
             contentPos = getNodeWorldPosition(baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor)
         }
+        
+        var nodeSize: CGFloat = CGFloat(1 * contentObj.scale)
         if (session.first?.distanceScale)! && contentObj.world_scale {
             nodeSize = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
         }
@@ -182,12 +183,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        if contentObj.mode == "free" {
-            
-        }
-        
         ctNode.scale    = SCNVector3(nodeSize, nodeSize, nodeSize)
-        ctNode.position = contentPos
+        let yH = ctNode.boundingBox.max.y * 0.5
+        ctNode.position = SCNVector3(contentPos.x, (contentPos.y-yH), contentPos.z)
         ctNode.tagComponents(nodeTag: contentObj.uuid)
         ctNode.name = contentObj.uuid
         
@@ -381,7 +379,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    
     func initScene() {
         print("initScene")
         loadingView.isHidden = trackingState == 0
@@ -431,7 +428,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewDidLoad() {
         print("viewDidLoad")
-        loadingView.isHidden = trackingState == 0
+        loadingView.isHidden = false
 
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
@@ -445,7 +442,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
-        loadingView.isHidden = trackingState == 0
+        loadingView.isHidden = false
 
         contentZoom = 0
         initScene()

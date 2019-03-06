@@ -21,17 +21,21 @@ extension MainVC {
                 rlmObj.feedId     = feedId
                 rlmObj.contentUrl = objInfo["url"] as! String
                 rlmObj.uuid       = objInfo["uuid"] as! String
+                
+                rlmObj.instance   = objInfo["instance"] as! Bool
 
                 rlmObj.name       = objInfo["name"] as! String
                 rlmObj.info       = objInfo["info"] as! String
                 rlmObj.filePath   = objFilePath.absoluteString
                 
-                // rlmObj.contentLink = objInfo["content_link"] as! String
                 rlmObj.contentLink = objInfo["content_link"] as! String
                 
                 rlmObj.text       = objInfo["text"] as! String
                 rlmObj.world_position = objInfo["world_position"] as! Bool
+                
                 rlmObj.world_scale = objInfo["world_scale"] as! Bool
+                rlmObj.scale      = objInfo["scale"] as! Double
+
                 rlmObj.type       = objInfo["type"] as! String
                 rlmObj.style      = objInfo["style"] as! Int
                 rlmObj.hex_color  = objInfo["hex_color"] as! String
@@ -44,8 +48,6 @@ extension MainVC {
                 rlmObj.y_pos      = objInfo["y_pos"] as! Double
                 rlmObj.z_pos      = objInfo["y_pos"] as! Double
 
-                rlmObj.scale      = objInfo["scale"] as! Double
-                
                 realm.add(rlmObj)
             }
         } catch {
@@ -91,32 +93,33 @@ extension MainVC {
             let valid = validateObj(keyList: validObjectJsonKeys, dict: feedContent)
             let objUid = UUID().uuidString
             
-        
             // TODO: updated_utx
             if valid {
                 
                 let objData: [String : Any] = [
-                    "name":             feedContent["name"] as! String,
+                    "name":             feedContent["name"]    as! String,
                     "version":          feedContent["version"] as! Int,
-
+                    "type":             feedContent["type"]    as! String,
+                    "id":               feedContent["id"]      as! String,
                     "uuid":             objUid,
-                    "id":               feedContent["id"]   as! String,
                     "feed_id":          feedId,
                     
-                    "type":             feedContent["type"]  as! String,
                     "style":            valueIfPresent(dict: feedContent, key: "style", placeHolderValue:  1) as! Int,
                     "mode":             valueIfPresent(dict: feedContent, key: "mode", placeHolderValue:   "free"),
-                    "hex_color":        valueIfPresent(dict: feedContent, key: "hex_color", placeHolderValue: "7259ff"),
+                    "hex_color":        valueIfPresent(dict: feedContent, key: "hex_color", placeHolderValue: "717271"),
 
                     "url":              valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
                     "content_link":     valueIfPresent(dict: feedContent, key: "content_link", placeHolderValue: ""),
 
                     "info":             valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
                     "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
-                    
-                    "world_position":   valueIfPresent(dict: feedContent, key: "world_position", placeHolderValue: true),
+                    "instance":         valueIfPresent(dict: feedContent, key: "instance", placeHolderValue: false),
+
                     "world_scale":      valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: true),
-                    
+                    "scale":            valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0),
+
+                    "world_position":   valueIfPresent(dict: feedContent, key: "world_position", placeHolderValue: true),
+
                     "lat":              valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
                     "lng":              valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
                     "alt":              valueIfPresent(dict: feedContent, key: "alt",    placeHolderValue: 0.0),
@@ -125,14 +128,13 @@ extension MainVC {
                     "y_pos":            valueIfPresent(dict: feedContent, key: "y_pos",  placeHolderValue: 0.0),
                     "z_pos":            valueIfPresent(dict: feedContent, key: "z_pos",  placeHolderValue: 0.0),
 
-                    "radius":           valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0),
-                    "scale":            valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0)
+                    "radius":           valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0)
                 ]
                 
                 if feedContent.keys.contains("url") {
-                    let contentUrl = feedContent["url"] as! String
-                    let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-                    let fileName = (URL(string: contentUrl)?.lastPathComponent)!
+                    let contentUrl     = feedContent["url"] as! String
+                    let documentsUrl   = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                    let fileName       = (URL(string: contentUrl)?.lastPathComponent)!
                     let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                     
                     if let URL = URL(string: contentUrl) {
@@ -258,8 +260,8 @@ extension MainVC {
             }
             
             print("Time Since Update: " + String(timeSinceUpdate))
-            print(String(fe.id) + " " + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
-            print("FeedObjectCount: " + String(feedObjects.count))
+            print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
+            print("FeedObjectCount: "   + String(feedObjects.count))
             
             if fe.active && !fe.deleted {
                 let fileName = fe.id + ".json"
@@ -272,9 +274,7 @@ extension MainVC {
                             url: URL as URL,
                             destinationUrl: destinationUrl!,
                             completion: {
-                                DispatchQueue.main.async {
-                                    self.updateFeed(fileUrl: destinationUrl!, feedDbItem: fe)
-                                }
+                                DispatchQueue.main.async { self.updateFeed(fileUrl: destinationUrl!, feedDbItem: fe) }
                         })
                     }
                 }

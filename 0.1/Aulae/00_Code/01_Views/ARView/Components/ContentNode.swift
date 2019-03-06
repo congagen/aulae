@@ -174,7 +174,14 @@ class ContentNode: SCNNode {
         if let objScene = SCNSceneSource(url: urlPath, options: nil) {
             do {
                 let node: SCNNode = try objScene.scene().rootNode.clone()
+                let objMtl = SCNMaterial()
+                objMtl.isDoubleSided = true
+                node.geometry?.firstMaterial?.diffuse.contents = UIColor(hexColor: contentObj.hex_color)
 
+                objMtl.lightingModel = .constant
+                
+                node.geometry?.materials = [objMtl]
+                
                 addChildNode(node)
             } catch {
                 print(error)
@@ -251,8 +258,12 @@ class ContentNode: SCNNode {
         let gifMaterial = SCNMaterial()
         gifMaterial.isDoubleSided = true
         gifMaterial.diffuse.contents = layer
+        gifMaterial.lightingModel = .constant
+        
+        //gifMaterial.blendMode = .subtract
         
         gifPlane.materials = [gifMaterial]
+        
         let node = SCNNode(geometry: gifPlane)
         node.name = contentObj.name
         

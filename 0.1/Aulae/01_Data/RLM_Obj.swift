@@ -14,6 +14,7 @@ class RLM_Obj: Object {
     @objc dynamic var version:  Int = 0
     @objc dynamic var info:     String = ""
     
+    @objc dynamic var instance: Bool = false
     @objc dynamic var type:     String = ""
     @objc dynamic var style:    Int = 0
     @objc dynamic var mode:     String = "free"

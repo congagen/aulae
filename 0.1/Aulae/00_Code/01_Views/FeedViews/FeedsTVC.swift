@@ -98,7 +98,11 @@ class FeedsTVC: UITableViewController {
             cell.textLabel?.text = "Untitled #" + String(indexPath.item)
         }
         
-        cell.detailTextLabel?.text = "Source: " + String(feed.url)
+        if feed.info == "" {
+            cell.detailTextLabel?.text = String(feed.url)
+        } else {
+            cell.detailTextLabel?.text = feed.info
+        }
 
         cell.restorationIdentifier = feed.id
         cell.backgroundColor = UIColor.clear
