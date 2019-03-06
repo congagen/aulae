@@ -178,12 +178,12 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
                     ano.coordinate = CLLocationCoordinate2D(latitude: fo.lat, longitude: fo.lng)
                     
                     ano.aType = fo.type
-
                     ano.id = fo.id
                     ano.name = fo.name
                     
                     if objFeed.count > 0 {
-                        ano.title = (objFeed.first?.name)! + " - " + fo.name
+                        ano.title = (objFeed.first?.name)!
+                        ano.subtitle = fo.name
                     } else {
                         ano.title = fo.name
                     }
@@ -229,6 +229,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     }
     
     
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
             return nil
@@ -246,6 +247,32 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         pinView?.image = UIImage(named: "pin_ds")
         pinView?.canShowCallout = true
+        
+        if let o:MapAno = annotation as? MapAno {
+            let fo = feedObjects.filter( {$0.id == o.id } )
+            if fo.count > 0 {
+                let subtitleLabel = UILabel()
+                
+                if fo.first?.name != "" {
+                    subtitleLabel.text = fo.first?.name
+                    subtitleLabel.numberOfLines = 0
+                    subtitleLabel.font = UIFont.systemFont(ofSize: 12)
+                    subtitleLabel.textColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0.5)
+                    subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+                    pinView!.detailCalloutAccessoryView = subtitleLabel
+                }
+                
+//                if fo.first?.contentLink != "" {
+//                    if let url = NSURL(string: (fo.first?.contentLink)!) {
+//                        let b = UIButton(type: .detailDisclosure)
+//                        b.addTarget(self, action:#selector(blablo(sender:)), for: .touchUpInside)
+//
+//                        pinView?.rightCalloutAccessoryView  = b
+//                        pinView?.rightCalloutAccessoryView?.tintColor = UIColor.black                    }
+//                }
+                
+            }
+        }
         
         return pinView
     }

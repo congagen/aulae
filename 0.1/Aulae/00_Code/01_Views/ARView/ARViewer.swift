@@ -169,7 +169,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
                 if (session.first?.showPlaceholders)! && !(session.first?.muteAudio)!{
                     ctNode.addSphere(radius: 0.05 + (nodeSize * 0.01), and: UIColor(hexColor: contentObj.hex_color))
-                    addHooverAnimation(node: ctNode, distance: 1, speed: 1)
+                    
                 }
                 addAudio(contentObj: contentObj, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize)
             }
@@ -222,32 +222,41 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         mainScene.rootNode.removeAllAudioPlayers()
         
         for o in activeInRange {
-            print("Obj in range: " + o.name)
+            let objFeeds = feeds.filter({$0.id == o.feedId})
             
-            if o.filePath != "" && o.type.lowercased() != "text" {
-                let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-                let fileName = (URL(string: o.filePath)?.lastPathComponent)!
-                let destinationUrl = documentsUrl.appendingPathComponent(fileName)
-                
-                print("UpdateScene: activeInRange: " + String(o.id))
-                
-                if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
-                    print("FileManager.default.fileExists")
-                    addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: (session.first?.scaleFactor)! )
-                } else {
-                    // TODO: Increment Feed Error Count -> [If VAL > THRESH] -> feed.active = false
-                    print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
+            if objFeeds.count > 0 {
+                if (objFeeds.first?.active)! {
+                    print("Obj in range: " + o.name)
+                    if o.filePath != "" && o.type.lowercased() != "text" {
+                        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                        let fileName = (URL(string: o.filePath)?.lastPathComponent)!
+                        let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+                        
+                        print("UpdateScene: activeInRange: " + String(o.id))
+                        
+                        if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
+                            print("FileManager.default.fileExists")
+                            addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: (session.first?.scaleFactor)! )
+                        } else {
+                            // TODO: Retry Download?
+                            // TODO: Increment Feed Error Count?
+                            print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
+                        }
+                    } else {
+                        if (o.type.lowercased() == "text") {
+                            addContentToScene(contentObj: o, fPath:"", scaleFactor: (session.first?.scaleFactor)! )
+                        }
+                    }
                 }
             } else {
-                if (o.type.lowercased() == "text") {
-                    addContentToScene(contentObj: o, fPath:"", scaleFactor: (session.first?.scaleFactor)! )
-                }
+                loadingViewLabel.text = "No active content found, activate or add sources"
+                loadingView.isHidden = trackingState == 0
             }
         }
     }
 
     
-    @objc func handleTap(rec: UITapGestureRecognizer){
+    @objc func handleTap(rec: UITapGestureRecognizer) {
         print("handleTap")
         
         for n in mainScene.rootNode.childNodes {
@@ -337,34 +346,37 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         var message: String = ""
+        trackingState = 2
+
         
         switch camera.trackingState {
         case .notAvailable:
-            message = "Tracking error, try reloading the scene"
+            message = "Localizing..."
             trackingState = 2
-            loadingView.isHidden = false
+            
         case .normal:
-            message = ""
+            message = "Lodaing..."
             trackingState = 0
-            loadingView.isHidden = true
+            
         case .limited(.excessiveMotion):
             message = "Try slowing down your movement"
-            trackingState = 1
-            loadingView.isHidden = false
+            trackingState = 0
+            
         case .limited(.insufficientFeatures):
-            trackingState = 1
             message = "Try pointing at a flat surface or reloading the scene"
+            trackingState = 1
+            
         case .limited(.initializing):
             trackingState = 1
             message = "Initializing..."
-            loadingView.isHidden = true
+            
         case .limited(.relocalizing):
             trackingState = 2
             message = "Localizing..."
         }
 
         loadingViewLabel.text = message
-        loadingView.isHidden = message == "" || message == "Initializing..."
+        loadingView.isHidden  = trackingState == 0
 
     }
     
@@ -372,7 +384,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func initScene() {
         print("initScene")
-        loadingView.isHidden = false
+        loadingView.isHidden = trackingState == 0
         
         if (session.first?.muteAudio)! {
             muteBarButton.image = UIImage(named: "mute_btn_a")
@@ -395,10 +407,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
-//        configuration.maximumNumberOfTrackedImages = 99
-//        configuration.environmentTexturing = .automatic
 
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        sceneView.antialiasingMode = .none
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         sceneView.addGestureRecognizer(tapGestureRecognizer)
@@ -410,18 +421,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         guard let camera = sceneView.pointOfView?.camera else {
             fatalError("Expected a valid `pointOfView` from the scene.")
         }
-        // Enable HDR camera settings for the most realistic appearance
-        // with environmental lighting and physically based materials.
+        // Enable HDR camera settings for the most realistic appearance with environmental lighting and physically based materials.
         camera.wantsHDR = true
         //camera.exposureOffset  = 0
-        camera.minimumExposure = 0
-        camera.maximumExposure = 1
+//        camera.minimumExposure = 0
+//        camera.maximumExposure = 1
     }
     
     
     override func viewDidLoad() {
         print("viewDidLoad")
-        loadingView.isHidden = false
+        loadingView.isHidden = trackingState == 0
 
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
@@ -435,7 +445,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
-        loadingView.isHidden = false
+        loadingView.isHidden = trackingState == 0
 
         contentZoom = 0
         initScene()
@@ -445,15 +455,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
-        loadingView.isHidden = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
         refreshAudionodes(mute: true)
-        
-        loadingView.isHidden = false
     }
     
     

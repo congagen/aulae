@@ -77,7 +77,9 @@ extension ARViewer {
                 }
             }
             
-            alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.cancel,  handler: { _ in self.resetSeletion() } ))
+            alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.default,  handler: { _ in self.resetSeletion() } ))
+            
+            
             alert.view.tintColor = UIColor.black
             
             self.present(alert, animated: true, completion: nil)
@@ -110,7 +112,7 @@ extension ARViewer {
             }
         }
         
-        addHooverAnimation(node: selectedNode!, distance: 0.2, speed: 3)
+        
     }
     
     

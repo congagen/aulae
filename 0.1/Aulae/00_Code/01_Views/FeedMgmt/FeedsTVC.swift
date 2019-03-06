@@ -24,7 +24,7 @@ class FeedsTVC: UITableViewController {
     
     let rowHeightRatio = 0.1
     let activeColor    = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 1)
-    let nonActiveColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+    let nonActiveColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.5)
     
     var textField: UITextField? = nil
     var selected: RLM_Feed? = nil
@@ -92,7 +92,12 @@ class FeedsTVC: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let feed = feeds[section]
         
-        cell.textLabel?.text = String(feed.name)
+        if feed.name != "" {
+            cell.textLabel?.text = String(feed.name)
+        } else {
+            cell.textLabel?.text = "Untitled #" + String(indexPath.item)
+        }
+        
         cell.detailTextLabel?.text = "Source: " + String(feed.url)
 
         cell.restorationIdentifier = feed.id
@@ -234,17 +239,22 @@ class FeedsTVC: UITableViewController {
         }
         shareAction.backgroundColor = UIColor.black
         
-        let renameAction = UITableViewRowAction(style: .normal, title: "Rename") { (rowAction, indexPath) in
+//        let renameAction = UITableViewRowAction(style: .normal, title: "Rename") { (rowAction, indexPath) in
+//            self.showRenameAlert(aMessage: self.selected?.name)
+//        }
+//        renameAction.backgroundColor = UIColor.black
+        
+        let visitSourceLink = UITableViewRowAction(style: .normal, title: "WWW") { (rowAction, indexPath) in
             self.showRenameAlert(aMessage: self.selected?.name)
         }
-        renameAction.backgroundColor = UIColor.black
+        visitSourceLink.backgroundColor = UIColor.black
         
         let deleteAction = UITableViewRowAction(style: .normal, title: "Delete") { (rowAction, indexPath) in
             self.removeFeed(indexP: indexPath)
         }
         deleteAction.backgroundColor = UIColor.black
         
-        return [shareAction, renameAction, deleteAction]
+        return [shareAction, deleteAction]
     }
 
     

@@ -10,14 +10,16 @@ class MapAno: NSObject, MKAnnotation {
     var id: String = ""
     var aType: String = ""
     var title: String? = ""
-    
+    var subtitle: String? = ""
+
     override init() {
         self.coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         self.name = ""
         self.id = ""
         self.aType = "object"
-        self.title = ""
-        
+        self.title = "?"
+        self.subtitle = "?"
+
         super.init()
     }
 }
