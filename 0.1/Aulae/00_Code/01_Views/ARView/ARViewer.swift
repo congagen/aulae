@@ -37,7 +37,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
         initScene()
-        updateScene()
+        refreshScene()
     }
     
     @IBOutlet var sceneView: ARSCNView!
@@ -61,7 +61,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         refreshAudionodes(mute: !(session.first?.muteAudio)!)
         
         if (session.first?.muteAudio)! {
-            updateScene()
+            refreshScene()
         }
     }
 
@@ -124,7 +124,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } else {
             muteBarButton.image = UIImage(named: "mute_btn_b")
             
-            updateScene()
+            refreshScene()
         }
         
     }
@@ -199,31 +199,31 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func updateScene() {
+    func refreshScene() {
         print("Update Scene")
         
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let range = (session.first?.searchRadius)!
         
         // TODO: Get search range
-        let objsInRange   = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
-        let activeInRange = objsInRange.filter({$0.active && !$0.deleted})
+        let objsInRange          = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
+        let activeObjectsInRange = objsInRange.filter({$0.active && !$0.deleted})
         
         for n in mainScene.rootNode.childNodes {
-            if !n.isKind(of: SKLightNode.self) && !n.isKind(of: ARCamera.self) && !n.isKind(of: SCNAudioPlayer.self) {
-                n.removeAllActions()
-                n.removeAllAnimations()
+            if n.isKind(of: ContentNode.self) {
                 n.removeFromParentNode()
             }
         }
         
         mainScene.rootNode.removeAllAudioPlayers()
         
-        for o in activeInRange {
+        for o in activeObjectsInRange {
             let objFeeds = feeds.filter({$0.id == o.feedId})
             
             if objFeeds.count > 0 {
-                if (objFeeds.first?.active)! {
+                let objFeed = objFeeds.first
+                
+                if (objFeed?.active)! {
                     print("Obj in range: " + o.name)
                     if o.filePath != "" && o.type.lowercased() != "text" {
                         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
@@ -246,9 +246,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         }
                     }
                 }
-            } else {
-                loadingViewLabel.text = "No active content found, activate or add sources"
-                loadingView.isHidden = trackingState == 0
             }
         }
     }
@@ -294,7 +291,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 if (selectedNode != nil) {
                     selectedNode?.position.y = selectedNodeY
                     selectedNodeY = 0
-                    selectedNode?.removeAllAnimations()
                 }
                 
                 selectedNode = nil
@@ -332,13 +328,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
             if !updateTimer.isValid {
                 updateTimer = Timer.scheduledTimer(
-                    timeInterval: session.first!.feedUpdateInterval,
-                    target: self, selector: #selector(mainTimerUpdate),
-                    userInfo: nil, repeats: true)
+                    timeInterval: session.first!.feedUpdateInterval, target: self, selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
             }
         }
         
-        updateScene()
+        refreshScene()
     }
     
     
@@ -381,11 +375,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func initScene() {
         print("initScene")
-        loadingView.isHidden = trackingState == 0
+        loadingViewLabel.text = "Loading..."
+        loadingView.isHidden = false
         
         if (session.first?.muteAudio)! {
-            muteBarButton.image = UIImage(named: "mute_btn_a")
             refreshAudionodes(mute: true)
+            muteBarButton.image = UIImage(named: "mute_btn_a")
         } else {
             muteBarButton.image = UIImage(named: "mute_btn_b")
         }
@@ -421,8 +416,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         // Enable HDR camera settings for the most realistic appearance with environmental lighting and physically based materials.
         camera.wantsHDR = true
         //camera.exposureOffset  = 0
-//        camera.minimumExposure = 0
-//        camera.maximumExposure = 1
+        camera.minimumExposure = 0
+        camera.maximumExposure = 1
     }
     
     
@@ -446,7 +441,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         contentZoom = 0
         initScene()
-        updateScene()
+        refreshScene()
     }
     
     
@@ -478,82 +473,3 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
 }
-
-
-
-
-
-//                if objectDistance < audioRangeRadius {
-//                    let dupli = mainScene.rootNode.audioPlayers.filter( {$0.accessibilityLabel == contentObj.id} )
-//
-//                    if dupli.count != 0 {
-//                        for d in dupli {
-//                            mainScene.rootNode.removeAudioPlayer(d)
-//                        }
-//                    }
-//
-//                    let asrc = SCNAudioSource(url: URL(fileURLWithPath: fPath))
-//                    asrc!.loops = true
-//                    asrc?.isPositional = true
-//                    asrc?.volume = Float(1.0 / objectDistance)
-//                    asrc!.load()
-//                    let player = SCNAudioPlayer(source: asrc!)
-//                    player.accessibilityLabel = contentObj.id
-//                    mainScene.rootNode.addAudioPlayer(player)
-//
-//                } else {
-//                    print("Audiosource outside listener scope")
-//                }
-
-
-
-
-
-
-//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-//        let currentTransform = frame.camera.transform
-//        print(currentTransform)
-//    }
-
-
-//    func worldUpdate(anchors: [ARAnchor]) {
-//
-//        for a in anchors {
-//            if let planeAnchor = a as? ARPlaneAnchor {
-//            }
-//
-//            if let wallAnchor = a as? ARObjectAnchor {
-//            }
-//        }
-//
-//    }
-
-//    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-//        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-//        let width = CGFloat(planeAnchor.extent.x)
-//        let height = CGFloat(planeAnchor.extent.z)
-//        let plane = SCNPlane(width: width, height: height)
-//
-//        plane.materials.first?.diffuse.contents = UIColor.green
-//
-//        let planeNode = SCNNode(geometry: plane)
-//        let x = CGFloat(planeAnchor.center.x)
-//        let y = CGFloat(planeAnchor.center.y)
-//        let z = CGFloat(planeAnchor.center.z)
-//
-//        planeNode.position = SCNVector3(x,y,z)
-//        planeNode.eulerAngles.x = -.pi / 2
-//
-//        currentPlanes?.append(planeNode)
-//        node.addChildNode(planeNode)
-//    }
-//
-//
-//    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-//        worldUpdate(anchors: anchors)
-//    }
-//
-//
-//    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-//        worldUpdate(anchors: anchors)
-//    }

@@ -7,9 +7,24 @@
 //
 
 import Foundation
+import CoreLocation
+import Realm
+import RealmSwift
 
-extension MainVC {
 
+//extension MainVC {
+
+class FeedMgmt {
+    
+    lazy var realm = try! Realm()
+    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    let validObjectJsonKeys = ["name", "id", "version", "type"]
+    
+    let httpDl = HttpDownloader()
+    
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
         print("storeFeedObject")
         
@@ -84,16 +99,15 @@ extension MainVC {
     }
     
     
-    func updateFeedObjects(feedList: Dictionary<String, AnyObject>, feedId: String) {
+    func updateFeedObjects(feedSpec: Dictionary<String, AnyObject>, feedId: String, feedDbItem: RLM_Feed) {
         print("! updateFeedObjects !")
         
-        for k in (feedList["content"]?.allKeys)! {
+        for k in (feedSpec["content"]?.allKeys)! {
             
-            let feedContent = feedList["content"]![k] as! Dictionary<String, AnyObject>
+            let feedContent = feedSpec["content"]![k] as! Dictionary<String, AnyObject>
             let valid = validateObj(keyList: validObjectJsonKeys, dict: feedContent)
             let objUid = UUID().uuidString
             
-            // TODO: updated_utx
             if valid {
                 
                 let objData: [String : Any] = [
@@ -152,6 +166,15 @@ extension MainVC {
                     let placeholderUrl = URL(fileURLWithPath: "")
                     storeFeedObject(objInfo: objData, objFilePath: placeholderUrl, feedId: feedId)
                 }
+                
+                do {
+                    try realm.write {
+                        feedDbItem.updatedUtx = Int(Date().timeIntervalSince1970)
+                    }
+                } catch {
+                    print("Error: \(error)")
+                }
+                
             } else {
                 print("ERROR: MALFORMED FEED ITEM: ")
                 print((feedContent))
@@ -168,9 +191,9 @@ extension MainVC {
         let valid = validateObj(keyList: vKeys, dict: feedSpec)
         
         if valid {
-            let sID: String = feedSpec["id"] as! String
-            let sName: String = feedSpec["name"] as! String
-            let sVersion: Int = feedSpec["version"] as! Int
+            let sID: String       = feedSpec["id"] as! String
+            let sName: String     = feedSpec["name"] as! String
+            let sVersion: Int     = feedSpec["version"] as! Int
             let sUpdated_utx: Int = feedSpec["updated_utx"] as! Int
             
             let sInfo: String = valueIfPresent(dict: feedSpec, key: "info", placeHolderValue: "") as! String
@@ -180,11 +203,11 @@ extension MainVC {
 
             do {
                 try realm.write {
-                    feedDbItem.id = sID
-                    feedDbItem.name = sName
-                    feedDbItem.info = sInfo
-                    feedDbItem.version = sVersion
-                    feedDbItem.updatedUtx = (sUpdated_utx)
+                    feedDbItem.id         = sID
+                    feedDbItem.name       = sName
+                    feedDbItem.info       = sInfo
+                    feedDbItem.version    = sVersion
+                    feedDbItem.updatedUtx = sUpdated_utx
                 }
             } catch {
                 print("Error: \(error)")
@@ -215,12 +238,12 @@ extension MainVC {
                     if jsonResult.keys.contains("version") {
                         if jsonResult["version"] as! Int != feedDbItem.version {
                             updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
-                            updateFeedObjects(feedList: jsonResult, feedId: feedDbItem.id)
+                            updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
                         }
                     } else {
                         feedDbItem.errors += 1
                         updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
-                        updateFeedObjects(feedList: jsonResult, feedId: feedDbItem.id)
+                        updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
                         
                         print("Error: updateFeed: Missing version key")
                         // TODO: Increment error count?

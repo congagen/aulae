@@ -248,8 +248,9 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         pinView?.image = UIImage(named: "pin_ds")
         pinView?.canShowCallout = true
         
-        if let o:MapAno = annotation as? MapAno {
+        if let o: MapAno = annotation as? MapAno {
             let fo = feedObjects.filter( {$0.id == o.id } )
+            
             if fo.count > 0 {
                 let subtitleLabel = UILabel()
                 
@@ -261,16 +262,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
                     subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
                     pinView!.detailCalloutAccessoryView = subtitleLabel
                 }
-                
-//                if fo.first?.contentLink != "" {
-//                    if let url = NSURL(string: (fo.first?.contentLink)!) {
-//                        let b = UIButton(type: .detailDisclosure)
-//                        b.addTarget(self, action:#selector(blablo(sender:)), for: .touchUpInside)
-//
-//                        pinView?.rightCalloutAccessoryView  = b
-//                        pinView?.rightCalloutAccessoryView?.tintColor = UIColor.black                    }
-//                }
-                
             }
         }
         

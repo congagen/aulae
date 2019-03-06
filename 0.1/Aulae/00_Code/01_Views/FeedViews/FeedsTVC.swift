@@ -22,6 +22,8 @@ class FeedsTVC: UITableViewController {
     var updateTimer = Timer()
     let updateInterval: Double = 10
     
+    let feedMgr = FeedMgmt()
+    
     let rowHeightRatio = 0.1
     let activeColor    = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 1)
     let nonActiveColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.5)
@@ -80,8 +82,7 @@ class FeedsTVC: UITableViewController {
             print("Error: \(error)")
         }
         
-        print("didSelectRowAt")
-        print(!feed.active)
+        feedMgr.updateFeeds()
         
         tableView.reloadData()
     }

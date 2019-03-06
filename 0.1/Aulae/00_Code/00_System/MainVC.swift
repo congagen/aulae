@@ -18,9 +18,10 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
-    let locationManager = CLLocationManager()
+    let feedMgr = FeedMgmt()
     
-    let validObjectJsonKeys = ["name", "id", "version", "type", "style"]
+    let locationManager = CLLocationManager()
+    let validObjectJsonKeys = ["name", "id", "version", "type"]
     
     var mainUpdateTimer = Timer()
     var activeDownloads: [String: String] = [:]
@@ -51,7 +52,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         }
         
         DispatchQueue.main.async {
-            self.updateFeeds()
+            self.feedMgr.updateFeeds()
         }
 
     }
