@@ -253,6 +253,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             }
         }
+        
+        loadingView.isHidden  = trackingState == 0
+
     }
 
     

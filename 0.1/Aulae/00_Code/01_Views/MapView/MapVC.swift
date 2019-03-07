@@ -160,10 +160,14 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     func updateObjectAnnotations() {
         print("updateObjectAnnotations")
         
-        let filterA = mapView.annotations.filter( {$0.isKind(of: MapAno.self)} )
-        
+        let filterA:[MapAno] = mapView.annotations.filter( {$0.isKind(of: MapAno.self)} ) as! [MapAno]
+            
         for a in filterA {
-            mapView.removeAnnotation(a)
+            // count > 0 or && (!feed.active || feed.deleted)
+            
+            if feedObjects.filter( {$0.uuid == a.id} ).count == 0 {
+                mapView.removeAnnotation(a)
+            }
         }
         
         for o in mapView.overlays {
@@ -175,21 +179,26 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
                 let objFeed = feeds.filter( {$0.id == fObj.feedId && !$0.deleted} )
                 
                 if objFeed.count > 0 {
-                    let ano = MapAno()
                     
-                    ano.coordinate = CLLocationCoordinate2D(latitude: fObj.lat, longitude: fObj.lng)
-                    ano.aType      = fObj.type
-                    ano.id         = fObj.uuid
-                    ano.name       = fObj.name
-                    
-                    ano.title    = fObj.name
-                    ano.subtitle = (objFeed.first?.name)!
-        
-                    if fObj.radius > 0 {
-                        addAnoRadius(feObj: fObj)
+                    if (objFeed.first?.active)! && !(objFeed.first?.deleted)! {
+                        let ano = MapAno()
+                        
+                        ano.coordinate = CLLocationCoordinate2D(latitude: fObj.lat, longitude: fObj.lng)
+                        ano.aType      = fObj.type
+                        ano.id         = fObj.uuid
+                        ano.name       = fObj.name
+                        ano.title      = fObj.name
+                        ano.subtitle   = (objFeed.first?.name)!
+                        
+                        if fObj.radius > 0 {
+                            addAnoRadius(feObj: fObj)
+                        }
+                        
+                        if filterA.filter({$0.id == fObj.uuid}).count == 0 {
+                            mapView.addAnnotation(ano)
+                        }
                     }
                     
-                    mapView.addAnnotation(ano)
                 }
             }
         }
@@ -254,22 +263,12 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
             let fo = feedObjects.filter( {$0.uuid == o.id } )
             
             if fo.count > 0 {
-                pinIcon.backgroundColor = UIColor(hexColor: (fo.first?.hex_color)!)
                 pinView?.addSubview(pinIcon)
-                
-                let subtitleLabel = UILabel()
-
-                if fo.first?.name != "" {
-                    subtitleLabel.text = fo.first?.name
-                    subtitleLabel.numberOfLines = 0
-                    subtitleLabel.font = UIFont.systemFont(ofSize: 12)
-                    subtitleLabel.textColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0.5)
-                    subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-                    pinView!.detailCalloutAccessoryView = subtitleLabel
-                }
             }
         }
         
+        updateSearchRadius()
+
         return pinView
     }
     
@@ -325,19 +324,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         mapView.userLocation.title = ""
         mapView.tintColor = UIColor.black
         mapView.backgroundColor = UIColor.black
-        
-//        if (session.first?.backgroundGps)! {
-//            locationManager.requestAlwaysAuthorization()
-//            locationManager.allowsBackgroundLocationUpdates = true
-//        } else {
-//            locationManager.requestWhenInUseAuthorization()
-//            locationManager.allowsBackgroundLocationUpdates = false
-//        }
-//
-//        locationManager.delegate = self
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        locationManager.startUpdatingLocation()
-
     }
 
     
@@ -367,6 +353,11 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )
+        
+        for a in mapView.annotations {
+            mapView.removeAnnotation(a)
+        }
+        
         updateObjectAnnotations()
     }
 

@@ -129,11 +129,10 @@ class FeedMgmt {
 
                     "info":             valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
                     "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
-                    "instance":         valueIfPresent(dict: feedContent, key: "instance", placeHolderValue: false),
+                    "instance":         valueIfPresent(dict: feedContent, key: "instance", placeHolderValue: true),
 
                     "scale":            valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0),
                     "world_scale":      valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: true),
-
                     "world_position":   valueIfPresent(dict: feedContent, key: "world_position", placeHolderValue: true),
 
                     "lat":              valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 10.0),
@@ -150,8 +149,12 @@ class FeedMgmt {
                 if feedContent.keys.contains("url") {
                     let contentUrl     = feedContent["url"] as! String
                     let documentsUrl   = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-                    let fileName       = (URL(string: contentUrl)?.lastPathComponent)!
+                    var fileName       = UUID().uuidString
                     let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+                    
+                    if (objData["instance"] as! Bool == true) {
+                        fileName = (URL(string: contentUrl)?.lastPathComponent)!
+                    }
                     
                     if let URL = URL(string: contentUrl) {
                         let _ = httpDl.loadFileAsync(
