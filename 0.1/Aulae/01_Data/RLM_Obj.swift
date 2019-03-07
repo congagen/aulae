@@ -28,6 +28,9 @@ class RLM_Obj: Object {
     @objc dynamic var fileName: String = ""
     @objc dynamic var filePath: String = ""
     
+    @objc dynamic var rotate:   Double = 0
+    @objc dynamic var hoover:   Bool = false
+    
     @objc dynamic var radius:   Double = 0
     @objc dynamic var scale:    Double = 1.0
     

@@ -176,11 +176,11 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         for fObj in feedObjects {
             if fObj.active && !fObj.deleted {
-                let objFeed = feeds.filter( {$0.id == fObj.feedId && !$0.deleted} )
+                let objFeeds = feeds.filter( {$0.id == fObj.feedId && !$0.deleted} )
                 
-                if objFeed.count > 0 {
+                if objFeeds.count > 0 {
                     
-                    if (objFeed.first?.active)! && !(objFeed.first?.deleted)! {
+                    if (objFeeds.first?.active)! && !(objFeeds.first?.deleted)! {
                         let ano = MapAno()
                         
                         ano.coordinate = CLLocationCoordinate2D(latitude: fObj.lat, longitude: fObj.lng)
@@ -188,7 +188,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
                         ano.id         = fObj.uuid
                         ano.name       = fObj.name
                         ano.title      = fObj.name
-                        ano.subtitle   = (objFeed.first?.name)!
+                        ano.subtitle   = (objFeeds.first?.name)!
                         
                         if fObj.radius > 0 {
                             addAnoRadius(feObj: fObj)

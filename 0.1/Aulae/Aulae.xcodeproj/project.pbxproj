@@ -100,6 +100,7 @@
 		FA482F672215ADE600D251AB /* Aumenta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Aumenta.entitlements; path = ../Aumenta.entitlements; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
+		FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aulae.entitlements; sourceTree = "<group>"; };
 		FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		FA789D202221629F009DC15F /* FeedSearchTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSearchTVC.swift; sourceTree = "<group>"; };
 		FA88CBFC222DBBD90078E48A /* NodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeActions.swift; sourceTree = "<group>"; };
@@ -170,6 +171,7 @@
 		3177251220B03AD4009FA8B1 = {
 			isa = PBXGroup;
 			children = (
+				FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */,
 				FAB2AE7922088315004D5819 /* TODO.swift */,
 				3177251D20B03AD4009FA8B1 /* 00_Code */,
 				31AB869220B356C30038F4D5 /* 01_Data */,
@@ -331,9 +333,10 @@
 			buildConfigurationList = 3177252F20B03AD6009FA8B1 /* Build configuration list for PBXNativeTarget "Aulae" */;
 			buildPhases = (
 				3177251720B03AD4009FA8B1 /* Sources */,
-				3177251820B03AD4009FA8B1 /* Frameworks */,
 				3177251920B03AD4009FA8B1 /* Resources */,
+				3177251820B03AD4009FA8B1 /* Frameworks */,
 				FA1AAC462153E9D300EE494A /* Embed Frameworks */,
+				FA6BA7CD22315EE700DB3F2A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -359,7 +362,7 @@
 						LastSwiftMigration = 1010;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -408,6 +411,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		FA6BA7CD22315EE700DB3F2A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3177251720B03AD4009FA8B1 /* Sources */ = {
@@ -588,7 +611,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Aumenta.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SRPD354G63;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -611,7 +633,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Aumenta.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SRPD354G63;
 				FRAMEWORK_SEARCH_PATHS = (

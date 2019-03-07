@@ -195,6 +195,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             ctNode.constraints = [constraint]
         }
         
+        if contentObj.rotate > 0 {
+            rotateAnimation(node: ctNode, xAmt: 0, yAmt: 360, zAmt: 0, speed: contentObj.rotate)
+        }
+        
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
     
