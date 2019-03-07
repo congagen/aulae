@@ -128,12 +128,46 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     }
     
     
+    func buildDemo() {
+        let demoFeed = RLM_Feed()
+        
+        demoFeed.url  = ""
+        demoFeed.id   = UUID().uuidString
+        demoFeed.name = "Demo Guide"
+        
+        do {
+            try realm.write {
+                self.realm.add(demoFeed)
+                
+                for i in 1...16 {
+                    let o = RLM_Obj()
+                    o.feedId = demoFeed.id
+                    o.contentUrl = ""
+                    o.active = true
+                    o.world_position = false
+                    
+                    o.type  = "text"
+                    o.text  = "Hello!"
+                    o.x_pos = sin( ((Double.pi / 8.0) * Double(i)) ) * 8
+                    o.y_pos = 0
+                    o.z_pos = cos( ((Double.pi / 8.0) * Double(i)) ) * 8
+                    
+                    self.realm.add(o)
+                }
+                
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+    }
+    
+    
     func initSession() {
         dbGc()
         
         if session.count < 1 {
             let sess = RLM_Session()
-            
             do {
                 try realm.write {
                     self.realm.add(sess)
@@ -141,11 +175,14 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             } catch {
                 print("Error: \(error)")
             }
+            
+            buildDemo()
         }
         
         resetErrCounts()
         mainUpdate()
         initLocation()
+        
     }
 
     

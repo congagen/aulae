@@ -51,13 +51,12 @@ class FeedMgmt {
                 rlmObj.world_scale = objInfo["world_scale"] as! Bool
                 rlmObj.scale      = objInfo["scale"] as! Double
                 
-                rlmObj.hex_color  = objInfo["hex_color"] as! String
-                
                 rlmObj.type       = objInfo["type"] as! String
                 rlmObj.style      = objInfo["style"] as! Int
                 rlmObj.hex_color  = objInfo["hex_color"] as! String
                 
                 rlmObj.rotate     = objInfo["rotate"] as! Double
+                rlmObj.hoover     = objInfo["hoover"] as! Double
                 
                 rlmObj.lat        = objInfo["lat"] as! Double
                 rlmObj.lng        = objInfo["lng"] as! Double
@@ -135,7 +134,8 @@ class FeedMgmt {
                     "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
                     "instance":         valueIfPresent(dict: feedContent, key: "instance", placeHolderValue: true),
 
-                    "rotate":            valueIfPresent(dict: feedContent, key: "rotate",  placeHolderValue: 1.0),
+                    "rotate":            valueIfPresent(dict: feedContent, key: "rotate",  placeHolderValue: 0.0),
+                    "hoover":            valueIfPresent(dict: feedContent, key: "hoover",  placeHolderValue: 0.0),
 
                     "scale":            valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0),
                     "world_scale":      valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: true),
