@@ -219,11 +219,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         for o in activeObjectsInRange {
             let objFeeds = feeds.filter({$0.id == o.feedId})
+            var inRange = true
+            
+            if o.radius != 0 {
+                let d = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!).distance(from: CLLocation(latitude: o.lat, longitude: o.lng))
+                inRange = d < o.radius
+            }
             
             if objFeeds.count > 0 {
                 let objFeed = objFeeds.first
                 
-                if (objFeed?.active)! {
+                if (objFeed?.active)! && inRange {
                     print("Obj in range: " + o.name)
                     if o.filePath != "" && o.type.lowercased() != "text" {
                         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
@@ -236,8 +242,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                             print("FileManager.default.fileExists")
                             addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: (session.first?.scaleFactor)! )
                         } else {
-                            // TODO: Retry Download?
-                            // TODO: Increment Feed Error Count?
+                            // TODO: Retry Download? + Increment Feed Error Count?
                             print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
                         }
                     } else {

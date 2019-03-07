@@ -50,7 +50,7 @@ class FeedMgmt {
                 
                 rlmObj.world_scale = objInfo["world_scale"] as! Bool
                 rlmObj.scale      = objInfo["scale"] as! Double
-
+                
                 rlmObj.type       = objInfo["type"] as! String
                 rlmObj.style      = objInfo["style"] as! Int
                 rlmObj.hex_color  = objInfo["hex_color"] as! String
@@ -62,6 +62,8 @@ class FeedMgmt {
                 rlmObj.x_pos      = objInfo["x_pos"] as! Double
                 rlmObj.y_pos      = objInfo["y_pos"] as! Double
                 rlmObj.z_pos      = objInfo["y_pos"] as! Double
+
+                rlmObj.radius     = objInfo["radius"] as! Double
 
                 realm.add(rlmObj)
             }
@@ -118,9 +120,9 @@ class FeedMgmt {
                     "uuid":             objUid,
                     "feed_id":          feedId,
                     
-                    "style":            valueIfPresent(dict: feedContent, key: "style", placeHolderValue:  1) as! Int,
-                    "mode":             valueIfPresent(dict: feedContent, key: "mode", placeHolderValue:   "free"),
-                    "hex_color":        valueIfPresent(dict: feedContent, key: "hex_color", placeHolderValue: "717271"),
+                    "style":            valueIfPresent(dict: feedContent, key: "style",  placeHolderValue: 1) as! Int,
+                    "mode":             valueIfPresent(dict: feedContent, key: "mode",   placeHolderValue: "free"),
+                    "hex_color":        valueIfPresent(dict: feedContent, key: "hex_color", placeHolderValue: "7122e8"),
 
                     "url":              valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
                     "content_link":     valueIfPresent(dict: feedContent, key: "content_link", placeHolderValue: ""),
@@ -129,20 +131,20 @@ class FeedMgmt {
                     "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
                     "instance":         valueIfPresent(dict: feedContent, key: "instance", placeHolderValue: false),
 
-                    "world_scale":      valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: true),
                     "scale":            valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0),
+                    "world_scale":      valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: true),
 
                     "world_position":   valueIfPresent(dict: feedContent, key: "world_position", placeHolderValue: true),
 
-                    "lat":              valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 0.0),
-                    "lng":              valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 0.0),
+                    "lat":              valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 10.0),
+                    "lng":              valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 20.0),
                     "alt":              valueIfPresent(dict: feedContent, key: "alt",    placeHolderValue: 0.0),
                     
                     "x_pos":            valueIfPresent(dict: feedContent, key: "x_pos",  placeHolderValue: 0.0),
                     "y_pos":            valueIfPresent(dict: feedContent, key: "y_pos",  placeHolderValue: 0.0),
                     "z_pos":            valueIfPresent(dict: feedContent, key: "z_pos",  placeHolderValue: 0.0),
 
-                    "radius":           valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 1.0)
+                    "radius":           valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 0.0)
                 ]
                 
                 if feedContent.keys.contains("url") {

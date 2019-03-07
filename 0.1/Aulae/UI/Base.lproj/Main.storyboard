@@ -225,7 +225,6 @@
                             </barButtonItem>
                             <barButtonItem systemItem="search" id="tP4-NO-MBE">
                                 <connections>
-                                    <action selector="searchBtnAction:" destination="shz-14-nLG" id="DoD-ie-dEq"/>
                                     <segue destination="Z9j-U6-ciR" kind="show" animates="NO" id="syp-hZ-XxQ"/>
                                 </connections>
                             </barButtonItem>
@@ -235,7 +234,6 @@
                         <outlet property="mapView" destination="zU5-ko-yXY" id="CUy-QG-oKU"/>
                         <outlet property="navBar" destination="jef-En-32s" id="GiM-UX-Kpw"/>
                         <outlet property="reloadBtn" destination="lp5-fg-UQE" id="t3g-PX-ERx"/>
-                        <outlet property="searchBtn" destination="tP4-NO-MBE" id="Ojh-qX-ZfL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jQb-Zr-Rmt" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -742,7 +740,7 @@
         <image name="mute_btn_a" width="18" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SZc-Qf-Odg"/>
-        <segue reference="Q9S-6L-g2l"/>
+        <segue reference="syp-hZ-XxQ"/>
+        <segue reference="aUW-k3-e0B"/>
     </inferredMetricsTieBreakers>
 </document>

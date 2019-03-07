@@ -27,23 +27,23 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
+    let imageColor = UIColor(red: 0.1, green: 0.9, blue: 0.5, alpha: 0.7)
+    let gifColor   = UIColor(red: 0.2, green: 0.8, blue: 0.6, alpha: 0.7)
+    let objColor   = UIColor(red: 0.4, green: 0.8, blue: 0.7, alpha: 0.7)
+    let usdzColor  = UIColor(red: 0.6, green: 0.7, blue: 0.8, alpha: 0.7)
+    let audioColor = UIColor(red: 0.5, green: 0.6, blue: 0.9, alpha: 0.7)
+    let textColor  = UIColor(red: 0.6, green: 0.5, blue: 1.0, alpha: 0.7)
+    
+    var userSearchRadiusIndicator: MKCircle = MKCircle()
+
     var selected: RLM_Obj? = nil
-    
-    var curLat = 0.0
-    var curLng = 0.0
-    var curAlt = 0.0
-    
     var textField: UITextField? = nil
-    @IBOutlet var searchBtn: UIBarButtonItem!
-    @IBAction func searchBtnAction(_ sender: UIBarButtonItem) {
-        
-    }
     
     @IBOutlet var reloadBtn: UIBarButtonItem!
     @IBAction func reloadBtnAction(_ sender: UIBarButtonItem) {
         initMapView()
         mainUpdate()
-        reloadAnnotations()
+        updateObjectAnnotations()
     }
     
     
@@ -84,7 +84,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         let d = current?.distance(from: currentTouchLocation)
         
         updateSearchRadius(rDistance: d!)
-        updateviewRadius()
+        updateSearchRadius()
 
     }
     
@@ -99,26 +99,22 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     }
     
     
-    func updateviewRadius() {
+    func updateSearchRadius() {
         
-        for o in mapView.overlays {
-            mapView.removeOverlay(o)
-        }
+        mapView.removeOverlay(userSearchRadiusIndicator)
         
         let cLoc = CLLocationCoordinate2D(
             latitude: mapView.userLocation.coordinate.latitude,
             longitude: mapView.userLocation.coordinate.longitude
         )
         
-        var areaCircle: MKCircle
-        
-        if (session.first?.searchRadius)! >= 11000 {
-            areaCircle = MKCircle(center: cLoc, radius: Double( (session.first?.searchRadius)! - 10000 ))
+        if (session.first?.searchRadius)! >= 110000 {
+            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (session.first?.searchRadius)! - 100000 ))
         } else {
-            areaCircle = MKCircle(center: cLoc, radius: Double( (session.first?.searchRadius)! ))
+            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (session.first?.searchRadius)! ))
         }
         
-        mapView.addOverlay(areaCircle)
+        mapView.addOverlay(userSearchRadiusIndicator)
         
     }
     
@@ -147,64 +143,58 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     }
     
     
-    func reloadAnnotations(){
-        let filterA = mapView.annotations.filter( {$0.isKind(of: MapAno.self)} )
-
-        for a in filterA {
-            mapView.removeAnnotation(a)
+    func addAnoRadius(feObj: RLM_Obj) {
+        let cLoc = CLLocationCoordinate2D( latitude: feObj.lat, longitude: feObj.lng )
+        
+        if (session.first?.searchRadius)! >= 110000 {
+            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (feObj.radius) - 100000 ))
+        } else {
+            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (feObj.radius) ))
         }
         
-        updateObjectAnnotations()
+        mapView.addOverlay(userSearchRadiusIndicator)
+        
     }
-    
+
     
     func updateObjectAnnotations() {
         print("updateObjectAnnotations")
         
-        for fo in feedObjects {
-            if fo.active && !fo.deleted {
-                // Omitt location marker
-                // a.isKind(of: MKUserLocation)
-                let filterA = mapView.annotations.filter( {$0.isKind(of: MapAno.self)} )
-                let fOnMap = filterA.filter( {$0.coordinate.latitude == fo.lat && $0.coordinate.longitude == fo.lng} )
+        let filterA = mapView.annotations.filter( {$0.isKind(of: MapAno.self)} )
+        
+        for a in filterA {
+            mapView.removeAnnotation(a)
+        }
+        
+        for o in mapView.overlays {
+            mapView.removeOverlay(o)
+        }
+        
+        for fObj in feedObjects {
+            if fObj.active && !fObj.deleted {
+                let objFeed = feeds.filter( {$0.id == fObj.feedId && !$0.deleted} )
                 
-                let objFeed = feeds.filter( {$0.id == fo.feedId && $0.deleted == false} )
-                
-                print("FeedObject: " + String(fo.lat) + ", " + String(fo.lng))
-                
-                if fOnMap.count == 0 {
-                    print("Adding annotation: " + String(fo.id) )
+                if objFeed.count > 0 {
                     let ano = MapAno()
-                    ano.coordinate = CLLocationCoordinate2D(latitude: fo.lat, longitude: fo.lng)
                     
-                    ano.aType = fo.type
-                    ano.id = fo.id
-                    ano.name = fo.name
+                    ano.coordinate = CLLocationCoordinate2D(latitude: fObj.lat, longitude: fObj.lng)
+                    ano.aType      = fObj.type
+                    ano.id         = fObj.uuid
+                    ano.name       = fObj.name
                     
-                    if objFeed.count > 0 {
-                        ano.title = (objFeed.first?.name)!
-                        ano.subtitle = fo.name
-                    } else {
-                        ano.title = fo.name
+                    ano.title    = fObj.name
+                    ano.subtitle = (objFeed.first?.name)!
+        
+                    if fObj.radius > 0 {
+                        addAnoRadius(feObj: fObj)
                     }
                     
                     mapView.addAnnotation(ano)
-                    // TODO? Radius Overlay?
-                } 
+                }
             }
         }
         
-        
-        for a in mapView.annotations {
-            let objAtAnnotationLocation = feedObjects.filter( {$0.lat == a.coordinate.latitude && $0.lng == a.coordinate.longitude} )
-            // TODO?: let activeInDB = objAtAnnotationLocation.filter({ !$0.active || $0.deleted })
-            
-            if objAtAnnotationLocation.count == 0 {
-                print("Removing: " + String(a.coordinate.latitude))
-                mapView.removeAnnotation(a)
-            }
-        }
-        
+        updateSearchRadius()
         mapView.updateFocusIfNeeded()
     }
     
@@ -229,9 +219,9 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     }
     
     
-    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
+            mapView.view(for: annotation)?.tintColor = UIColor.black
             return nil
         }
         
@@ -247,13 +237,28 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         pinView?.image = UIImage(named: "pin_ds")
         pinView?.canShowCallout = true
+        pinView?.backgroundColor = UIColor.clear
+        
+        let pinIcon = UIImageView()
+        
+        pinIcon.frame = CGRect(
+            x: (pinView?.frame.width)! * 0, y: (pinView?.frame.height)! * 0,
+            width: (pinView?.frame.width)!, height: (pinView?.frame.height)!
+        )
+        
+        pinIcon.layer.cornerRadius = pinIcon.frame.width / 2;
+        pinIcon.layer.masksToBounds = true
+        pinIcon.backgroundColor = UIColor.black
         
         if let o: MapAno = annotation as? MapAno {
-            let fo = feedObjects.filter( {$0.id == o.id } )
+            let fo = feedObjects.filter( {$0.uuid == o.id } )
             
             if fo.count > 0 {
-                let subtitleLabel = UILabel()
+                pinIcon.backgroundColor = UIColor(hexColor: (fo.first?.hex_color)!)
+                pinView?.addSubview(pinIcon)
                 
+                let subtitleLabel = UILabel()
+
                 if fo.first?.name != "" {
                     subtitleLabel.text = fo.first?.name
                     subtitleLabel.numberOfLines = 0
@@ -272,7 +277,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     func getAnoObj(view: MKAnnotationView) -> RLM_Obj? {
         if let a: MapAno = view.annotation as? MapAno {
             let id      = a.id
-            let results = feedObjects.filter({$0.id == id})
+            let results = feedObjects.filter({$0.uuid == id})
             
             if results.count > 0 {
                 return results.first
@@ -313,11 +318,12 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     func initMapView() {
         mapView.delegate = self
         mapView.showsUserLocation = true
-        mapView.showsPointsOfInterest = false
-        mapView.showsCompass = false
-        mapView.showsScale = false
+        mapView.showsPointsOfInterest = true
+        mapView.showsCompass = true
+        mapView.showsScale = true
+        mapView.showsBuildings = true
         mapView.userLocation.title = ""
-        mapView.tintColor = view.superview?.tintColor
+        mapView.tintColor = UIColor.black
         mapView.backgroundColor = UIColor.black
         
 //        if (session.first?.backgroundGps)! {
@@ -361,7 +367,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )
-        reloadAnnotations()
+        updateObjectAnnotations()
     }
 
 }

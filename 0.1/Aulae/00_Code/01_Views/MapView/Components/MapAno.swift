@@ -11,6 +11,7 @@ class MapAno: NSObject, MKAnnotation {
     var aType: String = ""
     var title: String? = ""
     var subtitle: String? = ""
+    var pinColor: UIColor? = UIColor.black
 
     override init() {
         self.coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
@@ -19,6 +20,7 @@ class MapAno: NSObject, MKAnnotation {
         self.aType = "object"
         self.title = "?"
         self.subtitle = "?"
+        self.pinColor = UIColor.black
 
         super.init()
     }
