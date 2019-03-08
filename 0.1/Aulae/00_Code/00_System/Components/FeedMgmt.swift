@@ -25,6 +25,8 @@ class FeedMgmt {
     
     let httpDl = HttpDownloader()
     
+    
+    
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
         print("storeFeedObject")
         
@@ -32,7 +34,7 @@ class FeedMgmt {
         
         do {
             try realm.write {
-                rlmObj.id         = objInfo["id"] as! String
+//                rlmObj.id         = objInfo["id"] as! String
                 rlmObj.feedId     = feedId
                 rlmObj.contentUrl = objInfo["url"] as! String
                 rlmObj.uuid       = objInfo["uuid"] as! String

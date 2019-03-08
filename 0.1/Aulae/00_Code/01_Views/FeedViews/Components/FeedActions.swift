@@ -67,7 +67,7 @@ class FeedActions {
             do {
                 try realm.write {
                     if (deleteFeedObjects) {
-                        for obj in feedObjects.filter( {$0.id == feedId} ) {
+                        for obj in feedObjects.filter( {$0.feedId == feedId} ) {
                             obj.deleted = true
                             obj.active  = false
                         }

@@ -131,30 +131,42 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     func buildDemo() {
         let demoFeed = RLM_Feed()
         
-        demoFeed.url  = ""
+        demoFeed.url  = "Just a test"
         demoFeed.id   = UUID().uuidString
         demoFeed.name = "Demo Guide"
+        
+        let itemCount = 6
+        
+        let documentsUrl   = FileManager.default.urls(for: .applicationDirectory, in: .userDomainMask).first! as NSURL
+        var fileName       = "Logo.png"
+        let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+        
         
         do {
             try realm.write {
                 self.realm.add(demoFeed)
                 
-                for i in 1...16 {
+                for i in 1...itemCount {
                     let o = RLM_Obj()
                     o.feedId = demoFeed.id
                     o.contentUrl = ""
                     o.active = true
-                    o.world_position = false
+                    
+                    o.lat = 10
+                    o.lng = 50
                     
                     o.type  = "text"
                     o.text  = "Hello!"
-                    o.x_pos = sin( ((Double.pi / 8.0) * Double(i)) ) * 8
-                    o.y_pos = 0
-                    o.z_pos = cos( ((Double.pi / 8.0) * Double(i)) ) * 8
                     
+                    o.filePath = (destinationUrl?.absoluteString)!
+                    o.world_position = false
+
+                    o.x_pos = sin( ((Double.pi / Double(itemCount/2)) * Double(i)) ) * Double(itemCount/2)
+                    o.z_pos = cos( ((Double.pi / Double(itemCount/2)) * Double(i)) ) * Double(itemCount/2)
+                    o.y_pos = 0 // Double(-(itemCount/2) + i)
+
                     self.realm.add(o)
                 }
-                
             }
         } catch {
             print("Error: \(error)")

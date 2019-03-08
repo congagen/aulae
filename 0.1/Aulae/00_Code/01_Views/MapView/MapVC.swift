@@ -209,28 +209,27 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     @objc func mainUpdate() {
-        if session.count > 0 {
-            let uIv = (session.first?.mapUpdateInterval)! + 1
-            
-            if updateTimer.timeInterval != uIv {
-                updateTimer.invalidate()
-            }
-            
+        let uIv = (session.first?.mapUpdateInterval)! + 1
+        
+        if updateTimer.timeInterval != uIv || !((session.first?.autoUpdate)!) {
+            updateTimer.invalidate()
+        }
+        
+        if (session.first?.autoUpdate)! {
             if !updateTimer.isValid {
                 updateTimer = Timer.scheduledTimer(
                     timeInterval: uIv,
                     target: self, selector: #selector(mainUpdate),
                     userInfo: nil, repeats: true)
             }
-            
-            updateObjectAnnotations()
         }
+        
+        updateObjectAnnotations()
     }
     
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
-            mapView.view(for: annotation)?.tintColor = UIColor.black
             return nil
         }
         
@@ -244,20 +243,15 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
             pinView?.annotation = annotation
         }
         
-        pinView?.image = UIImage(named: "pin_ds")
-        pinView?.canShowCallout = true
-        pinView?.backgroundColor = UIColor.clear
+        pinView?.image              = UIImage(named: "pin_ds")
+        pinView?.canShowCallout     = true
+        pinView?.backgroundColor    = UIColor.clear
         
-        let pinIcon = UIImageView()
-        
-        pinIcon.frame = CGRect(
-            x: (pinView?.frame.width)! * 0, y: (pinView?.frame.height)! * 0,
-            width: (pinView?.frame.width)!, height: (pinView?.frame.height)!
-        )
-        
-        pinIcon.layer.cornerRadius = pinIcon.frame.width / 2;
+        let pinIcon                 = UIImageView()
+        pinIcon.frame               = CGRect( x: 0, y: 0, width: (pinView?.frame.width)!, height: (pinView?.frame.height)! )
+        pinIcon.layer.cornerRadius  = pinIcon.frame.width / 2;
         pinIcon.layer.masksToBounds = true
-        pinIcon.backgroundColor = UIColor.black
+        pinIcon.backgroundColor     = UIColor.black
         
         if let o: MapAno = annotation as? MapAno {
             let fo = feedObjects.filter( {$0.uuid == o.id } )
@@ -268,7 +262,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         }
         
         updateSearchRadius()
-
         return pinView
     }
     

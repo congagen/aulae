@@ -154,14 +154,14 @@ class ContentNode: SCNNode {
         text.firstMaterial?.diffuse.contents = color
 
         let ctNode = SCNNode(geometry: text)
-        let max = text.boundingBox.max
-        let min = text.boundingBox.min
+//        let max = text.boundingBox.max
+//        let min = text.boundingBox.min
         
-        let tx = (max.x - min.x) / 2.0
-        let ty = min.y
-        let tz = Float(extrusion) / 2.0
-        
-        ctNode.pivot = SCNMatrix4MakeTranslation(tx, ty, tz)
+//        let tx = (max.x - min.x) / 2.0
+//        let ty = min.y
+//        let tz = Float(extrusion) / 2.0
+//
+//        ctNode.pivot = SCNMatrix4MakeTranslation(tx, ty, tz)
         
         addChildNode(ctNode)
     }

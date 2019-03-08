@@ -126,12 +126,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
             refreshScene()
         }
-        
     }
     
     
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
-        print("AddContentToScene: " + String(contentObj.id))
+        print("AddContentToScene: " + String(contentObj.uuid))
         print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
         
         let audioRangeRadius: Double = 1000
@@ -149,7 +148,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             nodeSize = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
         }
         
-        let ctNode = ContentNode(id: contentObj.id, title: contentObj.name, feedId: contentObj.feedId, location: rawObjectGpsCCL)
+        let ctNode = ContentNode(id: contentObj.uuid, title: contentObj.name, feedId: contentObj.feedId, location: rawObjectGpsCCL)
         
         if fPath != "" && contentObj.type.lowercased() != "text" {
 
@@ -240,7 +239,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         let fileName = (URL(string: o.filePath)?.lastPathComponent)!
                         let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                         
-                        print("UpdateScene: activeInRange: " + String(o.id))
+                        print("UpdateScene: activeInRange: " + String(o.uuid))
                         
                         if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                             print("FileManager.default.fileExists")
