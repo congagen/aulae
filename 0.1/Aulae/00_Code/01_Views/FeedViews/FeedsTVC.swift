@@ -82,7 +82,7 @@ class FeedsTVC: UITableViewController {
             print("Error: \(error)")
         }
         
-        feedMgr.updateFeeds()
+        feedMgr.updateFeeds(checkTimeSinceUpdate: false)
         
         tableView.reloadData()
     }

@@ -41,6 +41,7 @@
 		FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA663146221DBD4B000FEF60 /* ContentNode.swift */; };
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
 		FA6BA7CF2232A02500DB3F2A /* Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6BA7CE2232A02500DB3F2A /* Logo.png */; };
+		FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BA7D02232E5E600DB3F2A /* Demos.swift */; };
 		FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */; };
 		FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA789D202221629F009DC15F /* FeedSearchTVC.swift */; };
 		FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88CBFC222DBBD90078E48A /* NodeActions.swift */; };
@@ -98,11 +99,11 @@
 		FA1934E62225BD0000457C6E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA1AAC402153E9D000EE494A /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		FA1AAC412153E9D200EE494A /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
-		FA482F672215ADE600D251AB /* Aumenta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Aumenta.entitlements; path = ../Aumenta.entitlements; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aulae.entitlements; sourceTree = "<group>"; };
 		FA6BA7CE2232A02500DB3F2A /* Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Logo.png; sourceTree = "<group>"; };
+		FA6BA7D02232E5E600DB3F2A /* Demos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demos.swift; sourceTree = "<group>"; };
 		FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		FA789D202221629F009DC15F /* FeedSearchTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSearchTVC.swift; sourceTree = "<group>"; };
 		FA88CBFC222DBBD90078E48A /* NodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeActions.swift; sourceTree = "<group>"; };
@@ -173,7 +174,6 @@
 		3177251220B03AD4009FA8B1 = {
 			isa = PBXGroup;
 			children = (
-				FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */,
 				FAB2AE7922088315004D5819 /* TODO.swift */,
 				3177251D20B03AD4009FA8B1 /* 00_Code */,
 				31AB869220B356C30038F4D5 /* 01_Data */,
@@ -225,9 +225,9 @@
 		318FE90320B1696E0050528B /* Internals */ = {
 			isa = PBXGroup;
 			children = (
-				FA482F672215ADE600D251AB /* Aumenta.entitlements */,
 				3177251E20B03AD4009FA8B1 /* AppDelegate.swift */,
 				3177252C20B03AD6009FA8B1 /* Info.plist */,
+				FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */,
 				318FE8F820B0C3880050528B /* ArkitTest.entitlements */,
 			);
 			path = Internals;
@@ -259,6 +259,7 @@
 				318FE8F120B0BB730050528B /* HttpDownloader.swift */,
 				FA9E933E222183AC00346073 /* NetworkTools.swift */,
 				319D3F2720D7965B007FEECA /* FeedMgmt.swift */,
+				FA6BA7D02232E5E600DB3F2A /* Demos.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -365,7 +366,7 @@
 						LastSwiftMigration = 1010;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -374,6 +375,9 @@
 								enabled = 0;
 							};
 							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+							com.apple.Multipath = {
 								enabled = 1;
 							};
 							com.apple.NetworkExtensions.iOS = {
@@ -471,6 +475,7 @@
 				316B86DC20D955660076E63D /* SceneLocationView.swift in Sources */,
 				316B86D620D955660076E63D /* SceneLocationEstimate.swift in Sources */,
 				319D3F2820D7965B007FEECA /* FeedMgmt.swift in Sources */,
+				FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */,
 				318FE8F220B0BB730050528B /* HttpDownloader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -615,6 +620,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Internals/Aulae.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SRPD354G63;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -637,6 +643,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Internals/Aulae.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SRPD354G63;
 				FRAMEWORK_SEARCH_PATHS = (

@@ -168,6 +168,7 @@ class ContentNode: SCNNode {
     
     
     func addObj(fPath: String, contentObj: RLM_Obj) {
+        print("Adding OBJ")
 
         let urlPath = URL(fileURLWithPath: fPath)
  
@@ -212,7 +213,7 @@ class ContentNode: SCNNode {
     
 
     func addUSDZ(fPath: String, contentObj: RLM_Obj) {
-        
+        print("Adding USDZ")
         let urlPath = URL(fileURLWithPath: fPath)
         
         if let objScene = SCNSceneSource(url: urlPath, options: nil) {

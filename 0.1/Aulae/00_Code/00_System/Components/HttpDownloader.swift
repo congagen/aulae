@@ -24,17 +24,20 @@ class HttpDownloader {
     }
     
     
-    func loadFileAsync(url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
+    func loadFileAsync(checkExisting: Bool, url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
         let sessionConfig = URLSessionConfiguration.default
         let session = URLSession(configuration: sessionConfig)
         let request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
+        var dwl = true
+
+        if checkExisting {
+            dwl = !(FileManager.default.fileExists(atPath: destinationUrl.path))
+        }
         
-        // let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-        
-        if !(FileManager.default.fileExists(atPath: destinationUrl.path)) {
+        if dwl {
             let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
                 if let tempLocalUrl = tempLocalUrl, error == nil {
-                    // Success
+
                     if let statusCode = (response as? HTTPURLResponse)?.statusCode {
                         print("Success: \(statusCode)")
                     }
@@ -53,9 +56,6 @@ class HttpDownloader {
                 }
             }
             task.resume()
-        } else {
-            print("File exists: " + (destinationUrl.absoluteString))
-            completion()
         }
         
     }

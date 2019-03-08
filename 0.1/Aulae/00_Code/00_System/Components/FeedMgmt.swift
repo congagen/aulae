@@ -12,7 +12,6 @@ import Realm
 import RealmSwift
 
 
-//extension MainVC {
 
 class FeedMgmt {
     
@@ -25,8 +24,7 @@ class FeedMgmt {
     
     let httpDl = HttpDownloader()
     
-    
-    
+
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
         print("storeFeedObject")
         
@@ -34,7 +32,6 @@ class FeedMgmt {
         
         do {
             try realm.write {
-//                rlmObj.id         = objInfo["id"] as! String
                 rlmObj.feedId     = feedId
                 rlmObj.contentUrl = objInfo["url"] as! String
                 rlmObj.uuid       = objInfo["uuid"] as! String
@@ -111,68 +108,61 @@ class FeedMgmt {
         
         for k in (feedSpec["content"]?.allKeys)! {
             
-            let feedContent = feedSpec["content"]![k] as! Dictionary<String, AnyObject>
-            let valid = validateObj(keyList: validObjectJsonKeys, dict: feedContent)
+            let itemSpec = feedSpec["content"]![k] as! Dictionary<String, AnyObject>
+            let contentItemIsValid = validateObj(keyList: validObjectJsonKeys, dict: itemSpec)
             let objUid = UUID().uuidString
+            let itemContentType = itemSpec["type"] as! String
             
-            if valid {
+            if contentItemIsValid {
                 
                 let objData: [String : Any] = [
-                    "name":             feedContent["name"]    as! String,
-                    "version":          feedContent["version"] as! Int,
-                    "type":             feedContent["type"]    as! String,
-                    "id":               feedContent["id"]      as! String,
+                    "name":             itemSpec["name"]    as! String,
+                    "version":          itemSpec["version"] as! Int,
+                    "id":               itemSpec["id"]      as! String,
                     "uuid":             objUid,
                     "feed_id":          feedId,
+                    "type":             itemContentType,
                     
-                    "style":            valueIfPresent(dict: feedContent, key: "style",  placeHolderValue: 1) as! Int,
-                    "mode":             valueIfPresent(dict: feedContent, key: "mode",   placeHolderValue: "free"),
-                    "hex_color":        valueIfPresent(dict: feedContent, key: "hex_color", placeHolderValue: "7122e8"),
+                    "style":            valueIfPresent(dict: itemSpec, key: "style",  placeHolderValue: 1) as! Int,
+                    "mode":             valueIfPresent(dict: itemSpec, key: "mode",   placeHolderValue: "free"),
+                    "hex_color":        valueIfPresent(dict: itemSpec, key: "hex_color", placeHolderValue: "7122e8"),
 
-                    "url":              valueIfPresent(dict: feedContent, key: "url",    placeHolderValue: ""),
-                    "content_link":     valueIfPresent(dict: feedContent, key: "content_link", placeHolderValue: ""),
+                    "url":              valueIfPresent(dict: itemSpec, key: "url",    placeHolderValue: ""),
+                    "content_link":     valueIfPresent(dict: itemSpec, key: "content_link", placeHolderValue: ""),
 
-                    "info":             valueIfPresent(dict: feedContent, key: "info",   placeHolderValue: ""),
-                    "text":             valueIfPresent(dict: feedContent, key: "text",   placeHolderValue: ""),
-                    "instance":         valueIfPresent(dict: feedContent, key: "instance", placeHolderValue: true),
+                    "info":             valueIfPresent(dict: itemSpec, key: "info",   placeHolderValue: ""),
+                    "text":             valueIfPresent(dict: itemSpec, key: "text",   placeHolderValue: ""),
+                    "instance":         valueIfPresent(dict: itemSpec, key: "instance", placeHolderValue: true),
 
-                    "rotate":            valueIfPresent(dict: feedContent, key: "rotate",  placeHolderValue: 0.0),
-                    "hoover":            valueIfPresent(dict: feedContent, key: "hoover",  placeHolderValue: 0.0),
+                    "rotate":           valueIfPresent(dict: itemSpec, key: "rotate",  placeHolderValue: 0.0),
+                    "hoover":           valueIfPresent(dict: itemSpec, key: "hoover",  placeHolderValue: 0.0),
 
-                    "scale":            valueIfPresent(dict: feedContent, key: "scale",  placeHolderValue: 1.0),
-                    "world_scale":      valueIfPresent(dict: feedContent, key: "world_scale", placeHolderValue: true),
-                    "world_position":   valueIfPresent(dict: feedContent, key: "world_position", placeHolderValue: true),
+                    "scale":            valueIfPresent(dict: itemSpec, key: "scale",  placeHolderValue: 1.0),
+                    "world_scale":      valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: true),
+                    "world_position":   valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
 
-                    "lat":              valueIfPresent(dict: feedContent, key: "lat",    placeHolderValue: 10.0),
-                    "lng":              valueIfPresent(dict: feedContent, key: "lng",    placeHolderValue: 20.0),
-                    "alt":              valueIfPresent(dict: feedContent, key: "alt",    placeHolderValue: 0.0),
+                    "lat":              valueIfPresent(dict: itemSpec, key: "lat",    placeHolderValue: 10.0),
+                    "lng":              valueIfPresent(dict: itemSpec, key: "lng",    placeHolderValue: 20.0),
+                    "alt":              valueIfPresent(dict: itemSpec, key: "alt",    placeHolderValue: 0.0),
                     
-                    "x_pos":            valueIfPresent(dict: feedContent, key: "x_pos",  placeHolderValue: 0.0),
-                    "y_pos":            valueIfPresent(dict: feedContent, key: "y_pos",  placeHolderValue: 0.0),
-                    "z_pos":            valueIfPresent(dict: feedContent, key: "z_pos",  placeHolderValue: 0.0),
+                    "x_pos":            valueIfPresent(dict: itemSpec, key: "x_pos",  placeHolderValue: 0.0),
+                    "y_pos":            valueIfPresent(dict: itemSpec, key: "y_pos",  placeHolderValue: 0.0),
+                    "z_pos":            valueIfPresent(dict: itemSpec, key: "z_pos",  placeHolderValue: 0.0),
 
-                    "radius":           valueIfPresent(dict: feedContent, key: "radius", placeHolderValue: 0.0)
+                    "radius":           valueIfPresent(dict: itemSpec, key: "radius", placeHolderValue: 0.0)
                 ]
                 
-                if feedContent.keys.contains("url") {
-                    let contentUrl     = feedContent["url"] as! String
+                if itemContentType != "text" && itemSpec.keys.contains("url") {
+                    let contentUrl     = itemSpec["url"] as! String
                     let documentsUrl   = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-                    var fileName       = UUID().uuidString
+                    let fileName       = feedDbItem.id + String(feedDbItem.version) + (URL(string: contentUrl)?.lastPathComponent)!
                     let destinationUrl = documentsUrl.appendingPathComponent(fileName)
-                    
-                    if (objData["instance"] as! Bool == true) {
-                        fileName = (URL(string: contentUrl)?.lastPathComponent)!
-                    }
                     
                     if let URL = URL(string: contentUrl) {
                         let _ = httpDl.loadFileAsync(
+                            checkExisting: true,
                             url: URL as URL, destinationUrl: destinationUrl!,
-                            completion: { DispatchQueue.main.async {
-                                self.storeFeedObject(
-                                    objInfo: objData,
-                                    objFilePath: destinationUrl!,
-                                    feedId: feedId)
-                            }}
+                            completion: { DispatchQueue.main.async { self.storeFeedObject( objInfo: objData, objFilePath: destinationUrl!, feedId: feedId) } }
                         )
                     }
                 } else {
@@ -180,19 +170,7 @@ class FeedMgmt {
                     storeFeedObject(objInfo: objData, objFilePath: placeholderUrl, feedId: feedId)
                 }
                 
-                do {
-                    try realm.write {
-                        feedDbItem.updatedUtx = Int(Date().timeIntervalSince1970)
-                    }
-                } catch {
-                    print("Error: \(error)")
-                }
-                
-            } else {
-                print("ERROR: MALFORMED FEED ITEM: ")
-                print((feedContent))
             }
-            
         }
     }
     
@@ -259,7 +237,6 @@ class FeedMgmt {
                         updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
                         
                         print("Error: updateFeed: Missing version key")
-                        // TODO: Increment error count?
                     }
                 }
             } catch {
@@ -269,10 +246,12 @@ class FeedMgmt {
     }
     
     
-    func updateFeeds() {
+    func updateFeeds(checkTimeSinceUpdate: Bool) {
         print("updateFeeds")
         
         let updateInterval = Int((session.first?.feedUpdateInterval)!) + 1
+        var shouldUpdate = true
+
         refreshObjects()
 
         for ob in feedObjects {
@@ -281,39 +260,41 @@ class FeedMgmt {
         
         for fe in feeds {
             // Download if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
-            // TODO IF ERRCOUNT > THRESH -> Disable
-
-            let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
             
-            do {
-                try realm.write {
-                    if fe.errors > session.first!.feedErrorThreshold && !fe.deleted {
-                        fe.active = false
-                    }
-                }
-            } catch {
-                print("Error: \(error)")
+            if checkTimeSinceUpdate {
+                let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
+                print("Time Since Update: " + String(timeSinceUpdate))
+                shouldUpdate = Int(timeSinceUpdate) > updateInterval
             }
             
-            print("Time Since Update: " + String(timeSinceUpdate))
             print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
             print("FeedObjectCount: "   + String(feedObjects.count))
             
-            if fe.active && !fe.deleted {
+            if fe.active && !fe.deleted && shouldUpdate {
                 let fileName = fe.id + ".json"
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                 
-                if Int(timeSinceUpdate) > updateInterval {
-                    if let URL = URL(string: fe.url) {
-                        let _ = httpDl.loadFileAsync(
-                            url: URL as URL,
-                            destinationUrl: destinationUrl!,
-                            completion: {
-                                DispatchQueue.main.async { self.updateFeed(fileUrl: destinationUrl!, feedDbItem: fe) }
-                        })
-                    }
+                if let URL = URL(string: fe.url) {
+                    let _ = httpDl.loadFileAsync(
+                        checkExisting: false, url: URL as URL, destinationUrl: destinationUrl!,
+                        completion: {
+                            DispatchQueue.main.async { self.updateFeed(fileUrl: destinationUrl!, feedDbItem: fe) }
+                    })
                 }
+                
+                do {
+                    try realm.write {
+                        fe.updatedUtx = Int( Date().timeIntervalSince1970 )
+                        
+                        if fe.errors > session.first!.feedErrorThreshold && !fe.deleted {
+                            fe.active = false
+                        }
+                    }
+                } catch {
+                    print("Error: \(error)")
+                }
+                
             }
         }
     }

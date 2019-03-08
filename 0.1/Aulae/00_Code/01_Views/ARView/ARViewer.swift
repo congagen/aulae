@@ -182,21 +182,27 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        ctNode.scale    = SCNVector3(nodeSize, nodeSize, nodeSize)
-        let yH = ctNode.boundingBox.max.y * 0.5
-        ctNode.position = SCNVector3(contentPos.x, (contentPos.y-yH), contentPos.z)
-        ctNode.tagComponents(nodeTag: contentObj.uuid)
-        ctNode.name = contentObj.uuid
+        ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
+        var yH: Float = 0.0
         
         if contentObj.style == 0 {
+            yH = ctNode.boundingBox.max.y * 0.5
             let constraint = SCNBillboardConstraint()
             constraint.freeAxes = [.Y]
             ctNode.constraints = [constraint]
         }
         
-        if contentObj.rotate > 0 {
-            rotateAnimation(node: ctNode, xAmt: 0, yAmt: 360, zAmt: 0, speed: contentObj.rotate)
-        }
+        ctNode.position = SCNVector3(contentPos.x, (contentPos.y-yH), contentPos.z)
+        ctNode.tagComponents(nodeTag: contentObj.uuid)
+        ctNode.name = contentObj.uuid
+        
+//        if contentObj.rotate != 0 {
+//            rotateAnimation(node: ctNode, xAmt: 0, yAmt: 360, zAmt: 0, speed: contentObj.rotate)
+//        }
+//
+//        if contentObj.hoover != 0 {
+//            addHooverAnimation(node: ctNode, distance: CGFloat(contentObj.hoover), speed: CGFloat(contentObj.hoover))
+//        }
         
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
