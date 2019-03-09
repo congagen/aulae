@@ -46,7 +46,6 @@ class FeedMgmt {
             } catch {
                 print("Error: \(error)")
             }
-            
         }
     }
     
@@ -242,9 +241,11 @@ class FeedMgmt {
     }
     
     
-    func storeFeed(jsonResult: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed){
-        if jsonResult.keys.contains("version") {
-            if jsonResult["version"] as! Int != feedDbItem.version {
+    func storeFeed(jsonResult: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed, checkVersion: Bool) {
+        print("storeFeed")
+        
+        if jsonResult.keys.contains("version") || !checkVersion {
+            if jsonResult["version"] as! Int != feedDbItem.version || !checkVersion {
                 updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
                 updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
             }
@@ -257,7 +258,7 @@ class FeedMgmt {
     
     
     func storeFeedJson(fileUrl: URL, feedDbItem: RLM_Feed) {
-        print("UpdateFeed")
+        print("storeFeedJson")
         
         if FileManager.default.fileExists(atPath: fileUrl.path) {
             do {
@@ -265,7 +266,7 @@ class FeedMgmt {
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
                 
                 if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
-                    storeFeed(jsonResult: jsonResult, feedDbItem: feedDbItem)
+                    storeFeed(jsonResult: jsonResult, feedDbItem: feedDbItem, checkVersion: false)
                 }
             } catch {
                 print(error)
@@ -275,16 +276,15 @@ class FeedMgmt {
     
     
     func storeFeedApi(result: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed) {
+        print("storeFeedApi")
         print(result.keys)
         
-        if (result.keys.contains("info")) {
-            
-            self.storeFeed(jsonResult: result, feedDbItem: feedDbItem)
-        }
+        self.storeFeed(jsonResult: result, feedDbItem: feedDbItem, checkVersion: false)
     }
     
     
     @objc func handleApiResult(result: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed) {
+        print("handleApiResult")
         DispatchQueue.main.async {
             self.storeFeedApi(result: result, feedDbItem: feedDbItem)
         }
@@ -315,19 +315,21 @@ class FeedMgmt {
             print("FeedObjectCount: "   + String(feedObjects.count))
             
             if fe.active && !fe.deleted && shouldUpdate && fe.url != "" {
+                let sourceUrl = URL(string: fe.url)
+                let sourceExt = sourceUrl?.pathExtension.lowercased()
+                
                 let fileName = fe.id + ".json"
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                 
-                print(fe.url)
-                let sUrl = URL(string: fe.url)
-                
-                if sUrl?.pathExtension.lowercased() == "json" {
-                    if let URL = URL(string: fe.url) {
-                        let _ = httpDl.loadFileAsync(
-                            checkExisting: false, url: URL as URL, destinationUrl: destinationUrl!,
-                            completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl!, feedDbItem: fe) } }
-                        )
+                if sourceExt != nil {
+                    if sourceExt == "json" {
+                        if let URL = URL(string: fe.url) {
+                            let _ = httpDl.loadFileAsync(
+                                checkExisting: false, url: URL as URL, destinationUrl: destinationUrl!,
+                                completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl!, feedDbItem: fe) } }
+                            )
+                        }
                     }
                 } else {
                     NetworkTools().postReq(

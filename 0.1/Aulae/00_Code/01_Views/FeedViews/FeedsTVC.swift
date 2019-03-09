@@ -131,7 +131,7 @@ class FeedsTVC: UITableViewController {
         let section = indexP.section
         let feed = feeds[section]
         
-        feedAct.deleteFeed(feedId: feed.id, deleteFeedObjects: true)
+        feedAct.deleteFeed(feedUrl: feed.url, deleteFeedObjects: true)
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
@@ -170,7 +170,7 @@ class FeedsTVC: UITableViewController {
     func handleEnterURL(alertView: UIAlertAction!) {
         
         if textField?.text != nil {
-            feedAct.addJsonFeed(feedUrl: (self.textField?.text)!, refreshExisting: true)
+            feedAct.addFeedUrl(feedUrl: (self.textField?.text)!, refreshExisting: true)
         }
         
         self.tableView.reloadData()

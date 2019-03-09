@@ -77,7 +77,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             UIAlertAction(
                 title: "Ok",
                 style: UIAlertAction.Style.default,
-                handler: { _ in self.feedAct.addJsonFeed(feedUrl: feedUrl!, refreshExisting: true) }
+                handler: { _ in self.feedAct.addFeedUrl(feedUrl: feedUrl!, refreshExisting: true) }
             )
         )
         

@@ -32,14 +32,15 @@ class FeedActions {
     }
     
     
-    func addJsonFeed(feedUrl: String, refreshExisting: Bool) {
+    func addFeedUrl(feedUrl: String, refreshExisting: Bool) {
         print("addFeed")
         let newFeed = RLM_Feed()
 
         if refreshExisting {
-            if feeds.filter({$0.url == feedUrl }).count > 0 {
-                let exId = feeds.filter({$0.url == feedUrl }).first?.id
-                deleteFeed(feedId: exId!, deleteFeedObjects: true)
+            if feeds.filter({$0.url == feedUrl}).count > 0 {
+                for f in feeds.filter({$0.url == feedUrl}) {
+                    deleteFeed(feedUrl: f.url, deleteFeedObjects: true)
+                }
             }
         }
         
@@ -59,16 +60,18 @@ class FeedActions {
     }
     
     
-    func deleteFeed(feedId: String, deleteFeedObjects: Bool) {
-        let currentFeeds = feeds.filter( {$0.id == feedId} )
+    func deleteFeed(feedUrl: String, deleteFeedObjects: Bool) {
+        let matchingFeeds = feeds.filter( {$0.url == feedUrl} )
         
-        for f in currentFeeds {
+        for f in matchingFeeds {
             do {
                 try realm.write {
                     if (deleteFeedObjects) {
-                        for obj in feedObjects.filter( {$0.feedId == feedId} ) {
+                        for obj in feedObjects.filter( {$0.feedId == f.id} ) {
                             obj.deleted = true
                             obj.active  = false
+                            
+                            realm.delete(obj)
                         }
                     }
                     

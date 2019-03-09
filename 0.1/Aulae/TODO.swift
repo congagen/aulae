@@ -1,7 +1,8 @@
 
 // URGENT:
+
+//    Feed MGMT: Fix: [ Add Feed -> Delete Feed -> Add Feed ] Bug
 //    Name?
-//    Feed Update Timeout / Error Thresh
 //    Extensions: Target: Info: URL Types
 //    Content Type: Marker
 //    Content Display Modes:  Floor / Wall / World Position / Static
@@ -11,15 +12,12 @@
 
 // ArKit -> SceneKit?
 
-// System:
-//    Settings:                Content Refresh Interval
-
 
 // Feeds
 //    Feed Feeds / RSS / ?
-//    Object Altitude
 //    Update feed/items if deef version id !=
 //    Remove/Invalidate removed FeedItems
+//    Feed Update Timeout / Error Thresh
 
 
 // Feeds JSON SCHEMA:

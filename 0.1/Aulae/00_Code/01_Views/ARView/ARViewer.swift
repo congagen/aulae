@@ -10,7 +10,7 @@ import CoreLocation
 import ARKit
 import Realm
 import RealmSwift
-
+import Vision
 
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate {
     
@@ -18,6 +18,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    var qrRequests = [VNRequest]()
+    var detectedDataAnchor: ARAnchor?
+    var processing = false
     
     var audioSource: SCNAudioSource!
     
@@ -64,6 +68,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             refreshScene()
         }
     }
+    
+    
+    
+    
+    
 
     
     func objectsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
