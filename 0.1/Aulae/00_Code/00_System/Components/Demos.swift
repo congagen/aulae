@@ -13,9 +13,19 @@ import RealmSwift
 
 extension MainVC {
     
-    
+
     func buildTextDemo() {
         let demoFeed = RLM_Feed()
+        
+        let welcome = [
+            0: [
+                0: "Bla",
+                1: "Bla",
+                2: "Bla",
+                3: "Bla"
+                
+            ]
+        ]
         
         demoFeed.url  = "Examples and demos"
         demoFeed.id   = UUID().uuidString

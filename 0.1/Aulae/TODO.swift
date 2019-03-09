@@ -1,11 +1,9 @@
 
 // URGENT:
-//    Cam Res
-//    Searchbar -> NavigationBar
 //    Name?
-//    Feed Search: Refresh / Alert
 //    Feed Update Timeout / Error Thresh
 //    Extensions: Target: Info: URL Types
+//    Content Type: Marker
 //    Content Display Modes:  Floor / Wall / World Position / Static
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------

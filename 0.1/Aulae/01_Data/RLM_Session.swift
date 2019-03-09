@@ -26,6 +26,6 @@ class RLM_Session: Object {
     @objc dynamic var showPlaceholders: Bool = true
     @objc dynamic var allowAnimation:   Bool = true
     
-    @objc dynamic var debugUrl: String = "https://s3.amazonaws.com/abstra-dev/demo.json"
+    @objc dynamic var debugUrl: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev"
     
 }

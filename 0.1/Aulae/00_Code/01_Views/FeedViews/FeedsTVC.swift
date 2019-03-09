@@ -170,7 +170,7 @@ class FeedsTVC: UITableViewController {
     func handleEnterURL(alertView: UIAlertAction!) {
         
         if textField?.text != nil {
-            feedAct.addFeed(feedUrl: (self.textField?.text)!, refreshExisting: true)
+            feedAct.addJsonFeed(feedUrl: (self.textField?.text)!, refreshExisting: true)
         }
         
         self.tableView.reloadData()

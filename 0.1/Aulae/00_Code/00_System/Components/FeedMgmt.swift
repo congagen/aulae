@@ -22,7 +22,33 @@ class FeedMgmt {
     
     let validObjectJsonKeys = ["name", "id", "version", "type"]
     
+    var apiHeaderValue = ""
+    var apiHeaderFeild = ""
+    
     let httpDl = HttpDownloader()
+    
+    
+    func refreshObjects() {
+        print("refreshObjects")
+        for o in feedObjects {
+            let objectFeeds = feeds.filter({ $0.id == o.feedId })
+            
+            do {
+                try realm.write {
+                    if objectFeeds.count > 0 {
+                        o.deleted = (objectFeeds.first?.deleted)!
+                        o.active  = (objectFeeds.first?.active)!
+                    } else {
+                        o.deleted = true
+                        o.active  = false
+                    }
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+            
+        }
+    }
     
 
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
@@ -213,11 +239,24 @@ class FeedMgmt {
             }
             print("Feed Validation Error: " + String(feedDbItem.url))
         }
-        
     }
     
     
-    func updateFeed(fileUrl: URL, feedDbItem: RLM_Feed) {
+    func storeFeed(jsonResult: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed){
+        if jsonResult.keys.contains("version") {
+            if jsonResult["version"] as! Int != feedDbItem.version {
+                updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
+                updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+            }
+        } else {
+            feedDbItem.errors += 1
+            updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
+            updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+        }
+    }
+    
+    
+    func storeFeedJson(fileUrl: URL, feedDbItem: RLM_Feed) {
         print("UpdateFeed")
         
         if FileManager.default.fileExists(atPath: fileUrl.path) {
@@ -226,22 +265,28 @@ class FeedMgmt {
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
                 
                 if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
-                    if jsonResult.keys.contains("version") {
-                        if jsonResult["version"] as! Int != feedDbItem.version {
-                            updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
-                            updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
-                        }
-                    } else {
-                        feedDbItem.errors += 1
-                        updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
-                        updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
-                        
-                        print("Error: updateFeed: Missing version key")
-                    }
+                    storeFeed(jsonResult: jsonResult, feedDbItem: feedDbItem)
                 }
             } catch {
                 print(error)
             }
+        }
+    }
+    
+    
+    func storeFeedApi(result: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed) {
+        print(result.keys)
+        
+        if (result.keys.contains("info")) {
+            
+            self.storeFeed(jsonResult: result, feedDbItem: feedDbItem)
+        }
+    }
+    
+    
+    @objc func handleApiResult(result: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed) {
+        DispatchQueue.main.async {
+            self.storeFeedApi(result: result, feedDbItem: feedDbItem)
         }
     }
     
@@ -259,7 +304,6 @@ class FeedMgmt {
         }
         
         for fe in feeds {
-            // Download if [ "MISSING" || "TIME SINCE LAST UPDATE" > N ]
             
             if checkTimeSinceUpdate {
                 let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
@@ -270,17 +314,26 @@ class FeedMgmt {
             print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
             print("FeedObjectCount: "   + String(feedObjects.count))
             
-            if fe.active && !fe.deleted && shouldUpdate {
+            if fe.active && !fe.deleted && shouldUpdate && fe.url != "" {
                 let fileName = fe.id + ".json"
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                 
-                if let URL = URL(string: fe.url) {
-                    let _ = httpDl.loadFileAsync(
-                        checkExisting: false, url: URL as URL, destinationUrl: destinationUrl!,
-                        completion: {
-                            DispatchQueue.main.async { self.updateFeed(fileUrl: destinationUrl!, feedDbItem: fe) }
-                    })
+                print(fe.url)
+                let sUrl = URL(string: fe.url)
+                
+                if sUrl?.pathExtension.lowercased() == "json" {
+                    if let URL = URL(string: fe.url) {
+                        let _ = httpDl.loadFileAsync(
+                            checkExisting: false, url: URL as URL, destinationUrl: destinationUrl!,
+                            completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl!, feedDbItem: fe) } }
+                        )
+                    }
+                } else {
+                    NetworkTools().postReq(
+                        completion: { r in self.handleApiResult(result: r, feedDbItem: fe) } , apiHeaderValue: apiHeaderValue,
+                        apiHeaderFeild: apiHeaderFeild, apiUrl: fe.url, reqParams: ["":""]
+                    )
                 }
                 
                 do {
@@ -300,26 +353,6 @@ class FeedMgmt {
     }
     
     
-    func refreshObjects() {
-        print("refreshObjects")
-        for o in feedObjects {
-            let objectFeeds = feeds.filter({ $0.id == o.feedId })
-            
-            do {
-                try realm.write {
-                    if objectFeeds.count > 0 {
-                        o.deleted = (objectFeeds.first?.deleted)!
-                        o.active  = (objectFeeds.first?.active)!
-                    } else {
-                        o.deleted = true
-                        o.active  = false
-                    }
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-            
-        }
-    }
+
     
 }
