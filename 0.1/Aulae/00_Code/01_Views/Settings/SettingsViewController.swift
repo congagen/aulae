@@ -71,6 +71,15 @@ class SettingsViewController: UITableViewController {
         updateUI()
     }
     
+    let allowAudioParamName = "allowAudio"
+    @IBOutlet var allowAudioSwitch: UISwitch!
+    @IBAction func allowAudioSwitchAction(_ sender: UISwitch) {
+        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+        saveSettings(propName: allowAudioParamName, propValue: boolDouble)
+        updateUI()
+    }
+    
+    
     let showPlaceholderParamName = "showPlaceholders"
     @IBOutlet var showPlaceholderSwitch: UISwitch!
     @IBAction func showPlaceholderSwitchAction(_ sender: UISwitch) {
@@ -103,6 +112,9 @@ class SettingsViewController: UITableViewController {
                     case scaleFactorParamName:
                         session.first!.scaleFactor           = propValue
                       
+                    case allowAudioParamName:
+                        session.first?.muteAudio             = Int(propValue) != 1
+                        
                     case useDistanceParamName:
                         session.first!.distanceScale         = Int(propValue) == 1
                         
@@ -139,6 +151,8 @@ class SettingsViewController: UITableViewController {
         scaleFactorDisplay.text          = String(Int(session.first!.scaleFactor))
         scaleFactorStepper.value         = session.first!.scaleFactor
         
+        allowAudioSwitch.isOn           = session.first!.muteAudio         != true
+
         useDistanceSwitch.isOn           = session.first!.distanceScale    == true
         autoUpdateSwitch.isOn            = session.first!.autoUpdate       == true
         gpsToggleSwitch.isOn             = session.first!.backgroundGps    == true

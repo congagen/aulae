@@ -12,7 +12,7 @@ import Realm
 import RealmSwift
 import Vision
 
-class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate {
+class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
@@ -22,6 +22,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var qrRequests = [VNRequest]()
     var detectedDataAnchor: ARAnchor?
     var processing = false
+    
+    var qrUrl = ""
+    var qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
+    var qrCaptureSession = AVCaptureSession()
+    @IBOutlet var qrSearchView: UIView!
     
     var audioSource: SCNAudioSource!
     
@@ -49,31 +54,23 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
         print("sharePhotoBtn")
-
         let snapShot = sceneView.snapshot()
         let imageToShare = [snapShot]
         let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
-        
+
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
     }
     
-    @IBOutlet var muteBarButton: UIBarButtonItem!
     
-    @IBAction func muteToggleBtn(_ sender: UIBarButtonItem) {
-        refreshAudionodes(mute: !(session.first?.muteAudio)!)
-        
-        if (session.first?.muteAudio)! {
-            refreshScene()
-        }
+    @IBAction func searchQrBtnAction(_ sender: UIBarButtonItem) {
+        print("searchQrBtnAction")
+        captureQRCode()
+        qrSearchView.isHidden = false
+
     }
     
-    
-    
-    
-    
-
     
     func objectsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
         print("objectsInRange")
@@ -109,34 +106,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
     }
 
-    
-    func refreshAudionodes(mute: Bool) {
-        print("resetAudioNodes")
-        
-        do {
-            try realm.write {
-                session.first?.muteAudio = mute
-                print("Muted: " + (session.first?.muteAudio.description)!)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-        if (session.first?.muteAudio)! {
-            muteBarButton.image = UIImage(named: "mute_btn_a")
-            
-            for p in mainScene.rootNode.audioPlayers {
-                p.audioSource?.volume = 0
-            }
-            
-            mainScene.rootNode.removeAllAudioPlayers()
-        } else {
-            muteBarButton.image = UIImage(named: "mute_btn_b")
-            
-            refreshScene()
-        }
-    }
-    
     
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(contentObj.uuid))
@@ -400,16 +369,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func initScene() {
+        qrCaptureSession.stopRunning()
+        qrCapturePreviewLayer.removeFromSuperlayer()
+        qrSearchView.isHidden = true
+
         print("initScene")
         loadingViewLabel.text = "Loading..."
         loadingView.isHidden = false
-        
-        if (session.first?.muteAudio)! {
-            refreshAudionodes(mute: true)
-            muteBarButton.image = UIImage(named: "mute_btn_a")
-        } else {
-            muteBarButton.image = UIImage(named: "mute_btn_b")
-        }
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
@@ -435,6 +401,26 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        for item in metadataObjects {
+            if let metadataObject = item as? AVMetadataMachineReadableCodeObject {
+                if metadataObject.type == AVMetadataObject.ObjectType.qr {
+                    qrUrl = metadataObject.stringValue!
+                    
+                    if (metadataObject.stringValue != nil) {
+                        print(metadataObject.stringValue!)
+                        showURLAlert(aMessage: metadataObject.stringValue!)
+                    }
+                    
+                    qrSearchView.isHidden = true
+                    qrCaptureSession.stopRunning()
+                    qrCapturePreviewLayer.removeFromSuperlayer()
+                }
+            }
+        }
+    }
+    
+    
     private func optimizeCam() {
         guard let camera = sceneView.pointOfView?.camera else {
             fatalError("Expected a valid `pointOfView` from the scene.")
@@ -450,6 +436,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewDidLoad() {
         print("viewDidLoad")
         loadingView.isHidden = false
+        qrSearchView.isHidden = true
 
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
@@ -478,7 +465,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
-        refreshAudionodes(mute: true)
     }
     
     
