@@ -263,7 +263,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         if rec.state == .ended {
-
             let location: CGPoint = rec.location(in: sceneView)
             let hits = self.sceneView.hitTest(location, options: nil)
    
@@ -395,23 +394,25 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
-
-        sceneView.antialiasingMode = .none
+        
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         sceneView.addGestureRecognizer(tapGestureRecognizer)
         tapGestureRecognizer.cancelsTouchesInView = false
+        optimizeCam()
+
     }
     
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         for item in metadataObjects {
             if let metadataObject = item as? AVMetadataMachineReadableCodeObject {
+                
                 if metadataObject.type == AVMetadataObject.ObjectType.qr {
                     qrUrl = metadataObject.stringValue!
                     
-                    if (metadataObject.stringValue != nil) {
+                    if (qrUrl != "") {
                         print(metadataObject.stringValue!)
                         showURLAlert(aMessage: metadataObject.stringValue!)
                     }
@@ -420,6 +421,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     qrCaptureSession.stopRunning()
                     qrCapturePreviewLayer.removeFromSuperlayer()
                 }
+                
+                if metadataObject.type == AVMetadataObject.ObjectType.upce {
+                    print(AVMetadataObject.ObjectType.upce)
+                }
+                
             }
         }
     }
@@ -447,7 +453,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         pinchGR.delegate = self
         view.addGestureRecognizer(pinchGR)
-        optimizeCam()
     }
     
     
@@ -458,6 +463,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         contentZoom = 0
         initScene()
         refreshScene()
+        
     }
     
     

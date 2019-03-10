@@ -139,14 +139,7 @@ class ContentNode: SCNNode {
     
     
     func addText(contentObj: RLM_Obj, objText: String, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
-        
-        let allowedFonts = ["Arial", "Times", "GillSans"]
-        var f = "Arial"
-        
-        if allowedFonts.contains(contentObj.font) {
-            f = contentObj.font
-        }
-        
+    
         var nText = "?"
         
         if objText != "" {
@@ -157,14 +150,20 @@ class ContentNode: SCNNode {
         text.alignmentMode = CATextLayerAlignmentMode.center.rawValue
         text.firstMaterial?.isDoubleSided = true
         text.chamferRadius = extrusion
-        text.font = UIFont (name: f, size: fontSize)
+        
+        if UIFont.fontNames(forFamilyName: contentObj.font).count > 0 {
+            text.font = UIFont(name: contentObj.font, size: fontSize)
+        } else {
+            text.font = UIFont(name: "arial", size: fontSize)
+        }
+        
         text.firstMaterial?.diffuse.contents = color
 
         let ctNode = SCNNode(geometry: text)
         let max = text.boundingBox.max
         let min = text.boundingBox.min
         
-        let tx = (max.x - min.x) / 2.0
+        let tx = max.x / 2.0
         let ty = min.y
         let tz = Float(extrusion) / 2.0
 

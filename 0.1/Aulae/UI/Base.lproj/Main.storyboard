@@ -268,7 +268,7 @@
         <!--Settings-->
         <scene sceneID="Fts-l3-fo1">
             <objects>
-                <tableViewController title="Settings" extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="CjR-vc-y1M" customClass="SettingsViewController" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Settings" extendedLayoutIncludesOpaqueBars="YES" modalPresentationStyle="currentContext" id="CjR-vc-y1M" customClass="SettingsViewController" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" bouncesZoom="NO" dataMode="static" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="3ps-j2-dEu">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -800,7 +800,7 @@
         <image name="TabBarIcon_03" width="19" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="syp-hZ-XxQ"/>
-        <segue reference="Q9S-6L-g2l"/>
+        <segue reference="SZc-Qf-Odg"/>
+        <segue reference="pCq-sO-rbF"/>
     </inferredMetricsTieBreakers>
 </document>

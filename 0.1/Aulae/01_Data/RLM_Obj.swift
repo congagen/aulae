@@ -6,6 +6,8 @@ class RLM_Obj: Object {
     @objc dynamic var name:        String = ""
     @objc dynamic var feedId:      String = ""
     @objc dynamic var uuid:        String = ""
+    
+    @objc dynamic var type:        String = ""
     @objc dynamic var contentUrl:  String = ""
     
     @objc dynamic var version:     Int = 0
@@ -20,10 +22,9 @@ class RLM_Obj: Object {
     @objc dynamic var filePath:    String = ""
     
     @objc dynamic var text:        String = ""
-    @objc dynamic var font:        String = "Arial"
+    @objc dynamic var font:        String = ""
     
     @objc dynamic var instance:    Bool = false
-    @objc dynamic var type:        String = ""
     
     @objc dynamic var hex_color:   String = "7259ff"
     @objc dynamic var style:       Int = 0

@@ -1,7 +1,7 @@
 
 // URGENT:
 
-//    Feed MGMT: Fix: [ Add Feed -> Delete Feed -> Add Feed ] Bug
+//    Orientation bug (Settings -> vert->hori -> Return)
 //    Name?
 //    Extensions: Target: Info: URL Types
 //    Content Type: Marker
