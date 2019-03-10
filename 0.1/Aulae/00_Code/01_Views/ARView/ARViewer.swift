@@ -19,10 +19,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
-    var qrRequests = [VNRequest]()
-    var detectedDataAnchor: ARAnchor?
-    var processing = false
-    
+    var isTrackingQR = false
     var qrUrl = ""
     var qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
     var qrCaptureSession = AVCaptureSession()
@@ -35,6 +32,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var updateTimer = Timer()
     var audioListener: SCNNode? { return mainScene.rootNode }
 
+    var configuration = AROrientationTrackingConfiguration()
     var mainScene = SCNScene()
     var selectedNode: ContentNode? = nil
     var selectedNodeY: Float = 0
@@ -64,11 +62,23 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    @IBOutlet var searchQRBtn: UIBarButtonItem!
+    
     @IBAction func searchQrBtnAction(_ sender: UIBarButtonItem) {
         print("searchQrBtnAction")
-        captureQRCode()
-        qrSearchView.isHidden = false
-
+        if isTrackingQR {
+            searchQRBtn.tintColor = self.view.window?.tintColor
+            qrCaptureSession.stopRunning()
+            qrCapturePreviewLayer.removeFromSuperlayer()
+            isTrackingQR = false
+            qrSearchView.isHidden = true
+        } else {
+            searchQRBtn.tintColor = UIColor.green
+            captureQRCode()
+            qrSearchView.isHidden = false
+            isTrackingQR = true
+        }
+        
     }
     
     
@@ -364,7 +374,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         loadingViewLabel.text = message
         loadingView.isHidden  = trackingState == 0
-
     }
     
     
@@ -372,7 +381,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
         qrSearchView.isHidden = true
-
+        
         print("initScene")
         loadingViewLabel.text = "Loading..."
         loadingView.isHidden = false
@@ -384,17 +393,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         sceneView.delegate = self
         sceneView.audioListener = mainScene.rootNode
         
-        //let configuration = ARWorldTrackingConfiguration()
-        let configuration = AROrientationTrackingConfiguration()
-
-//        configuration.planeDetection = [.vertical, .horizontal]
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
 
-        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         sceneView.antialiasingMode = .none
-        
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         sceneView.addGestureRecognizer(tapGestureRecognizer)
         tapGestureRecognizer.cancelsTouchesInView = false
@@ -436,7 +441,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewDidLoad() {
         print("viewDidLoad")
         loadingView.isHidden = false
-        qrSearchView.isHidden = true
 
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
@@ -451,7 +455,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
         loadingView.isHidden = false
-
+        
         contentZoom = 0
         initScene()
         refreshScene()
@@ -469,8 +473,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func session(_ session: ARSession, didFailWithError error: Error) {
-        print("ArKit ViewerVC: didFailWithError")
         print(error)
+        print(error.localizedDescription)
+        
+        if let arError = error as? ARError {
+            initScene()
+        }
     }
     
     

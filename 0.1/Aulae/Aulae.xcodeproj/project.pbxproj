@@ -258,10 +258,10 @@
 			isa = PBXGroup;
 			children = (
 				FA6BA7CE2232A02500DB3F2A /* Logo.png */,
+				FA6BA7D02232E5E600DB3F2A /* Demos.swift */,
 				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 				318FE8F120B0BB730050528B /* HttpDownloader.swift */,
 				FA9E933E222183AC00346073 /* NetworkTools.swift */,
-				FA6BA7D02232E5E600DB3F2A /* Demos.swift */,
 				319D3F2720D7965B007FEECA /* FeedMgmt.swift */,
 			);
 			path = Components;

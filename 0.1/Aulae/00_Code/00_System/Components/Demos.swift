@@ -27,7 +27,7 @@ extension MainVC {
             ]
         ]
         
-        demoFeed.url  = "Examples and demos"
+        demoFeed.url  = ""
         demoFeed.id   = UUID().uuidString
         demoFeed.name = "Demo Guide"
         

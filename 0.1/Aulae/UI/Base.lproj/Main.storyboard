@@ -185,7 +185,7 @@
                             </barButtonItem>
                             <barButtonItem image="QR" id="zJn-jr-Es6">
                                 <connections>
-                                    <action selector="searchQrBtnAction:" destination="cNO-cb-Srl" id="PcJ-st-3kW"/>
+                                    <action selector="searchQrBtnAction:" destination="cNO-cb-Srl" id="9dV-7R-HaM"/>
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
@@ -207,6 +207,7 @@
                         <outlet property="loadingViewLabel" destination="mak-KG-CXa" id="ObG-sf-0Us"/>
                         <outlet property="qrSearchView" destination="j7D-sZ-GrG" id="heI-GE-cSi"/>
                         <outlet property="sceneView" destination="fEs-rS-yaY" id="cxZ-S7-Spe"/>
+                        <outlet property="searchQRBtn" destination="zJn-jr-Es6" id="TN2-UT-k9e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0yF-0m-H2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -792,7 +793,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="QR" width="20" height="20"/>
+        <image name="QR" width="22" height="22"/>
         <image name="TabBarIcon_00" width="24" height="24"/>
         <image name="TabBarIcon_01" width="26" height="16"/>
         <image name="TabBarIcon_02" width="20" height="21"/>

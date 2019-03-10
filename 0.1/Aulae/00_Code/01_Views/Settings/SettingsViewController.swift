@@ -107,7 +107,7 @@ class SettingsViewController: UITableViewController {
                         session.first!.feedUpdateInterval    = propValue
                         
                     case contentUpdateSpeedParamName:
-                        session.first!.contentUpdateInterval = propValue
+                        session.first!.sysUpdateInterval     = propValue
                         
                     case scaleFactorParamName:
                         session.first!.scaleFactor           = propValue
@@ -145,8 +145,8 @@ class SettingsViewController: UITableViewController {
         feedUpdateSpeedDisplay.text      = String(Int(session.first!.feedUpdateInterval))
         feedUpdateSpeedStepper.value     = session.first!.feedUpdateInterval
         
-        contentUpdateSpeedDisplay.text   = String(Int(session.first!.contentUpdateInterval))
-        contentUpdateSpeedStepper.value  = session.first!.contentUpdateInterval
+        contentUpdateSpeedDisplay.text   = String(Int(session.first!.sysUpdateInterval))
+        contentUpdateSpeedStepper.value  = session.first!.sysUpdateInterval
         
         scaleFactorDisplay.text          = String(Int(session.first!.scaleFactor))
         scaleFactorStepper.value         = session.first!.scaleFactor

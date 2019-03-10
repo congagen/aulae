@@ -186,8 +186,8 @@ class FeedsTVC: UITableViewController {
         )
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:handleCancel))
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler:handleEnterURL))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,  handler: handleCancel))
+        alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: handleEnterURL))
         alert.view.tintColor = UIColor.black
         
         self.present(alert, animated: true, completion: nil)

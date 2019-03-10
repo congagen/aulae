@@ -39,13 +39,13 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         dbGc()
 
         if session.count > 0 {
-            if mainUpdateTimer.timeInterval != session.first?.contentUpdateInterval {
+            if mainUpdateTimer.timeInterval != session.first?.sysUpdateInterval {
                 mainUpdateTimer.invalidate()
             }
             
             if !mainUpdateTimer.isValid {
                 mainUpdateTimer = Timer.scheduledTimer(
-                    timeInterval: (session.first?.contentUpdateInterval)!,
+                    timeInterval: (session.first?.sysUpdateInterval)!,
                     target: self, selector: #selector(mainUpdate),
                     userInfo: nil, repeats: true)
             }

@@ -24,39 +24,46 @@ class HttpDownloader {
     }
     
     
-    func loadFileAsync(checkExisting: Bool, url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
+    func loadFileAsync(removeExisting: Bool, url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
         let sessionConfig = URLSessionConfiguration.default
         let session = URLSession(configuration: sessionConfig)
         let request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
         var dwl = true
 
-        if checkExisting {
-            dwl = !(FileManager.default.fileExists(atPath: destinationUrl.path))
-        }
-        
-        if dwl {
-            let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
-                if let tempLocalUrl = tempLocalUrl, error == nil {
-
-                    if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                        print("Success: \(statusCode)")
-                    }
-                    
-                    do {
-                        try FileManager.default.copyItem(at: tempLocalUrl, to: destinationUrl)
-                        completion()
-                    } catch (let writeError) {
-                        print(writeError)
-                    }
-                    
-                } else {
-                    print(error!)
-                    print(url.absoluteString)
-                    //  try! FileManager.default.removeItem(at: destinationUrl!)
+        if removeExisting {
+            //dwl = !(FileManager.default.fileExists(atPath: destinationUrl.path))
+            
+            if FileManager.default.fileExists(atPath: destinationUrl.path )  {
+                do{
+                    try FileManager.default.removeItem(atPath: destinationUrl.path )
+                }catch let error {
+                    print("error occurred, here are the details:\n \(error)")
                 }
             }
-            task.resume()
+            
         }
+        
+        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
+            if let tempLocalUrl = tempLocalUrl, error == nil {
+
+                if let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                    print("Success: \(statusCode)")
+                }
+                
+                do {
+                    try FileManager.default.copyItem(at: tempLocalUrl, to: destinationUrl)
+                    completion()
+                } catch (let writeError) {
+                    print(writeError)
+                }
+                
+            } else {
+                print(error!)
+                print(url.absoluteString)
+                //  try! FileManager.default.removeItem(at: destinationUrl!)
+            }
+        }
+        task.resume()
         
     }
 

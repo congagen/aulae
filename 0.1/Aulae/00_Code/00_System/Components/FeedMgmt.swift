@@ -30,6 +30,7 @@ class FeedMgmt {
     
     func refreshObjects() {
         print("refreshObjects")
+        
         for o in feedObjects {
             let objectFeeds = feeds.filter({ $0.id == o.feedId })
             
@@ -185,7 +186,7 @@ class FeedMgmt {
                     
                     if let URL = URL(string: contentUrl) {
                         let _ = httpDl.loadFileAsync(
-                            checkExisting: true,
+                            removeExisting: true,
                             url: URL as URL, destinationUrl: destinationUrl!,
                             completion: { DispatchQueue.main.async { self.storeFeedObject( objInfo: objData, objFilePath: destinationUrl!, feedId: feedId) } }
                         )
@@ -266,7 +267,7 @@ class FeedMgmt {
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
                 
                 if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
-                    storeFeed(jsonResult: jsonResult, feedDbItem: feedDbItem, checkVersion: false)
+                    storeFeed(jsonResult: jsonResult, feedDbItem: feedDbItem, checkVersion: true)
                 }
             } catch {
                 print(error)
@@ -279,12 +280,14 @@ class FeedMgmt {
         print("storeFeedApi")
         print(result.keys)
         
-        self.storeFeed(jsonResult: result, feedDbItem: feedDbItem, checkVersion: false)
+        self.storeFeed(jsonResult: result, feedDbItem: feedDbItem, checkVersion: true)
     }
     
     
     @objc func handleApiResult(result: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed) {
         print("handleApiResult")
+        print(result)
+        
         DispatchQueue.main.async {
             self.storeFeedApi(result: result, feedDbItem: feedDbItem)
         }
@@ -293,17 +296,18 @@ class FeedMgmt {
     
     func updateFeeds(checkTimeSinceUpdate: Bool) {
         print("updateFeeds")
-        
+        print("Feed Count:      "   + String(feeds.count))
+        print("FeedObjectCount: "   + String(feedObjects.count))
+
         let updateInterval = Int((session.first?.feedUpdateInterval)!) + 1
         var shouldUpdate = true
 
         refreshObjects()
 
-        for ob in feedObjects {
-            print("Object: " + "Path: " + ob.filePath + " | Active: " + String(ob.active) + " | Deleted: " + String(ob.deleted) )
-        }
-        
         for fe in feeds {
+            print("Updating Feed: " + fe.name)
+            print("Feed ID:       " + fe.id)
+            print("Feed URL:      " + fe.url)
             
             if checkTimeSinceUpdate {
                 let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
@@ -312,7 +316,6 @@ class FeedMgmt {
             }
             
             print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
-            print("FeedObjectCount: "   + String(feedObjects.count))
             
             if fe.active && !fe.deleted && shouldUpdate && fe.url != "" {
                 let sourceUrl = URL(string: fe.url)
@@ -322,18 +325,36 @@ class FeedMgmt {
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                 
+                if FileManager.default.fileExists(atPath: (destinationUrl?.absoluteString)!)  {
+                    do{
+                        try FileManager.default.removeItem(atPath: (destinationUrl?.absoluteString)! )
+                    }catch let error {
+                        print("error occurred, here are the details:\n \(error)")
+                    }
+                }
+                
+                var sType = "api"
+                
                 if sourceExt != nil {
-                    if sourceExt == "json" {
-                        if let URL = URL(string: fe.url) {
-                            let _ = httpDl.loadFileAsync(
-                                checkExisting: false, url: URL as URL, destinationUrl: destinationUrl!,
-                                completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl!, feedDbItem: fe) } }
-                            )
-                        }
+                    print("Ext: " + sourceExt!)
+                    
+                    if sourceExt?.lowercased() == "json" {
+                        sType = "json"
+                    }
+                }
+                
+                if sType == "json" {
+                    if let URL = URL(string: fe.url) {
+                        print("Downloading Feed JSON: " + fe.url)
+                        let _ = httpDl.loadFileAsync(
+                            removeExisting: true, url: URL as URL, destinationUrl: destinationUrl!,
+                            completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl!, feedDbItem: fe) } }
+                        )
                     }
                 } else {
+                    print("Calling Feed API: " + fe.url)
                     NetworkTools().postReq(
-                        completion: { r in self.handleApiResult(result: r, feedDbItem: fe) } , apiHeaderValue: apiHeaderValue,
+                        completion: { r in self.handleApiResult(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
                         apiHeaderFeild: apiHeaderFeild, apiUrl: fe.url, reqParams: ["":""]
                     )
                 }

@@ -24,7 +24,7 @@ extension ARViewer {
     }
     
     
-    func handleCancel(alertView: UIAlertAction!) {
+    func cancelHandler(alertView: UIAlertAction!) {
         qrSearchView.isHidden = true
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
@@ -40,7 +40,7 @@ extension ARViewer {
         
         qrUrl = aMessage
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:handleCancel))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: cancelHandler))
         alert.addAction(UIAlertAction(title: "Add", style: UIAlertAction.Style.default, handler: handleEnterURL))
         alert.view.tintColor = UIColor.black
         
@@ -50,7 +50,7 @@ extension ARViewer {
     
     func captureQRCode() {
     
-//        qrCaptureSession.stopRunning()
+        qrCaptureSession.stopRunning()
         qrCaptureSession = AVCaptureSession()
         
         let device = AVCaptureDevice.default(for: AVMediaType.video)
