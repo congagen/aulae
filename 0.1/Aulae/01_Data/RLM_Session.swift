@@ -14,8 +14,8 @@ class RLM_Session: Object {
     @objc dynamic var currentAlt: Double = 0.0
     
     @objc dynamic var mapUpdateInterval:  Double = 5.0
-    @objc dynamic var feedUpdateInterval: Double = 60.0
-    @objc dynamic var sysUpdateInterval:  Double = 60.0
+    @objc dynamic var feedUpdateInterval: Double = 10.0
+    @objc dynamic var sysUpdateInterval:  Double = 10.0
     @objc dynamic var searchRadius: Double = 1000000000
 
     @objc dynamic var scaleFactor:   Double = 5

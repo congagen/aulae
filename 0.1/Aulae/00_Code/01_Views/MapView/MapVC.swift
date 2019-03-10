@@ -249,9 +249,9 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         let pinIcon                 = UIImageView()
         pinIcon.frame               = CGRect( x: 0, y: 0, width: (pinView?.frame.width)!, height: (pinView?.frame.height)! )
-        pinIcon.layer.cornerRadius  = pinIcon.frame.width / 2;
+        pinIcon.layer.cornerRadius  = pinIcon.frame.width / 2
         pinIcon.layer.masksToBounds = true
-        pinIcon.backgroundColor     = UIColor.black
+        pinIcon.backgroundColor     = UIColor.purple
         
         if let o: MapAno = annotation as? MapAno {
             let fo = feedObjects.filter( {$0.uuid == o.id } )

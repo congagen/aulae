@@ -28,13 +28,15 @@ extension ARViewer {
         qrSearchView.isHidden = true
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
+        
+        searchQRBtn.tintColor = self.view.window?.tintColor
     }
     
     
     func showURLAlert(aMessage: String) {
         let alert = UIAlertController(
             title: aMessage,
-            message: "Add this url?",
+            message: nil,
             preferredStyle: UIAlertController.Style.alert
         )
         

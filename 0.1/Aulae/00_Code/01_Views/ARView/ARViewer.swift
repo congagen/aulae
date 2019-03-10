@@ -48,8 +48,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     @IBOutlet var sceneView: ARSCNView!
-    
-    
     @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
         print("sharePhotoBtn")
         let snapShot = sceneView.snapshot()
@@ -63,7 +61,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @IBOutlet var searchQRBtn: UIBarButtonItem!
-    
     @IBAction func searchQrBtnAction(_ sender: UIBarButtonItem) {
         print("searchQrBtnAction")
         if isTrackingQR {
@@ -164,7 +161,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } else {
             if contentObj.type.lowercased() == "text" {
                 ctNode.addText(
-                    objText: contentObj.text, extrusion: CGFloat(contentObj.scale * 0.1),
+                    contentObj: contentObj, objText: contentObj.text, extrusion: CGFloat(contentObj.scale * 0.1),
                     fontSize: CGFloat(contentObj.scale), color: UIColor(hexColor: contentObj.hex_color)
                 )
             }
@@ -378,11 +375,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func initScene() {
+        print("initScene")
+
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
         qrSearchView.isHidden = true
+        searchQRBtn.tintColor = self.view.window?.tintColor
         
-        print("initScene")
         loadingViewLabel.text = "Loading..."
         loadingView.isHidden = false
         
@@ -476,7 +475,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print(error)
         print(error.localizedDescription)
         
-        if let arError = error as? ARError {
+        if error is ARError {
             initScene()
         }
     }

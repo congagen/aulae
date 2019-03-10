@@ -18,7 +18,9 @@ class RLM_Obj: Object {
     
     @objc dynamic var fileName:    String = ""
     @objc dynamic var filePath:    String = ""
+    
     @objc dynamic var text:        String = ""
+    @objc dynamic var font:        String = "Arial"
     
     @objc dynamic var instance:    Bool = false
     @objc dynamic var type:        String = ""

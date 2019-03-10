@@ -71,6 +71,8 @@ class FeedMgmt {
                 rlmObj.contentLink = objInfo["content_link"] as! String
                 
                 rlmObj.text       = objInfo["text"] as! String
+                rlmObj.font       = objInfo["font"] as! String
+
                 rlmObj.world_position = objInfo["world_position"] as! Bool
                 
                 rlmObj.world_scale = objInfo["world_scale"] as! Bool
@@ -158,6 +160,8 @@ class FeedMgmt {
 
                     "info":             valueIfPresent(dict: itemSpec, key: "info",   placeHolderValue: ""),
                     "text":             valueIfPresent(dict: itemSpec, key: "text",   placeHolderValue: ""),
+                    "font":             valueIfPresent(dict: itemSpec, key: "font",   placeHolderValue: "Arial"),
+
                     "instance":         valueIfPresent(dict: itemSpec, key: "instance", placeHolderValue: true),
 
                     "rotate":           valueIfPresent(dict: itemSpec, key: "rotate",  placeHolderValue: 0.0),
