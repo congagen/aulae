@@ -255,6 +255,7 @@ class FeedMgmt {
                 updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
             }
         } else {
+            print(jsonResult)
             
             do {
                 try realm.write {

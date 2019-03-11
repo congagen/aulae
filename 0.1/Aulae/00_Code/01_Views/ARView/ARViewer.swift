@@ -43,8 +43,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var loadingView: UIView!
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
-        initScene()
-        refreshScene()
+        //initScene()
+        //refreshScene()
+        mainTimerUpdate()
     }
     
     @IBOutlet var sceneView: ARSCNView!
@@ -179,6 +180,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.position = SCNVector3(contentPos.x, (contentPos.y-yH), contentPos.z)
         ctNode.tagComponents(nodeTag: contentObj.uuid)
         ctNode.name = contentObj.uuid
+        
+        //rotateAnimation(node: ctNode, xAmt: 0, yAmt: 360, zAmt: 0, speed: contentObj.rotate)
         
 //        if contentObj.rotate != 0 {
 //            rotateAnimation(node: ctNode, xAmt: 0, yAmt: 360, zAmt: 0, speed: contentObj.rotate)
@@ -320,19 +323,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @objc func mainTimerUpdate() {
         print("mainUpdate: ARViewer")
+        var needsUpdate = false
+        
+        for fo in feedObjects {
+            
+            if (fo.active && !fo.deleted) {
+                if mainScene.rootNode.childNodes.filter( {$0.name == fo.uuid} ).count == 0 {
+                    needsUpdate = true
+                }
+            }
+        }
+        
+        if needsUpdate {
+            print("mainUpdate: needsUpdate")
+            refreshScene()
+        }
         
         if session.count > 0 {
             if updateTimer.timeInterval != session.first!.feedUpdateInterval {
                 updateTimer.invalidate()
             }
             
-            if !updateTimer.isValid {
+            if !updateTimer.isValid && (session.first?.autoUpdate)! {
                 updateTimer = Timer.scheduledTimer(
                     timeInterval: session.first!.feedUpdateInterval, target: self, selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
             }
         }
-        
-        refreshScene()
     }
     
     
@@ -400,7 +416,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         sceneView.addGestureRecognizer(tapGestureRecognizer)
         tapGestureRecognizer.cancelsTouchesInView = false
         optimizeCam()
-
+        
+        if (session.first?.autoUpdate)! {
+            mainTimerUpdate()
+        }
+        
     }
     
     
@@ -462,7 +482,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         contentZoom = 0
         initScene()
         refreshScene()
-        
     }
     
     

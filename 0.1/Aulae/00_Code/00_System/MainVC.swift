@@ -124,7 +124,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             locationManager.requestWhenInUseAuthorization()
             locationManager.allowsBackgroundLocationUpdates = false
         }
-        
     }
     
     
@@ -161,7 +160,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
-
     }
 
     

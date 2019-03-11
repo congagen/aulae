@@ -17,16 +17,6 @@ extension MainVC {
     func buildTextDemo() {
         let demoFeed = RLM_Feed()
         
-        let welcome = [
-            0: [
-                0: "Bla",
-                1: "Bla",
-                2: "Bla",
-                3: "Bla"
-                
-            ]
-        ]
-        
         demoFeed.url  = ""
         demoFeed.id   = "Demo Feed"
         demoFeed.name = "Demo Feed"
@@ -41,8 +31,8 @@ extension MainVC {
                     let o = RLM_Obj()
                     o.name = String(i)
                     o.feedId = demoFeed.id
-                    o.contentUrl = ""
                     o.active = true
+                    o.contentLink = "https://www.abstraqata.com"
                     
                     o.lat = 10
                     o.lng = 50
