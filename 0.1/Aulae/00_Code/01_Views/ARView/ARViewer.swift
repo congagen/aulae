@@ -14,6 +14,8 @@ import Vision
 
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
+    var updateTimer = Timer()
+
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
@@ -23,13 +25,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var qrUrl = ""
     var qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
     var qrCaptureSession = AVCaptureSession()
-    @IBOutlet var qrSearchView: UIView!
-    
-    var audioSource: SCNAudioSource!
-    
+        
     var trackingState = 3
     var contentZoom: Double = 1
-    var updateTimer = Timer()
     var audioListener: SCNNode? { return mainScene.rootNode }
 
     var configuration = AROrientationTrackingConfiguration()
@@ -43,8 +41,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var loadingView: UIView!
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
-        //initScene()
-        //refreshScene()
         mainTimerUpdate()
     }
     
@@ -69,13 +65,23 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             qrCaptureSession.stopRunning()
             qrCapturePreviewLayer.removeFromSuperlayer()
             isTrackingQR = false
-            qrSearchView.isHidden = true
         } else {
-            searchQRBtn.tintColor = UIColor.green
             captureQRCode()
-            qrSearchView.isHidden = false
+            searchQRBtn.tintColor = UIColor.green
             isTrackingQR = true
         }
+    }
+    
+    
+    private func optimizeCam() {
+        guard let camera = sceneView.pointOfView?.camera else {
+            fatalError("Expected a valid `pointOfView` from the scene.")
+        }
+        // Enable HDR camera settings for the most realistic appearance with environmental lighting and physically based materials.
+        camera.wantsHDR = true
+        //camera.exposureOffset  = 0
+        camera.minimumExposure = 0
+        camera.maximumExposure = 1
     }
     
     
@@ -154,7 +160,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
                 if (session.first?.showPlaceholders)! && !(session.first?.muteAudio)!{
                     ctNode.addSphere(radius: 0.05 + (nodeSize * 0.01), and: UIColor(hexColor: contentObj.hex_color))
-                    
                 }
                 addAudio(contentObj: contentObj, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize)
             }
@@ -280,11 +285,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                             if selectedNode == (sNodes.first as! ContentNode) {
                                 showSeletedNodeActions(objData: matchingObjs.first!)
                                 highlightSelected(hideOther: true)
-
                             } else {
                                 selectedNode = (sNodes.first as! ContentNode)
                                 selectedNodeY = (selectedNode?.position.y)!
-
                                 highlightSelected(hideOther: true)
                             }
                         }
@@ -295,9 +298,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     selectedNode?.position.y = selectedNodeY
                     selectedNodeY = 0
                 }
-                
                 selectedNode = nil
-                
             }
         }
     }
@@ -321,41 +322,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    @objc func mainTimerUpdate() {
-        print("mainUpdate: ARViewer")
-        var needsUpdate = false
-        
-        for fo in feedObjects {
-            
-            if (fo.active && !fo.deleted) {
-                if mainScene.rootNode.childNodes.filter( {$0.name == fo.uuid} ).count == 0 {
-                    needsUpdate = true
-                }
-            }
-        }
-        
-        if needsUpdate {
-            print("mainUpdate: needsUpdate")
-            refreshScene()
-        }
-        
-        if session.count > 0 {
-            if updateTimer.timeInterval != session.first!.feedUpdateInterval {
-                updateTimer.invalidate()
-            }
-            
-            if !updateTimer.isValid && (session.first?.autoUpdate)! {
-                updateTimer = Timer.scheduledTimer(
-                    timeInterval: session.first!.feedUpdateInterval, target: self, selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
-            }
-        }
-    }
-    
-    
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         var message: String = ""
         trackingState = 2
-
         
         switch camera.trackingState {
         case .notAvailable:
@@ -393,7 +362,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
-        qrSearchView.isHidden = true
         searchQRBtn.tintColor = self.view.window?.tintColor
         
         loadingViewLabel.text = "Loading..."
@@ -410,6 +378,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
         
+//        sceneView.debugOptions = [.showFeaturePoints]
+
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -436,7 +406,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         showURLAlert(aMessage: metadataObject.stringValue!)
                     }
                     
-                    qrSearchView.isHidden = true
                     qrCaptureSession.stopRunning()
                     qrCapturePreviewLayer.removeFromSuperlayer()
                 }
@@ -450,15 +419,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    private func optimizeCam() {
-        guard let camera = sceneView.pointOfView?.camera else {
-            fatalError("Expected a valid `pointOfView` from the scene.")
+    @objc func mainTimerUpdate() {
+        print("mainUpdate: ARViewer")
+        var needsRefresh = false
+        
+        for fo in feedObjects {
+            if (fo.active && !fo.deleted) {
+                if mainScene.rootNode.childNodes.filter( {$0.name == fo.uuid} ).count == 0 {
+                    needsRefresh = true
+                }
+            }
         }
-        // Enable HDR camera settings for the most realistic appearance with environmental lighting and physically based materials.
-        camera.wantsHDR = true
-        //camera.exposureOffset  = 0
-        camera.minimumExposure = 0
-        camera.maximumExposure = 1
+        
+        if needsRefresh {
+            print("mainUpdate: needsUpdate")
+            refreshScene()
+        }
+        
+        updateTimer.invalidate()
+        
+        if !updateTimer.isValid && (session.first?.autoUpdate)! {
+            updateTimer = Timer.scheduledTimer(
+                timeInterval: session.first!.feedUpdateInterval, target: self, selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
+        }
+        
+        loadingView.isHidden  = trackingState == 0
+
     }
     
     

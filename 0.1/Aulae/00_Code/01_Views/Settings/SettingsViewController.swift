@@ -20,20 +20,19 @@ class SettingsViewController: UITableViewController {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     
-    // SYSTEM
+    let systemUpdateSpeedParamName = "systemUpdateSpeed"
+    @IBOutlet var systemUpdateSpeedStepper: UIStepper!
+    @IBOutlet var systemUpdateSpeedDisplay: UITextField!
+    @IBAction func systemUpdateSpeedStepperAction(_ sender: UIStepper) {
+        saveSettings(propName: systemUpdateSpeedParamName, propValue: Double(sender.value))
+        updateUI()
+    }
+    
     let feeUpdateSpeedParamName = "feedUpdateSpeed"
     @IBOutlet var feedUpdateSpeedStepper: UIStepper!
     @IBOutlet var feedUpdateSpeedDisplay: UITextField!
     @IBAction func feedUpdateIntervalStepperAction(_ sender: UIStepper) {
         saveSettings(propName: feeUpdateSpeedParamName, propValue: Double(sender.value))
-        updateUI()
-    }
-    
-    let contentUpdateSpeedParamName = "contentUpdateSpeed"
-    @IBOutlet var contentUpdateSpeedStepper: UIStepper!
-    @IBOutlet var contentUpdateSpeedDisplay: UITextField!
-    @IBAction func contentUpdateSpeedStepperAction(_ sender: UIStepper) {
-        saveSettings(propName: contentUpdateSpeedParamName, propValue: Double(sender.value))
         updateUI()
     }
     
@@ -103,11 +102,11 @@ class SettingsViewController: UITableViewController {
                 try realm.write {
                     switch propName {
                         
+                    case systemUpdateSpeedParamName:
+                        session.first!.sysUpdateInterval     = propValue
+                        
                     case feeUpdateSpeedParamName:
                         session.first!.feedUpdateInterval    = propValue
-                        
-                    case contentUpdateSpeedParamName:
-                        session.first!.sysUpdateInterval     = propValue
                         
                     case scaleFactorParamName:
                         session.first!.scaleFactor           = propValue
@@ -145,8 +144,8 @@ class SettingsViewController: UITableViewController {
         feedUpdateSpeedDisplay.text      = String(Int(session.first!.feedUpdateInterval))
         feedUpdateSpeedStepper.value     = session.first!.feedUpdateInterval
         
-        contentUpdateSpeedDisplay.text   = String(Int(session.first!.sysUpdateInterval))
-        contentUpdateSpeedStepper.value  = session.first!.sysUpdateInterval
+        systemUpdateSpeedDisplay.text   = String(Int(session.first!.sysUpdateInterval))
+        systemUpdateSpeedStepper.value  = session.first!.sysUpdateInterval
         
         scaleFactorDisplay.text          = String(Int(session.first!.scaleFactor))
         scaleFactorStepper.value         = session.first!.scaleFactor

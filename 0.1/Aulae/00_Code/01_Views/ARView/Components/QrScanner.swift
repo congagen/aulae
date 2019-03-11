@@ -17,18 +17,16 @@ extension ARViewer {
     
     
     func handleEnterURL(alertView: UIAlertAction!) {
-        print("Adding: " + qrUrl)
+        print("Adding QRURL: " + qrUrl)
         FeedActions().addFeedUrl(feedUrl: qrUrl, refreshExisting: true)
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
         
         searchQRBtn.tintColor = self.view.window?.tintColor
-        
     }
     
     
     func cancelHandler(alertView: UIAlertAction!) {
-        qrSearchView.isHidden = true
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
         
