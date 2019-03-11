@@ -28,10 +28,10 @@ extension MainVC {
         ]
         
         demoFeed.url  = ""
-        demoFeed.id   = UUID().uuidString
-        demoFeed.name = "Demo Guide"
+        demoFeed.id   = "Demo Feed"
+        demoFeed.name = "Demo Feed"
         
-        let itemCount = 8
+        let itemCount = 9
         
         do {
             try realm.write {

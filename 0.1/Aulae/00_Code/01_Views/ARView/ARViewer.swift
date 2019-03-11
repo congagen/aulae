@@ -75,7 +75,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             qrSearchView.isHidden = false
             isTrackingQR = true
         }
-        
     }
     
     

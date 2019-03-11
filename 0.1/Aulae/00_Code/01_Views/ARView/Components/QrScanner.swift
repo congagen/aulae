@@ -17,9 +17,12 @@ extension ARViewer {
     
     
     func handleEnterURL(alertView: UIAlertAction!) {
-        
         print("Adding: " + qrUrl)
         FeedActions().addFeedUrl(feedUrl: qrUrl, refreshExisting: true)
+        qrCaptureSession.stopRunning()
+        qrCapturePreviewLayer.removeFromSuperlayer()
+        
+        searchQRBtn.tintColor = self.view.window?.tintColor
         
     }
     
@@ -77,6 +80,8 @@ extension ARViewer {
         qrCapturePreviewLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
         
         self.view.layer.addSublayer(qrCapturePreviewLayer)
+        
+        
         qrCaptureSession.startRunning()
     }
     

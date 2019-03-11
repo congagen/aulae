@@ -255,9 +255,16 @@ class FeedMgmt {
                 updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
             }
         } else {
-            feedDbItem.errors += 1
-            updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
-            updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+            
+            do {
+                try realm.write {
+                    feedDbItem.errors += 10
+                    feedDbItem.active  = false
+                    feedDbItem.name    = "Offline"
+                }
+            } catch {
+                print("Error: \(error)")
+            }
         }
     }
     
