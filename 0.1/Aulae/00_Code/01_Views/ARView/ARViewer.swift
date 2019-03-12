@@ -31,6 +31,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var audioListener: SCNNode? { return mainScene.rootNode }
 
     var configuration = AROrientationTrackingConfiguration()
+    //var configuration = ARWorldTrackingConfiguration()
+    
     var mainScene = SCNScene()
     var selectedNode: ContentNode? = nil
     var selectedNodeY: Float = 0
@@ -42,9 +44,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var loadingView: UIView!
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
-        
-        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 2)
-        
+        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
         mainTimerUpdate()
     }
     
@@ -66,9 +66,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var searchQRBtn: UIBarButtonItem!
     @IBAction func searchQrBtnAction(_ sender: UIBarButtonItem) {
         print("searchQrBtnAction")
-        
-        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 2)
-        
+    
         if isTrackingQR {
             searchQRBtn.tintColor = self.view.window?.tintColor
             qrCaptureSession.stopRunning()
@@ -178,6 +176,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     contentObj: contentObj, objText: contentObj.text, extrusion: CGFloat(contentObj.scale * 0.1),
                     fontSize: CGFloat(contentObj.scale), color: UIColor(hexColor: contentObj.hex_color)
                 )
+            } else {
+                if (session.first?.showPlaceholders)! {
+                    ctNode.addSphere(radius: 10, and: UIColor.green)
+                }
             }
         }
         
@@ -413,7 +415,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 if metadataObject.type == AVMetadataObject.ObjectType.upce {
                     print(AVMetadataObject.ObjectType.upce)
                 }
-                
             }
         }
     }
@@ -433,6 +434,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if needsRefresh {
             print("mainUpdate: needsUpdate")
+            
             refreshScene()
         }
         

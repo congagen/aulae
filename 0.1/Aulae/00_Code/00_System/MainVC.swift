@@ -157,6 +157,12 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
+        
+        let logo = UIImage(named: "Logo.png")
+        let imageView = UIImageView(image: logo)
+        imageView.contentMode = .scaleAspectFit
+        self.navigationController?.navigationBar.topItem?.titleView = imageView
+        
     }
 
     

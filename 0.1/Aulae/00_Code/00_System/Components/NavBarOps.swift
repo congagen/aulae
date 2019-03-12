@@ -11,6 +11,7 @@ import UIKit
 
 class NavBarOps {
     
+    
     func showProgressBar(navCtrl: UINavigationController, progressBar: UIProgressView, view: UIView, timeoutPeriod: Double) {
         
         let navBarHeight = navCtrl.navigationBar.frame.height
@@ -22,8 +23,6 @@ class NavBarOps {
         progressBar.layoutIfNeeded()
         progressBar.layer.removeAllAnimations()
         
-        progressBar.setProgress(Float(timeoutPeriod), animated: true)
-        
         let pSetX = progressViewFrame.origin.x
         let pSetY = CGFloat(navBarHeight)
         let pSetWidth = view.frame.width
@@ -32,6 +31,8 @@ class NavBarOps {
         progressBar.frame = CGRect(x: pSetX, y: pSetY, width: pSetWidth, height: pSetHight)
         navCtrl.navigationBar.addSubview(progressBar)
         progressBar.translatesAutoresizingMaskIntoConstraints = true
+        
+        progressBar.setProgress(Float(timeoutPeriod), animated: true)
         
         if timeoutPeriod != 0 {
             Timer.scheduledTimer(withTimeInterval: timeoutPeriod, repeats: false, block: {_ in progressBar.removeFromSuperview()})

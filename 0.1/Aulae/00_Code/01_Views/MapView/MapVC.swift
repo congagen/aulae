@@ -42,7 +42,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var reloadBtn: UIBarButtonItem!
     @IBAction func reloadBtnAction(_ sender: UIBarButtonItem) {
-        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 2)
+        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
         
         initMapView()
         mainUpdate()
@@ -254,7 +254,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         pinIcon.frame               = CGRect( x: 0, y: 0, width: (pinView?.frame.width)!, height: (pinView?.frame.height)! )
         pinIcon.layer.cornerRadius  = pinIcon.frame.width / 2
         pinIcon.layer.masksToBounds = true
-        pinIcon.backgroundColor     = UIColor.purple
+        
+        pinIcon.backgroundColor     = UIColor.green
         
         if let o: MapAno = annotation as? MapAno {
             let fo = feedObjects.filter( {$0.uuid == o.id } )
@@ -333,6 +334,11 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         lpgr.delaysTouchesBegan = true
         lpgr.delegate = self
         self.mapView.addGestureRecognizer(lpgr)
+        
+        let logo = UIImage(named: "Logo.png")
+        let imageView = UIImageView(image: logo)
+        imageView.contentMode = .scaleAspectFit
+        self.navigationController?.navigationBar.topItem?.titleView = imageView
     
     }
 

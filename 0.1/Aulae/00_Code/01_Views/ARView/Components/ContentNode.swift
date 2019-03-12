@@ -186,7 +186,6 @@ class ContentNode: SCNNode {
                 node.geometry?.firstMaterial?.diffuse.contents = UIColor(hexColor: contentObj.hex_color)
 
                 objMtl.lightingModel = .constant
-                
                 node.geometry?.materials = [objMtl]
                 
                 addChildNode(node)

@@ -13,7 +13,7 @@ import RealmSwift
 
 extension MainVC {
     
-
+    
     func buildTextDemo() {
         let demoFeed = RLM_Feed()
         
@@ -32,13 +32,12 @@ extension MainVC {
                     o.name = String(i)
                     o.feedId = demoFeed.id
                     o.active = true
-                    o.contentLink = "https://www.abstraqata.com"
+                    o.contentLink = "https://www.abstraqata.com/aulae"
                     
                     o.lat = 10
                     o.lng = 50
                     o.style = 0
-                    o.type  = "text"
-                    o.text  = "AULAE"
+                    o.type  = "image"
                     
                     o.world_position = false
                     
@@ -48,6 +47,7 @@ extension MainVC {
                     
                     self.realm.add(o)
                 }
+                
             }
         } catch {
             print("Error: \(error)")

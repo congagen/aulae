@@ -74,14 +74,11 @@ extension ARViewer {
         let bounds = self.view.layer.bounds
         qrCapturePreviewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         qrCapturePreviewLayer.bounds = bounds
-        //qrCapturePreviewLayer.position = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds))
+        /////////////////////qrCapturePreviewLayer.position = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds))
         qrCapturePreviewLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
         
         self.view.layer.addSublayer(qrCapturePreviewLayer)
-        
-        
         qrCaptureSession.startRunning()
-    }
-    
+    }    
     
 }

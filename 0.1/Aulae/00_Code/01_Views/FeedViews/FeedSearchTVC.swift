@@ -174,7 +174,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     func performSearch(_ searchBar: UISearchBar) {
         print("performSearch")
         
-        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 2)
+        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
         progressBar.setProgress(1, animated: true)
         
         searchResults = [searchStatus: ""] as Dictionary<String, AnyObject>
