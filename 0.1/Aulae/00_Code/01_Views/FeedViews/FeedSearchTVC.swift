@@ -10,6 +10,7 @@ import Realm
 import RealmSwift
 import Foundation
 
+
 class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     let realm = try! Realm()
@@ -27,7 +28,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     let nonActiveColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
     
     let searchTermRequestKey = "search_term"
-    let searchStatus = "Searching..."
+    let searchStatus = "No sources found..."
 
     var currentSearchTerm: String = "Demo"
     var searchResults: Dictionary<String, AnyObject> = [:]
@@ -50,9 +51,6 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             searchResults = [:]
         }
         
-        progressBar.removeFromSuperview()
-        progressBar.setProgress(0, animated: true)
-
         self.tableView.reloadInputViews()
         self.tableView.reloadData()
     }
@@ -175,10 +173,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     func performSearch(_ searchBar: UISearchBar) {
         print("performSearch")
-        //showProgress(navCtrl: self.navigationController!)
         
-        NavBarOps().showProgress(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view)
-        progressBar.setProgress(0, animated: false)
+        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 2)
         progressBar.setProgress(1, animated: true)
         
         searchResults = [searchStatus: ""] as Dictionary<String, AnyObject>

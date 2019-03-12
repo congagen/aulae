@@ -36,11 +36,14 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     var userSearchRadiusIndicator: MKCircle = MKCircle()
 
+    let progressBar = UIProgressView()
     var selected: RLM_Obj? = nil
     var textField: UITextField? = nil
     
     @IBOutlet var reloadBtn: UIBarButtonItem!
     @IBAction func reloadBtnAction(_ sender: UIBarButtonItem) {
+        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 2)
+        
         initMapView()
         mainUpdate()
         updateObjectAnnotations()

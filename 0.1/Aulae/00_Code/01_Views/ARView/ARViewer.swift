@@ -43,8 +43,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
         
-        NavBarOps().showProgress(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view)
-        progressBar.setProgress(0, animated: false)
+        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 2)
         
         mainTimerUpdate()
     }
@@ -67,6 +66,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var searchQRBtn: UIBarButtonItem!
     @IBAction func searchQrBtnAction(_ sender: UIBarButtonItem) {
         print("searchQrBtnAction")
+        
+        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 2)
+        
         if isTrackingQR {
             searchQRBtn.tintColor = self.view.window?.tintColor
             qrCaptureSession.stopRunning()
@@ -208,7 +210,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func refreshScene() {
-        print("Update Scene")
+        print("RefreshScene")
         
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let range = (session.first?.searchRadius)!
@@ -271,8 +273,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("handleTap")
         
         for n in mainScene.rootNode.childNodes {
-            n.removeAllAnimations()
-            n.removeAllActions()
             n.isHidden = false
         }
         
@@ -288,13 +288,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     
                     for sn in sNodes {
                         if (sn.isKind(of: ContentNode.self)) {
-                            
                             if selectedNode == (sNodes.first as! ContentNode) {
                                 showSeletedNodeActions(objData: matchingObjs.first!)
                                 highlightSelected(hideOther: true)
                             } else {
                                 selectedNode = (sNodes.first as! ContentNode)
-                                selectedNodeY = (selectedNode?.position.y)!
                                 highlightSelected(hideOther: true)
                             }
                         }
@@ -302,8 +300,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             } else {
                 if (selectedNode != nil) {
-                    selectedNode?.position.y = selectedNodeY
-                    selectedNodeY = 0
                 }
                 selectedNode = nil
             }
@@ -366,14 +362,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func initScene() {
         print("initScene")
-        progressBar.removeFromSuperview()
 
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
         searchQRBtn.tintColor = self.view.window?.tintColor
         
         loadingViewLabel.text = "Loading..."
-        loadingView.isHidden = false
+        loadingView.isHidden  = false
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
@@ -396,7 +391,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         if (session.first?.autoUpdate)! {
             mainTimerUpdate()
         }
-        
     }
     
     
@@ -446,15 +440,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if !updateTimer.isValid && (session.first?.autoUpdate)! {
             updateTimer = Timer.scheduledTimer(
-                timeInterval: session.first!.feedUpdateInterval, target: self, selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
+                timeInterval: session.first!.feedUpdateInterval, target: self,
+                selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
         }
         
         loadingView.isHidden  = trackingState == 0
-        progressBar.setProgress(1, animated: true)
-        
-        // Timer().performSelector(onMainThread: "a", with: nil, waitUntilDone: true)
-        progressBar.removeFromSuperview()
-        
     }
     
     
@@ -485,6 +475,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("viewWillAppear")
         progressBar.removeFromSuperview()
     }
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
