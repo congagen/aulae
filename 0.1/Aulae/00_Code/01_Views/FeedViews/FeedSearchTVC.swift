@@ -26,16 +26,14 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     let activeColor    = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 1)
     let nonActiveColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
     
-    let apiUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev"
-    var apiHeaderValue = "VYtA9KZdQ26y4isktSKba59ME8h4WOCuajYwblvn"
-    var apiHeaderFeild = "x-api-key"
-
     let searchTermRequestKey = "search_term"
     let searchStatus = "Searching..."
 
     var currentSearchTerm: String = "Demo"
     var searchResults: Dictionary<String, AnyObject> = [:]
-    
+    let progressBar = UIProgressView()
+    let loadingProgress = Progress(totalUnitCount: 100)
+
     @IBOutlet var searchBar: UISearchBar!
     
     public var screenHeight: CGFloat {
@@ -52,17 +50,18 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             searchResults = [:]
         }
         
+        progressBar.removeFromSuperview()
+        progressBar.setProgress(0, animated: true)
+
         self.tableView.reloadInputViews()
         self.tableView.reloadData()
     }
     
     
     @objc func updateSearchResults(result: Dictionary<String, AnyObject> ) {
-        
         DispatchQueue.main.async {
             self.refrgah(result: result)
         }
-
     }
     
     
@@ -91,43 +90,6 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
                 self.tableView.reloadData()
             }
         )
-        
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return screenHeight * CGFloat(rowHeightRatio)
-    }
-    
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("searchBarSearchButtonClicked")
-        
-        searchResults = [searchStatus: ""] as Dictionary<String, AnyObject>
-        
-        self.tableView.reloadData()
-        self.tableView.reloadInputViews()
-        
-        if searchBar.text != nil {
-            currentSearchTerm = searchBar.text!
-        }
-        
-        if currentSearchTerm != "" {
-            let payload = [
-                searchTermRequestKey: currentSearchTerm,
-                "lat":  "", "long": ""
-            ]
-            
-            NetworkTools().postReq(
-                completion: updateSearchResults, apiHeaderValue: apiHeaderValue,
-                apiHeaderFeild: apiHeaderFeild, apiUrl: apiUrl,
-                reqParams: payload
-            )
-        }
-        
-        view.endEditing(false)
-        self.tableView.reloadData()
-        self.tableView.reloadInputViews()
-        
     }
     
     
@@ -135,17 +97,6 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         if searchBar.text != nil {
             currentSearchTerm = searchBar.text!
         }
-    }
-    
-
-    // MARK: - Table view data source
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchResults.count
     }
     
     
@@ -158,7 +109,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             let itmTitle: String = keys[indexPath.item]
             let itmUrl: String = itemData["url"] as! String
             
-            if feeds.filter( {$0.url == itmUrl} ).count == 0 {
+            if feeds.filter( {$0.url == itmUrl } ).count == 0 {
                 showAddSearchFeedAlert(feedTitle: itmTitle, feedUrl: itmUrl, message: "Add this feed?")
             }
         }
@@ -169,13 +120,11 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
 
     
     @objc func asyncUrlSearch(cell: UITableViewCell, urlId: String) {
-        
         if feeds.filter( {$0.url == urlId} ).count > 0 {
             cell.textLabel?.textColor = activeColor
         } else {
             cell.textLabel?.textColor = nonActiveColor
         }
-        
     }
 
     
@@ -215,20 +164,84 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     }
     
     
-    @objc func manualUpdate() {
+    @objc func pullRefreshCompleted() {
         rCtrl.endRefreshing()
+        
+        progressBar.removeFromSuperview()
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
+    }
+    
+    
+    func performSearch(_ searchBar: UISearchBar) {
+        print("performSearch")
+        //showProgress(navCtrl: self.navigationController!)
+        
+        NavBarOps().showProgress(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view)
+        progressBar.setProgress(0, animated: false)
+        progressBar.setProgress(1, animated: true)
+        
+        searchResults = [searchStatus: ""] as Dictionary<String, AnyObject>
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
         
+        if searchBar.text != nil {
+            currentSearchTerm = searchBar.text!
+        }
+        
+        if currentSearchTerm != "" {
+            let payload = [
+                searchTermRequestKey: currentSearchTerm,
+                "lat":  "", "long": ""
+            ]
+            
+            NetworkTools().postReq(
+                completion: updateSearchResults, apiHeaderValue: (session.first?.apiHeaderValue)!,
+                apiHeaderFeild: (session.first?.apiHeaderFeild)!, apiUrl: (session.first?.feedSearchApi)!,
+                reqParams: payload
+            )
+        }
+        
+        view.endEditing(false)
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
+        
     }
-    
+
     
     // --------------------------------------------------------------------------------------------------------
     
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        performSearch(searchBar)
+    }
+    
+    
     override func viewDidDisappear(_ animated: Bool) {
         self.navigationController?.popViewController(animated: true)
+        progressBar.removeFromSuperview()
     }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        progressBar.removeFromSuperview()
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return screenHeight * CGFloat(rowHeightRatio)
+    }
+
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchResults.count
+    }
+    
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -236,8 +249,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         
         rCtrl.tintColor = view.superview?.tintColor
         tableView.addSubview(rCtrl)
-        rCtrl.addTarget(self, action: #selector(FeedsTVC.manualUpdate), for: .valueChanged)
-        
+        rCtrl.addTarget(self, action: #selector(pullRefreshCompleted), for: .valueChanged)
     }
     
 }

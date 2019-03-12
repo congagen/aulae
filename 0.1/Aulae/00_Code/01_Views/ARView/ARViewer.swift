@@ -36,11 +36,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var selectedNodeY: Float = 0
     
     var currentPlanes: [SCNNode]? = nil
+    let progressBar = UIProgressView()
     
     @IBOutlet var loadingViewLabel: UILabel!
     @IBOutlet var loadingView: UIView!
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
+        
+        NavBarOps().showProgress(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view)
+        progressBar.setProgress(0, animated: false)
+        
         mainTimerUpdate()
     }
     
@@ -361,6 +366,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func initScene() {
         print("initScene")
+        progressBar.removeFromSuperview()
 
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
@@ -379,8 +385,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
-        
-//        sceneView.debugOptions = [.showFeaturePoints]
 
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
 
@@ -446,7 +450,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         loadingView.isHidden  = trackingState == 0
-
+        progressBar.setProgress(1, animated: true)
+        
+        // Timer().performSelector(onMainThread: "a", with: nil, waitUntilDone: true)
+        progressBar.removeFromSuperview()
+        
     }
     
     
@@ -475,11 +483,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
+        progressBar.removeFromSuperview()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         sceneView.session.pause()
+        progressBar.removeFromSuperview()
     }
     
     

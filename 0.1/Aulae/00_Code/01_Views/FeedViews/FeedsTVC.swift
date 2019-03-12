@@ -51,7 +51,7 @@ class FeedsTVC: UITableViewController {
     
     
     func addFeed(){
-        showURLAlert(aMessage: session.first?.debugUrl)
+        showURLAlert(aMessage: session.first?.defaultFeedUrl)
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
@@ -142,7 +142,7 @@ class FeedsTVC: UITableViewController {
     {
         if let _ = textField {
             self.textField = textField!
-            textField.text! = (session.first?.debugUrl)!
+            textField.text! = (session.first?.defaultFeedUrl)!
         }
     }
     
