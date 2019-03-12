@@ -26,7 +26,7 @@ class FeedsTVC: UITableViewController {
     
     let rowHeightRatio = 0.1
     let activeColor    = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 1)
-    let nonActiveColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.5)
+    let nonActiveColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.3)
     
     var textField: UITextField? = nil
     var selected: RLM_Feed? = nil
@@ -175,18 +175,17 @@ class FeedsTVC: UITableViewController {
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
+
     }
     
     
     func showURLAlert(aMessage: String?){
         let alert = UIAlertController(
-            title: "Feed URL",
-            message: "",
-            preferredStyle: UIAlertController.Style.alert
+            title: "Feed URL", message: "", preferredStyle: UIAlertController.Style.alert
         )
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,  handler: handleCancel))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: handleCancel))
         alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: handleEnterURL))
         alert.view.tintColor = UIColor.black
         
@@ -205,22 +204,6 @@ class FeedsTVC: UITableViewController {
     }
     
  
-    func showRenameAlert(aMessage: String?){
-        let alert = UIAlertController(
-            title: "",
-            message: "",
-            preferredStyle: UIAlertController.Style.alert
-        )
-        
-        alert.addTextField(configurationHandler: renameConfigurationTextField)
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:handleCancel))
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler:handleRenameOk))
-        alert.view.tintColor = UIColor.black
-        
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    
     func shareURLAction(url: String) {
         
         let textToShare = [ url ]
@@ -229,6 +212,22 @@ class FeedsTVC: UITableViewController {
         // activityViewController.excludedActivityTypes = [ UIActivityType.airDrop ]
         
         self.present(activityViewController, animated: true, completion: nil)
+    }
+    
+    
+    func openUrl(scheme: String) {
+        if let url = URL(string: scheme) {
+            if #available(iOS 10, *) {
+                UIApplication.shared.open(url, options: [:],
+                                          completionHandler: {
+                                            (success) in
+                                            print("Open \(scheme): \(success)")
+                })
+            } else {
+                let success = UIApplication.shared.openURL(url)
+                print("Open \(scheme): \(success)")
+            }
+        }
     }
     
     
@@ -244,13 +243,8 @@ class FeedsTVC: UITableViewController {
         }
         shareAction.backgroundColor = UIColor.black
         
-//        let renameAction = UITableViewRowAction(style: .normal, title: "Rename") { (rowAction, indexPath) in
-//            self.showRenameAlert(aMessage: self.selected?.name)
-//        }
-//        renameAction.backgroundColor = UIColor.black
-        
         let visitSourceLink = UITableViewRowAction(style: .normal, title: "WWW") { (rowAction, indexPath) in
-            self.showRenameAlert(aMessage: self.selected?.name)
+             self.openUrl(scheme: (self.selected?.url)!)
         }
         visitSourceLink.backgroundColor = UIColor.black
         

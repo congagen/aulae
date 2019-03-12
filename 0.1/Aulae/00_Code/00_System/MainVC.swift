@@ -19,10 +19,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     let feedMgr = FeedMgmt()
-    
     let locationManager = CLLocationManager()
-    let validObjectJsonKeys = ["name", "id", "version", "type"]
-    
     var mainUpdateTimer = Timer()
     var activeDownloads: [String: String] = [:]
     

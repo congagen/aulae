@@ -20,7 +20,7 @@ class FeedMgmt {
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
-    let validObjectJsonKeys = ["name", "id", "version", "type"]
+    let validFeedContentObjectKeys = ["name", "id", "type"]
     
     var apiHeaderValue = ""
     var apiHeaderFeild = ""
@@ -137,7 +137,7 @@ class FeedMgmt {
         for k in (feedSpec["content"]?.allKeys)! {
             
             let itemSpec = feedSpec["content"]![k] as! Dictionary<String, AnyObject>
-            let contentItemIsValid = validateObj(keyList: validObjectJsonKeys, dict: itemSpec)
+            let contentItemIsValid = validateObj(keyList: validFeedContentObjectKeys, dict: itemSpec)
             let objUid = UUID().uuidString
             let itemContentType = itemSpec["type"] as! String
             
@@ -182,24 +182,37 @@ class FeedMgmt {
                     "radius":           valueIfPresent(dict: itemSpec, key: "radius", placeHolderValue: 0.0)
                 ]
                 
+                let isInstance:Bool = objData["instance"]! as! Bool
+                
                 if itemContentType != "text" && itemSpec.keys.contains("url") {
-                    let contentUrl     = itemSpec["url"] as! String
-                    let documentsUrl   = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-                    let fileName       = feedDbItem.id + String(feedDbItem.version) + (URL(string: contentUrl)?.lastPathComponent)!
-                    let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+                    let contentUrl      = itemSpec["url"] as! String
+                    let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                    let fileName        = feedDbItem.id + String(feedDbItem.version) + (URL(string: contentUrl)?.lastPathComponent)!
+                    let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
+
+                    storeFeedObject( objInfo: objData, objFilePath: destinationUrl!, feedId: feedId)
+                    
+//                    if let URL = URL(string: contentUrl) {
+//                        let _ = httpDl.loadFileAsync(
+//                            removeExisting:  !isInstance,
+//                            url: URL as URL, destinationUrl: destinationUrl!,
+//                            completion: { DispatchQueue.main.async {
+//                                self.storeFeedObject( objInfo: objData, objFilePath: destinationUrl!, feedId: feedId) } }
+//                        )
+//                    }
                     
                     if let URL = URL(string: contentUrl) {
                         let _ = httpDl.loadFileAsync(
-                            removeExisting: true,
+                            removeExisting:  !isInstance,
                             url: URL as URL, destinationUrl: destinationUrl!,
-                            completion: { DispatchQueue.main.async { self.storeFeedObject( objInfo: objData, objFilePath: destinationUrl!, feedId: feedId) } }
+                            completion: {}
                         )
                     }
+                   
                 } else {
                     let placeholderUrl = URL(fileURLWithPath: "")
                     storeFeedObject(objInfo: objData, objFilePath: placeholderUrl, feedId: feedId)
                 }
-                
             }
         }
     }

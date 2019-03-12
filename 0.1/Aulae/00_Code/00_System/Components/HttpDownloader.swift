@@ -29,15 +29,16 @@ class HttpDownloader {
         let session = URLSession(configuration: sessionConfig)
         let request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
 
-        if removeExisting {
-            if FileManager.default.fileExists(atPath: destinationUrl.path )  {
-                do{
-                    try FileManager.default.removeItem(atPath: destinationUrl.path )
-                }catch let error {
-                    print("error occurred, here are the details:\n \(error)")
-                }
+        if removeExisting && FileManager.default.fileExists(atPath: destinationUrl.path) {
+            
+            do{
+                try FileManager.default.removeItem(atPath: destinationUrl.path )
+            } catch let error {
+                print("\(error)")
             }
+            
         }
+        
         
         let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
             if let tempLocalUrl = tempLocalUrl, error == nil {
@@ -56,7 +57,6 @@ class HttpDownloader {
             } else {
                 print(error!)
                 print(url.absoluteString)
-                //  try! FileManager.default.removeItem(at: destinationUrl!)
             }
         }
         task.resume()

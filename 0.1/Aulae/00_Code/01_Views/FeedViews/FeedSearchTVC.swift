@@ -85,8 +85,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         alert.view.tintColor = UIColor.black
         
         self.present(
-            alert,
-            animated: true,
+            alert, animated: true,
             completion: {
                 self.tableView.reloadInputViews()
                 self.tableView.reloadData()
