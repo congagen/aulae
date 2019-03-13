@@ -86,11 +86,14 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="Nhx-W2-kfA">
-                        <barButtonItem key="leftBarButtonItem" image="TabBarIcon_03" id="ayD-K4-8Qr">
-                            <connections>
-                                <segue destination="CjR-vc-y1M" kind="show" id="pCq-sO-rbF"/>
-                            </connections>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem image="TabBarIcon_03" id="ayD-K4-8Qr">
+                                <connections>
+                                    <segue destination="CjR-vc-y1M" kind="show" id="pCq-sO-rbF"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="compose" id="ZXm-Bu-Bh5"/>
+                        </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="IYM-9R-419">
                                 <connections>
@@ -224,14 +227,11 @@
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
                     <navigationItem key="navigationItem" id="jef-En-32s">
-                        <leftBarButtonItems>
-                            <barButtonItem image="TabBarIcon_03" id="SvZ-XF-1hu">
-                                <connections>
-                                    <segue destination="CjR-vc-y1M" kind="show" id="aUW-k3-e0B"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="compose" id="pAf-u3-T3i"/>
-                        </leftBarButtonItems>
+                        <barButtonItem key="leftBarButtonItem" image="TabBarIcon_03" id="SvZ-XF-1hu">
+                            <connections>
+                                <segue destination="CjR-vc-y1M" kind="show" id="aUW-k3-e0B"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="refresh" id="lp5-fg-UQE">
                                 <connections>
@@ -638,7 +638,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aqq-r3-8tt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="908" y="2454"/>
+            <point key="canvasLocation" x="908" y="2477"/>
         </scene>
         <!--Feed SearchTVC-->
         <scene sceneID="1XM-Tk-eYm">

@@ -21,31 +21,29 @@ extension MainVC {
         demoFeed.id   = "Demo Feed"
         demoFeed.name = "Demo Feed"
         
-        let itemCount = 9
+        let itemCount = 4
         
         do {
             try realm.write {
                 self.realm.add(demoFeed)
                 
                 for i in 1...itemCount {
-                    let o      = RLM_Obj()
-                    o.name     = String(i)
-                    o.feedId   = demoFeed.id
-                    o.active   = true
+                    let o         = RLM_Obj()
+                    o.name        = String(i)
+                    o.feedId      = demoFeed.id
+                    o.active      = true
                     o.contentLink = "https://www.abstraqata.com/aulae"
                     
-                    o.filePath = "3234.png"
+                    o.filePath    = "instro.png"
                     
-                    o.lat   = 10
-                    o.lng   = 50
-                    o.style = 0
-                    o.type  = "image"
-                    o.text  = "Bla"
+                    o.style       = 0
+                    o.type        = "image"
+                    o.text        = "Bla"
                     
                     o.world_position = false
                     
-                    o.x_pos = sin( ((Double.pi / Double(itemCount / 2)) * Double(i)) ) * Double(itemCount)
-                    o.z_pos = cos( ((Double.pi / Double(itemCount / 2)) * Double(i)) ) * Double(itemCount)
+                    o.x_pos = sin( ((Double.pi / Double(itemCount / 2)) * Double(i)) ) * Double(1)
+                    o.z_pos = cos( ((Double.pi / Double(itemCount / 2)) * Double(i)) ) * Double(1)
                     o.y_pos = 0
                     
                     self.realm.add(o)

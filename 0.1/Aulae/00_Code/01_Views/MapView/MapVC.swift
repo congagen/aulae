@@ -305,8 +305,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        //view.image = UIImage(named: "pin_s")
-        
         if getAnoObj(view: view) != nil {
             selected = getAnoObj(view: view)!
             print(selected!)
@@ -315,8 +313,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-//        view.image = UIImage(named: "pin_ds")
-        
         if getAnoObj(view: view) != nil {
             selected = getAnoObj(view: view)!
             print(selected!)
