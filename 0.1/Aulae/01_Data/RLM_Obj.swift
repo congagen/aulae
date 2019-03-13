@@ -29,7 +29,6 @@ class RLM_Obj: Object {
     @objc dynamic var hex_color:   String = "7259ff"
     @objc dynamic var style:       Int = 0
     @objc dynamic var mode:        String = "free"
-    @objc dynamic var billboard:   Bool   = true
     
     @objc dynamic var rotate:      Double = 0
     @objc dynamic var hoover:      Double = 0
@@ -38,6 +37,7 @@ class RLM_Obj: Object {
     @objc dynamic var scale:       Double = 1.0
     @objc dynamic var world_position: Bool = true
     @objc dynamic var world_scale: Bool = false
+    @objc dynamic var billboard:   Bool   = true
 
     @objc dynamic var lat:         Double = 0
     @objc dynamic var lng:         Double = 0

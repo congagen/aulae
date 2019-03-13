@@ -31,7 +31,6 @@ extension UIColor {
 
 extension ARViewer {
     
-    
     func getNodeWorldPosition(baseOffset: Double, contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
         print("getNodeWorldPosition")
         

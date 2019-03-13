@@ -138,7 +138,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         var contentPos        = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         if contentObj.world_position {
-            contentPos = getNodeWorldPosition(baseOffset: 1.0, contentObj: contentObj, scaleFactor: scaleFactor)
+            contentPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: contentObj, scaleFactor: scaleFactor)
         }
         
         var nodeSize: CGFloat = CGFloat(1 * contentObj.scale)

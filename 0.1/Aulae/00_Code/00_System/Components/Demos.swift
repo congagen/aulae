@@ -17,7 +17,7 @@ extension MainVC {
     func buildTextDemo() {
         let demoFeed = RLM_Feed()
         
-        demoFeed.url  = ""
+        demoFeed.url  = "https://s3.amazonaws.com/abstra-dev/1.json"
         demoFeed.id   = "Demo Feed"
         demoFeed.name = "Demo Feed"
         
@@ -33,6 +33,8 @@ extension MainVC {
                     o.feedId = demoFeed.id
                     o.active = true
                     o.contentLink = "https://www.abstraqata.com/aulae"
+                    
+                    o.filePath = ""
                     
                     o.lat = 10
                     o.lng = 50
