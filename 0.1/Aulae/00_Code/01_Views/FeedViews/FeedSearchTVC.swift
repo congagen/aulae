@@ -28,7 +28,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     let nonActiveColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
     
     let searchTermRequestKey = "search_term"
-    let searchStatus = "No sources found..."
+    let searchStatus = "Searching..."
 
     var currentSearchTerm: String = "Demo"
     var searchResults: Dictionary<String, AnyObject> = [:]
@@ -42,11 +42,10 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     }
     
     @objc func refrgah(result: Dictionary<String, AnyObject>) {
-        print("updateSearchResults")
+        print("refrgah")
         
         if let resp = result["search_results"] as? Dictionary<String, AnyObject> {
             searchResults = resp
-            print(searchResults)
         } else {
             searchResults = [:]
         }
@@ -57,13 +56,16 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     
     @objc func updateSearchResults(result: Dictionary<String, AnyObject> ) {
+        print("updateSearchResults")
         DispatchQueue.main.async {
             self.refrgah(result: result)
         }
     }
     
     
-    func showAddSearchFeedAlert(feedTitle: String, feedUrl: String?, message: String){
+    func showAddSearchFeedAlert(feedTitle: String, feedUrl: String?, message: String) {
+        print("showAddSearchFeedAlert")
+        
         let alert = UIAlertController(
             title: feedTitle,
             message: message,
@@ -101,8 +103,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let keys: Array  = Array(searchResults.keys)
         
-        if keys.count > 0 {
-            let itemData: Dictionary<String, AnyObject> = searchResults[keys[indexPath.item]]! as! Dictionary<String, AnyObject>
+        if keys.count > 0 && !searchResults.keys.contains(searchStatus) {
+            let itemData = searchResults[keys[indexPath.item]]! as! Dictionary<String, AnyObject>
             
             let itmTitle: String = keys[indexPath.item]
             let itmUrl: String = itemData["url"] as! String
@@ -174,13 +176,11 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     func performSearch(_ searchBar: UISearchBar) {
         print("performSearch")
         
-        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
-        progressBar.setProgress(1, animated: true)
+        NavBarOps().showProgressBar(
+            navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1
+        )
         
         searchResults = [searchStatus: ""] as Dictionary<String, AnyObject>
-        
-        self.tableView.reloadData()
-        self.tableView.reloadInputViews()
         
         if searchBar.text != nil {
             currentSearchTerm = searchBar.text!
@@ -206,19 +206,17 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     }
 
     
-    // --------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------
     
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         performSearch(searchBar)
     }
     
-    
     override func viewDidDisappear(_ animated: Bool) {
         self.navigationController?.popViewController(animated: true)
         progressBar.removeFromSuperview()
     }
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         progressBar.removeFromSuperview()
@@ -227,17 +225,14 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return screenHeight * CGFloat(rowHeightRatio)
     }
-
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResults.count
     }
     
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

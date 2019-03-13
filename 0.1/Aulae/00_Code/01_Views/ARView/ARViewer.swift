@@ -186,7 +186,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
         var yH: Float = 0.0
         
-        if contentObj.style == 0 {
+        if contentObj.billboard {
             yH = ctNode.boundingBox.max.y * 0.5
             let constraint = SCNBillboardConstraint()
             constraint.freeAxes = [.Y]

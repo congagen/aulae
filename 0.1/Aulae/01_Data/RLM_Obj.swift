@@ -29,6 +29,8 @@ class RLM_Obj: Object {
     @objc dynamic var hex_color:   String = "7259ff"
     @objc dynamic var style:       Int = 0
     @objc dynamic var mode:        String = "free"
+    @objc dynamic var billboard:   Bool   = true
+    
     @objc dynamic var rotate:      Double = 0
     @objc dynamic var hoover:      Double = 0
     

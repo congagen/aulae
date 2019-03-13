@@ -248,20 +248,33 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         pinView?.image              = UIImage(named: "pin_ds")
         pinView?.canShowCallout     = true
-        pinView?.backgroundColor    = UIColor.clear
-        
-        let pinIcon                 = UIImageView()
-        pinIcon.frame               = CGRect( x: 0, y: 0, width: (pinView?.frame.width)!, height: (pinView?.frame.height)! )
-        pinIcon.layer.cornerRadius  = pinIcon.frame.width / 2
-        pinIcon.layer.masksToBounds = true
-        
-        pinIcon.backgroundColor     = UIColor.green
-        
+
         if let o: MapAno = annotation as? MapAno {
             let fo = feedObjects.filter( {$0.uuid == o.id } )
             
             if fo.count > 0 {
-                pinView?.addSubview(pinIcon)
+                //pinView?.addSubview(pinIcon)
+                
+                if fo.first?.type == "image" {
+                    pinView?.image = UIImage(named: "pin_image_ds")
+                }
+                
+                if fo.first?.type == "usdz" {
+                    pinView?.image = UIImage(named: "pin_model_ds")
+                }
+                
+                if fo.first?.type == "gif" {
+                    pinView?.image = UIImage(named: "pin_gif_ds")
+                }
+                
+                if fo.first?.type == "audio" {
+                    pinView?.image = UIImage(named: "pin_audio_ds")
+                }
+                
+                if fo.first?.type == "text" {
+                    pinView?.image = UIImage(named: "pin_text_ds")
+                }
+                
             }
         }
         
@@ -292,7 +305,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        view.image = UIImage(named: "pin_s")
+        //view.image = UIImage(named: "pin_s")
         
         if getAnoObj(view: view) != nil {
             selected = getAnoObj(view: view)!
@@ -302,7 +315,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-        view.image = UIImage(named: "pin_ds")
+//        view.image = UIImage(named: "pin_ds")
         
         if getAnoObj(view: view) != nil {
             selected = getAnoObj(view: view)!

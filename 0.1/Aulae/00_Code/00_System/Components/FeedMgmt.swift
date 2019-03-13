@@ -12,7 +12,6 @@ import Realm
 import RealmSwift
 
 
-
 class FeedMgmt {
     
     lazy var realm = try! Realm()
@@ -58,42 +57,43 @@ class FeedMgmt {
         
         do {
             try realm.write {
-                rlmObj.feedId     = feedId
-                rlmObj.contentUrl = objInfo["url"] as! String
-                rlmObj.uuid       = objInfo["uuid"] as! String
+                rlmObj.feedId      = feedId
+                rlmObj.contentUrl  = objInfo["url"] as! String
+                rlmObj.uuid        = objInfo["uuid"] as! String
                 
-                rlmObj.instance   = objInfo["instance"] as! Bool
+                rlmObj.instance    = objInfo["instance"] as! Bool
 
-                rlmObj.name       = objInfo["name"] as! String
-                rlmObj.info       = objInfo["info"] as! String
-                rlmObj.filePath   = objFilePath.absoluteString
+                rlmObj.name        = objInfo["name"] as! String
+                rlmObj.info        = objInfo["info"] as! String
+                rlmObj.filePath    = objFilePath.absoluteString
                 
                 rlmObj.contentLink = objInfo["content_link"] as! String
                 
-                rlmObj.text       = objInfo["text"] as! String
-                rlmObj.font       = objInfo["font"] as! String
+                rlmObj.text        = objInfo["text"] as! String
+                rlmObj.font        = objInfo["font"] as! String
 
                 rlmObj.world_position = objInfo["world_position"] as! Bool
+                rlmObj.billboard   = objInfo["billboard"] as! Bool
                 
                 rlmObj.world_scale = objInfo["world_scale"] as! Bool
-                rlmObj.scale      = objInfo["scale"] as! Double
+                rlmObj.scale       = objInfo["scale"] as! Double
                 
-                rlmObj.type       = objInfo["type"] as! String
-                rlmObj.style      = objInfo["style"] as! Int
-                rlmObj.hex_color  = objInfo["hex_color"] as! String
+                rlmObj.type        = objInfo["type"] as! String
+                rlmObj.style       = objInfo["style"] as! Int
+                rlmObj.hex_color   = objInfo["hex_color"] as! String
                 
-                rlmObj.rotate     = objInfo["rotate"] as! Double
-                rlmObj.hoover     = objInfo["hoover"] as! Double
+                rlmObj.rotate      = objInfo["rotate"] as! Double
+                rlmObj.hoover      = objInfo["hoover"] as! Double
                 
-                rlmObj.lat        = objInfo["lat"] as! Double
-                rlmObj.lng        = objInfo["lng"] as! Double
-                rlmObj.alt        = objInfo["alt"] as! Double
+                rlmObj.lat         = objInfo["lat"] as! Double
+                rlmObj.lng         = objInfo["lng"] as! Double
+                rlmObj.alt         = objInfo["alt"] as! Double
                 
-                rlmObj.x_pos      = objInfo["x_pos"] as! Double
-                rlmObj.y_pos      = objInfo["y_pos"] as! Double
-                rlmObj.z_pos      = objInfo["y_pos"] as! Double
+                rlmObj.x_pos       = objInfo["x_pos"] as! Double
+                rlmObj.y_pos       = objInfo["y_pos"] as! Double
+                rlmObj.z_pos       = objInfo["y_pos"] as! Double
 
-                rlmObj.radius     = objInfo["radius"] as! Double
+                rlmObj.radius      = objInfo["radius"] as! Double
 
                 realm.add(rlmObj)
             }
@@ -150,6 +150,8 @@ class FeedMgmt {
                     "uuid":             objUid,
                     "feed_id":          feedId,
                     "type":             itemContentType,
+                    
+                    "billboard":        valueIfPresent(dict: itemSpec, key: "billboard", placeHolderValue: true),
                     
                     "style":            valueIfPresent(dict: itemSpec, key: "style",     placeHolderValue: 1) as! Int,
                     "mode":             valueIfPresent(dict: itemSpec, key: "mode",      placeHolderValue: "free"),
