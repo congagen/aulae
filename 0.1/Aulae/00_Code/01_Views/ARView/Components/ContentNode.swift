@@ -234,18 +234,31 @@ class ContentNode: SCNNode {
     }
 
     
-    func addImage(fPath: String, contentObj: RLM_Obj) {
+    func addImage(fPath: String, contentObj: RLM_Obj, demo: Bool) {
         let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
         
-        if let img = UIImage(contentsOfFile: fPath) {
-            node.physicsBody? = .static()
-            node.name = contentObj.name
-            node.geometry?.materials.first?.diffuse.contents = UIColor.clear
-            node.geometry?.materials.first?.diffuse.contents = img
-            node.geometry?.materials.first?.isDoubleSided = true
-            
-            addChildNode(node)
+        if demo {
+            if let img = UIImage(named: fPath) {
+                node.physicsBody? = .static()
+                node.name = contentObj.name
+                node.geometry?.materials.first?.diffuse.contents = UIColor.clear
+                node.geometry?.materials.first?.diffuse.contents = img
+                node.geometry?.materials.first?.isDoubleSided = true
+                
+                addChildNode(node)
+            }
+        } else {
+            if let img = UIImage(contentsOfFile: fPath) {
+                node.physicsBody? = .static()
+                node.name = contentObj.name
+                node.geometry?.materials.first?.diffuse.contents = UIColor.clear
+                node.geometry?.materials.first?.diffuse.contents = img
+                node.geometry?.materials.first?.isDoubleSided = true
+            }
         }
+        
+        addChildNode(node)
+
     }
     
     

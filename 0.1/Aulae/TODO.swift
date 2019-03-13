@@ -1,16 +1,19 @@
 
 // URGENT:
+//
+//      Name?
+//      NavBar Icon
+//      Onboarding Content
+//      Demo Content
 
-//    Orientation bug (Settings -> vert->hori -> Return)
-//    Name?
-//    Extensions: Target: Info: URL Types
-//    Content Type: Marker
-//    Content Display Modes:  Floor / Wall / World Position / Static
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 // ArKit -> SceneKit?
+
+//      Content Display Modes:  Floor / Wall / World Position / Static
+//      Extensions: Target: Info: URL Types
 
 
 // Feeds

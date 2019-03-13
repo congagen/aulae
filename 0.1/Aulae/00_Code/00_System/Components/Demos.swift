@@ -17,7 +17,7 @@ extension MainVC {
     func buildTextDemo() {
         let demoFeed = RLM_Feed()
         
-        demoFeed.url  = "https://s3.amazonaws.com/abstra-dev/1.json"
+        demoFeed.url  = ""
         demoFeed.id   = "Demo Feed"
         demoFeed.name = "Demo Feed"
         
@@ -28,18 +28,19 @@ extension MainVC {
                 self.realm.add(demoFeed)
                 
                 for i in 1...itemCount {
-                    let o = RLM_Obj()
-                    o.name = String(i)
-                    o.feedId = demoFeed.id
-                    o.active = true
+                    let o      = RLM_Obj()
+                    o.name     = String(i)
+                    o.feedId   = demoFeed.id
+                    o.active   = true
                     o.contentLink = "https://www.abstraqata.com/aulae"
                     
-                    o.filePath = ""
+                    o.filePath = "3234.png"
                     
-                    o.lat = 10
-                    o.lng = 50
+                    o.lat   = 10
+                    o.lng   = 50
                     o.style = 0
                     o.type  = "image"
+                    o.text  = "Bla"
                     
                     o.world_position = false
                     

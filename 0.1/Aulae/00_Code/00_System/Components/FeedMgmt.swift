@@ -351,10 +351,10 @@ class FeedMgmt {
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                 
-                if FileManager.default.fileExists(atPath: (destinationUrl?.absoluteString)!)  {
+                if FileManager.default.fileExists(atPath: (destinationUrl?.absoluteString)!) {
                     do{
                         try FileManager.default.removeItem(atPath: (destinationUrl?.absoluteString)! )
-                    }catch let error {
+                    } catch let error {
                         print("error occurred, here are the details:\n \(error)")
                     }
                 }

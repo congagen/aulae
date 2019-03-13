@@ -37,6 +37,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var selectedNode: ContentNode? = nil
     var selectedNodeY: Float = 0
     
+    let audioRangeRadius: Double = 1000
+    
     var currentPlanes: [SCNNode]? = nil
     let progressBar = UIProgressView()
     
@@ -127,11 +129,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
 
     
-    func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double) {
+    func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double, localDemoContent: Bool) {
         print("AddContentToScene: " + String(contentObj.uuid))
         print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
         
-        let audioRangeRadius: Double = 1000
         let rawDeviceGpsCCL   = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let rawObjectGpsCCL   = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
@@ -157,7 +158,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addUSDZ(fPath: fPath, contentObj: contentObj)
             }
             if contentObj.type.lowercased() == "image" {
-                ctNode.addImage(fPath: fPath, contentObj: contentObj)
+                ctNode.addImage(fPath: fPath, contentObj: contentObj, demo: localDemoContent)
             }
             if contentObj.type.lowercased() == "gif" {
                 ctNode.addGif(fPath: fPath, contentObj: contentObj)
@@ -252,14 +253,27 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         
                         if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                             print("FileManager.default.fileExists")
-                            addContentToScene(contentObj: o, fPath: (destinationUrl?.path)!, scaleFactor: (session.first?.scaleFactor)! )
+                            addContentToScene(
+                                contentObj: o, fPath: (destinationUrl?.path)!,
+                                scaleFactor: (session.first?.scaleFactor)!,
+                                localDemoContent: false
+                            )
                         } else {
-                            // TODO: Retry Download? + Increment Feed Error Count?
-                            print("ERROR: FEED CONTENT: MISSING DATA: " + String(o.filePath))
+                            if o.type == "image" {
+                                if UIImage(named: o.filePath) != nil {
+                                    addContentToScene(
+                                        contentObj: o, fPath: o.filePath,
+                                        scaleFactor: (session.first?.scaleFactor)!,
+                                        localDemoContent: true
+                                    )
+                                }
+                            }
+                            
+                            print("MISSING DATA? " + String(o.filePath))
                         }
                     } else {
                         if (o.type.lowercased() == "text") {
-                            addContentToScene(contentObj: o, fPath:"", scaleFactor: (session.first?.scaleFactor)! )
+                            addContentToScene(contentObj: o, fPath:"", scaleFactor: (session.first?.scaleFactor)!, localDemoContent: false )
                         }
                     }
                 }
