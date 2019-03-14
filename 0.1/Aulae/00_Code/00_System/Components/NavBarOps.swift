@@ -12,6 +12,14 @@ import UIKit
 class NavBarOps {
     
     
+    func showLogo(navCtrl: UINavigationController, imageName: String) {
+        let logo = UIImage(named: imageName)
+        let imageView = UIImageView(image: logo)
+        imageView.contentMode = .scaleAspectFit
+        navCtrl.navigationBar.topItem?.titleView = imageView
+    }
+    
+    
     func showProgressBar(navCtrl: UINavigationController, progressBar: UIProgressView, view: UIView, timeoutPeriod: Double) {
         
         let navBarHeight = navCtrl.navigationBar.frame.height

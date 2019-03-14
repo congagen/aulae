@@ -70,7 +70,7 @@ extension ARViewer {
             )
             
             if (objData.contentLink) != "" {
-                alert.addAction(UIAlertAction(title:     "WWW",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (objData.contentLink)) } ))
+                alert.addAction(UIAlertAction(title:     "Object Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (objData.contentLink)) } ))
             }
             
             if selFeeds.count > 0 {
@@ -79,8 +79,12 @@ extension ARViewer {
                 }
             }
             
-            alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.default,  handler: { _ in self.resetSeletion() } ))
-            alert.view.tintColor = UIColor.black
+            alert.addAction(UIAlertAction(title: "Cancel",     style: .cancel,  handler: { _ in self.resetSeletion() } ))
+
+            alert.view.tintColor = UIColor.green
+            alert.view.tintColorDidChange()
+            
+            
             
             self.present(alert, animated: true, completion: nil)
         }

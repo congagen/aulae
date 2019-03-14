@@ -465,7 +465,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         print("viewDidLoad")
+        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+
         loadingView.isHidden = false
 
         let pinchGR = UIPinchGestureRecognizer(

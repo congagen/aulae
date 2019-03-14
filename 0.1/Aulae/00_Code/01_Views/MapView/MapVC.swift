@@ -344,11 +344,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         lpgr.delegate = self
         self.mapView.addGestureRecognizer(lpgr)
         
-        let logo = UIImage(named: "Logo.png")
-        let imageView = UIImageView(image: logo)
-        imageView.contentMode = .scaleAspectFit
-        self.navigationController?.navigationBar.topItem?.titleView = imageView
-    
+        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
     }
 
     

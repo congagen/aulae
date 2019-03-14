@@ -3,18 +3,13 @@
 //
 //      Name?
 //      NavBar Icon
-//      Onboarding Content
+//      Onboarding Content -> Trad / AR?
 //      Demo Content
-
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-// ArKit -> SceneKit?
-
 //      Content Display Modes:  Floor / Wall / World Position / Static
 //      Extensions: Target: Info: URL Types
-
 
 // Feeds
 //    Feed Feeds / RSS / ?

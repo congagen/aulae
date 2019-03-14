@@ -295,7 +295,8 @@ class FeedsTVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+
         rCtrl.tintColor = view.superview?.tintColor
         tableView.addSubview(rCtrl)
         rCtrl.addTarget(self, action: #selector(FeedsTVC.manualUpdate), for: .valueChanged)
