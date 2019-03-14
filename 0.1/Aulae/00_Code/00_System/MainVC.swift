@@ -131,6 +131,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             let sess = RLM_Session()
             do {
                 try realm.write {
+                    sess.sessionUUID = UUID().uuidString
                     self.realm.add(sess)
                 }
             } catch {
@@ -158,10 +159,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             }
         }
         
-        let logo = UIImage(named: "Logo.png")
-        let imageView = UIImageView(image: logo)
-        imageView.contentMode = .scaleAspectFit
-        self.navigationController?.navigationBar.topItem?.titleView = imageView
+        
         
     }
 

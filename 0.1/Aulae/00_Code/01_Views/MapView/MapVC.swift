@@ -330,6 +330,9 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         mapView.userLocation.title = ""
         mapView.tintColor = UIColor.black
         mapView.backgroundColor = UIColor.black
+        
+        mapView.mapType = .standard
+
     }
 
     
