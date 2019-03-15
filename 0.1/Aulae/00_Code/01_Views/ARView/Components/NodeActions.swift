@@ -80,11 +80,8 @@ extension ARViewer {
             }
             
             alert.addAction(UIAlertAction(title: "Cancel",     style: .cancel,  handler: { _ in self.resetSeletion() } ))
-
-            alert.view.tintColor = UIColor.green
+            alert.view.tintColor = UIColor.black
             alert.view.tintColorDidChange()
-            
-            
             
             self.present(alert, animated: true, completion: nil)
         }
