@@ -13,7 +13,6 @@ import RealmSwift
 
 extension MainVC {
     
-    
     func buildTextDemo() {
         let demoFeed = RLM_Feed()
         
@@ -36,25 +35,25 @@ extension MainVC {
                     o.contentLink = "https://www.abstraqata.com/aulae"
                     
                     if i == 1 {
-                        o.filePath    = "Welcome.png"
+                        o.filePath    = "welc.png"
                         o.x_pos = 0
                         o.z_pos = -distance
                     }
                     
                     if i == 2 {
-                        o.filePath    = "Interaction.png"
+                        o.filePath    = "scene.png"
                         o.x_pos = 0
                         o.z_pos = distance
                     }
                     
                     if i == 3 {
-                        o.filePath    = "Sources.png"
+                        o.filePath    = "sources.png"
                         o.x_pos = -distance
                         o.z_pos = 0
                     }
                     
                     if i == 4 {
-                        o.filePath    = "Map.png"
+                        o.filePath    = "map.png"
                         o.x_pos = distance
                         o.z_pos = 0
                     }

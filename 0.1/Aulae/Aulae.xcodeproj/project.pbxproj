@@ -38,6 +38,10 @@
 		FA1AAC432153E9D200EE494A /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC402153E9D000EE494A /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FA1AAC442153E9D200EE494A /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC412153E9D200EE494A /* Realm.framework */; };
 		FA1AAC452153E9D200EE494A /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA1AAC412153E9D200EE494A /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FA4ABBA3223C4CD5006525AA /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4ABB9F223C4CD5006525AA /* map.png */; };
+		FA4ABBA4223C4CD5006525AA /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4ABBA0223C4CD5006525AA /* welc.png */; };
+		FA4ABBA5223C4CD5006525AA /* scene.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4ABBA1223C4CD5006525AA /* scene.png */; };
+		FA4ABBA6223C4CD5006525AA /* sources.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4ABBA2223C4CD5006525AA /* sources.png */; };
 		FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA663146221DBD4B000FEF60 /* ContentNode.swift */; };
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
 		FA6BA7CF2232A02500DB3F2A /* Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6BA7CE2232A02500DB3F2A /* Logo.png */; };
@@ -47,11 +51,6 @@
 		FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88CBFC222DBBD90078E48A /* NodeActions.swift */; };
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
-		FAA2872D223BB45B00EFFD9F /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA2872C223BB45B00EFFD9F /* GuideViewController.swift */; };
-		FAA28731223C050A00EFFD9F /* Map.png in Resources */ = {isa = PBXBuildFile; fileRef = FAA28730223C050A00EFFD9F /* Map.png */; };
-		FAA28734223C051000EFFD9F /* Interaction.png in Resources */ = {isa = PBXBuildFile; fileRef = FAA28732223C051000EFFD9F /* Interaction.png */; };
-		FAA28735223C051000EFFD9F /* Sources.png in Resources */ = {isa = PBXBuildFile; fileRef = FAA28733223C051000EFFD9F /* Sources.png */; };
-		FAA28737223C056300EFFD9F /* Welcome.png in Resources */ = {isa = PBXBuildFile; fileRef = FAA28736223C056300EFFD9F /* Welcome.png */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
 		FAE439632237B5C900F828EF /* NavBarOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE439622237B5C900F828EF /* NavBarOps.swift */; };
 		FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* NodeAppearance.swift */; };
@@ -106,6 +105,10 @@
 		FA1934E62225BD0000457C6E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA1AAC402153E9D000EE494A /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		FA1AAC412153E9D200EE494A /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
+		FA4ABB9F223C4CD5006525AA /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
+		FA4ABBA0223C4CD5006525AA /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welc.png; sourceTree = "<group>"; };
+		FA4ABBA1223C4CD5006525AA /* scene.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scene.png; sourceTree = "<group>"; };
+		FA4ABBA2223C4CD5006525AA /* sources.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sources.png; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aulae.entitlements; sourceTree = "<group>"; };
@@ -116,11 +119,6 @@
 		FA88CBFC222DBBD90078E48A /* NodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeActions.swift; sourceTree = "<group>"; };
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
-		FAA2872C223BB45B00EFFD9F /* GuideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
-		FAA28730223C050A00EFFD9F /* Map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Map.png; sourceTree = "<group>"; };
-		FAA28732223C051000EFFD9F /* Interaction.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Interaction.png; sourceTree = "<group>"; };
-		FAA28733223C051000EFFD9F /* Sources.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sources.png; sourceTree = "<group>"; };
-		FAA28736223C056300EFFD9F /* Welcome.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Welcome.png; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		FAE439622237B5C900F828EF /* NavBarOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarOps.swift; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* NodeAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAppearance.swift; sourceTree = "<group>"; };
@@ -260,6 +258,7 @@
 		318FE90520B169C00050528B /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				FA4ABB9E223C2EC8006525AA /* Images */,
 				3177252420B03AD4009FA8B1 /* Main.storyboard */,
 				3177252920B03AD6009FA8B1 /* LaunchScreen.storyboard */,
 			);
@@ -269,17 +268,12 @@
 		319D3F2620D7963A007FEECA /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				FAA28732223C051000EFFD9F /* Interaction.png */,
-				FAA28733223C051000EFFD9F /* Sources.png */,
-				FAA28736223C056300EFFD9F /* Welcome.png */,
-				FAA28730223C050A00EFFD9F /* Map.png */,
-				FA6BA7CE2232A02500DB3F2A /* Logo.png */,
 				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 				318FE8F120B0BB730050528B /* HttpDownloader.swift */,
 				FA9E933E222183AC00346073 /* NetworkTools.swift */,
-				FA6BA7D02232E5E600DB3F2A /* Demos.swift */,
 				FAE439622237B5C900F828EF /* NavBarOps.swift */,
 				319D3F2720D7965B007FEECA /* FeedMgmt.swift */,
+				FA6BA7D02232E5E600DB3F2A /* Demos.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -330,6 +324,18 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		FA4ABB9E223C2EC8006525AA /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				FA4ABB9F223C4CD5006525AA /* map.png */,
+				FA4ABBA1223C4CD5006525AA /* scene.png */,
+				FA4ABBA2223C4CD5006525AA /* sources.png */,
+				FA4ABBA0223C4CD5006525AA /* welc.png */,
+				FA6BA7CE2232A02500DB3F2A /* Logo.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		FA6E5ACA221F1D4200A5DF17 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,21 +347,12 @@
 		FA6E5ACB221F1D7600A5DF17 /* 01_Views */ = {
 			isa = PBXGroup;
 			children = (
-				FAA2872B223BB43800EFFD9F /* Guide */,
 				31AB868D20B3525E0038F4D5 /* MapView */,
 				31AB868F20B352780038F4D5 /* ARView */,
 				31AB868E20B352660038F4D5 /* FeedViews */,
 				FA6E5ACA221F1D4200A5DF17 /* Settings */,
 			);
 			path = 01_Views;
-			sourceTree = "<group>";
-		};
-		FAA2872B223BB43800EFFD9F /* Guide */ = {
-			isa = PBXGroup;
-			children = (
-				FAA2872C223BB45B00EFFD9F /* GuideViewController.swift */,
-			);
-			path = Guide;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -439,14 +436,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAA28735223C051000EFFD9F /* Sources.png in Resources */,
-				FAA28734223C051000EFFD9F /* Interaction.png in Resources */,
+				FA4ABBA3223C4CD5006525AA /* map.png in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
+				FA4ABBA5223C4CD5006525AA /* scene.png in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
-				FAA28731223C050A00EFFD9F /* Map.png in Resources */,
 				FA6BA7CF2232A02500DB3F2A /* Logo.png in Resources */,
-				FAA28737223C056300EFFD9F /* Welcome.png in Resources */,
 				FA1934E72225BD0000457C6E /* Assets.xcassets in Resources */,
+				FA4ABBA4223C4CD5006525AA /* welc.png in Resources */,
+				FA4ABBA6223C4CD5006525AA /* sources.png in Resources */,
 				3177252620B03AD4009FA8B1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -481,7 +478,6 @@
 				316B86D820D955660076E63D /* FloatingPoint+Radians.swift in Sources */,
 				FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */,
 				316B86DD20D955660076E63D /* LocationManager.swift in Sources */,
-				FAA2872D223BB45B00EFFD9F /* GuideViewController.swift in Sources */,
 				316B86DB20D955660076E63D /* CLLocation+Extensions.swift in Sources */,
 				FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */,
 				FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */,
