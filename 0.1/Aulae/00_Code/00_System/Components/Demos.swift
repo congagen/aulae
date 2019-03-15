@@ -34,7 +34,29 @@ extension MainVC {
                     o.active      = true
                     o.contentLink = "https://www.abstraqata.com/aulae"
                     
-                    o.filePath    = "instro.png"
+                    if i == 1 {
+                        o.filePath    = "Welcome.png"
+                        o.x_pos = 0
+                        o.z_pos = -2
+                    }
+                    
+                    if i == 2 {
+                        o.filePath    = "Logo.png"
+                        o.x_pos = 0
+                        o.z_pos = 2
+                    }
+                    
+                    if i == 3 {
+                        o.filePath    = "Logo.png"
+                        o.x_pos = -2
+                        o.z_pos = 0
+                    }
+                    
+                    if i == 4 {
+                        o.filePath    = "Logo.png"
+                        o.x_pos = 2
+                        o.z_pos = 0
+                    }
                     
                     o.style       = 0
                     o.type        = "image"
@@ -42,9 +64,9 @@ extension MainVC {
                     
                     o.world_position = false
                     
-                    o.x_pos = sin( ((Double.pi / Double(itemCount / 2)) * Double(i)) ) * Double(1)
-                    o.z_pos = cos( ((Double.pi / Double(itemCount / 2)) * Double(i)) ) * Double(1)
-                    o.y_pos = 0
+//                    o.x_pos = sin(( (Double.pi / Double(itemCount / 2)) * Double(i)))
+//                    o.z_pos = cos(( (Double.pi / Double(itemCount / 2)) * Double(i)))
+                    o.y_pos = 0.3
                     
                     self.realm.add(o)
                 }
