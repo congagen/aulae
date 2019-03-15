@@ -48,7 +48,10 @@
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
 		FAA2872D223BB45B00EFFD9F /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA2872C223BB45B00EFFD9F /* GuideViewController.swift */; };
-		FAA2872F223BFB0700EFFD9F /* Welcome.png in Resources */ = {isa = PBXBuildFile; fileRef = FAA2872E223BFB0700EFFD9F /* Welcome.png */; };
+		FAA28731223C050A00EFFD9F /* Map.png in Resources */ = {isa = PBXBuildFile; fileRef = FAA28730223C050A00EFFD9F /* Map.png */; };
+		FAA28734223C051000EFFD9F /* Interaction.png in Resources */ = {isa = PBXBuildFile; fileRef = FAA28732223C051000EFFD9F /* Interaction.png */; };
+		FAA28735223C051000EFFD9F /* Sources.png in Resources */ = {isa = PBXBuildFile; fileRef = FAA28733223C051000EFFD9F /* Sources.png */; };
+		FAA28737223C056300EFFD9F /* Welcome.png in Resources */ = {isa = PBXBuildFile; fileRef = FAA28736223C056300EFFD9F /* Welcome.png */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
 		FAE439632237B5C900F828EF /* NavBarOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE439622237B5C900F828EF /* NavBarOps.swift */; };
 		FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* NodeAppearance.swift */; };
@@ -114,7 +117,10 @@
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
 		FAA2872C223BB45B00EFFD9F /* GuideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
-		FAA2872E223BFB0700EFFD9F /* Welcome.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Welcome.png; sourceTree = "<group>"; };
+		FAA28730223C050A00EFFD9F /* Map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Map.png; sourceTree = "<group>"; };
+		FAA28732223C051000EFFD9F /* Interaction.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Interaction.png; sourceTree = "<group>"; };
+		FAA28733223C051000EFFD9F /* Sources.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sources.png; sourceTree = "<group>"; };
+		FAA28736223C056300EFFD9F /* Welcome.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Welcome.png; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		FAE439622237B5C900F828EF /* NavBarOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarOps.swift; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* NodeAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAppearance.swift; sourceTree = "<group>"; };
@@ -263,7 +269,10 @@
 		319D3F2620D7963A007FEECA /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				FAA2872E223BFB0700EFFD9F /* Welcome.png */,
+				FAA28732223C051000EFFD9F /* Interaction.png */,
+				FAA28733223C051000EFFD9F /* Sources.png */,
+				FAA28736223C056300EFFD9F /* Welcome.png */,
+				FAA28730223C050A00EFFD9F /* Map.png */,
 				FA6BA7CE2232A02500DB3F2A /* Logo.png */,
 				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 				318FE8F120B0BB730050528B /* HttpDownloader.swift */,
@@ -430,10 +439,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAA2872F223BFB0700EFFD9F /* Welcome.png in Resources */,
+				FAA28735223C051000EFFD9F /* Sources.png in Resources */,
+				FAA28734223C051000EFFD9F /* Interaction.png in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
+				FAA28731223C050A00EFFD9F /* Map.png in Resources */,
 				FA6BA7CF2232A02500DB3F2A /* Logo.png in Resources */,
+				FAA28737223C056300EFFD9F /* Welcome.png in Resources */,
 				FA1934E72225BD0000457C6E /* Assets.xcassets in Resources */,
 				3177252620B03AD4009FA8B1 /* Main.storyboard in Resources */,
 			);

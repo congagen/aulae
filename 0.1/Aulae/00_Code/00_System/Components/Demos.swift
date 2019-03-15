@@ -22,6 +22,7 @@ extension MainVC {
         demoFeed.name = "Demo Feed"
         
         let itemCount = 4
+        let distance: Double = 1.5
         
         do {
             try realm.write {
@@ -37,24 +38,24 @@ extension MainVC {
                     if i == 1 {
                         o.filePath    = "Welcome.png"
                         o.x_pos = 0
-                        o.z_pos = -2
+                        o.z_pos = -distance
                     }
                     
                     if i == 2 {
-                        o.filePath    = "Logo.png"
+                        o.filePath    = "Interaction.png"
                         o.x_pos = 0
-                        o.z_pos = 2
+                        o.z_pos = distance
                     }
                     
                     if i == 3 {
-                        o.filePath    = "Logo.png"
-                        o.x_pos = -2
+                        o.filePath    = "Sources.png"
+                        o.x_pos = -distance
                         o.z_pos = 0
                     }
                     
                     if i == 4 {
-                        o.filePath    = "Logo.png"
-                        o.x_pos = 2
+                        o.filePath    = "Map.png"
+                        o.x_pos = distance
                         o.z_pos = 0
                     }
                     
