@@ -127,45 +127,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
   
     
-    func demoContentPos(distance: Float, x: Double, z: Double) -> SCNVector3 {
-        let dir = calculateCameraDirection(cameraNode: sceneView.pointOfView!)
-        
-        var newPos = SCNVector3(0.0, 0.0, 0.0)
-        
-        if z < 0 {
-            print("worldFront")
-            let p = pointInFrontOfPoint(point: self.sceneView!.pointOfView!.worldFront, direction: dir, distance: distance)
-            newPos.x += p.x
-            newPos.y = 0
-            newPos.z += p.y
-        } else {
-            print("-worldFront")
-            let p = pointInFrontOfPoint(point: self.sceneView!.pointOfView!.worldFront, direction: dir, distance: -distance)
-            newPos.x += p.x
-            newPos.y = 0
-            newPos.z += p.y
-        }
-        
-        if x < 0 {
-            print("worldRight")
-            let p = pointInFrontOfPoint(point: self.sceneView!.pointOfView!.worldRight, direction: dir, distance: distance)
-            newPos.x += p.x
-            newPos.y = 0
-            newPos.z += p.y
-        } else {
-            print("-worldRight")
-            let p = pointInFrontOfPoint(point: self.sceneView!.pointOfView!.worldRight, direction: dir, distance: -distance)
-            newPos.x += p.x
-            newPos.y = 0
-            newPos.z += p.y
-        }
-        
-        return newPos
-    
-    }
-    
-
-    
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double, localDemoContent: Bool) {
         print("AddContentToScene: " + String(contentObj.uuid))
         print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
@@ -228,12 +189,21 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         let yH = ctNode.boundingBox.max.y * 0.5
-        ctNode.position = SCNVector3(contentPos.x, (contentPos.y-yH), contentPos.z)
-        
+        ctNode.position = SCNVector3(contentPos.x, (contentPos.y - yH), contentPos.z)
         ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
         ctNode.tagComponents(nodeTag: contentObj.uuid)
         ctNode.name = contentObj.uuid
         
+        let r = sceneView.pointOfView?.rotation
+        let yr = Double(Double.pi / Double((r?.y)!))
+        print(yr)
+        
+        let rotato = GLKQuaternionMakeWithAngleAndAxis(Float(Double.pi), 0.0, 0.5, 0.0)
+        let ummmmm = SCNQuaternion(rotato.x, rotato.y, rotato.z, rotato.w)
+        print(rotato.q)
+        print(ummmmm)
+        
+        ctNode.rotate(by: ummmmm, aroundTarget: (sceneView!.pointOfView?.position)!)
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
     
@@ -249,9 +219,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let activeObjectsInRange = objsInRange.filter({$0.active && !$0.deleted})
         
         for n in mainScene.rootNode.childNodes {
-            if n.isKind(of: ContentNode.self) {
-                n.removeFromParentNode()
-            }
+            if n.isKind(of: ContentNode.self) { n.removeFromParentNode() }
         }
         
         mainScene.rootNode.removeAllAudioPlayers()
@@ -261,7 +229,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             var inRange = true
             
             if o.radius != 0 {
-                let d = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!).distance(from: CLLocation(latitude: o.lat, longitude: o.lng))
+                let d = CLLocation(
+                    latitude:  (session.first?.currentLat)!, longitude: (session.first?.currentLng)!).distance(from: CLLocation(latitude: o.lat, longitude: o.lng))
                 inRange = d < o.radius
             }
             
@@ -287,6 +256,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         } else {
                             if o.type == "image" {
                                 if UIImage(named: o.filePath) != nil {
+                                    print("localDemoContent")
                                     addContentToScene(
                                         contentObj: o, fPath: o.filePath,
                                         scaleFactor: (session.first?.scaleFactor)!,

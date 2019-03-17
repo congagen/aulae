@@ -31,6 +31,8 @@ extension MainVC {
                     let o         = RLM_Obj()
                     o.name        = String(i)
                     o.feedId      = demoFeed.id
+                    o.y_pos       = -0.3
+
                     o.active      = true
                     o.contentLink = "https://www.abstraqata.com/aulae"
                     
