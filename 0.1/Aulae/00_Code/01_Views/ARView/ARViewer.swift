@@ -203,7 +203,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print(rotato.q)
         print(ummmmm)
         
-        ctNode.rotate(by: ummmmm, aroundTarget: (sceneView!.pointOfView?.position)!)
+        //ctNode.rotate(by: ummmmm, aroundTarget: (sceneView!.pointOfView?.position)!)
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
     

@@ -7,7 +7,7 @@ class RLM_Session: Object {
     @objc dynamic var sessionUUID: String = ""
     
     @objc dynamic var hibernated: Bool = false
-    @objc dynamic var muteAudio:  Bool = true
+    @objc dynamic var muteAudio:  Bool = false
 
     @objc dynamic var feedErrorThreshold: Int = 10
     
