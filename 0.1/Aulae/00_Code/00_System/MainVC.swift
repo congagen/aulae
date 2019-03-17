@@ -158,9 +158,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
-        
-        
-        
     }
 
     

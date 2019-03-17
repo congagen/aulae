@@ -1,13 +1,15 @@
 
 // URGENT:
-//
-//      Name?
-//      NavBar Icon
-//      Onboarding Content -> Trad / AR?
+
+//      Name
+//      Logo
 //      Demo Content
+//      Lng -> Long
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+//      Menu Link / Direct Link
+//
 //      Content Display Modes:  Floor / Wall / World Position / Static
 //      Extensions: Target: Info: URL Types
 

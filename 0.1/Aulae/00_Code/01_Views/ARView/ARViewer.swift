@@ -14,29 +14,27 @@ import Vision
 
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
-    var updateTimer = Timer()
-
     let realm = try! Realm()
     lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
+    var updateTimer = Timer()
+    
     var isTrackingQR = false
     var qrUrl = ""
     var qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
     var qrCaptureSession = AVCaptureSession()
-        
+    
     var trackingState = 3
     var contentZoom: Double = 1
-    var audioListener: SCNNode? { return mainScene.rootNode }
 
+    var arCam: ARCamera? = nil
+    
     var configuration = AROrientationTrackingConfiguration()
-    //var configuration = ARWorldTrackingConfiguration()
     
     var mainScene = SCNScene()
     var selectedNode: ContentNode? = nil
-    var selectedNodeY: Float = 0
-    
     let audioRangeRadius: Double = 1000
     
     var currentPlanes: [SCNNode]? = nil
@@ -75,9 +73,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             qrCapturePreviewLayer.removeFromSuperlayer()
             isTrackingQR = false
         } else {
+            isTrackingQR = true
             captureQRCode()
             searchQRBtn.tintColor = UIColor.green
-            isTrackingQR = true
         }
     }
     
@@ -127,24 +125,63 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             mainScene.rootNode.addAudioPlayer(SCNAudioPlayer(source: asrc!))
         }
     }
+  
+    
+    func demoContentPos(distance: Float, x: Double, z: Double) -> SCNVector3 {
+        let dir = calculateCameraDirection(cameraNode: sceneView.pointOfView!)
+        
+        var newPos = SCNVector3(0.0, 0.0, 0.0)
+        
+        if z < 0 {
+            print("worldFront")
+            let p = pointInFrontOfPoint(point: self.sceneView!.pointOfView!.worldFront, direction: dir, distance: distance)
+            newPos.x += p.x
+            newPos.y = 0
+            newPos.z += p.y
+        } else {
+            print("-worldFront")
+            let p = pointInFrontOfPoint(point: self.sceneView!.pointOfView!.worldFront, direction: dir, distance: -distance)
+            newPos.x += p.x
+            newPos.y = 0
+            newPos.z += p.y
+        }
+        
+        if x < 0 {
+            print("worldRight")
+            let p = pointInFrontOfPoint(point: self.sceneView!.pointOfView!.worldRight, direction: dir, distance: distance)
+            newPos.x += p.x
+            newPos.y = 0
+            newPos.z += p.y
+        } else {
+            print("-worldRight")
+            let p = pointInFrontOfPoint(point: self.sceneView!.pointOfView!.worldRight, direction: dir, distance: -distance)
+            newPos.x += p.x
+            newPos.y = 0
+            newPos.z += p.y
+        }
+        
+        return newPos
+    
+    }
+    
 
     
     func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double, localDemoContent: Bool) {
         print("AddContentToScene: " + String(contentObj.uuid))
         print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
-        
+
         let rawDeviceGpsCCL   = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let rawObjectGpsCCL   = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        var contentPos        = SCNVector3( contentObj.x_pos, contentObj.y_pos, contentObj.z_pos )
         
-        var contentPos        = SCNVector3(contentObj.x_pos, contentObj.y_pos, contentObj.z_pos)
         if contentObj.world_position {
             contentPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: contentObj, scaleFactor: scaleFactor)
         }
         
         var nodeSize: CGFloat = CGFloat(1 * contentObj.scale)
         if (session.first?.distanceScale)! && contentObj.world_scale {
-            nodeSize = CGFloat( ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+            nodeSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
         }
         
         let ctNode = ContentNode(id: contentObj.uuid, title: contentObj.name, feedId: contentObj.feedId, location: rawObjectGpsCCL)
@@ -184,29 +221,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
-        var yH: Float = 0.0
-        
         if contentObj.billboard {
-            yH = ctNode.boundingBox.max.y * 0.5
             let constraint = SCNBillboardConstraint()
             constraint.freeAxes = [.Y]
             ctNode.constraints = [constraint]
         }
         
+        let yH = ctNode.boundingBox.max.y * 0.5
         ctNode.position = SCNVector3(contentPos.x, (contentPos.y-yH), contentPos.z)
+        
+        ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
         ctNode.tagComponents(nodeTag: contentObj.uuid)
         ctNode.name = contentObj.uuid
-        
-        //rotateAnimation(node: ctNode, xAmt: 0, yAmt: 360, zAmt: 0, speed: contentObj.rotate)
-        
-//        if contentObj.rotate != 0 {
-//            rotateAnimation(node: ctNode, xAmt: 0, yAmt: 360, zAmt: 0, speed: contentObj.rotate)
-//        }
-//
-//        if contentObj.hoover != 0 {
-//            addHooverAnimation(node: ctNode, distance: CGFloat(contentObj.hoover), speed: CGFloat(contentObj.hoover))
-//        }
         
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
@@ -306,10 +332,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         if (sn.isKind(of: ContentNode.self)) {
                             if selectedNode == (sNodes.first as! ContentNode) {
                                 showSeletedNodeActions(objData: matchingObjs.first!)
-                                highlightSelected(hideOther: true)
+                                highlightSelected(hideOther: false)
                             } else {
                                 selectedNode = (sNodes.first as! ContentNode)
-                                highlightSelected(hideOther: true)
+                                highlightSelected(hideOther: false)
                             }
                         }
                     }
@@ -337,6 +363,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         Double(gestureRecognizer.scale))
                 }
             }
+        }
+    }
+    
+    
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        if arCam == nil {
+            arCam = session.currentFrame?.camera
         }
     }
     
@@ -524,3 +557,27 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        let pov = sceneView.pointOfView!.rotation
+//        ctNode.rotate(by: pov, aroundTarget: SCNVector3(0,0,0) )
+
+
+//        if contentObj.rotate != 0 {
+//            rotateAnimation(node: ctNode, xAmt: 0, yAmt: 1, zAmt: 0, speed: contentObj.rotate)
+//        }
+//
+//        if contentObj.hoover != 0 {
+//            addHooverAnimation(node: ctNode, distance: CGFloat(contentObj.hoover), speed: CGFloat(contentObj.hoover))
+//        }
