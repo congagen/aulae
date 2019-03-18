@@ -188,8 +188,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             ctNode.constraints = [constraint]
         }
         
-        let yH = ctNode.boundingBox.max.y * 0.5
-        ctNode.position = SCNVector3(contentPos.x, (contentPos.y - yH), contentPos.z)
+        //let yH = ctNode.boundingBox.max.y * 0.5
+        ctNode.position = SCNVector3(contentPos.x, (contentPos.y), contentPos.z)
+        ctNode.localTranslate(by: SCNVector3(contentPos.x, (contentPos.y), contentPos.z))
+        
         ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
         ctNode.tagComponents(nodeTag: contentObj.uuid)
         ctNode.name = contentObj.uuid
@@ -198,10 +200,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let yr = Double(Double.pi / Double((r?.y)!))
         print(yr)
         
-        let rotato = GLKQuaternionMakeWithAngleAndAxis(Float(Double.pi), 0.0, 0.5, 0.0)
-        let ummmmm = SCNQuaternion(rotato.x, rotato.y, rotato.z, rotato.w)
-        print(rotato.q)
-        print(ummmmm)
+//        let rotato = GLKQuaternionMakeWithAngleAndAxis(Float(Double.pi), 0.0, 1.0, 0.0)
+//        let ummmmm = SCNQuaternion(rotato.x, rotato.y, rotato.z, rotato.w)
+//        print(rotato.q)
+//        print(ummmmm)
         
         //ctNode.rotate(by: ummmmm, aroundTarget: (sceneView!.pointOfView?.position)!)
         sceneView.scene.rootNode.addChildNode(ctNode)

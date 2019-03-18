@@ -139,12 +139,20 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             }
             
             buildTextDemo()
+            resetErrCounts()
+            mainUpdate()
+            initLocation()
+            
+            self.selectedIndex = 1
+
+            //self.tabBar.selectedItem = self.tabBar.items![1]
+        } else {
+            resetErrCounts()
+            mainUpdate()
+            initLocation()
         }
         
-        resetErrCounts()
-        mainUpdate()
-        initLocation()
-        
+
     }
 
     

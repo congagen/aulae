@@ -31,7 +31,7 @@ extension MainVC {
                     let o         = RLM_Obj()
                     o.name        = String(i)
                     o.feedId      = demoFeed.id
-                    o.y_pos       = -0.3
+                    o.y_pos       = -0.1
 
                     o.active      = true
                     o.contentLink = "https://www.abstraqata.com/aulae"
@@ -65,10 +65,6 @@ extension MainVC {
                     o.text        = "Bla"
                     
                     o.world_position = false
-                    
-//                    o.x_pos = sin(( (Double.pi / Double(itemCount / 2)) * Double(i)))
-//                    o.z_pos = cos(( (Double.pi / Double(itemCount / 2)) * Double(i)))
-                    o.y_pos = 0.3
                     
                     self.realm.add(o)
                 }
