@@ -182,30 +182,25 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
+        //let yH = ctNode.boundingBox.max.y * 0.5
+        
         if contentObj.billboard {
             let constraint = SCNBillboardConstraint()
             constraint.freeAxes = [.Y]
             ctNode.constraints = [constraint]
         }
         
-        //let yH = ctNode.boundingBox.max.y * 0.5
-        ctNode.position = SCNVector3(contentPos.x, (contentPos.y), contentPos.z)
-        ctNode.localTranslate(by: SCNVector3(contentPos.x, (contentPos.y), contentPos.z))
-        
         ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
         ctNode.tagComponents(nodeTag: contentObj.uuid)
         ctNode.name = contentObj.uuid
-        
-        let r = sceneView.pointOfView?.rotation
-        let yr = Double(Double.pi / Double((r?.y)!))
-        print(yr)
-        
-//        let rotato = GLKQuaternionMakeWithAngleAndAxis(Float(Double.pi), 0.0, 1.0, 0.0)
-//        let ummmmm = SCNQuaternion(rotato.x, rotato.y, rotato.z, rotato.w)
-//        print(rotato.q)
-//        print(ummmmm)
-        
-        //ctNode.rotate(by: ummmmm, aroundTarget: (sceneView!.pointOfView?.position)!)
+        ctNode.position = SCNVector3(contentPos.x, (contentPos.y), contentPos.z)
+
+        if !contentObj.world_position {
+            let ori = sceneView.pointOfView?.orientation
+            let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+            ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+        }
+
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
     
@@ -278,8 +273,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        loadingView.isHidden  = trackingState == 0
-
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 })
     }
 
     
@@ -377,7 +371,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
 
         loadingViewLabel.text = message
-        loadingView.isHidden  = trackingState == 0
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 })
     }
     
     
@@ -465,7 +459,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
         }
         
-        loadingView.isHidden  = trackingState == 0
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 })
     }
     
     
@@ -491,7 +485,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         contentZoom = 0
         initScene()
-        refreshScene()
+        
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.refreshScene() })
     }
     
     

@@ -21,7 +21,7 @@ extension MainVC {
         demoFeed.name = "Demo Feed"
         
         let itemCount = 4
-        let distance: Double = 1
+        let distance: Double = 0.75
         
         do {
             try realm.write {
@@ -31,7 +31,7 @@ extension MainVC {
                     let o         = RLM_Obj()
                     o.name        = String(i)
                     o.feedId      = demoFeed.id
-                    o.y_pos       = -0.1
+                    o.y_pos       = 0
 
                     o.active      = true
                     o.contentLink = "https://www.abstraqata.com/aulae"

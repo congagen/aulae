@@ -321,24 +321,45 @@
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="pkE-xE-xGD">
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="g8y-MV-Vbv">
                                         <rect key="frame" x="170" y="389" width="35" height="34"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="35" id="LaN-bi-MaG"/>
-                                            <constraint firstAttribute="height" constant="34" id="aIP-Ek-W1L"/>
+                                            <constraint firstAttribute="width" constant="35" id="oO4-D3-dUs"/>
+                                            <constraint firstAttribute="height" constant="34" id="oyH-Tz-yst"/>
                                         </constraints>
                                         <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </activityIndicatorView>
+                                    <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wgG-QP-Msr">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="aZI-ct-6ru">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iwz-v7-qrn">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="uR3-ET-AJm">
+                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    </view>
+                                                    <vibrancyEffect>
+                                                        <blurEffect style="light"/>
+                                                    </vibrancyEffect>
+                                                </visualEffectView>
+                                            </subviews>
+                                        </view>
+                                        <blurEffect style="light"/>
+                                    </visualEffectView>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="g8y-MV-Vbv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mak-KG-CXa" secondAttribute="trailing" constant="8" symbolic="YES" id="2Ek-N5-isz"/>
                                     <constraint firstItem="mak-KG-CXa" firstAttribute="top" secondItem="cVh-GF-OBP" secondAttribute="top" id="Boz-pd-Ig5"/>
-                                    <constraint firstItem="pkE-xE-xGD" firstAttribute="centerY" secondItem="mak-KG-CXa" secondAttribute="centerY" id="FMb-hQ-bVw"/>
+                                    <constraint firstItem="g8y-MV-Vbv" firstAttribute="centerX" secondItem="cVh-GF-OBP" secondAttribute="centerX" id="Eqe-AC-1AB"/>
                                     <constraint firstItem="mak-KG-CXa" firstAttribute="leading" secondItem="cVh-GF-OBP" secondAttribute="leadingMargin" id="Feo-jy-A5M"/>
-                                    <constraint firstItem="pkE-xE-xGD" firstAttribute="centerY" secondItem="cVh-GF-OBP" secondAttribute="centerY" id="J0N-Gi-HZt"/>
                                     <constraint firstAttribute="bottom" secondItem="mak-KG-CXa" secondAttribute="bottom" id="LFO-Id-aF1"/>
-                                    <constraint firstItem="pkE-xE-xGD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mak-KG-CXa" secondAttribute="trailing" constant="8" symbolic="YES" id="jv6-4D-RAp"/>
-                                    <constraint firstItem="pkE-xE-xGD" firstAttribute="centerX" secondItem="cVh-GF-OBP" secondAttribute="centerX" id="rba-cu-pnp"/>
+                                    <constraint firstItem="g8y-MV-Vbv" firstAttribute="centerY" secondItem="mak-KG-CXa" secondAttribute="centerY" id="fhu-rt-W1P"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -393,7 +414,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0yF-0m-H2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="908" y="1685"/>
+            <point key="canvasLocation" x="908" y="1684.729064039409"/>
         </scene>
         <!--MapVC-->
         <scene sceneID="CcG-m6-yJt">
@@ -1372,6 +1393,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="SZc-Qf-Odg"/>
-        <segue reference="pCq-sO-rbF"/>
+        <segue reference="Q9S-6L-g2l"/>
     </inferredMetricsTieBreakers>
 </document>
