@@ -297,8 +297,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     for sn in sNodes {
                         if (sn.isKind(of: ContentNode.self)) {
                             
-                            if (matchingObjs.first?.directLink)! {
-                                self.shareURLAction(url: (matchingObjs.first?.contentUrl)!)
+                            if (matchingObjs.first?.directLink)! && ((matchingObjs.first?.contentLink)! != "") {
+                                self.openUrl(scheme: (matchingObjs.first?.contentLink)!)
                             } else {
                                 if let a = sNodes.first as! ContentNode? {
                                     selectedNode = a
