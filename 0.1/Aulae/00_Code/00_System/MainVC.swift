@@ -143,9 +143,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             mainUpdate()
             initLocation()
             
-            self.selectedIndex = 1
-
-            //self.tabBar.selectedItem = self.tabBar.items![1]
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { _ in self.selectedIndex = 1 })
         } else {
             resetErrCounts()
             mainUpdate()

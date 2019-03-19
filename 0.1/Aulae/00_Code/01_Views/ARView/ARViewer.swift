@@ -296,12 +296,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     
                     for sn in sNodes {
                         if (sn.isKind(of: ContentNode.self)) {
-                            if selectedNode == (sNodes.first as! ContentNode) {
-                                showSeletedNodeActions(objData: matchingObjs.first!)
-                                highlightSelected(hideOther: false)
+                            
+                            if (matchingObjs.first?.directLink)! {
+                                self.shareURLAction(url: (matchingObjs.first?.contentUrl)!)
                             } else {
-                                selectedNode = (sNodes.first as! ContentNode)
-                                highlightSelected(hideOther: false)
+                                if let a = sNodes.first as! ContentNode? {
+                                    selectedNode = a
+                                    showSeletedNodeActions(objData: matchingObjs.first!)
+                                }
                             }
                         }
                     }
@@ -404,7 +406,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         optimizeCam()
         
         if (session.first?.autoUpdate)! {
-            mainTimerUpdate()
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.mainTimerUpdate() })
         }
     }
     
@@ -447,7 +449,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if needsRefresh {
             print("mainUpdate: needsUpdate")
-            
             refreshScene()
         }
         
@@ -459,7 +460,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
         }
         
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 })
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 })
     }
     
     
@@ -498,6 +499,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        loadingView.isHidden = false
         sceneView.session.pause()
         progressBar.removeFromSuperview()
     }

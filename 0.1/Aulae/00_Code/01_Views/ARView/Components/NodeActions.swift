@@ -12,43 +12,6 @@ import ARKit
 
 extension ARViewer {
     
-    
-    func pointInFrontOfPoint(point: SCNVector3, direction: SCNVector3, distance: Float) -> SCNVector3 {
-        var x = Float()
-        var y = Float()
-        var z = Float()
-        
-        x = point.x + distance * direction.x
-        y = point.y + distance * direction.y
-        z = point.z + distance * direction.z
-        
-        let result = SCNVector3Make(x, y, z)
-        return result
-    }
-    
-    
-    func calculateCameraDirection(cameraNode: SCNNode) -> SCNVector3 {
-        let x = -cameraNode.rotation.x
-        let y = -cameraNode.rotation.y
-        let z = -cameraNode.rotation.z
-        let w = cameraNode.rotation.w
-        let cameraRotationMatrix = GLKMatrix3Make(cos(w) + pow(x, 2) * (1 - cos(w)),
-                                                  x * y * (1 - cos(w)) - z * sin(w),
-                                                  x * z * (1 - cos(w)) + y*sin(w),
-                                                  
-                                                  y*x*(1-cos(w)) + z*sin(w),
-                                                  cos(w) + pow(y, 2) * (1 - cos(w)),
-                                                  y*z*(1-cos(w)) - x*sin(w),
-                                                  
-                                                  z*x*(1 - cos(w)) - y*sin(w),
-                                                  z*y*(1 - cos(w)) + x*sin(w),
-                                                  cos(w) + pow(z, 2) * ( 1 - cos(w)))
-        
-        let cameraDirection = GLKMatrix3MultiplyVector3(cameraRotationMatrix, GLKVector3Make(0.0, 0.0, -1.0))
-        return SCNVector3FromGLKVector3(cameraDirection)
-    }
-    
-    
 
     func sharePhoto() {
         let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: [:])
@@ -140,16 +103,16 @@ extension ARViewer {
     }
     
     
-    func highlightSelected(hideOther: Bool) {
-        
-        if hideOther {
-            for n in mainScene.rootNode.childNodes {
-                if n != selectedNode && !(n.isKind(of: SKLightNode.self)) && !(n.isKind(of: SCNLight.self)) {
-                    n.isHidden = true
-                }
-            }
-        }
-        
-    }
+//    func highlightSelected(hideOther: Bool) {
+//        
+//        if hideOther {
+//            for n in mainScene.rootNode.childNodes {
+//                if n != selectedNode && !(n.isKind(of: SKLightNode.self)) && !(n.isKind(of: SCNLight.self)) {
+//                    n.isHidden = true
+//                }
+//            }
+//        }
+//        
+//    }
     
 }

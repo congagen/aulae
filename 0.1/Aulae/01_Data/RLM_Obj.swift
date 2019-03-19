@@ -17,6 +17,7 @@ class RLM_Obj: Object {
     @objc dynamic var deleted:     Bool = false
 
     @objc dynamic var contentLink: String = ""
+    @objc dynamic var directLink:  Bool = false
     
     @objc dynamic var fileName:    String = ""
     @objc dynamic var filePath:    String = ""

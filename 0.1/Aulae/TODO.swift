@@ -1,8 +1,9 @@
 
 // URGENT:
 
-//      Name
-//      Logo
+//      Direct Links
+//      Initial Load Demo Orientation Bug
+//      Name & Logo
 //      Demo Content
 //      Lng -> Long
 
