@@ -218,11 +218,9 @@ class FeedsTVC: UITableViewController {
     func openUrl(scheme: String) {
         if let url = URL(string: scheme) {
             if #available(iOS 10, *) {
-                UIApplication.shared.open(url, options: [:],
-                                          completionHandler: {
-                                            (success) in
-                                            print("Open \(scheme): \(success)")
-                })
+                UIApplication.shared.open(
+                    url, options: [:], completionHandler: { (success) in print("Open \(scheme): \(success)") }
+                )
             } else {
                 let success = UIApplication.shared.openURL(url)
                 print("Open \(scheme): \(success)")
@@ -303,6 +301,12 @@ class FeedsTVC: UITableViewController {
 
         mainUpdate()
     }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        manualUpdate()
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

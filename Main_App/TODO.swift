@@ -1,8 +1,8 @@
 
 // URGENT:
 
-//      Direct Links
-//      Initial Load Demo Orientation Bug
+//      API Source Update -> Share user position
+//      Content node type: Icon / MapMarker
 //      Name & Logo
 //      Demo Content
 //      Lng -> Long

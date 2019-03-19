@@ -348,19 +348,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         switch camera.trackingState {
         case .notAvailable:
-            message = "Localizing..."
+            message = "Insufficient Light"
             trackingState = 2
             
         case .normal:
-            message = "Lodaing..."
+            message = "Updating..."
             trackingState = 0
             
         case .limited(.excessiveMotion):
-            message = "Try slowing down your movement"
+            message = "Updating..."
             trackingState = 0
             
         case .limited(.insufficientFeatures):
-            message = "Try pointing at a flat surface or reloading the scene"
+            message = "Loading..."
             trackingState = 1
             
         case .limited(.initializing):
