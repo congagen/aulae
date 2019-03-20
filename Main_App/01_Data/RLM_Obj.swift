@@ -13,6 +13,7 @@ class RLM_Obj: Object {
     @objc dynamic var version:     Int = 0
     @objc dynamic var info:        String = ""
     
+    @objc dynamic var demo:        Bool = false
     @objc dynamic var active:      Bool = true
     @objc dynamic var deleted:     Bool = false
 

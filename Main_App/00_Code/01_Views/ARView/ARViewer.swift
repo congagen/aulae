@@ -195,12 +195,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.name = contentObj.uuid
         ctNode.position = SCNVector3(contentPos.x, (contentPos.y), contentPos.z)
 
-        if !contentObj.world_position {
+        if contentObj.demo {
             let ori = sceneView.pointOfView?.orientation
             let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
             ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+            
+            ctNode.position = SCNVector3(ctNode.position.x * 1.2, 0, ctNode.position.z * 1.2)
         }
-
+        
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
     

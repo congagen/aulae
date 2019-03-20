@@ -32,7 +32,8 @@ extension MainVC {
                     o.name        = String(i)
                     o.feedId      = demoFeed.id
                     o.y_pos       = 0
-
+                    o.demo        = true
+                    
                     o.active      = true
                     o.contentLink = "https://www.abstraqata.com/aulae"
                     
