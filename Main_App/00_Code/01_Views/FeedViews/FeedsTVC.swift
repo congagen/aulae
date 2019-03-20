@@ -146,27 +146,7 @@ class FeedsTVC: UITableViewController {
         }
     }
     
-    
-    func handleRenameOk(alertView: UIAlertAction!) {
-        // TODO: Update all assosiated FeedObjects["feedId"]
-
-        if selected != nil {
-            do {
-                try realm.write {
-                    if textField?.text != nil {
-                        selected?.name = (self.textField?.text)!
-                    }
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-        }
         
-        self.tableView.reloadData()
-        self.tableView.reloadInputViews()
-    }
-    
-    
     func handleEnterURL(alertView: UIAlertAction!) {
         
         if textField?.text != nil {

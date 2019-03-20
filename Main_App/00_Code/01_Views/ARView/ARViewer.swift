@@ -136,6 +136,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         var contentPos        = SCNVector3( contentObj.x_pos, contentObj.y_pos, contentObj.z_pos )
         
+        print(contentPos)
+        
         if contentObj.world_position {
             contentPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: contentObj, scaleFactor: scaleFactor)
         }
@@ -213,7 +215,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
         let range = (session.first?.searchRadius)!
         
-        // TODO: Get search range
         let objsInRange          = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
         let activeObjectsInRange = objsInRange.filter({$0.active && !$0.deleted})
         

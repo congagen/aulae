@@ -1,6 +1,7 @@
 
 // URGENT:
-
+//      API FEED UPDATES
+//      Image Content Urls
 //      API Source Update -> Share user position
 //      Content node type: Icon / MapMarker
 //      Name & Logo
