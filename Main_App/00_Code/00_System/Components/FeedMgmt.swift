@@ -193,8 +193,8 @@ class FeedMgmt {
                         "world_scale":      valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: true),
                         "world_position":   valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
 
-                        "lat":              valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: 10.0),
-                        "lng":              valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: 20.0),
+                        "lat":              valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: 80.0),
+                        "lng":              valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: 0.0),
                         "alt":              valueIfPresent(dict: itemSpec, key: "alt",       placeHolderValue: 0.0),
                         
                         "x_pos":            valueIfPresent(dict: itemSpec, key: "x_pos",     placeHolderValue: 0.0),

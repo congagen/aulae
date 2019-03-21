@@ -10,7 +10,6 @@ import CoreLocation
 import ARKit
 import Realm
 import RealmSwift
-import Vision
 
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
@@ -27,10 +26,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var qrCaptureSession = AVCaptureSession()
     
     var trackingState = 3
-    var contentZoom: Double = 1
-
     var arCam: ARCamera? = nil
-    
     var configuration = AROrientationTrackingConfiguration()
     
     var mainScene = SCNScene()
@@ -44,6 +40,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var loadingView: UIView!
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
+        
+        FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
+        
         NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
         mainTimerUpdate()
     }
@@ -150,7 +149,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let ctNode = ContentNode(id: contentObj.uuid, title: contentObj.name, feedId: contentObj.feedId, location: rawObjectGpsCCL)
         
         if fPath != "" && contentObj.type.lowercased() != "text" {
-
+            
+            if contentObj.type.lowercased() == "marker" {
+                ctNode.addSphere(radius: 1, and: UIColor(hexColor: contentObj.hex_color))
+            }
             if contentObj.type.lowercased() == "obj" {
                 ctNode.addObj(fPath: fPath, contentObj: contentObj)
             }
@@ -486,8 +488,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
         loadingView.isHidden = false
-        
-        contentZoom = 0
         initScene()
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.refreshScene() })

@@ -44,7 +44,7 @@ extension MainVC {
                     }
                     
                     if i == 2 {
-                        o.filePath    = "scene.png"
+                        o.filePath    = "view.png"
                         o.x_pos = 0
                         o.z_pos = distance
                     }

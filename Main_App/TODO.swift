@@ -1,8 +1,10 @@
 
 // URGENT:
-//      API FEED UPDATES
+
+//      Duplicate feed Name(?) Bug
 //      Image Content Urls
 //      API Source Update -> Share user position
+//      Relative Pinch Scaling
 //      Content node type: Icon / MapMarker
 //      Name & Logo
 //      Demo Content
