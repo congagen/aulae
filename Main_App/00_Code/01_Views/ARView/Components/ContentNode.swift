@@ -123,7 +123,6 @@ class ContentNode: SCNNode {
     }
     
     
-    
     func addDebugNode(with radius: CGFloat, and color: UIColor, and text: String) {
         let sphereNode = createSphereNode(with: radius, color: color)
         let newText = SCNText(string: title, extrusionDepth: 0.05)

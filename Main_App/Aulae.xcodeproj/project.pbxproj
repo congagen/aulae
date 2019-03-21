@@ -47,7 +47,7 @@
 		FA7C4B662243BE5F0067DD05 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7C4B622243BE5F0067DD05 /* view.png */; };
 		FA7C4B672243BE5F0067DD05 /* sources.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7C4B632243BE5F0067DD05 /* sources.png */; };
 		FA7C4B682243BE5F0067DD05 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7C4B642243BE5F0067DD05 /* map.png */; };
-		FA7C4B692243BE5F0067DD05 /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7C4B652243BE5F0067DD05 /* welc.png */; };
+		FA7C4BAF2243D3370067DD05 /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7C4BAE2243D3370067DD05 /* welc.png */; };
 		FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88CBFC222DBBD90078E48A /* NodeActions.swift */; };
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
@@ -115,7 +115,7 @@
 		FA7C4B622243BE5F0067DD05 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = view.png; path = ../../../../../../../../../../../../../../Desktop/view.png; sourceTree = "<group>"; };
 		FA7C4B632243BE5F0067DD05 /* sources.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sources.png; path = ../../../../../../../../../../../../../../Desktop/sources.png; sourceTree = "<group>"; };
 		FA7C4B642243BE5F0067DD05 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = map.png; path = ../../../../../../../../../../../../../../Desktop/map.png; sourceTree = "<group>"; };
-		FA7C4B652243BE5F0067DD05 /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = welc.png; path = ../../../../../../../../../../../../../../Desktop/welc.png; sourceTree = "<group>"; };
+		FA7C4BAE2243D3370067DD05 /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = welc.png; path = ../../../../../../../../../../../../../../Desktop/welc.png; sourceTree = "<group>"; };
 		FA88CBFC222DBBD90078E48A /* NodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeActions.swift; sourceTree = "<group>"; };
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
@@ -327,10 +327,10 @@
 		FA4ABB9E223C2EC8006525AA /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				FA7C4BAE2243D3370067DD05 /* welc.png */,
 				FA7C4B642243BE5F0067DD05 /* map.png */,
 				FA7C4B632243BE5F0067DD05 /* sources.png */,
 				FA7C4B622243BE5F0067DD05 /* view.png */,
-				FA7C4B652243BE5F0067DD05 /* welc.png */,
 				FA6BA7CE2232A02500DB3F2A /* Logo.png */,
 			);
 			path = Images;
@@ -438,7 +438,7 @@
 			files = (
 				FA7C4B682243BE5F0067DD05 /* map.png in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
-				FA7C4B692243BE5F0067DD05 /* welc.png in Resources */,
+				FA7C4BAF2243D3370067DD05 /* welc.png in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
 				FA7C4B662243BE5F0067DD05 /* view.png in Resources */,
 				FA6BA7CF2232A02500DB3F2A /* Logo.png in Resources */,

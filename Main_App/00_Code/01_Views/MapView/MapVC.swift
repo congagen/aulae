@@ -197,7 +197,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
                             addAnoRadius(feObj: fObj)
                         }
                         
-                        if filterA.filter({$0.id == fObj.uuid}).count == 0 {
+                        if filterA.filter( {$0.id == fObj.uuid} ).count == 0 {
                             mapView.addAnnotation(ano)
                         }
                     }

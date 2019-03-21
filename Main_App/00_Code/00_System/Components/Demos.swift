@@ -17,7 +17,7 @@ extension MainVC {
         let demoFeed = RLM_Feed()
         
         demoFeed.url  = ""
-        demoFeed.id   = "Demo Feed"
+        demoFeed.id   = "User Guide"
         demoFeed.name = "Demo Feed"
         
         let itemCount = 4

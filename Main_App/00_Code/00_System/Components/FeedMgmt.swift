@@ -53,8 +53,7 @@ class FeedMgmt {
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
         print("storeFeedObject")
         
-        let current = feedObjects.filter({$0.feedId == feedId && ($0.uuid == objInfo["uuid"] as! String) })
-        
+        let current = feedObjects.filter( {$0.feedId == feedId && ($0.uuid == objInfo["uuid"] as! String)} )
         let rlmObj = RLM_Obj()
         
         do {
@@ -238,7 +237,8 @@ class FeedMgmt {
         let valid = validateObj(keyList: vKeys, dict: feedSpec)
         
         if valid {
-            let sID: String       = feedSpec["id"] as! String
+            //let sID: String       = feedSpec["id"] as! String TODO
+            let sID: String       = UUID().uuidString
             let sName: String     = feedSpec["name"] as! String
             let sVersion: Int     = feedSpec["version"] as! Int
             let sUpdated_utx: Int = feedSpec["updated_utx"] as! Int
@@ -275,7 +275,7 @@ class FeedMgmt {
     func storeFeed(jsonResult: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed, checkVersion: Bool) {
         print("storeFeed")
         
-        if jsonResult.keys.contains("version") || !checkVersion {
+        if jsonResult.keys.contains("version") {
             if let v:Int = jsonResult["version"] as? Int {
                 if v != feedDbItem.version || !checkVersion {
                     updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
@@ -285,10 +285,7 @@ class FeedMgmt {
                 updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
                 updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
             }
-            
         } else {
-            print(jsonResult)
-            
             do {
                 try realm.write {
                     feedDbItem.errors += 10
@@ -350,7 +347,7 @@ class FeedMgmt {
 
         for fe in feeds {
             print("Updating Feed: " + fe.name)
-            print("Feed ID:       " + fe.id)
+            print("Feed ID:       " + String(fe.id))
             print("Feed URL:      " + fe.url)
             
             if checkTimeSinceUpdate {

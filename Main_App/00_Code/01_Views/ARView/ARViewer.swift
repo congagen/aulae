@@ -231,8 +231,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             var inRange = true
             
             if o.radius != 0 {
-                let d = CLLocation(
-                    latitude:  (session.first?.currentLat)!, longitude: (session.first?.currentLng)!).distance(from: CLLocation(latitude: o.lat, longitude: o.lng))
+                let cLoc = CLLocation(latitude:  (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+                let d = cLoc.distance(from: CLLocation(latitude: o.lat, longitude: o.lng))
                 inRange = d < o.radius
             }
             

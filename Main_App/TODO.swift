@@ -1,7 +1,6 @@
 
 // URGENT:
 
-//      Duplicate feed Name(?) Bug
 //      Image Content Urls
 //      API Source Update -> Share user position
 //      Relative Pinch Scaling
@@ -16,6 +15,7 @@
 //
 //      Content Display Modes:  Floor / Wall / World Position / Static
 //      Extensions: Target: Info: URL Types
+//      Duplicate feed ID Bug (?)
 
 // Feeds
 //    Feed Feeds / RSS / ?
