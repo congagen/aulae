@@ -116,8 +116,13 @@ class FeedsTVC: UITableViewController {
         cell.imageView?.image = UIImage(named: placeholderFeedThumbImage)
         
         if feed.thumbImagePath != "" {
+            print("Thumb Image Path: " + feed.thumbImagePath)
+            
             if let img = UIImage(contentsOfFile: feed.thumbImagePath) {
+                print("Image OK")
                 cell.imageView?.image = img
+            } else {
+                print("Thumb Image Load Error")
             }
         }
         

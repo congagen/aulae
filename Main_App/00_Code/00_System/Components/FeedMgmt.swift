@@ -232,7 +232,7 @@ class FeedMgmt {
     }
     
     
-    func updateFeedDatabase(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {
+    func updateFeedItem(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {
         print("updateFeedDatabase")
         
         let vKeys = ["id", "name", "version", "updated_utx", "content"]
@@ -246,6 +246,7 @@ class FeedMgmt {
             let sUpdated_utx: Int = feedSpec["updated_utx"] as! Int
             
             let sInfo: String = valueIfPresent(dict: feedSpec, key: "info", placeHolderValue: "") as! String
+            let thumbUrl: String = valueIfPresent(dict: feedSpec, key: "thumb_url", placeHolderValue: "") as! String
             
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(feedDbItem.updatedUtx)))
             print(timeSinceUpdate)
@@ -257,6 +258,7 @@ class FeedMgmt {
                     feedDbItem.info       = sInfo
                     feedDbItem.version    = sVersion
                     feedDbItem.updatedUtx = sUpdated_utx
+                    feedDbItem.thumbImageUrl = thumbUrl
                 }
             } catch {
                 print("Error: \(error)")
@@ -275,9 +277,11 @@ class FeedMgmt {
     
     
     func storeThumb(feedDBItem: RLM_Feed, thumbImageFilePath: URL)  {
+        print("storeThumb")
+        
         do {
             try realm.write {
-                feedDBItem.thumbImagePath = thumbImageFilePath.absoluteString
+                feedDBItem.thumbImagePath = thumbImageFilePath.path
             }
         } catch {
             print("Error: \(error)")
@@ -286,10 +290,14 @@ class FeedMgmt {
     
     
     func downloadThumb(feedDBItem: RLM_Feed, fileName: String) {
+        print("downloadThumb")
+
         let thImgUrl = URL(string: feedDBItem.thumbImageUrl)
         
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-        let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+        let contentUrl      = feedDBItem.thumbImageUrl
+        let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+        let fileName        = feedDBItem.id + String(feedDBItem.id) + "_" + (URL(string: contentUrl)?.lastPathComponent)!
+        let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
         
         let _ = httpDl.loadFileAsync(
             removeExisting: true, url: thImgUrl!, destinationUrl: destinationUrl!,
@@ -310,11 +318,11 @@ class FeedMgmt {
         if feedData.keys.contains("version") {
             if let v: Int = feedData["version"] as? Int {
                 if v != feedDbItem.version || !checkVersion {
-                    updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: feedData)
+                    updateFeedItem(feedDbItem: feedDbItem, feedSpec: feedData)
                     updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
                 }
             } else {
-                updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: feedData)
+                updateFeedItem(feedDbItem: feedDbItem, feedSpec: feedData)
                 updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
             }
         } else {
