@@ -52,6 +52,8 @@ extension ARViewer {
     
     
     func captureQRCode() {
+        
+        // TODO: Add if Image?
     
         qrCaptureSession.stopRunning()
         qrCaptureSession = AVCaptureSession()
