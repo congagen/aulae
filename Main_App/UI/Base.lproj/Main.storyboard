@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="cell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="Icp-CO-ElE" detailTextLabel="Fvi-uR-xKg" rowHeight="100" style="IBUITableViewCellStyleSubtitle" id="jMW-xd-Wac">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="cell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="Icp-CO-ElE" detailTextLabel="Fvi-uR-xKg" imageView="fVv-3R-8Ln" rowHeight="100" style="IBUITableViewCellStyleSubtitle" id="jMW-xd-Wac">
                                 <rect key="frame" x="0.0" y="28" width="375" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jMW-xd-Wac" id="tEe-4F-PQa">
@@ -55,7 +55,7 @@
                                             </constraints>
                                         </view>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Icp-CO-ElE">
-                                            <rect key="frame" x="16.000000000000004" y="30" width="33.333333333333336" height="20.333333333333332"/>
+                                            <rect key="frame" x="131" y="30" width="33.333333333333336" height="20.333333333333332"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -63,12 +63,16 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Fvi-uR-xKg">
-                                            <rect key="frame" x="15.999999999999996" y="53.333333333333329" width="43.666666666666664" height="14.333333333333334"/>
+                                            <rect key="frame" x="131" y="53.333333333333329" width="43.666666666666664" height="14.333333333333334"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" white="1" alpha="0.69842099471830987" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" image="erth.gif" id="fVv-3R-8Ln">
+                                            <rect key="frame" x="16" y="0.0" width="100" height="100"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
@@ -110,7 +114,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QzA-Tt-Q7F" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1702" y="1685"/>
+            <point key="canvasLocation" x="1701.5999999999999" y="1684.729064039409"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="N9c-Vt-pov">
@@ -1015,9 +1019,10 @@
         <image name="TabBarIcon_01" width="26" height="16"/>
         <image name="TabBarIcon_02" width="20" height="21"/>
         <image name="TabBarIcon_03" width="19" height="16"/>
+        <image name="erth.gif" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="SZc-Qf-Odg"/>
-        <segue reference="Q9S-6L-g2l"/>
+        <segue reference="pCq-sO-rbF"/>
     </inferredMetricsTieBreakers>
 </document>

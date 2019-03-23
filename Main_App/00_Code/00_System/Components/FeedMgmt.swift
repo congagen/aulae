@@ -72,9 +72,10 @@ class FeedMgmt {
                 rlmObj.name        = objInfo["name"] as! String
                 rlmObj.info        = objInfo["info"] as! String
                 rlmObj.filePath    = objFilePath.absoluteString
-                
+            
                 rlmObj.contentLink = objInfo["content_link"] as! String
-                
+                rlmObj.directLink  = objInfo["direct_link"] as! Bool
+
                 rlmObj.text        = objInfo["text"] as! String
                 rlmObj.font        = objInfo["font"] as! String
 
@@ -171,14 +172,15 @@ class FeedMgmt {
                         "type":             itemContentType,
                         
                         "billboard":        valueIfPresent(dict: itemSpec, key: "billboard", placeHolderValue: true),
-                        
+
                         "style":            valueIfPresent(dict: itemSpec, key: "style",     placeHolderValue: 1) as! Int,
                         "mode":             valueIfPresent(dict: itemSpec, key: "mode",      placeHolderValue: "free"),
                         "hex_color":        valueIfPresent(dict: itemSpec, key: "hex_color", placeHolderValue: "7122e8"),
 
                         "url":              valueIfPresent(dict: itemSpec, key: "url",       placeHolderValue: ""),
                         "content_link":     valueIfPresent(dict: itemSpec, key: "content_link", placeHolderValue: ""),
-
+                        "direct_link":      valueIfPresent(dict: itemSpec, key: "direct_link", placeHolderValue: false),
+                        
                         "info":             valueIfPresent(dict: itemSpec, key: "info",      placeHolderValue: ""),
                         "text":             valueIfPresent(dict: itemSpec, key: "text",      placeHolderValue: ""),
                         "font":             valueIfPresent(dict: itemSpec, key: "font",      placeHolderValue: "Arial"),
@@ -272,18 +274,48 @@ class FeedMgmt {
     }
     
     
-    func storeFeed(jsonResult: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed, checkVersion: Bool) {
+    func storeThumb(feedDBItem: RLM_Feed, thumbImageFilePath: URL)  {
+        do {
+            try realm.write {
+                feedDBItem.thumbImagePath = thumbImageFilePath.absoluteString
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    
+    func downloadThumb(feedDBItem: RLM_Feed, fileName: String) {
+        let thImgUrl = URL(string: feedDBItem.thumbImageUrl)
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+        let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+        
+        let _ = httpDl.loadFileAsync(
+            removeExisting: true, url: thImgUrl!, destinationUrl: destinationUrl!,
+            completion: { DispatchQueue.main.async { self.storeThumb(feedDBItem: feedDBItem, thumbImageFilePath: destinationUrl!) } }
+        )
+    }
+    
+    
+    func storeFeed(feedData: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed, checkVersion: Bool) {
         print("storeFeed")
         
-        if jsonResult.keys.contains("version") {
-            if let v:Int = jsonResult["version"] as? Int {
+        // TODO Download Thumb Image if thumbImageUrl exists
+        
+        if feedDbItem.thumbImageUrl != "" {
+            downloadThumb(feedDBItem: feedDbItem, fileName: "thumb_" + feedDbItem.id)
+        }
+        
+        if feedData.keys.contains("version") {
+            if let v: Int = feedData["version"] as? Int {
                 if v != feedDbItem.version || !checkVersion {
-                    updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
-                    updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+                    updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: feedData)
+                    updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
                 }
             } else {
-                updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: jsonResult)
-                updateFeedObjects(feedSpec: jsonResult, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+                updateFeedDatabase(feedDbItem: feedDbItem, feedSpec: feedData)
+                updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
             }
         } else {
             do {
@@ -308,7 +340,7 @@ class FeedMgmt {
                 let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
                 
                 if let jsonResult = jsonResult as? Dictionary<String, AnyObject> {
-                    storeFeed(jsonResult: jsonResult, feedDbItem: feedDbItem, checkVersion: true)
+                    storeFeed(feedData: jsonResult, feedDbItem: feedDbItem, checkVersion: true)
                 }
             } catch {
                 print(error)
@@ -317,20 +349,12 @@ class FeedMgmt {
     }
     
     
-    func storeFeedApi(result: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed) {
+    @objc func storeFeedApi(result: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed) {
         print("storeFeedApi")
-        print(result.keys)
-        
-        self.storeFeed(jsonResult: result, feedDbItem: feedDbItem, checkVersion: true)
-    }
-    
-    
-    @objc func handleApiResult(result: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed) {
-        print("handleApiResult")
         print(result)
         
         DispatchQueue.main.async {
-            self.storeFeedApi(result: result, feedDbItem: feedDbItem)
+            self.storeFeed(feedData: result, feedDbItem: feedDbItem, checkVersion: true)
         }
     }
     
@@ -397,7 +421,7 @@ class FeedMgmt {
                 } else {
                     print("Calling Feed API: " + fe.url)
                     NetworkTools().postReq(
-                        completion: { r in self.handleApiResult(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
+                        completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
                         apiHeaderFeild: apiHeaderFeild, apiUrl: fe.url, reqParams: ["":""]
                     )
                 }

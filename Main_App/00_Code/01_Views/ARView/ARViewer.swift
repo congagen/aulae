@@ -197,14 +197,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
         ctNode.tagComponents(nodeTag: contentObj.uuid)
         ctNode.name = contentObj.uuid
-        ctNode.position = SCNVector3(contentPos.x, (contentPos.y), contentPos.z)
+        ctNode.position = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
 
         if contentObj.demo {
             let ori = sceneView.pointOfView?.orientation
             let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
             ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
             
-            ctNode.position = SCNVector3(ctNode.position.x * 1.2, 0, ctNode.position.z * 1.2)
+            ctNode.position = SCNVector3(ctNode.position.x * 1.5, 0, ctNode.position.z * 1.5)
         }
         
         sceneView.scene.rootNode.addChildNode(ctNode)
@@ -314,8 +314,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     }
                 }
             } else {
-                if (selectedNode != nil) {
-                }
                 selectedNode = nil
             }
         }

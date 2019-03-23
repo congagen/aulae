@@ -1,6 +1,6 @@
 
 // URGENT:
-
+//      Feed Icons / Thumbs
 //      Image Content Urls
 //      API Source Update -> Share user position
 //      Relative Pinch Scaling

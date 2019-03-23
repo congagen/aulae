@@ -22,6 +22,8 @@ class FeedsTVC: UITableViewController {
     var updateTimer = Timer()
     let updateInterval: Double = 10
     
+    let placeholderFeedThumbImage = "Logo.png"
+    
     let feedMgr = FeedMgmt()
     
     let rowHeightRatio = 0.1
@@ -93,6 +95,8 @@ class FeedsTVC: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let feed = feeds[section]
         
+        // TODO: If feed.thumbImgPath != "" -> Update Image
+        
         if feed.name != "" {
             cell.textLabel?.text = String(feed.name)
         } else {
@@ -109,6 +113,13 @@ class FeedsTVC: UITableViewController {
         cell.backgroundColor = UIColor.clear
         cell.contentView.backgroundColor = UIColor.clear
         cell.accessibilityHint = String(feed.name) + " Source: " + String(feed.url)
+        cell.imageView?.image = UIImage(named: placeholderFeedThumbImage)
+        
+        if feed.thumbImagePath != "" {
+            if let img = UIImage(contentsOfFile: feed.thumbImagePath) {
+                cell.imageView?.image = img
+            }
+        }
         
         if !feed.active {
             cell.textLabel?.textColor = nonActiveColor
@@ -146,7 +157,7 @@ class FeedsTVC: UITableViewController {
         }
     }
     
-        
+    
     func handleEnterURL(alertView: UIAlertAction!) {
         
         if textField?.text != nil {

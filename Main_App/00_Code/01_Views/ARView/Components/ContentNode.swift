@@ -4,6 +4,11 @@ import ARKit
 import CoreLocation
 
 
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromCATextLayerAlignmentMode(_ input: CATextLayerAlignmentMode) -> String {
+    return input.rawValue
+}
+
 class ContentNode: SCNNode {
     
     let id: String
@@ -290,7 +295,4 @@ class ContentNode: SCNNode {
     
 }
 
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromCATextLayerAlignmentMode(_ input: CATextLayerAlignmentMode) -> String {
-	return input.rawValue
-}
+

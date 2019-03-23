@@ -62,7 +62,7 @@ extension ARViewer {
         let selFeeds = feeds.filter({$0.id == self.selectedNode?.feedId})
         
         if selectedNode != nil {
-            
+
             let alert =  UIAlertController(
                 title:   (selectedNode?.feedId)! + " - " + (selectedNode?.title)!,
                 message: nil,
@@ -82,6 +82,7 @@ extension ARViewer {
             alert.addAction(UIAlertAction(title: "Cancel",     style: .cancel,  handler: { _ in self.resetSeletion() } ))
             alert.view.tintColor = UIColor.black
             alert.view.tintColorDidChange()
+
             
             self.present(alert, animated: true, completion: nil)
         }
