@@ -309,8 +309,6 @@ class FeedMgmt {
     func storeFeed(feedData: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed, checkVersion: Bool) {
         print("storeFeed")
         
-        // TODO Download Thumb Image if thumbImageUrl exists
-        
         if feedDbItem.thumbImageUrl != "" {
             downloadThumb(feedDBItem: feedDbItem, fileName: "thumb_" + feedDbItem.id)
         }
