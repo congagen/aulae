@@ -351,28 +351,28 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         switch camera.trackingState {
         case .notAvailable:
-            message = "Insufficient Light"
+            message = "LOCALIZING"
             trackingState = 2
             
         case .normal:
-            message = "Updating..."
+            message = "LOADING"
             trackingState = 0
             
         case .limited(.excessiveMotion):
-            message = "Updating..."
+            message = "LOCALIZING"
             trackingState = 0
             
         case .limited(.insufficientFeatures):
-            message = "Loading..."
+            message = "LOADING"
             trackingState = 1
             
         case .limited(.initializing):
             trackingState = 1
-            message = "Initializing..."
-            
+            message = "INITIALIZING"
+
         case .limited(.relocalizing):
             trackingState = 2
-            message = "Localizing..."
+            message = "LOCALIZING"
         }
 
         loadingViewLabel.text = message
@@ -387,7 +387,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         qrCapturePreviewLayer.removeFromSuperlayer()
         searchQRBtn.tintColor = self.view.window?.tintColor
         
-        loadingViewLabel.text = "Loading..."
+        loadingViewLabel.text = "LOADING"
         loadingView.isHidden  = false
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
