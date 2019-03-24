@@ -26,9 +26,9 @@ class FeedsTVC: UITableViewController {
     
     let feedMgr = FeedMgmt()
     
-    let rowHeightRatio = 0.1
+    let rowHeightRatio = 0.11
     let activeColor    = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 1)
-    let nonActiveColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.3)
+    let nonActiveColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.2)
     
     var textField: UITextField? = nil
     var selected: RLM_Feed? = nil
@@ -125,6 +125,12 @@ class FeedsTVC: UITableViewController {
                 print("Thumb Image Load Error")
             }
         }
+        
+        //cell.imageView!.layer.cornerRadius = 10
+        cell.imageView!.backgroundColor = UIColor.clear
+        cell.imageView!.layer.borderWidth = 6
+        cell.imageView!.layer.borderColor = UIColor.black.cgColor
+        cell.imageView!.reloadInputViews()
         
         if !feed.active {
             cell.textLabel?.textColor = nonActiveColor

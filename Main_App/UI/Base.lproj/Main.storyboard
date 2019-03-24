@@ -14,13 +14,13 @@
         <scene sceneID="x9n-Rz-mVX">
             <objects>
                 <tableViewController title="Lib" extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="4ZI-rx-Clo" customClass="FeedsTVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Co9-JA-gGn">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Co9-JA-gGn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="cell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="Icp-CO-ElE" detailTextLabel="Fvi-uR-xKg" imageView="fVv-3R-8Ln" rowHeight="100" style="IBUITableViewCellStyleSubtitle" id="jMW-xd-Wac">
-                                <rect key="frame" x="0.0" y="55.333333333333343" width="375" height="100"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="cell" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell" textLabel="Icp-CO-ElE" detailTextLabel="Fvi-uR-xKg" imageView="fVv-3R-8Ln" rowHeight="100" style="IBUITableViewCellStyleSubtitle" id="jMW-xd-Wac">
+                                <rect key="frame" x="0.0" y="28" width="375" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jMW-xd-Wac" id="tEe-4F-PQa">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
@@ -938,7 +938,7 @@
             <objects>
                 <navigationController title="Sources" id="Be5-wM-mQA" customClass="UiNavCtrl" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
-                    <tabBarItem key="tabBarItem" title="Sources" image="TabBarIcon_02" selectedImage="TabBarIcon_02" id="iA0-4h-1mo"/>
+                    <tabBarItem key="tabBarItem" title="Lib" image="TabBarIcon_02" selectedImage="TabBarIcon_02" id="iA0-4h-1mo"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="HI8-YY-PZD">
