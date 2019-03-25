@@ -26,8 +26,8 @@ class NetworkTools {
                 request!.httpBody = try? JSONSerialization.data(withJSONObject: reqParams, options: [])
                 request!.addValue("application/json", forHTTPHeaderField: "Content-Type")
                 
-                let session = URLSession.shared
-                let task = session.dataTask(with: request!, completionHandler: { data, response, error -> Void in
+                let urlSession = URLSession.shared
+                let task = urlSession.dataTask(with: request!, completionHandler: { data, response, error -> Void in
                     do {
                         if data != nil {
                             let json = try JSONSerialization.jsonObject(with: data!)

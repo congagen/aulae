@@ -26,7 +26,7 @@ class HttpDownloader {
     
     func loadFileAsync(removeExisting: Bool, url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
         let sessionConfig = URLSessionConfiguration.default
-        let session = URLSession(configuration: sessionConfig)
+        let urlSession = URLSession(configuration: sessionConfig)
         let request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
 
         if removeExisting && FileManager.default.fileExists(atPath: destinationUrl.path) {
@@ -37,7 +37,7 @@ class HttpDownloader {
             }
         }
         
-        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
+        let task = urlSession.downloadTask(with: request) { (tempLocalUrl, response, error) in
             if let tempLocalUrl = tempLocalUrl, error == nil {
 
                 if let statusCode = (response as? HTTPURLResponse)?.statusCode {

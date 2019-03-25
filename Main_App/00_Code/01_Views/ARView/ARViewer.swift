@@ -14,8 +14,8 @@ import RealmSwift
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
-    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     var updateTimer = Timer()
@@ -111,7 +111,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             let urlPath = URL(fileURLWithPath: fPath)
             let asrc = SCNAudioSource(url: urlPath)
             
-            if (session.first?.muteAudio)! {
+            if (rlmSession.first?.muteAudio)! {
                 asrc!.volume = 0
             } else {
                 asrc!.volume = Float(1.0 / objectDistance)
@@ -130,7 +130,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("AddContentToScene: " + String(contentObj.uuid))
         print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
 
-        let rawDeviceGpsCCL   = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        let rawDeviceGpsCCL   = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
         let rawObjectGpsCCL   = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         var contentPos        = SCNVector3( contentObj.x_pos, contentObj.y_pos, contentObj.z_pos )
@@ -142,7 +142,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         var nodeSize: CGFloat = CGFloat(1 * contentObj.scale)
-        if (session.first?.distanceScale)! && contentObj.world_scale {
+        if (rlmSession.first?.distanceScale)! && contentObj.world_scale {
             nodeSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
         }
         
@@ -168,7 +168,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             if contentObj.type.lowercased() == "audio" {
                 ctNode.removeAllAudioPlayers()
 
-                if (session.first?.showPlaceholders)! && !(session.first?.muteAudio)!{
+                if (rlmSession.first?.showPlaceholders)! && !(rlmSession.first?.muteAudio)!{
                     ctNode.addSphere(radius: 0.05 + (nodeSize * 0.01), and: UIColor(hexColor: contentObj.hex_color))
                 }
                 addAudio(contentObj: contentObj, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize)
@@ -180,7 +180,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     fontSize: CGFloat(contentObj.scale), color: UIColor(hexColor: contentObj.hex_color)
                 )
             } else {
-                if (session.first?.showPlaceholders)! {
+                if (rlmSession.first?.showPlaceholders)! {
                     ctNode.addSphere(radius: 10, and: UIColor.green)
                 }
             }
@@ -214,8 +214,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     func refreshScene() {
         print("RefreshScene")
         
-        let curPos = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
-        let range = (session.first?.searchRadius)!
+        let curPos = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
+        let range = (rlmSession.first?.searchRadius)!
         
         let objsInRange          = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
         let activeObjectsInRange = objsInRange.filter({$0.active && !$0.deleted})
@@ -227,11 +227,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         mainScene.rootNode.removeAllAudioPlayers()
         
         for o in activeObjectsInRange {
-            let objFeeds = feeds.filter({$0.id == o.feedId})
+            let objFeeds = rlmFeeds.filter({$0.id == o.feedId})
             var inRange = true
             
             if o.radius != 0 {
-                let cLoc = CLLocation(latitude:  (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+                let cLoc = CLLocation(latitude:  (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
                 let d = cLoc.distance(from: CLLocation(latitude: o.lat, longitude: o.lng))
                 inRange = d < o.radius
             }
@@ -252,7 +252,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                             print("FileManager.default.fileExists")
                             addContentToScene(
                                 contentObj: o, fPath: (destinationUrl?.path)!,
-                                scaleFactor: (session.first?.scaleFactor)!,
+                                scaleFactor: (rlmSession.first?.scaleFactor)!,
                                 localDemoContent: false
                             )
                         } else {
@@ -261,7 +261,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                                     print("localDemoContent")
                                     addContentToScene(
                                         contentObj: o, fPath: o.filePath,
-                                        scaleFactor: (session.first?.scaleFactor)!,
+                                        scaleFactor: (rlmSession.first?.scaleFactor)!,
                                         localDemoContent: true
                                     )
                                 }
@@ -271,7 +271,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         }
                     } else {
                         if (o.type.lowercased() == "text") {
-                            addContentToScene(contentObj: o, fPath:"", scaleFactor: (session.first?.scaleFactor)!, localDemoContent: false )
+                            addContentToScene(contentObj: o, fPath:"", scaleFactor: (rlmSession.first?.scaleFactor)!, localDemoContent: false )
                         }
                     }
                 }
@@ -408,7 +408,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         tapGestureRecognizer.cancelsTouchesInView = false
         optimizeCam()
         
-        if (session.first?.autoUpdate)! {
+        if (rlmSession.first?.autoUpdate)! {
             Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.mainTimerUpdate() })
         }
     }
@@ -457,9 +457,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         updateTimer.invalidate()
         
-        if !updateTimer.isValid && (session.first?.autoUpdate)! {
+        if !updateTimer.isValid && (rlmSession.first?.autoUpdate)! {
             updateTimer = Timer.scheduledTimer(
-                timeInterval: session.first!.feedUpdateInterval, target: self,
+                timeInterval: rlmSession.first!.feedUpdateInterval, target: self,
                 selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
         }
         

@@ -15,8 +15,8 @@ import Foundation
 class FeedsTVC: UITableViewController {
 
     let realm = try! Realm()
-    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
     var updateTimer = Timer()
@@ -53,7 +53,7 @@ class FeedsTVC: UITableViewController {
     
     
     func addFeed(){
-        showURLAlert(aMessage: session.first?.defaultFeedUrl)
+        showURLAlert(aMessage: rlmSession.first?.defaultFeedUrl)
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
@@ -68,7 +68,7 @@ class FeedsTVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = indexPath.section
-        let feed = feeds[section]
+        let feed = rlmFeeds[section]
 
         do {
             try realm.write {
@@ -93,7 +93,7 @@ class FeedsTVC: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let feed = feeds[section]
+        let feed = rlmFeeds[section]
         
         // TODO: If feed.thumbImgPath != "" -> Update Image
         
@@ -151,9 +151,9 @@ class FeedsTVC: UITableViewController {
     func removeFeed(indexP: IndexPath) {
         
         let section = indexP.section
-        let feed = feeds[section]
+        let feed = rlmFeeds[section]
         
-        feedAct.deleteFeed(feedUrl: feed.url, deleteFeedObjects: true)
+        feedAct.deleteFeed(feedUrl: feed.url, deleteFeedObjects: true, deleteFeed: false)
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
@@ -164,7 +164,7 @@ class FeedsTVC: UITableViewController {
     {
         if let _ = textField {
             self.textField = textField!
-            textField.text! = (session.first?.defaultFeedUrl)!
+            textField.text! = (rlmSession.first?.defaultFeedUrl)!
         }
     }
     
@@ -234,8 +234,8 @@ class FeedsTVC: UITableViewController {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let section = indexPath.section
         
-        if feeds[section].id != "" {
-            selected = feeds[section]
+        if rlmFeeds[section].id != "" {
+            selected = rlmFeeds[section]
         }
         
         let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (rowAction, indexPath) in
@@ -276,7 +276,7 @@ class FeedsTVC: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return feeds.filter({!$0.deleted}).count
+        return rlmFeeds.filter({!$0.deleted}).count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

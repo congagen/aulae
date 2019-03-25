@@ -15,8 +15,8 @@ import RealmSwift
 class FeedMgmt {
     
     lazy var realm = try! Realm()
-    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     let validFeedContentObjectKeys = ["name", "id", "type"]
@@ -31,7 +31,7 @@ class FeedMgmt {
         print("refreshObjects")
         
         for o in feedObjects {
-            let objectFeeds = feeds.filter({ $0.id == o.feedId })
+            let objectFeeds = rlmFeeds.filter({ $0.id == o.feedId})
             
             do {
                 try realm.write {
@@ -367,15 +367,15 @@ class FeedMgmt {
     
     func updateFeeds(checkTimeSinceUpdate: Bool) {
         print("updateFeeds")
-        print("Feed Count:      "   + String(feeds.count))
+        print("Feed Count:      "   + String(rlmFeeds.count))
         print("FeedObjectCount: "   + String(feedObjects.count))
 
-        let updateInterval = Int((session.first?.feedUpdateInterval)!) + 1
+        let updateInterval = Int((rlmSession.first?.feedUpdateInterval)!) + 1
         var shouldUpdate = true
 
         refreshObjects()
 
-        for fe in feeds {
+        for fe in rlmFeeds {
             print("Updating Feed: " + fe.name)
             print("Feed ID:       " + String(fe.id))
             print("Feed URL:      " + fe.url)
@@ -425,10 +425,12 @@ class FeedMgmt {
                         )
                     }
                 } else {
+                    
                     print("Calling Feed API: " + fe.url)
                     NetworkTools().postReq(
                         completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
-                        apiHeaderFeild: apiHeaderFeild, apiUrl: fe.url, reqParams: ["":""]
+                        apiHeaderFeild: apiHeaderFeild, apiUrl: fe.url,
+                        reqParams: ["lat": String(rlmSession.first!.currentLat), "long": String(rlmSession.first!.currentLng)]
                     )
                 }
                 
@@ -436,7 +438,7 @@ class FeedMgmt {
                     try realm.write {
                         fe.updatedUtx = Int( Date().timeIntervalSince1970 )
                         
-                        if fe.errors > session.first!.feedErrorThreshold && !fe.deleted {
+                        if fe.errors > rlmSession.first!.feedErrorThreshold && !fe.deleted {
                             fe.active = false
                         }
                     }

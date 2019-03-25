@@ -23,17 +23,10 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     //let locationManager = CLLocationManager()
 
     lazy var realm = try! Realm()
-    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
-    let imageColor = UIColor(red: 0.1, green: 0.9, blue: 0.5, alpha: 0.7)
-    let gifColor   = UIColor(red: 0.2, green: 0.8, blue: 0.6, alpha: 0.7)
-    let objColor   = UIColor(red: 0.4, green: 0.8, blue: 0.7, alpha: 0.7)
-    let usdzColor  = UIColor(red: 0.6, green: 0.7, blue: 0.8, alpha: 0.7)
-    let audioColor = UIColor(red: 0.5, green: 0.6, blue: 0.9, alpha: 0.7)
-    let textColor  = UIColor(red: 0.6, green: 0.5, blue: 1.0, alpha: 0.7)
-    
     var userSearchRadiusIndicator: MKCircle = MKCircle()
 
     let progressBar = UIProgressView()
@@ -63,7 +56,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
        
         do {
             try realm.write {
-               session.first?.searchRadius = rDistance
+               rlmSession.first?.searchRadius = rDistance
             }
         } catch {
             print("Error: \(error)")
@@ -111,10 +104,10 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
             longitude: mapView.userLocation.coordinate.longitude
         )
         
-        if (session.first?.searchRadius)! >= 110000 {
-            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (session.first?.searchRadius)! - 100000 ))
+        if (rlmSession.first?.searchRadius)! >= 110000 {
+            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (rlmSession.first?.searchRadius)! - 100000 ))
         } else {
-            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (session.first?.searchRadius)! ))
+            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (rlmSession.first?.searchRadius)! ))
         }
         
         mapView.addOverlay(userSearchRadiusIndicator)
@@ -126,7 +119,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     {
         if let _ = textField {
             self.textField = textField!
-            textField.text! = (session.first?.defaultFeedUrl)!
+            textField.text! = (rlmSession.first?.defaultFeedUrl)!
         }
     }
     
@@ -149,7 +142,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     func addAnoRadius(feObj: RLM_Obj) {
         let cLoc = CLLocationCoordinate2D( latitude: feObj.lat, longitude: feObj.lng )
         
-        if (session.first?.searchRadius)! >= 110000 {
+        if (rlmSession.first?.searchRadius)! >= 110000 {
             userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (feObj.radius) - 100000 ))
         } else {
             userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (feObj.radius) ))
@@ -179,7 +172,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         for fObj in feedObjects {
             if fObj.active && !fObj.deleted {
-                let objFeeds = feeds.filter( {$0.id == fObj.feedId && !$0.deleted} )
+                let objFeeds = rlmFeeds.filter( {$0.id == fObj.feedId && !$0.deleted} )
                 
                 if objFeeds.count > 0 {
                     
@@ -212,13 +205,13 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     @objc func mainUpdate() {
-        let uIv = (session.first?.mapUpdateInterval)! + 1
+        let uIv = (rlmSession.first?.mapUpdateInterval)! + 1
         
-        if updateTimer.timeInterval != uIv || !((session.first?.autoUpdate)!) {
+        if updateTimer.timeInterval != uIv || !((rlmSession.first?.autoUpdate)!) {
             updateTimer.invalidate()
         }
         
-        if (session.first?.autoUpdate)! {
+        if (rlmSession.first?.autoUpdate)! {
             if !updateTimer.isValid {
                 updateTimer = Timer.scheduledTimer(
                     timeInterval: uIv,

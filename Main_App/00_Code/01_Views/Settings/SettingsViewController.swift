@@ -15,8 +15,8 @@ import Foundation
 class SettingsViewController: UITableViewController {
 
     let realm = try! Realm()
-    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     
@@ -97,37 +97,37 @@ class SettingsViewController: UITableViewController {
     
     
     func saveSettings(propName: String, propValue: Double) {
-        if session.count > 0 {
+        if rlmSession.count > 0 {
             do {
                 try realm.write {
                     switch propName {
                         
                     case systemUpdateSpeedParamName:
-                        session.first!.sysUpdateInterval     = propValue
+                        rlmSession.first!.sysUpdateInterval     = propValue
                         
                     case feeUpdateSpeedParamName:
-                        session.first!.feedUpdateInterval    = propValue
+                        rlmSession.first!.feedUpdateInterval    = propValue
                         
                     case scaleFactorParamName:
-                        session.first!.scaleFactor           = propValue
+                        rlmSession.first!.scaleFactor           = propValue
                       
                     case allowAudioParamName:
-                        session.first?.muteAudio             = Int(propValue) != 1
+                        rlmSession.first?.muteAudio             = Int(propValue) != 1
                         
                     case useDistanceParamName:
-                        session.first!.distanceScale         = Int(propValue) == 1
+                        rlmSession.first!.distanceScale         = Int(propValue) == 1
                         
                     case autoUpdateParamName:
-                        session.first!.autoUpdate            = Int(propValue) == 1
+                        rlmSession.first!.autoUpdate            = Int(propValue) == 1
                         
                     case gpsToggleParamName:
-                        session.first!.backgroundGps         = Int(propValue) == 1
+                        rlmSession.first!.backgroundGps         = Int(propValue) == 1
                         
                     case showPlaceholderParamName:
-                        session.first!.showPlaceholders      = Int(propValue) == 1
+                        rlmSession.first!.showPlaceholders      = Int(propValue) == 1
                         
                     case animationToggleParamName:
-                        session.first!.allowAnimation        = Int(propValue) == 1
+                        rlmSession.first!.allowAnimation        = Int(propValue) == 1
     
                     default:
                         break
@@ -141,23 +141,23 @@ class SettingsViewController: UITableViewController {
     
 
     func updateUI()  {
-        feedUpdateSpeedDisplay.text      = String(Int(session.first!.feedUpdateInterval))
-        feedUpdateSpeedStepper.value     = session.first!.feedUpdateInterval
+        feedUpdateSpeedDisplay.text      = String(Int(rlmSession.first!.feedUpdateInterval))
+        feedUpdateSpeedStepper.value     = rlmSession.first!.feedUpdateInterval
         
-        systemUpdateSpeedDisplay.text   = String(Int(session.first!.sysUpdateInterval))
-        systemUpdateSpeedStepper.value  = session.first!.sysUpdateInterval
+        systemUpdateSpeedDisplay.text    = String(Int(rlmSession.first!.sysUpdateInterval))
+        systemUpdateSpeedStepper.value   = rlmSession.first!.sysUpdateInterval
         
-        scaleFactorDisplay.text          = String(Int(session.first!.scaleFactor))
-        scaleFactorStepper.value         = session.first!.scaleFactor
+        scaleFactorDisplay.text          = String(Int(rlmSession.first!.scaleFactor))
+        scaleFactorStepper.value         = rlmSession.first!.scaleFactor
         
-        allowAudioSwitch.isOn           = session.first!.muteAudio         != true
+        allowAudioSwitch.isOn            = rlmSession.first!.muteAudio         != true
 
-        useDistanceSwitch.isOn           = session.first!.distanceScale    == true
-        autoUpdateSwitch.isOn            = session.first!.autoUpdate       == true
-        gpsToggleSwitch.isOn             = session.first!.backgroundGps    == true
+        useDistanceSwitch.isOn           = rlmSession.first!.distanceScale    == true
+        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate       == true
+        gpsToggleSwitch.isOn             = rlmSession.first!.backgroundGps    == true
         
-        showPlaceholderSwitch.isOn       = session.first!.showPlaceholders == true
-        animationToggleSwitch.isOn       = session.first!.allowAnimation   == true
+        showPlaceholderSwitch.isOn       = rlmSession.first!.showPlaceholders == true
+        animationToggleSwitch.isOn       = rlmSession.first!.allowAnimation   == true
     }
     
     

@@ -16,8 +16,8 @@ import Foundation
 class FeedActions {
     
     let realm = try! Realm()
-    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     var textField: UITextField? = nil
@@ -27,7 +27,7 @@ class FeedActions {
     {
         if let _ = textField {
             self.textField = textField!
-            textField.text! = (session.first?.defaultFeedUrl)!
+            textField.text! = (rlmSession.first?.defaultFeedUrl)!
         }
     }
     
@@ -38,14 +38,14 @@ class FeedActions {
         let newFeed = RLM_Feed()
 
         if refreshExisting {
-            if feeds.filter({$0.url == feedUrl}).count > 0 {
-                for f in feeds.filter({$0.url == feedUrl}) {
-                    deleteFeed(feedUrl: f.url, deleteFeedObjects: true)
+            if rlmFeeds.filter({$0.url == feedUrl}).count > 0 {
+                for f in rlmFeeds.filter({$0.url == feedUrl}) {
+                    deleteFeed(feedUrl: f.url, deleteFeedObjects: true, deleteFeed: false)
                 }
             }
         }
         
-        if feeds.filter({$0.url == feedUrl }).count == 0 {
+        if rlmFeeds.filter({$0.url == feedUrl }).count == 0 {
             do {
                 try realm.write {
                     newFeed.url  = feedUrl
@@ -62,8 +62,8 @@ class FeedActions {
     }
     
     
-    func deleteFeed(feedUrl: String, deleteFeedObjects: Bool) {
-        let matchingFeeds = feeds.filter( {$0.url == feedUrl} )
+    func deleteFeed(feedUrl: String, deleteFeedObjects: Bool, deleteFeed: Bool) {
+        let matchingFeeds = rlmFeeds.filter( {$0.url == feedUrl} )
         
         for f in matchingFeeds {
             do {
@@ -79,8 +79,11 @@ class FeedActions {
                     
                     f.deleted = true
                     f.active = false
+
+                    if deleteFeed {
+                        realm.delete(f)
+                    }
                     
-                    realm.delete(f)
                 }
             } catch {
                 print("Error: \(error)")

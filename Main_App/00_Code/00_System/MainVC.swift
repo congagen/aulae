@@ -14,8 +14,8 @@ import RealmSwift
 class MainVC: UITabBarController, CLLocationManagerDelegate {
 
     lazy var realm = try! Realm()
-    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     let feedMgr = FeedMgmt()
@@ -35,14 +35,14 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         print("mainUpdate: MainVC")
         dbGc()
 
-        if session.count > 0 {
-            if mainUpdateTimer.timeInterval != session.first?.sysUpdateInterval {
+        if rlmSession.count > 0 {
+            if mainUpdateTimer.timeInterval != rlmSession.first?.sysUpdateInterval {
                 mainUpdateTimer.invalidate()
             }
             
             if !mainUpdateTimer.isValid {
                 mainUpdateTimer = Timer.scheduledTimer(
-                    timeInterval: (session.first?.sysUpdateInterval)!,
+                    timeInterval: (rlmSession.first?.sysUpdateInterval)!,
                     target: self, selector: #selector(mainUpdate),
                     userInfo: nil, repeats: true)
             }
@@ -60,7 +60,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
 
         do {
             try realm.write {
-                for f in feeds {
+                for f in rlmFeeds {
                     if f.deleted {
                         realm.delete(f)
                     }
@@ -81,7 +81,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     
     func resetErrCounts()  {
         print("resetErrCounts")
-        for f in feeds {
+        for f in rlmFeeds {
             do {
                 try realm.write {
                     f.errors = 0
@@ -98,9 +98,9 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
 
         do {
             try realm.write {
-                session.first?.currentLat = (locations.last?.coordinate.latitude)!
-                session.first?.currentLng = (locations.last?.coordinate.longitude)!
-                session.first?.currentAlt = (locations.last?.altitude)!
+                rlmSession.first?.currentLat = (locations.last?.coordinate.latitude)!
+                rlmSession.first?.currentLng = (locations.last?.coordinate.longitude)!
+                rlmSession.first?.currentAlt = (locations.last?.altitude)!
             }
         } catch {
             print("Error: \(error)")
@@ -114,7 +114,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
         
-        if (session.first?.backgroundGps)! {
+        if (rlmSession.first?.backgroundGps)! {
             locationManager.requestAlwaysAuthorization()
             locationManager.allowsBackgroundLocationUpdates = true
         } else {
@@ -127,7 +127,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     func initSession() {
         dbGc()
         
-        if session.count < 1 {
+        if rlmSession.count < 1 {
             let sess = RLM_Session()
             do {
                 try realm.write {
@@ -143,7 +143,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             mainUpdate()
             initLocation()
             
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in self.selectedIndex = 1 })
+            // Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in self.selectedIndex = 1 })
         } else {
             resetErrCounts()
             mainUpdate()

@@ -34,7 +34,7 @@ extension ARViewer {
     func getNodeWorldPosition(baseOffset: Double, contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
         print("getNodeWorldPosition")
         
-        let rawDeviceGpsCCL      = CLLocation(latitude: (session.first?.currentLat)!, longitude: (session.first?.currentLng)!)
+        let rawDeviceGpsCCL      = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
         let rawObjectGpsCCL      = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
         let objectDistance       = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         let scaleDivider: Double = (objectDistance / scaleFactor)

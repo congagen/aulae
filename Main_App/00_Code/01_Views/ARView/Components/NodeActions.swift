@@ -59,7 +59,7 @@ extension ARViewer {
     
     func showSeletedNodeActions(objData: RLM_Obj) {
         print("showSeletedNodeActions")
-        let selFeeds = feeds.filter({$0.id == self.selectedNode?.feedId})
+        let selFeeds = rlmFeeds.filter({$0.id == self.selectedNode?.feedId})
         
         if selectedNode != nil {
 

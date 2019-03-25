@@ -14,8 +14,8 @@ import Foundation
 class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     let realm = try! Realm()
-    lazy var session: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var feeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
     let feedAct = FeedActions()
@@ -109,7 +109,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             let itmTitle: String = keys[indexPath.item]
             let itmUrl: String = itemData["url"] as! String
             
-            if feeds.filter( {$0.url == itmUrl } ).count == 0 {
+            if rlmFeeds.filter( {$0.url == itmUrl } ).count == 0 {
                 showAddSearchFeedAlert(feedTitle: itmTitle, feedUrl: itmUrl, message: "Add this feed?")
             }
         }
@@ -120,7 +120,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
 
     
     @objc func asyncUrlSearch(cell: UITableViewCell, urlId: String) {
-        if feeds.filter( {$0.url == urlId} ).count > 0 {
+        if rlmFeeds.filter( {$0.url == urlId} ).count > 0 {
             cell.textLabel?.textColor = activeColor
         } else {
             cell.textLabel?.textColor = nonActiveColor
@@ -189,12 +189,13 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         if currentSearchTerm != "" {
             let payload = [
                 searchTermRequestKey: currentSearchTerm,
-                "lat":  "", "long": ""
+                "lat":  String(rlmSession.first!.currentLat),
+                "long": String(rlmSession.first!.currentLng)
             ]
             
             NetworkTools().postReq(
-                completion: updateSearchResults, apiHeaderValue: (session.first?.apiHeaderValue)!,
-                apiHeaderFeild: (session.first?.apiHeaderFeild)!, apiUrl: (session.first?.feedSearchApi)!,
+                completion: updateSearchResults, apiHeaderValue: (rlmSession.first?.apiHeaderValue)!,
+                apiHeaderFeild: (rlmSession.first?.apiHeaderFeild)!, apiUrl: (rlmSession.first?.feedSearchApi)!,
                 reqParams: payload
             )
         }
