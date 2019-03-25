@@ -174,7 +174,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     }
     
     
-    func performSearch(_ searchBar: UISearchBar) {
+    func sourcesSearch(_ searchBar: UISearchBar) {
         print("performSearch")
         
         NavBarOps().showProgressBar(
@@ -189,7 +189,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         
         if currentSearchTerm != "" {
             let payload = [
-                searchTermRequestKey: currentSearchTerm,
+                "search_term": currentSearchTerm,
+                "places_search": "places_search",
                 "lat":  String(rlmSession.first!.currentLat),
                 "long": String(rlmSession.first!.currentLng)
             ]
@@ -204,7 +205,6 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         view.endEditing(false)
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
-        
     }
 
     
@@ -212,7 +212,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        performSearch(searchBar)
+        sourcesSearch(searchBar)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

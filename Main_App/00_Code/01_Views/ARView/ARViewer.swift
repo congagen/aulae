@@ -324,7 +324,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     n.scale = SCNVector3(
                         Double(gestureRecognizer.scale),
                         Double(gestureRecognizer.scale),
-                        Double(gestureRecognizer.scale))
+                        Double(gestureRecognizer.scale)
+                    )
                 }
             }
         }
