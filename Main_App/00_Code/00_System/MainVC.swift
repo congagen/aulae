@@ -127,7 +127,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         dbGc()
         
         if rlmSession.count < 1 {
-            // TODO: Disable interaction
             
             let sess = RLM_Session()
             do {
@@ -144,7 +143,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             mainUpdate()
             initLocation()
             
-            // Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in self.selectedIndex = 1 })
+            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in self.selectedIndex = 1 })
         } else {
             resetErrCounts()
             mainUpdate()

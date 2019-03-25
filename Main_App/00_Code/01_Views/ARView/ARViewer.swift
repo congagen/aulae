@@ -83,7 +83,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         // Enable HDR camera settings for the most realistic appearance with environmental lighting and physically based materials.
         camera.wantsHDR = true
-        //camera.exposureOffset  = 0
+        //camera.exposureOffset = 0
         camera.minimumExposure = 0
         camera.maximumExposure = 1
     }
@@ -184,7 +184,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        
         if contentObj.billboard {
             let constraint = SCNBillboardConstraint()
             constraint.freeAxes = [.Y]
@@ -261,7 +260,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                                     )
                                 }
                             }
-                            
                             print("MISSING DATA? " + String(o.filePath))
                         }
                     } else {

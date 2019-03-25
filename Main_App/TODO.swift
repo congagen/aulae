@@ -1,9 +1,6 @@
 
 // URGENT:
 
-//      Map Pin Color Bug
-//      Demo Content Node Updates
-
 //      API Source Update -> Share user position
 //      Relative Pinch Scaling
 //      Content node type: Icon / MapMarker
@@ -20,10 +17,10 @@
 //      Duplicate feed ID Bug (?)
 
 // Feeds
-//    Feed Feeds / RSS / ?
-//    Update feed/items if deef version id !=
-//    Remove/Invalidate removed FeedItems
-//    Feed Update Timeout / Error Thresh
+//      Feed Feeds / RSS / ?
+//      Update feed/items if deef version id !=
+//      Remove/Invalidate removed FeedItems
+//      Feed Update Timeout / Error Thresh
 
 
 // Feeds JSON SCHEMA:

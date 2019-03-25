@@ -104,16 +104,4 @@ extension ARViewer {
     }
     
     
-//    func highlightSelected(hideOther: Bool) {
-//        
-//        if hideOther {
-//            for n in mainScene.rootNode.childNodes {
-//                if n != selectedNode && !(n.isKind(of: SKLightNode.self)) && !(n.isKind(of: SCNLight.self)) {
-//                    n.isHidden = true
-//                }
-//            }
-//        }
-//        
-//    }
-    
 }
