@@ -18,6 +18,7 @@ import RealmSwift
 class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
     var updateTimer = Timer()
+    var isInit = false
     
     @IBOutlet var mapView: MKMapView!
     //let locationManager = CLLocationManager()
@@ -35,6 +36,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var reloadBtn: UIBarButtonItem!
     @IBAction func reloadBtnAction(_ sender: UIBarButtonItem) {
+        print("reloadBtnAction")
+
         NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
         
         initMapView()
@@ -52,19 +55,9 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     }
     
     
-    func updateSearchRadius(rDistance: Double) {
-       
-        do {
-            try realm.write {
-               rlmSession.first?.searchRadius = rDistance
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-    }
-    
-    
     @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        print("handleLongPress")
+
         guard gestureRecognizer.state != .ended else { return }
         
         let mapTouchLocation = gestureRecognizer.location(in: mapView)
@@ -80,10 +73,12 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         let d = current?.distance(from: currentTouchLocation)
         
         if d != nil {
-            updateSearchRadius(rDistance: d!)
+            if !isInit {
+                updateSearchRadiusDB(rDistance: 99999999999999)
+            } else {
+                updateSearchRadiusDB(rDistance: d!)
+            }
         }
-        
-        updateSearchRadius()
 
     }
     
@@ -98,8 +93,9 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     }
     
     
-    func updateSearchRadius() {
-        
+    func updateMapSearchRadius() {
+        print("updateMapSearchRadius")
+
         mapView.removeOverlay(userSearchRadiusIndicator)
         
         let cLoc = CLLocationCoordinate2D(
@@ -114,7 +110,22 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         }
         
         mapView.addOverlay(userSearchRadiusIndicator)
+    }
+    
+    
+    func updateSearchRadiusDB(rDistance: Double) {
+        print("updateSearchRadiusDB")
+        print(rDistance)
         
+        do {
+            try realm.write {
+                rlmSession.first?.searchRadius = rDistance
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        updateMapSearchRadius()
     }
     
     
@@ -128,7 +139,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func addRadiusOverlay(lat:Double, long:Double, radius:Double) {
-        
+        print("addRadiusOverlay")
+
         let currentOverlays = mapView.overlays.filter {
             $0.coordinate.latitude == lat && $0.coordinate.longitude == long
         }
@@ -143,6 +155,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func addAnoRadius(feObj: RLM_Obj) {
+        print("addAnoRadius")
+
         let cLoc = CLLocationCoordinate2D( latitude: feObj.lat, longitude: feObj.lng )
         
         if (rlmSession.first?.searchRadius)! >= 110000 {
@@ -202,12 +216,14 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
             }
         }
         
-        updateSearchRadius()
+        updateMapSearchRadius()
         mapView.updateFocusIfNeeded()
     }
     
     
     @objc func mainUpdate() {
+        print("mainUpdate")
+        
         let uIv = (rlmSession.first?.mapUpdateInterval)! + 1
         
         if updateTimer.timeInterval != uIv || !((rlmSession.first?.autoUpdate)!) {
@@ -274,7 +290,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
             }
         }
         
-        updateSearchRadius()
+        updateMapSearchRadius()
         return pinView
     }
     
@@ -317,6 +333,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func initMapView() {
+        print("initMapView")
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.showsPointsOfInterest = true
@@ -353,18 +370,20 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
     
     override func viewWillDisappear(_ animated: Bool) {
-        
+        isInit = false
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )
+        isInit = false
         
         for a in mapView.annotations {
             mapView.removeAnnotation(a)
         }
         
         updateObjectAnnotations()
+        updateSearchRadiusDB(rDistance: 9999999999999999)
     }
 
 }

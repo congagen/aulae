@@ -20,13 +20,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     var updateTimer = Timer()
     
+    var isInit = false
     var isTrackingQR = false
     var qrUrl = ""
     var qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
     var qrCaptureSession = AVCaptureSession()
     
     var trackingState = 3
-    var arCam: ARCamera? = nil
     var configuration = AROrientationTrackingConfiguration()
     
     var mainScene = SCNScene()
@@ -40,9 +40,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var loadingView: UIView!
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
-        
         FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
-        
         NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
         mainTimerUpdate()
     }
@@ -186,7 +184,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        //let yH = ctNode.boundingBox.max.y * 0.5
         
         if contentObj.billboard {
             let constraint = SCNBillboardConstraint()
@@ -199,12 +196,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.name = contentObj.uuid
         ctNode.position = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
 
-        if contentObj.demo {
+        if contentObj.demo && !isInit {
             let ori = sceneView.pointOfView?.orientation
             let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
             ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-            
-            ctNode.position = SCNVector3(ctNode.position.x * 1.5, 0, ctNode.position.z * 1.5)
         }
         
         sceneView.scene.rootNode.addChildNode(ctNode)
@@ -278,7 +273,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 })
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 })
     }
 
     
@@ -334,13 +329,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         Double(gestureRecognizer.scale))
                 }
             }
-        }
-    }
-    
-    
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        if arCam == nil {
-            arCam = session.currentFrame?.camera
         }
     }
     
@@ -410,7 +398,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if (rlmSession.first?.autoUpdate)! {
             Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.mainTimerUpdate() })
+            Timer.scheduledTimer(withTimeInterval: 1 + ((rlmSession.first?.feedUpdateInterval)! * 0.25), repeats: false, block: { _ in self.isInit = true })
         }
+        
     }
     
     
@@ -463,7 +453,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
         }
         
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 })
+        Timer.scheduledTimer(
+            withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 }
+        )
+        
     }
     
     
@@ -485,6 +478,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
+        isInit = false
         loadingView.isHidden = false
         initScene()
         
@@ -500,6 +494,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        isInit = false
+
         loadingView.isHidden = false
         sceneView.session.pause()
         progressBar.removeFromSuperview()
@@ -527,27 +523,3 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        let pov = sceneView.pointOfView!.rotation
-//        ctNode.rotate(by: pov, aroundTarget: SCNVector3(0,0,0) )
-
-
-//        if contentObj.rotate != 0 {
-//            rotateAnimation(node: ctNode, xAmt: 0, yAmt: 1, zAmt: 0, speed: contentObj.rotate)
-//        }
-//
-//        if contentObj.hoover != 0 {
-//            addHooverAnimation(node: ctNode, distance: CGFloat(contentObj.hoover), speed: CGFloat(contentObj.hoover))
-//        }

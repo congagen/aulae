@@ -25,7 +25,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     
     let httpDl = HttpDownloader()
     
-    
     func randRange (lower: Int , upper: Int) -> Int {
         return Int(arc4random_uniform(UInt32(upper - lower)))
     }
@@ -128,6 +127,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         dbGc()
         
         if rlmSession.count < 1 {
+            // TODO: Disable interaction
+            
             let sess = RLM_Session()
             do {
                 try realm.write {
@@ -149,8 +150,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             mainUpdate()
             initLocation()
         }
-        
-
     }
 
     

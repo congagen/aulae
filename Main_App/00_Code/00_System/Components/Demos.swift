@@ -21,7 +21,7 @@ extension MainVC {
         demoFeed.name = "Demo Feed"
         
         let itemCount = 4
-        let distance: Double = 1
+        let distance: Double = 1.2
         
         do {
             try realm.write {
