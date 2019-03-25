@@ -50,7 +50,7 @@ extension MainVC {
                     }
                     
                     if i == 3 {
-                        o.filePath    = "sources.png"
+                        o.filePath    = "lib.png"
                         o.x_pos = -distance
                         o.z_pos = 0
                     }
