@@ -18,7 +18,6 @@ import RealmSwift
 class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
     var updateTimer = Timer()
-    var isInit = false
     
     @IBOutlet var mapView: MKMapView!
     //let locationManager = CLLocationManager()
@@ -73,11 +72,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         let d = current?.distance(from: currentTouchLocation)
         
         if d != nil {
-            if !isInit {
-                updateSearchRadiusDB(rDistance: 99999999999999)
-            } else {
-                updateSearchRadiusDB(rDistance: d!)
-            }
+            updateSearchRadiusDB(rDistance: d!)
+    
         }
 
     }
@@ -316,14 +312,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     }
     
     
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if getAnoObj(view: view) != nil {
-            selected = getAnoObj(view: view)!
-            print(selected!)
-        }
-    }
-    
-    
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         if getAnoObj(view: view) != nil {
             selected = getAnoObj(view: view)!
@@ -368,22 +356,15 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         super.didReceiveMemoryWarning()
     }
 
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        isInit = false
-    }
-    
-    
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )
-        isInit = false
         
         for a in mapView.annotations {
             mapView.removeAnnotation(a)
         }
         
         updateObjectAnnotations()
-        updateSearchRadiusDB(rDistance: 9999999999999999)
+        updateSearchRadiusDB(rDistance: (rlmSession.first?.searchRadius)!)
     }
 
 }
