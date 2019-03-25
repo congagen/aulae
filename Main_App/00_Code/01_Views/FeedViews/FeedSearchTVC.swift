@@ -57,6 +57,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     @objc func updateSearchResults(result: Dictionary<String, AnyObject> ) {
         print("updateSearchResults")
+        
         DispatchQueue.main.async {
             self.refrgah(result: result)
         }

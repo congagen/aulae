@@ -79,7 +79,10 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         let current = mapView!.userLocation.location
         let d = current?.distance(from: currentTouchLocation)
         
-        updateSearchRadius(rDistance: d!)
+        if d != nil {
+            updateSearchRadius(rDistance: d!)
+        }
+        
         updateSearchRadius()
 
     }

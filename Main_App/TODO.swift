@@ -1,7 +1,9 @@
 
 // URGENT:
-//      Feed Icons / Thumbs
-//      Image Content Urls
+
+//      Map Pin Color Bug
+//      Demo Content Node Updates
+
 //      API Source Update -> Share user position
 //      Relative Pinch Scaling
 //      Content node type: Icon / MapMarker
