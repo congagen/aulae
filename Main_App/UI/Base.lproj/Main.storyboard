@@ -98,11 +98,7 @@
                                     <action selector="addBtnAction:" destination="4ZI-rx-Clo" id="9T1-zV-i3g"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="search" id="hIw-Fb-57X">
-                                <connections>
-                                    <segue destination="Z9j-U6-ciR" kind="show" id="SZc-Qf-Odg"/>
-                                </connections>
-                            </barButtonItem>
+                            <barButtonItem image="Spacer" id="hIw-Fb-57X"/>
                         </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>
@@ -262,11 +258,7 @@
                                     <action selector="reloadBtnAction:" destination="shz-14-nLG" id="MV4-JY-nUe"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="search" id="tP4-NO-MBE">
-                                <connections>
-                                    <segue destination="Z9j-U6-ciR" kind="show" animates="NO" id="syp-hZ-XxQ"/>
-                                </connections>
-                            </barButtonItem>
+                            <barButtonItem image="Spacer" id="tP4-NO-MBE"/>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
@@ -662,7 +654,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aqq-r3-8tt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1702" y="2520"/>
+            <point key="canvasLocation" x="908" y="2520"/>
         </scene>
         <!--Search-->
         <scene sceneID="1XM-Tk-eYm">
@@ -832,7 +824,6 @@
         <image name="TabBarIcon_03" width="19" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SZc-Qf-Odg"/>
         <segue reference="pCq-sO-rbF"/>
     </inferredMetricsTieBreakers>
 </document>

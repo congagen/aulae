@@ -209,7 +209,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
 
     
 // --------------------------------------------------------------------------------------------------------
-    
+// Search -> Places Results
+// Add Search Term As Feed
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         sourcesSearch(searchBar)

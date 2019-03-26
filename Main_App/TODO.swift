@@ -1,7 +1,9 @@
 
 // URGENT:
 
-//      API Source Update -> Share user position
+//      DEMO FEEDS: LOCAL PARKS  |  LOCAL COFFE  |  LOCAL NEWS
+//      SETTINGS -> LOCATION SHARING
+
 //      Relative Pinch Scaling
 //      Content node type: Icon / MapMarker
 //      Name & Logo
