@@ -29,10 +29,10 @@
 			<string>com.abstraqata.aulae</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>aulae</string>
+				<string>AulaeApp</string>
 			</array>
-			<key>aulae</key>
-			<string>qr</string>
+			<key>linkUrl</key>
+			<string>link</string>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>

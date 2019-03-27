@@ -111,7 +111,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             let itmUrl: String = itemData["url"] as! String
             
             if rlmFeeds.filter( {$0.url == itmUrl } ).count == 0 {
-                showAddSearchFeedAlert(feedTitle: itmTitle, feedUrl: itmUrl, message: "Add this feed?")
+                showAddSearchFeedAlert(feedTitle: itmTitle, feedUrl: itmUrl, message: "Add this source?")
             }
         }
     

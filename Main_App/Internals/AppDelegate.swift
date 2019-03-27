@@ -18,15 +18,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.tintColor = UIColor.white
         return true
     }
+
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        print("Yas?")
-        print(options)
+        print(options.description)
         
-        let sendingAppID = options[.sourceApplication]
-        print("source application = \(sendingAppID ?? "Unknown")")
+        // let sendingAppID = options[.sourceApplication]
         
+        var urlString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
         
+        if urlString.lowercased().contains("https") {
+            print("OK")
+        } else {
+            if urlString.lowercased().contains("http") {
+                urlString = urlString.replacingOccurrences(of: "http", with: "https")
+            } else {
+                urlString = "https://" + urlString
+            }
+        }
+        
+        let alertController = UIAlertController(title: "Add this source?", message: urlString, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {_ in FeedActions().addFeedUrl(feedUrl: urlString, refreshExisting: true) } )
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        alertController.view.tintColor = UIColor.black
+        
+        window?.rootViewController?.present(alertController, animated: true, completion: { FeedActions().addFeedUrl(feedUrl: urlString, refreshExisting: true) } )
         
         return true
     }

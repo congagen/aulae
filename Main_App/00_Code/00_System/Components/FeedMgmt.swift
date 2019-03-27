@@ -430,7 +430,11 @@ class FeedMgmt {
                     NetworkTools().postReq(
                         completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
                         apiHeaderFeild: apiHeaderFeild, apiUrl: fe.url,
-                        reqParams: ["lat": String(rlmSession.first!.currentLat), "lng": String(rlmSession.first!.currentLng)]
+                        reqParams: [
+                            "lat": String(rlmSession.first!.currentLat),
+                            "lng": String(rlmSession.first!.currentLng),
+                            "sid": (rlmSession.first?.sessionUUID)!
+                        ]
                     )
                 }
                 
