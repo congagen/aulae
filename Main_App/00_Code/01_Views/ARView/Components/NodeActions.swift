@@ -64,10 +64,11 @@ extension ARViewer {
         if selectedNode != nil {
 
             let alert =  UIAlertController(
-                title:   (selectedNode?.feedId)! + " - " + (selectedNode?.title)!,
+                title:   (selFeeds.first?.name)! + " - " + (selectedNode?.title)!,
                 message: nil,
                 preferredStyle: UIAlertController.Style.actionSheet
             )
+            
             
             if (objData.contentLink) != "" {
                 alert.addAction(UIAlertAction(title:     "Object Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (objData.contentLink)) } ))

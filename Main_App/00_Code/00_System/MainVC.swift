@@ -150,7 +150,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             initLocation()
         }
     }
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
