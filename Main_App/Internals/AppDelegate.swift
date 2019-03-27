@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         alertController.addAction(cancelAction)
         alertController.view.tintColor = UIColor.black
         
-        window?.rootViewController?.present(alertController, animated: true, completion: { FeedActions().addFeedUrl(feedUrl: urlString, refreshExisting: true) } )
+        window?.rootViewController?.present(alertController, animated: true, completion: nil )
         
         return true
     }
