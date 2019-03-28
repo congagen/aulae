@@ -41,8 +41,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         return UIScreen.main.bounds.height
     }
     
-    @objc func refrgah(result: Dictionary<String, AnyObject>) {
-        print("refrgah")
+    @objc func updateSearchResults(result: Dictionary<String, AnyObject>) {
+        print("updateSearchResults")
         
         if let resp = result["search_results"] as? Dictionary<String, AnyObject> {
             searchResults = resp
@@ -55,12 +55,19 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     }
     
     
-    @objc func updateSearchResults(result: Dictionary<String, AnyObject> ) {
-        print("updateSearchResults")
+    @objc func updateSearchResultsComp(result: Dictionary<String, AnyObject> ) {
+        print("updateSearchResultsComp")
         
         DispatchQueue.main.async {
-            self.refrgah(result: result)
+            self.updateSearchResults(result: result)
         }
+    }
+    
+    
+    func addSrFeed(feedUrl: String, refreshExisting: Bool){
+        self.feedAct.addFeedUrl(feedUrl: feedUrl, refreshExisting: true)
+        self.tableView.reloadInputViews()
+        self.tableView.reloadData()
     }
     
     
@@ -68,16 +75,13 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         print("showAddSearchFeedAlert")
         
         let alert = UIAlertController(
-            title: feedTitle,
-            message: message,
-            preferredStyle: UIAlertController.Style.alert
+            title: feedTitle, message: message, preferredStyle: UIAlertController.Style.alert
         )
         
         alert.addAction(
             UIAlertAction(
-                title: "Add",
-                style: UIAlertAction.Style.default,
-                handler: { _ in self.feedAct.addFeedUrl(feedUrl: feedUrl!, refreshExisting: true) }
+                title: "Add", style: UIAlertAction.Style.default,
+                handler: { _ in self.addSrFeed(feedUrl: feedUrl!, refreshExisting: true) }
             )
         )
         
@@ -196,7 +200,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             ]
             
             NetworkTools().postReq(
-                completion: updateSearchResults, apiHeaderValue: (rlmSession.first?.apiHeaderValue)!,
+                completion: updateSearchResultsComp, apiHeaderValue: (rlmSession.first?.apiHeaderValue)!,
                 apiHeaderFeild: (rlmSession.first?.apiHeaderFeild)!, apiUrl: (rlmSession.first?.feedSearchApi)!,
                 reqParams: payload
             )

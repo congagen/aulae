@@ -9,16 +9,6 @@
 /* Begin PBXBuildFile section */
 		3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3164AF4920B47E79009EDA27 /* RLM_Obj.swift */; };
 		316B86B620D900940076E63D /* FeedsTVCMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86B520D900940076E63D /* FeedsTVCMain.swift */; };
-		316B86D520D955660076E63D /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CA20D955660076E63D /* SCNVector3+Extensions.swift */; };
-		316B86D620D955660076E63D /* SceneLocationEstimate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CB20D955660076E63D /* SceneLocationEstimate.swift */; };
-		316B86D720D955660076E63D /* SceneLocationEstimate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CC20D955660076E63D /* SceneLocationEstimate+Extensions.swift */; };
-		316B86D820D955660076E63D /* FloatingPoint+Radians.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CD20D955660076E63D /* FloatingPoint+Radians.swift */; };
-		316B86D920D955660076E63D /* LocationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CE20D955660076E63D /* LocationNode.swift */; };
-		316B86DA20D955660076E63D /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86CF20D955660076E63D /* CGPoint+Extensions.swift */; };
-		316B86DB20D955660076E63D /* CLLocation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D020D955660076E63D /* CLLocation+Extensions.swift */; };
-		316B86DC20D955660076E63D /* SceneLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D120D955660076E63D /* SceneLocationView.swift */; };
-		316B86DD20D955660076E63D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D220D955660076E63D /* LocationManager.swift */; };
-		316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B86D320D955660076E63D /* SCNNode+Extensions.swift */; };
 		3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177251E20B03AD4009FA8B1 /* AppDelegate.swift */; };
 		3177252120B03AD4009FA8B1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 3177252020B03AD4009FA8B1 /* art.scnassets */; };
 		3177252620B03AD4009FA8B1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3177252420B03AD4009FA8B1 /* Main.storyboard */; };
@@ -50,9 +40,9 @@
 		FAB68C7A224CB37700126867 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; };
 		FAB68C7B224CB37700126867 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FAB68C81224CCBEE00126867 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB68C7D224CCBEE00126867 /* view.png */; };
-		FAB68C82224CCBEE00126867 /* lib.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB68C7E224CCBEE00126867 /* lib.png */; };
 		FAB68C86224CCD0100126867 /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB68C84224CCD0100126867 /* welc.png */; };
 		FAB68C87224CCD0100126867 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB68C85224CCD0100126867 /* map.png */; };
+		FAB68C89224CCF2C00126867 /* lib.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB68C88224CCF2C00126867 /* lib.png */; };
 		FAE439632237B5C900F828EF /* NavBarOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE439622237B5C900F828EF /* NavBarOps.swift */; };
 		FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* NodeAppearance.swift */; };
 		FAF4C9A2223474D500C2F371 /* QrScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF4C9A1223474D500C2F371 /* QrScanner.swift */; };
@@ -76,16 +66,6 @@
 /* Begin PBXFileReference section */
 		3164AF4920B47E79009EDA27 /* RLM_Obj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Obj.swift; sourceTree = "<group>"; };
 		316B86B520D900940076E63D /* FeedsTVCMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsTVCMain.swift; sourceTree = "<group>"; };
-		316B86CA20D955660076E63D /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
-		316B86CB20D955660076E63D /* SceneLocationEstimate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneLocationEstimate.swift; sourceTree = "<group>"; };
-		316B86CC20D955660076E63D /* SceneLocationEstimate+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneLocationEstimate+Extensions.swift"; sourceTree = "<group>"; };
-		316B86CD20D955660076E63D /* FloatingPoint+Radians.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FloatingPoint+Radians.swift"; sourceTree = "<group>"; };
-		316B86CE20D955660076E63D /* LocationNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationNode.swift; sourceTree = "<group>"; };
-		316B86CF20D955660076E63D /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
-		316B86D020D955660076E63D /* CLLocation+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extensions.swift"; sourceTree = "<group>"; };
-		316B86D120D955660076E63D /* SceneLocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneLocationView.swift; sourceTree = "<group>"; };
-		316B86D220D955660076E63D /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		316B86D320D955660076E63D /* SCNNode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNNode+Extensions.swift"; sourceTree = "<group>"; };
 		3177251B20B03AD4009FA8B1 /* Aulae.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aulae.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3177251E20B03AD4009FA8B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3177252020B03AD4009FA8B1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -119,9 +99,9 @@
 		FAB68C76224CB37600126867 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		FAB68C77224CB37600126867 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		FAB68C7D224CCBEE00126867 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = view.png; sourceTree = "<group>"; };
-		FAB68C7E224CCBEE00126867 /* lib.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lib.png; sourceTree = "<group>"; };
 		FAB68C84224CCD0100126867 /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welc.png; sourceTree = "<group>"; };
 		FAB68C85224CCD0100126867 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
+		FAB68C88224CCF2C00126867 /* lib.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lib.png; sourceTree = "<group>"; };
 		FAE439622237B5C900F828EF /* NavBarOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarOps.swift; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* NodeAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAppearance.swift; sourceTree = "<group>"; };
 		FAF4C9A1223474D500C2F371 /* QrScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrScanner.swift; sourceTree = "<group>"; };
@@ -160,31 +140,6 @@
 				FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */,
 			);
 			path = Components;
-			sourceTree = "<group>";
-		};
-		316B86B820D953B60076E63D /* ArKitCoreloc */ = {
-			isa = PBXGroup;
-			children = (
-				316B86C920D955660076E63D /* Source */,
-			);
-			name = ArKitCoreloc;
-			sourceTree = "<group>";
-		};
-		316B86C920D955660076E63D /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				316B86CA20D955660076E63D /* SCNVector3+Extensions.swift */,
-				316B86CB20D955660076E63D /* SceneLocationEstimate.swift */,
-				316B86CC20D955660076E63D /* SceneLocationEstimate+Extensions.swift */,
-				316B86CD20D955660076E63D /* FloatingPoint+Radians.swift */,
-				316B86CE20D955660076E63D /* LocationNode.swift */,
-				316B86CF20D955660076E63D /* CGPoint+Extensions.swift */,
-				316B86D020D955660076E63D /* CLLocation+Extensions.swift */,
-				316B86D120D955660076E63D /* SceneLocationView.swift */,
-				316B86D220D955660076E63D /* LocationManager.swift */,
-				316B86D320D955660076E63D /* SCNNode+Extensions.swift */,
-			);
-			path = Source;
 			sourceTree = "<group>";
 		};
 		3177251220B03AD4009FA8B1 = {
@@ -232,7 +187,6 @@
 			children = (
 				FAB68C76224CB37600126867 /* Realm.framework */,
 				FAB68C77224CB37600126867 /* RealmSwift.framework */,
-				316B86B820D953B60076E63D /* ArKitCoreloc */,
 				318FE8F420B0BDDD0050528B /* MapKit.framework */,
 			);
 			name = Frameworks;
@@ -330,9 +284,9 @@
 		FA4ABB9E223C2EC8006525AA /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				FAB68C88224CCF2C00126867 /* lib.png */,
 				FAB68C85224CCD0100126867 /* map.png */,
 				FAB68C84224CCD0100126867 /* welc.png */,
-				FAB68C7E224CCBEE00126867 /* lib.png */,
 				FAB68C7D224CCBEE00126867 /* view.png */,
 				FA2BDFAD2247C21A002CB0D4 /* Logo.png */,
 			);
@@ -441,8 +395,8 @@
 			files = (
 				FAB68C87224CCD0100126867 /* map.png in Resources */,
 				FAB68C81224CCBEE00126867 /* view.png in Resources */,
-				FAB68C82224CCBEE00126867 /* lib.png in Resources */,
 				FA2BDFAE2247C21B002CB0D4 /* Logo.png in Resources */,
+				FAB68C89224CCF2C00126867 /* lib.png in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
 				FA1934E72225BD0000457C6E /* Assets.xcassets in Resources */,
@@ -478,18 +432,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				316B86D820D955660076E63D /* FloatingPoint+Radians.swift in Sources */,
 				FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */,
-				316B86DD20D955660076E63D /* LocationManager.swift in Sources */,
-				316B86DB20D955660076E63D /* CLLocation+Extensions.swift in Sources */,
 				FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */,
 				FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */,
 				31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */,
-				316B86D920D955660076E63D /* LocationNode.swift in Sources */,
 				FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
-				316B86DE20D955660076E63D /* SCNNode+Extensions.swift in Sources */,
 				FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
 				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
@@ -499,17 +448,12 @@
 				316B86B620D900940076E63D /* FeedsTVCMain.swift in Sources */,
 				31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */,
 				FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */,
-				316B86D720D955660076E63D /* SceneLocationEstimate+Extensions.swift in Sources */,
-				316B86D520D955660076E63D /* SCNVector3+Extensions.swift in Sources */,
 				FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */,
 				3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */,
 				FA2BDFA02246B658002CB0D4 /* ObjectGestures.swift in Sources */,
 				319AA77F20B418E800F99223 /* MainVC.swift in Sources */,
-				316B86DA20D955660076E63D /* CGPoint+Extensions.swift in Sources */,
 				FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */,
 				FAE439632237B5C900F828EF /* NavBarOps.swift in Sources */,
-				316B86DC20D955660076E63D /* SceneLocationView.swift in Sources */,
-				316B86D620D955660076E63D /* SceneLocationEstimate.swift in Sources */,
 				319D3F2820D7965B007FEECA /* FeedMgmt.swift in Sources */,
 				FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */,
 				318FE8F220B0BB730050528B /* HttpDownloader.swift in Sources */,
@@ -666,7 +610,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Internals/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -690,7 +634,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Internals/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

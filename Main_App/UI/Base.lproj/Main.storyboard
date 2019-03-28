@@ -83,7 +83,7 @@
                             <outlet property="delegate" destination="4ZI-rx-Clo" id="AYB-z0-Mok"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Nhx-W2-kfA">
+                    <navigationItem key="navigationItem" title="Aulae" id="Nhx-W2-kfA">
                         <leftBarButtonItems>
                             <barButtonItem image="TabBarIcon_03" id="ayD-K4-8Qr">
                                 <connections>
@@ -189,7 +189,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
-                    <navigationItem key="navigationItem" id="0Jn-a9-joB">
+                    <navigationItem key="navigationItem" title="Aulae" id="0Jn-a9-joB">
                         <leftBarButtonItems>
                             <barButtonItem image="TabBarIcon_03" id="Bi4-h3-vTk">
                                 <connections>
@@ -247,7 +247,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
-                    <navigationItem key="navigationItem" id="jef-En-32s">
+                    <navigationItem key="navigationItem" title="Aulae" id="jef-En-32s">
                         <leftBarButtonItems>
                             <barButtonItem image="TabBarIcon_03" id="SvZ-XF-1hu">
                                 <connections>
@@ -660,7 +660,7 @@
             </objects>
             <point key="canvasLocation" x="110" y="2520"/>
         </scene>
-        <!--Search-->
+        <!--Aulae-->
         <scene sceneID="1XM-Tk-eYm">
             <objects>
                 <tableViewController extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="Z9j-U6-ciR" customClass="FeedSearchTVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
@@ -711,7 +711,7 @@
                             <outlet property="delegate" destination="Z9j-U6-ciR" id="cbe-AL-6cS"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Search" id="GvU-Ik-pSC">
+                    <navigationItem key="navigationItem" title="Aulae" id="GvU-Ik-pSC">
                         <barButtonItem key="backBarButtonItem" title="Home" id="t8W-ru-nzR"/>
                     </navigationItem>
                     <connections>

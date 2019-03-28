@@ -195,10 +195,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.name = contentObj.uuid
         ctNode.position = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
 
-        if contentObj.demo && !isInit {
-            let ori = sceneView.pointOfView?.orientation
-            let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
-            ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+        if contentObj.demo {
+            if !isInit {
+                let ori = sceneView.pointOfView?.orientation
+                let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+                ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+                ctNode.position = SCNVector3(ctNode.position.x, 0, ctNode.position.z)
+            } else {
+                ctNode.position = SCNVector3(ctNode.position.x, 0, ctNode.position.z)
+            }
         }
         
         sceneView.scene.rootNode.addChildNode(ctNode)
@@ -360,6 +365,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         case .limited(.relocalizing):
             trackingState = 2
             message = "LOCALIZING"
+        case .limited(_):
+            message = "INITIALIZING"
         }
 
         loadingViewLabel.text = message
@@ -462,7 +469,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad")
-        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+        // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
 
         loadingView.isHidden = false
 
