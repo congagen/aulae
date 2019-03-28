@@ -34,7 +34,7 @@ extension ARViewer {
     }
     
     
-    func showURLAlert(aMessage: String) {
+    func showQRURLAlert(aMessage: String) {
         let alert = UIAlertController(
             title: aMessage,
             message: nil,
@@ -43,8 +43,10 @@ extension ARViewer {
         
         qrUrl = aMessage
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: cancelHandler))
-        alert.addAction(UIAlertAction(title: "Add", style: UIAlertAction.Style.default, handler: handleEnterURL))
+        alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.cancel,  handler: cancelHandler))
+        alert.addAction(UIAlertAction(title: "Add to Lib", style: UIAlertAction.Style.default, handler: handleEnterURL))
+        alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: {_ in self.openUrl(scheme: self.qrUrl)} ))
+        
         alert.view.tintColor = UIColor.black
         
         self.present(alert, animated: true, completion: nil)

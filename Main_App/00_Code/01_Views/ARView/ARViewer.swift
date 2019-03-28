@@ -412,7 +412,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     
                     if (qrUrl != "") {
                         print(metadataObject.stringValue!)
-                        showURLAlert(aMessage: metadataObject.stringValue!)
+                        showQRURLAlert(aMessage: metadataObject.stringValue!)
                     }
                     
                     qrCaptureSession.stopRunning()
