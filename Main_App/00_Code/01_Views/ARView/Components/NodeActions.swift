@@ -61,7 +61,7 @@ extension ARViewer {
         print("showSeletedNodeActions")
         let selFeeds = rlmFeeds.filter({$0.id == self.selectedNode?.feedId})
         
-        if selectedNode != nil {
+        if selectedNode != nil && selFeeds.count > 0 {
 
             let alert =  UIAlertController(
                 title:   (selFeeds.first?.name)! + " - " + (selectedNode?.title)!,

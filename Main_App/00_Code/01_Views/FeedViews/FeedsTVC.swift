@@ -183,7 +183,7 @@ class FeedsTVC: UITableViewController {
     
     func showURLAlert(aMessage: String?){
         let alert = UIAlertController(
-            title: "Feed URL", message: "", preferredStyle: UIAlertController.Style.alert
+            title: "Add URL", message: "", preferredStyle: UIAlertController.Style.alert
         )
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)

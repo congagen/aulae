@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jBl-tO-DwV">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jBl-tO-DwV">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -98,7 +98,11 @@
                                     <action selector="addBtnAction:" destination="4ZI-rx-Clo" id="9T1-zV-i3g"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="Spacer" id="hIw-Fb-57X"/>
+                            <barButtonItem systemItem="search" id="hIw-Fb-57X">
+                                <connections>
+                                    <segue destination="Z9j-U6-ciR" kind="show" id="1xY-Yh-QER"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>
@@ -654,7 +658,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aqq-r3-8tt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="908" y="2520"/>
+            <point key="canvasLocation" x="110" y="2520"/>
         </scene>
         <!--Search-->
         <scene sceneID="1XM-Tk-eYm">
@@ -716,7 +720,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tNu-ip-EAX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="110" y="2520"/>
+            <point key="canvasLocation" x="1702" y="2520"/>
         </scene>
         <!--MainVC-->
         <scene sceneID="Wui-Ci-rQu">

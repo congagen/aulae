@@ -34,6 +34,24 @@ extension ARViewer {
     }
     
     
+    func openQRUrl(scheme: String) {
+        if let url = URL(string: scheme) {
+            if #available(iOS 10, *) {
+                UIApplication.shared.open(
+                    url, options: [:], completionHandler: { (success) in print("Open \(scheme): \(success)")
+                })
+            } else {
+                let success = UIApplication.shared.openURL(url)
+                print("Open \(scheme): \(success)")
+            }
+        }
+        
+        qrCaptureSession.stopRunning()
+        qrCapturePreviewLayer.removeFromSuperlayer()
+        searchQRBtn.tintColor = self.view.window?.tintColor
+    }
+    
+    
     func showQRURLAlert(aMessage: String) {
         let alert = UIAlertController(
             title: aMessage,
@@ -45,7 +63,7 @@ extension ARViewer {
         
         alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.cancel,  handler: cancelHandler))
         alert.addAction(UIAlertAction(title: "Add to Lib", style: UIAlertAction.Style.default, handler: handleEnterURL))
-        alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: {_ in self.openUrl(scheme: self.qrUrl)} ))
+        alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: {_ in self.openQRUrl(scheme: self.qrUrl)} ))
         
         alert.view.tintColor = UIColor.black
         
