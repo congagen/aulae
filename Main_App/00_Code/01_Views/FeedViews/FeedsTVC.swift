@@ -172,7 +172,7 @@ class FeedsTVC: UITableViewController {
     func handleEnterURL(alertView: UIAlertAction!) {
         
         if textField?.text != nil {
-            feedAct.addFeedUrl(feedUrl: (self.textField?.text)!, refreshExisting: true)
+            feedAct.addFeedUrl(feedUrl: (self.textField?.text)!, feedApiKwd: "", refreshExisting: true)
         }
         
         self.tableView.reloadData()
@@ -243,7 +243,7 @@ class FeedsTVC: UITableViewController {
         }
         shareAction.backgroundColor = UIColor.black
         
-        let visitSourceLink = UITableViewRowAction(style: .normal, title: "WWW") { (rowAction, indexPath) in
+        let visitSourceLink = UITableViewRowAction(style: .normal, title: "Edit") { (rowAction, indexPath) in
              self.openUrl(scheme: (self.selected?.url)!)
         }
         visitSourceLink.backgroundColor = UIColor.black

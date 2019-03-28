@@ -33,7 +33,7 @@ class FeedActions {
     
     
     
-    func addFeedUrl(feedUrl: String, refreshExisting: Bool) {
+    func addFeedUrl(feedUrl: String, feedApiKwd: String, refreshExisting: Bool) {
         print("addFeed")
         let newFeed = RLM_Feed()
 
@@ -51,6 +51,7 @@ class FeedActions {
                     newFeed.url  = feedUrl
                     newFeed.id   = UUID().uuidString
                     newFeed.name = "Updating..."
+                    newFeed.topicKwd = feedApiKwd
                     
                     self.realm.add(newFeed)
                 }

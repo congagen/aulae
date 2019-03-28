@@ -7,6 +7,7 @@ class RLM_Feed: Object {
     @objc dynamic var name: String = ""
     @objc dynamic var version: Int = 123456789
     @objc dynamic var id: String = ""
+    @objc dynamic var topicKwd: String = ""
     
     @objc dynamic var thumbImagePath: String = ""
     @objc dynamic var thumbImageUrl: String = ""

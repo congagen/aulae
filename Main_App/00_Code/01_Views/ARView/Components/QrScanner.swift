@@ -18,7 +18,7 @@ extension ARViewer {
     
     func handleEnterURL(alertView: UIAlertAction!) {
         print("Adding QRURL: " + qrUrl)
-        FeedActions().addFeedUrl(feedUrl: qrUrl, refreshExisting: true)
+        FeedActions().addFeedUrl(feedUrl: qrUrl, feedApiKwd: "", refreshExisting: true)
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
         

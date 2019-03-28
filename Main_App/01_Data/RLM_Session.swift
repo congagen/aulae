@@ -29,8 +29,8 @@ class RLM_Session: Object {
     @objc dynamic var allowAnimation:   Bool = true
     
     @objc dynamic var defaultFeedUrl: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev"
+    @objc dynamic var feedSearchApi:  String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
     
-    @objc dynamic var feedSearchApi:  String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev"
     @objc dynamic var apiHeaderValue: String = "VYtA9KZdQ26y4isktSKba59ME8h4WOCuajYwblvn"
     @objc dynamic var apiHeaderFeild: String = "x-api-key"
     

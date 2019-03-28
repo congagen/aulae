@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let alertController = UIAlertController(title: "Add this source?", message: urlString, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {_ in FeedActions().addFeedUrl(feedUrl: urlString, refreshExisting: true) } )
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {_ in FeedActions().addFeedUrl(feedUrl: urlString, feedApiKwd: "", refreshExisting: true) } )
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
         alertController.view.tintColor = UIColor.black

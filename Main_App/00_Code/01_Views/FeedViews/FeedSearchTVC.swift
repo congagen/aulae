@@ -43,7 +43,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     @objc func updateSearchResults(result: Dictionary<String, AnyObject>) {
         print("updateSearchResults")
-        
+        print(result)
+
         if let resp = result["search_results"] as? Dictionary<String, AnyObject> {
             searchResults = resp
         } else {
@@ -57,6 +58,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     @objc func updateSearchResultsComp(result: Dictionary<String, AnyObject> ) {
         print("updateSearchResultsComp")
+        print(result)
         
         DispatchQueue.main.async {
             self.updateSearchResults(result: result)
@@ -64,8 +66,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     }
     
     
-    func addSrFeed(feedUrl: String, refreshExisting: Bool){
-        self.feedAct.addFeedUrl(feedUrl: feedUrl, refreshExisting: true)
+    func addSrcFeed(feedUrl: String, searchKwd: String, refreshExisting: Bool) {
+        self.feedAct.addFeedUrl(feedUrl: feedUrl, feedApiKwd: searchKwd, refreshExisting: true)
         self.tableView.reloadInputViews()
         self.tableView.reloadData()
     }
@@ -81,7 +83,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         alert.addAction(
             UIAlertAction(
                 title: "Add", style: UIAlertAction.Style.default,
-                handler: { _ in self.addSrFeed(feedUrl: feedUrl!, refreshExisting: true) }
+                handler: { _ in self.addSrcFeed(feedUrl: feedUrl!, searchKwd: feedTitle, refreshExisting: true) }
             )
         )
         
@@ -114,7 +116,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             let itmTitle: String = keys[indexPath.item]
             let itmUrl: String = itemData["url"] as! String
             
-            if rlmFeeds.filter( {$0.url == itmUrl } ).count == 0 {
+            if rlmFeeds.filter( {$0.topicKwd == itmTitle } ).count == 0 {
                 showAddSearchFeedAlert(feedTitle: itmTitle, feedUrl: itmUrl, message: "")
             }
         }
@@ -139,7 +141,6 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
 //        let noResultsMsg = "Your search did not match any sources"
         
         let keys: Array  = Array(searchResults.keys)
-        
         if keys.count > 0 && !searchResults.keys.contains(searchStatus) {
             let itemData: Dictionary<String, AnyObject> = searchResults[keys[indexPath.item]] as! Dictionary<String, AnyObject>
 
@@ -189,14 +190,14 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
         
         if searchBar.text != nil {
             currentSearchTerm = searchBar.text!
+            print(currentSearchTerm)
         }
         
         if currentSearchTerm != "" {
             let payload = [
                 "search_term": currentSearchTerm,
-                "places_search": "places_search",
-                "lat":  String(rlmSession.first!.currentLat),
-                "long": String(rlmSession.first!.currentLng)
+                "lat": String(rlmSession.first!.currentLat),
+                "lng": String(rlmSession.first!.currentLng)
             ]
             
             NetworkTools().postReq(

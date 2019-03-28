@@ -425,7 +425,6 @@ class FeedMgmt {
                         )
                     }
                 } else {
-                    
                     print("Calling Feed API: " + fe.url)
                     NetworkTools().postReq(
                         completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
@@ -433,6 +432,7 @@ class FeedMgmt {
                         reqParams: [
                             "lat": String(rlmSession.first!.currentLat),
                             "lng": String(rlmSession.first!.currentLng),
+                            "kwd": String(fe.topicKwd),
                             "sid": (rlmSession.first?.sessionUUID)!
                         ]
                     )

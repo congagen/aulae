@@ -70,11 +70,11 @@ class HttpDownloader {
             if dataFromURL.write(to: destinationUrl!, atomically: true) {
                 completion(destinationUrl!.path, nil)
             } else {
-                let error = NSError(domain:"Error saving file", code:1001, userInfo:nil)
+                let error = NSError(domain:"Error saving file", code:1001, userInfo: nil)
                 completion(destinationUrl!.path, error)
             }
         } else {
-            let error = NSError(domain:"Error downloading file", code:1002, userInfo:nil)
+            let error = NSError(domain:"Error downloading file", code:1002, userInfo: nil)
             completion(destinationUrl!.path, error)
         }
     }
