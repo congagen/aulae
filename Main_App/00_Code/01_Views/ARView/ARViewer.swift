@@ -196,17 +196,22 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.position = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
 
         if contentObj.demo {
-            if !isInit {
-                let ori = sceneView.pointOfView?.orientation
-                let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
-                ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-                ctNode.position = SCNVector3(ctNode.position.x, 0, ctNode.position.z)
-            } else {
-                ctNode.position = SCNVector3(ctNode.position.x, 0, ctNode.position.z)
-            }
+            positionDemoContent(ctNode: ctNode)
         }
         
         sceneView.scene.rootNode.addChildNode(ctNode)
+    }
+    
+    
+    func positionDemoContent(ctNode: ContentNode) {
+        if !isInit {
+            let ori = sceneView.pointOfView?.orientation
+            let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+            ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+            ctNode.position = SCNVector3(ctNode.position.x, 0, ctNode.position.z)
+        } else {
+            ctNode.position = SCNVector3(ctNode.position.x, 0, ctNode.position.z)
+        }
     }
     
     

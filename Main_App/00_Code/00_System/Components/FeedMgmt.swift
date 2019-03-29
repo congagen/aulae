@@ -389,11 +389,11 @@ class FeedMgmt {
             print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.sourceUrl))
             
             if fe.active && !fe.deleted && shouldUpdate && fe.sourceUrl != "" {
-                let sourceUrl = URL(string: fe.sourceUrl)
-                let sourceExt = sourceUrl?.pathExtension.lowercased()
+                let sourceUrl      = URL(string: fe.sourceUrl)
+                let sourceExt      = sourceUrl?.pathExtension.lowercased()
                 
-                let fileName = fe.id + ".json"
-                let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                let fileName       = fe.id + ".json"
+                let documentsUrl   = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                 
                 if FileManager.default.fileExists(atPath: (destinationUrl?.absoluteString)!) {

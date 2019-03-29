@@ -263,6 +263,8 @@ class FeedsTVC: UITableViewController {
         }
     }
     
+    // layer.maskToBounds
+    // layer.cornerRadius
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let section = indexPath.section
@@ -285,7 +287,7 @@ class FeedsTVC: UITableViewController {
         }
         visitSourceLink.backgroundColor = UIColor.black
         
-        let deleteAction = UITableViewRowAction(style: .normal, title: "Delete") { (rowAction, indexPath) in
+        let deleteAction = UITableViewRowAction(style: .normal,    title: "Delete") { (rowAction, indexPath) in
             self.removeFeed(indexP: indexPath)
         }
         deleteAction.backgroundColor = UIColor.black
