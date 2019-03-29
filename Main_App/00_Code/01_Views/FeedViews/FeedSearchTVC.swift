@@ -67,7 +67,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     
     func addSrcFeed(feedUrl: String, searchKwd: String, refreshExisting: Bool) {
-        self.feedAct.addFeedUrl(feedUrl: feedUrl, feedApiKwd: searchKwd, refreshExisting: true)
+        self.feedAct.addNewSource(feedUrl: feedUrl, feedApiKwd: searchKwd, refreshExisting: true)
         self.tableView.reloadInputViews()
         self.tableView.reloadData()
     }

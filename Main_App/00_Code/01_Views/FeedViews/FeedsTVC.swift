@@ -30,7 +30,7 @@ class FeedsTVC: UITableViewController {
     let activeColor    = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 1)
     let nonActiveColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.2)
     
-    var textField: UITextField? = nil
+    var newSourceAlertTextField: UITextField? = nil
     var selected: RLM_Feed? = nil
     
     private let rCtrl = UIRefreshControl()
@@ -43,7 +43,9 @@ class FeedsTVC: UITableViewController {
     }
 
     @IBAction func addBtnAction(_ sender: UIBarButtonItem) {
-        addFeed()
+        showAddSourceAlert()
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
     }
     
     
@@ -51,18 +53,11 @@ class FeedsTVC: UITableViewController {
         return Int(arc4random_uniform(UInt32(upper - lower)))
     }
     
-    
-    func addFeed(){
-        showURLAlert(aMessage: rlmSession.first?.defaultFeedUrl)
-        
-        self.tableView.reloadData()
-        self.tableView.reloadInputViews()
-    }
-    
+
     
     func handleCancel(alertView: UIAlertAction!)
     {
-        print(self.textField?.text! ?? "")
+        print(self.newSourceAlertTextField?.text! ?? "")
     }
     
     
@@ -163,34 +158,72 @@ class FeedsTVC: UITableViewController {
     func urlConfigurationTextField(textField: UITextField!)
     {
         if let _ = textField {
-            self.textField = textField!
+            self.newSourceAlertTextField = textField!
             textField.text! = (rlmSession.first?.defaultFeedUrl)!
         }
     }
     
-    
     func handleEnterURL(alertView: UIAlertAction!) {
         
-        if textField?.text != nil {
-            feedAct.addFeedUrl(feedUrl: (self.textField?.text)!, feedApiKwd: "", refreshExisting: true)
+        if newSourceAlertTextField?.text != nil {
+            feedAct.addNewSource(feedUrl: (self.newSourceAlertTextField?.text)!, feedApiKwd: "", refreshExisting: true)
         }
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
-
     }
     
     
+    func handleEnterTopic(alertView: UIAlertAction!) {
+        
+        if newSourceAlertTextField?.text != nil {
+            feedAct.addNewSource(feedUrl: rlmSession.first!.defaultFeedUrl, feedApiKwd: (self.newSourceAlertTextField?.text)!, refreshExisting: true)
+        }
+        
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
+    }
+    
     func showURLAlert(aMessage: String?){
         let alert = UIAlertController(
-            title: "Add URL", message: "", preferredStyle: UIAlertController.Style.alert
+            title: "Source URL", message: nil, preferredStyle: UIAlertController.Style.alert
         )
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: handleCancel))
-        alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: handleEnterURL))
-        alert.view.tintColor = UIColor.black
         
+        alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: handleEnterURL))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: handleCancel))
+        
+        alert.view.tintColor = UIColor.black
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func showTopicAlert(aMessage: String?){
+        let alert = UIAlertController(
+            title: "Topic", message: nil, preferredStyle: UIAlertController.Style.alert
+        )
+        newSourceAlertTextField?.text = ""
+        alert.addTextField(configurationHandler: urlConfigurationTextField)
+        
+        alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: handleEnterTopic))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: handleCancel))
+        
+        alert.view.tintColor = UIColor.black
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func showAddSourceAlert() {
+        let alert = UIAlertController(
+            title: nil, message: nil, preferredStyle: UIAlertController.Style.alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Add Source", style: UIAlertAction.Style.default, handler:   { _ in self.showURLAlert(aMessage: "") } ))
+        alert.addAction(UIAlertAction(title: "Add Topic", style: UIAlertAction.Style.default, handler: { _ in self.showTopicAlert(aMessage: "") } ))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: handleCancel))
+        
+        alert.view.tintColor = UIColor.black
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -198,9 +231,9 @@ class FeedsTVC: UITableViewController {
     func renameConfigurationTextField(textField: UITextField!)
     {
         if let _ = textField {
-            self.textField = textField!
+            self.newSourceAlertTextField = textField!
             if selected != nil {
-                self.textField?.text = selected?.name
+                self.newSourceAlertTextField?.text = selected?.name
             }
         }
     }
@@ -239,7 +272,11 @@ class FeedsTVC: UITableViewController {
         }
         
         let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (rowAction, indexPath) in
-            self.shareURLAction(url: (self.selected?.url)!)
+            if self.selected?.topicKwd != "" {
+                self.shareURLAction(url: "Topic: " + (self.selected?.topicKwd)!)
+            } else {
+                self.shareURLAction(url: (self.selected?.url)!)
+            }
         }
         shareAction.backgroundColor = UIColor.black
         
@@ -295,7 +332,7 @@ class FeedsTVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
 
         rCtrl.tintColor = view.superview?.tintColor
         tableView.addSubview(rCtrl)

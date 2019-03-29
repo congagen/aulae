@@ -83,27 +83,17 @@
                             <outlet property="delegate" destination="4ZI-rx-Clo" id="AYB-z0-Mok"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Aulae" id="Nhx-W2-kfA">
-                        <leftBarButtonItems>
-                            <barButtonItem image="TabBarIcon_03" id="ayD-K4-8Qr">
-                                <connections>
-                                    <segue destination="CjR-vc-y1M" kind="show" id="pCq-sO-rbF"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem image="Spacer" id="ZXm-Bu-Bh5"/>
-                        </leftBarButtonItems>
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="IYM-9R-419">
-                                <connections>
-                                    <action selector="addBtnAction:" destination="4ZI-rx-Clo" id="9T1-zV-i3g"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="search" id="hIw-Fb-57X">
-                                <connections>
-                                    <segue destination="Z9j-U6-ciR" kind="show" id="1xY-Yh-QER"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                    <navigationItem key="navigationItem" title="Auale" id="Nhx-W2-kfA">
+                        <barButtonItem key="leftBarButtonItem" image="TabBarIcon_03" id="ayD-K4-8Qr">
+                            <connections>
+                                <segue destination="CjR-vc-y1M" kind="show" id="pCq-sO-rbF"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="IYM-9R-419">
+                            <connections>
+                                <action selector="addBtnAction:" destination="4ZI-rx-Clo" id="9T1-zV-i3g"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QzA-Tt-Q7F" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -189,7 +179,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Aulae" id="0Jn-a9-joB">
+                    <navigationItem key="navigationItem" title="Auale" id="0Jn-a9-joB">
                         <leftBarButtonItems>
                             <barButtonItem image="TabBarIcon_03" id="Bi4-h3-vTk">
                                 <connections>
@@ -247,7 +237,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Aulae" id="jef-En-32s">
+                    <navigationItem key="navigationItem" title="Auale" id="jef-En-32s">
                         <leftBarButtonItems>
                             <barButtonItem image="TabBarIcon_03" id="SvZ-XF-1hu">
                                 <connections>
@@ -828,6 +818,6 @@
         <image name="TabBarIcon_03" width="19" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="pCq-sO-rbF"/>
+        <segue reference="Q9S-6L-g2l"/>
     </inferredMetricsTieBreakers>
 </document>

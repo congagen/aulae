@@ -30,6 +30,6 @@ class RLM_Feed: Object {
     
     @objc dynamic var radius: Double = 1000000000
     
-    @objc dynamic var url: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev"
+    @objc dynamic var url: String = ""
     
 }

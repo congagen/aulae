@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // let sendingAppID = options[.sourceApplication]
         
+        let topicString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
         var urlString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
         
         if urlString.lowercased().contains("https") {
@@ -37,10 +38,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        let alertController = UIAlertController(title: "Add this source?", message: urlString, preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {_ in FeedActions().addFeedUrl(feedUrl: urlString, feedApiKwd: "", refreshExisting: true) } )
-        alertController.addAction(okAction)
+        let alertController = UIAlertController(title: "Add this source?", message: topicString, preferredStyle: .alert)
+        
+        let urlAction    = UIAlertAction(
+            title: "URL", style: UIAlertAction.Style.default,
+            handler: {_ in FeedActions().addNewSource(feedUrl: urlString, feedApiKwd: "", refreshExisting: true) } )
+        
+        let topicAction  = UIAlertAction(
+            title: "Topic", style: UIAlertAction.Style.default,
+            handler: {_ in FeedActions().addNewSource(
+                feedUrl: "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test",
+                feedApiKwd: topicString,
+                refreshExisting: true)
+            }
+        )
+        
+        let cancelAction = UIAlertAction(
+            title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil
+        )
+        
+        alertController.addAction(urlAction)
+        alertController.addAction(topicAction)
         alertController.addAction(cancelAction)
         alertController.view.tintColor = UIColor.black
         

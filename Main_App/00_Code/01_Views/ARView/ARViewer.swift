@@ -347,7 +347,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             trackingState = 2
             
         case .normal:
-            message = "LOADING"
+            message = "UPDATING"
             trackingState = 0
             
         case .limited(.excessiveMotion):
@@ -355,7 +355,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             trackingState = 0
             
         case .limited(.insufficientFeatures):
-            message = "LOADING"
+            message = "UPDATING"
             trackingState = 1
             
         case .limited(.initializing):
@@ -469,7 +469,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad")
-        // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
 
         loadingView.isHidden = false
 

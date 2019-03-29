@@ -3,6 +3,7 @@ import Foundation
 
 class RLM_Obj: Object {
     
+    @objc dynamic var title:       String = ""
     @objc dynamic var name:        String = ""
     @objc dynamic var feedId:      String = ""
     @objc dynamic var uuid:        String = ""

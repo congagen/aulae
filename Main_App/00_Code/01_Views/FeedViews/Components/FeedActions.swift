@@ -33,7 +33,7 @@ class FeedActions {
     
     
     
-    func addFeedUrl(feedUrl: String, feedApiKwd: String, refreshExisting: Bool) {
+    func addNewSource(feedUrl: String, feedApiKwd: String, refreshExisting: Bool) {
         print("addFeed")
         let newFeed = RLM_Feed()
 
@@ -59,7 +59,6 @@ class FeedActions {
                 print("Error: \(error)")
             }
         }
-            
     }
     
     

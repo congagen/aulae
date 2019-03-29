@@ -348,7 +348,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         lpgr.delegate = self
         self.mapView.addGestureRecognizer(lpgr)
         
-        // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
     }
 
     
