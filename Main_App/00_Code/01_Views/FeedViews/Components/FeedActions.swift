@@ -38,17 +38,17 @@ class FeedActions {
         let newFeed = RLM_Feed()
 
         if refreshExisting {
-            if rlmFeeds.filter( {$0.url == feedUrl} ).count > 0 {
-                for f in rlmFeeds.filter({$0.url == feedUrl}) {
+            if rlmFeeds.filter( {$0.sourceUrl == feedUrl && $0.topicKwd == feedApiKwd} ).count > 0 {
+                for f in rlmFeeds.filter({$0.sourceUrl == feedUrl && $0.topicKwd == feedApiKwd}) {
                     deleteFeed(feedId: f.id, deleteFeedObjects: true, deleteFeed: false)
                 }
             }
         }
         
-        if rlmFeeds.filter({ !$0.deleted }).filter({$0.url == feedUrl }).count == 0 {
+        if rlmFeeds.filter({ !$0.deleted }).filter({$0.sourceUrl == feedUrl && $0.topicKwd == feedApiKwd}).count == 0 {
             do {
                 try realm.write {
-                    newFeed.url  = feedUrl
+                    newFeed.sourceUrl  = feedUrl
                     newFeed.id   = UUID().uuidString
                     newFeed.name = "Updating..."
                     newFeed.topicKwd = feedApiKwd

@@ -99,7 +99,7 @@ class FeedsTVC: UITableViewController {
         }
         
         if feed.info == "" {
-            cell.detailTextLabel?.text = String(feed.url)
+            cell.detailTextLabel?.text = String(feed.sourceUrl)
         } else {
             cell.detailTextLabel?.text = feed.info
         }
@@ -107,7 +107,7 @@ class FeedsTVC: UITableViewController {
         cell.restorationIdentifier = feed.id
         cell.backgroundColor = UIColor.clear
         cell.contentView.backgroundColor = UIColor.clear
-        cell.accessibilityHint = String(feed.name) + " Source: " + String(feed.url)
+        cell.accessibilityHint = String(feed.name) + " Source: " + String(feed.sourceUrl)
         cell.imageView?.image = UIImage(named: placeholderFeedThumbImage)
         
         if feed.thumbImagePath != "" {
@@ -275,13 +275,13 @@ class FeedsTVC: UITableViewController {
             if self.selected?.topicKwd != "" {
                 self.shareURLAction(url: "Topic: " + (self.selected?.topicKwd)!)
             } else {
-                self.shareURLAction(url: (self.selected?.url)!)
+                self.shareURLAction(url: (self.selected?.sourceUrl)!)
             }
         }
         shareAction.backgroundColor = UIColor.black
         
         let visitSourceLink = UITableViewRowAction(style: .normal, title: "Edit") { (rowAction, indexPath) in
-             self.openUrl(scheme: (self.selected?.url)!)
+             self.openUrl(scheme: (self.selected?.sourceUrl)!)
         }
         visitSourceLink.backgroundColor = UIColor.black
         

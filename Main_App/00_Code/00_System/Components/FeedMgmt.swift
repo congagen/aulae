@@ -271,7 +271,7 @@ class FeedMgmt {
             } catch {
                 print("Error: \(error)")
             }
-            print("Feed Validation Error: " + String(feedDbItem.url))
+            print("Feed Validation Error: " + String(feedDbItem.sourceUrl))
         }
     }
     
@@ -378,7 +378,7 @@ class FeedMgmt {
         for fe in rlmFeeds {
             print("Updating Feed: " + fe.name)
             print("Feed ID:       " + String(fe.id))
-            print("Feed URL:      " + fe.url)
+            print("Feed URL:      " + fe.sourceUrl)
             
             if checkTimeSinceUpdate {
                 let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
@@ -386,10 +386,10 @@ class FeedMgmt {
                 shouldUpdate = Int(timeSinceUpdate) > updateInterval
             }
             
-            print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.url))
+            print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.sourceUrl))
             
-            if fe.active && !fe.deleted && shouldUpdate && fe.url != "" {
-                let sourceUrl = URL(string: fe.url)
+            if fe.active && !fe.deleted && shouldUpdate && fe.sourceUrl != "" {
+                let sourceUrl = URL(string: fe.sourceUrl)
                 let sourceExt = sourceUrl?.pathExtension.lowercased()
                 
                 let fileName = fe.id + ".json"
@@ -417,18 +417,18 @@ class FeedMgmt {
                 print("sType: " + sType)
                 
                 if sType == "json" {
-                    if let URL = URL(string: fe.url) {
-                        print("Downloading Feed JSON: " + fe.url)
+                    if let URL = URL(string: fe.sourceUrl) {
+                        print("Downloading Feed JSON: " + fe.sourceUrl)
                         let _ = httpDl.loadFileAsync(
                             removeExisting: true, url: URL as URL, destinationUrl: destinationUrl!,
                             completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl!, feedDbItem: fe) } }
                         )
                     }
                 } else {
-                    print("Calling Feed API: " + fe.url)
+                    print("Calling Feed API: " + fe.sourceUrl)
                     NetworkTools().postReq(
                         completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
-                        apiHeaderFeild: apiHeaderFeild, apiUrl: fe.url,
+                        apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
                         reqParams: [
                             "lat": String(rlmSession.first!.currentLat),
                             "lng": String(rlmSession.first!.currentLng),

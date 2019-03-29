@@ -75,8 +75,8 @@ extension ARViewer {
             }
             
             if selFeeds.count > 0 {
-                if selFeeds.first?.url != "" && selFeeds.first?.topicKwd == "" {
-                    alert.addAction(UIAlertAction(title: "Share Source", style: UIAlertAction.Style.default,  handler: {_ in self.shareURLAction(url: (selFeeds.first?.url)!)      }))
+                if selFeeds.first?.sourceUrl != "" && selFeeds.first?.topicKwd == "" {
+                    alert.addAction(UIAlertAction(title: "Share Source", style: UIAlertAction.Style.default,  handler: {_ in self.shareURLAction(url: (selFeeds.first?.sourceUrl)!)      }))
                 } else {
                     alert.addAction(UIAlertAction(title: "Share Topic",  style: UIAlertAction.Style.default,  handler: {_ in self.shareURLAction(url: (selFeeds.first?.topicKwd)!) }))
                 }

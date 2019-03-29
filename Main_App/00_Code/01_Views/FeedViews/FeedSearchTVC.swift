@@ -127,7 +127,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
 
     
     @objc func asyncUrlSearch(cell: UITableViewCell, urlId: String) {
-        if rlmFeeds.filter( {$0.url == urlId} ).count > 0 {
+        if rlmFeeds.filter( {$0.sourceUrl == urlId} ).count > 0 {
             cell.textLabel?.textColor = activeColor
         } else {
             cell.textLabel?.textColor = nonActiveColor
