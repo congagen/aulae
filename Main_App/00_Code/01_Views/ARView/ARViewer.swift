@@ -124,58 +124,58 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
   
     
-    func addContentToScene(contentObj: RLM_Obj, fPath: String, scaleFactor: Double, localDemoContent: Bool) {
-        print("AddContentToScene: " + String(contentObj.uuid))
-        print("Adding: " + contentObj.type.lowercased() + ": " + fPath)
+    func addContentToScene(objData: RLM_Obj, fPath: String, scaleFactor: Double, localDemoContent: Bool) {
+        print("AddContentToScene: " + String(objData.uuid))
+        print("Adding: " + objData.type.lowercased() + ": " + fPath)
 
         let rawDeviceGpsCCL   = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
-        let rawObjectGpsCCL   = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
+        let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var contentPos        = SCNVector3( contentObj.x_pos, contentObj.y_pos, contentObj.z_pos )
+        var contentPos        = SCNVector3( objData.x_pos, objData.y_pos, objData.z_pos )
         
         print(contentPos)
         
-        if contentObj.world_position {
-            contentPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: contentObj, scaleFactor: scaleFactor)
+        if objData.world_position {
+            contentPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
         }
         
-        var nodeSize: CGFloat = CGFloat(1 * contentObj.scale)
-        if (rlmSession.first?.distanceScale)! && contentObj.world_scale {
+        var nodeSize: CGFloat = CGFloat(1 * objData.scale)
+        if (rlmSession.first?.distanceScale)! && objData.world_scale {
             nodeSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
         }
         
-        let ctNode = ContentNode(id: contentObj.uuid, title: contentObj.name, feedId: contentObj.feedId, location: rawObjectGpsCCL)
+        let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, location: rawObjectGpsCCL)
         
-        if fPath != "" && contentObj.type.lowercased() != "text" {
+        if fPath != "" && objData.type.lowercased() != "text" {
             
-            if contentObj.type.lowercased() == "marker" {
-                ctNode.addSphere(radius: 1, and: UIColor(hexColor: contentObj.hex_color))
+            if objData.type.lowercased() == "marker" {
+                ctNode.addSphere(radius: 1, and: UIColor(hexColor: objData.hex_color))
             }
-            if contentObj.type.lowercased() == "obj" {
-                ctNode.addObj(fPath: fPath, contentObj: contentObj)
+            if objData.type.lowercased() == "obj" {
+                ctNode.addObj(fPath: fPath, contentObj: objData)
             }
-            if contentObj.type.lowercased() == "usdz" {
-                ctNode.addUSDZ(fPath: fPath, contentObj: contentObj)
+            if objData.type.lowercased() == "usdz" {
+                ctNode.addUSDZ(fPath: fPath, contentObj: objData)
             }
-            if contentObj.type.lowercased() == "image" {
-                ctNode.addImage(fPath: fPath, contentObj: contentObj, demo: localDemoContent)
+            if objData.type.lowercased() == "image" {
+                ctNode.addImage(fPath: fPath, contentObj: objData, demo: localDemoContent)
             }
-            if contentObj.type.lowercased() == "gif" {
-                ctNode.addGif(fPath: fPath, contentObj: contentObj)
+            if objData.type.lowercased() == "gif" {
+                ctNode.addGif(fPath: fPath, contentObj: objData)
             }
-            if contentObj.type.lowercased() == "audio" {
+            if objData.type.lowercased() == "audio" {
                 ctNode.removeAllAudioPlayers()
 
                 if (rlmSession.first?.showPlaceholders)! && !(rlmSession.first?.muteAudio)!{
-                    ctNode.addSphere(radius: 0.05 + (nodeSize * 0.01), and: UIColor(hexColor: contentObj.hex_color))
+                    ctNode.addSphere(radius: 0.05 + (nodeSize * 0.01), and: UIColor(hexColor: objData.hex_color))
                 }
-                addAudio(contentObj: contentObj, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize)
+                addAudio(contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize)
             }
         } else {
-            if contentObj.type.lowercased() == "text" {
+            if objData.type.lowercased() == "text" {
                 ctNode.addText(
-                    contentObj: contentObj, objText: contentObj.text, extrusion: CGFloat(contentObj.scale * 0.1),
-                    fontSize: CGFloat(contentObj.scale), color: UIColor(hexColor: contentObj.hex_color)
+                    contentObj: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.1),
+                    fontSize: CGFloat(objData.scale), color: UIColor(hexColor: objData.hex_color)
                 )
             } else {
                 if (rlmSession.first?.showPlaceholders)! {
@@ -184,34 +184,53 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
         
-        if contentObj.billboard {
+        if objData.billboard {
             let constraint = SCNBillboardConstraint()
             constraint.freeAxes = [.Y]
             ctNode.constraints = [constraint]
         }
         
         ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
-        ctNode.tagComponents(nodeTag: contentObj.uuid)
-        ctNode.name = contentObj.uuid
+        ctNode.tagComponents(nodeTag: objData.uuid)
+        ctNode.name = objData.uuid
         ctNode.position = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
 
-        if contentObj.demo {
-            positionDemoContent(ctNode: ctNode)
+        if objData.demo {
+            print("ISDEMO")
+            positionDemoNodes(ctNode: ctNode, objData: objData)
         }
         
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
     
     
-    func positionDemoContent(ctNode: ContentNode) {
+    func positionDemoNodes(ctNode: ContentNode, objData: RLM_Obj) {
+        print("positionDemoNodes")
+
         if !isInit {
             let ori = sceneView.pointOfView?.orientation
             let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
             ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-            ctNode.position = SCNVector3(ctNode.position.x, 0, ctNode.position.z)
-        } else {
-            ctNode.position = SCNVector3(ctNode.position.x, 0, ctNode.position.z)
         }
+        
+        print(rlmSession.first!.currentLat)
+        print(rlmSession.first!.currentLng)
+        print(rlmSession.first!.currentAlt)
+        
+        do {
+            try realm.write {
+                objData.lat = rlmSession.first!.currentLat
+                objData.lng = rlmSession.first!.currentLng
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    
+        
+        ctNode.position = SCNVector3(
+            ctNode.position.x, 0, ctNode.position.z
+        )
+        
     }
     
     
@@ -255,7 +274,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                             print("FileManager.default.fileExists")
                             addContentToScene(
-                                contentObj: o, fPath: (destinationUrl?.path)!,
+                                objData: o, fPath: (destinationUrl?.path)!,
                                 scaleFactor: (rlmSession.first?.scaleFactor)!,
                                 localDemoContent: false
                             )
@@ -264,7 +283,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                                 if UIImage(named: o.filePath) != nil {
                                     print("localDemoContent")
                                     addContentToScene(
-                                        contentObj: o, fPath: o.filePath,
+                                        objData: o, fPath: o.filePath,
                                         scaleFactor: (rlmSession.first?.scaleFactor)!,
                                         localDemoContent: true
                                     )
@@ -274,7 +293,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         }
                     } else {
                         if (o.type.lowercased() == "text") {
-                            addContentToScene(contentObj: o, fPath:"", scaleFactor: (rlmSession.first?.scaleFactor)!, localDemoContent: false )
+                            addContentToScene(objData: o, fPath:"", scaleFactor: (rlmSession.first?.scaleFactor)!, localDemoContent: false )
                         }
                     }
                 }

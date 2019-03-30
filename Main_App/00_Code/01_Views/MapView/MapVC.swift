@@ -71,10 +71,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         let current = mapView!.userLocation.location
         let d = current?.distance(from: currentTouchLocation)
         
-        if d != nil {
-            updateSearchRadiusDB(rDistance: d!)
-    
-        }
+        if d != nil { updateSearchRadiusDB(rDistance: d!) }
 
     }
     
@@ -122,15 +119,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         }
         
         updateMapSearchRadius()
-    }
-    
-    
-    func urlConfigurationTextField(textField: UITextField!)
-    {
-        if let _ = textField {
-            self.textField = textField!
-            textField.text! = (rlmSession.first?.defaultFeedUrl)!
-        }
     }
     
     
@@ -259,31 +247,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
         if let o: MapAno = annotation as? MapAno {
             let fo = feedObjects.filter( {$0.uuid == o.id } )
-            
-            if fo.count > 0 {
-                //pinView?.addSubview(pinIcon)
-                
-                if fo.first?.type == "image" {
-                    pinView?.image = UIImage(named: "pin_image_ds")
-                }
-                
-                if fo.first?.type == "usdz" {
-                    pinView?.image = UIImage(named: "pin_model_ds")
-                }
-                
-                if fo.first?.type == "gif" {
-                    pinView?.image = UIImage(named: "pin_gif_ds")
-                }
-                
-                if fo.first?.type == "audio" {
-                    pinView?.image = UIImage(named: "pin_audio_ds")
-                }
-                
-                if fo.first?.type == "text" {
-                    pinView?.image = UIImage(named: "pin_text_ds")
-                }
-                
-            }
+            print(fo.first?.hex_color)
         }
         
         updateMapSearchRadius()

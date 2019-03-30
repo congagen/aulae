@@ -159,14 +159,15 @@ class FeedsTVC: UITableViewController {
     {
         if let _ = textField {
             self.newSourceAlertTextField = textField!
-            textField.text! = (rlmSession.first?.defaultFeedUrl)!
+            textField.text! = ""
         }
     }
     
     func handleEnterURL(alertView: UIAlertAction!) {
         
         if newSourceAlertTextField?.text != nil {
-            feedAct.addNewSource(feedUrl: (self.newSourceAlertTextField?.text)!, feedApiKwd: "", refreshExisting: true)
+            feedAct.addNewSource(
+                feedUrl: (self.newSourceAlertTextField?.text)!, feedApiKwd: "", refreshExisting: true)
         }
         
         self.tableView.reloadData()
@@ -219,9 +220,9 @@ class FeedsTVC: UITableViewController {
             title: nil, message: nil, preferredStyle: UIAlertController.Style.alert
         )
         
-        alert.addAction(UIAlertAction(title: "Add Source", style: UIAlertAction.Style.default, handler:   { _ in self.showURLAlert(aMessage: "") } ))
-        alert.addAction(UIAlertAction(title: "Add Topic", style: UIAlertAction.Style.default, handler: { _ in self.showTopicAlert(aMessage: "") } ))
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: handleCancel))
+        alert.addAction(UIAlertAction(title: "Add Source", style: UIAlertAction.Style.default, handler: { _ in self.showURLAlert(aMessage: "") } ))
+        alert.addAction(UIAlertAction(title: "Add Topic",  style: UIAlertAction.Style.default, handler: { _ in self.showTopicAlert(aMessage: "") } ))
+        alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.cancel,  handler: handleCancel))
         
         alert.view.tintColor = UIColor.black
         self.present(alert, animated: true, completion: nil)

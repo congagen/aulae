@@ -18,8 +18,9 @@ extension MainVC {
         
         demoFeed.sourceUrl = ""
         demoFeed.id   = "User Guide"
-        demoFeed.name = "Demo Feed"
-        
+        demoFeed.name = "Getting Started"
+        demoFeed.info = "Quick Start Instructions"
+
         let itemCount = 4
         let distance: Double = 1.2
         

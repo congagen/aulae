@@ -27,7 +27,7 @@ class FeedActions {
     {
         if let _ = textField {
             self.textField = textField!
-            textField.text! = (rlmSession.first?.defaultFeedUrl)!
+            textField.text! = ""
         }
     }
     

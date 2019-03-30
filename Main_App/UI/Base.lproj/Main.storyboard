@@ -221,11 +221,11 @@
             <objects>
                 <viewController title="Map" extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="shz-14-nLG" customClass="MapVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="raj-ma-XdT">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="724"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zU5-ko-yXY">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="641"/>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -237,6 +237,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="Auale" id="jef-En-32s">
                         <leftBarButtonItems>
                             <barButtonItem image="TabBarIcon_03" id="SvZ-XF-1hu">
@@ -648,7 +649,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aqq-r3-8tt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="110" y="2520"/>
+            <point key="canvasLocation" x="908" y="2520"/>
         </scene>
         <!--Aulae-->
         <scene sceneID="1XM-Tk-eYm">
@@ -809,7 +810,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Logo.png" width="1000" height="1000"/>
+        <image name="Logo.png" width="1001" height="1001"/>
         <image name="QR" width="22" height="22"/>
         <image name="Spacer" width="20" height="20"/>
         <image name="TabBarIcon_00" width="24" height="24"/>
@@ -818,6 +819,6 @@
         <image name="TabBarIcon_03" width="19" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Q9S-6L-g2l"/>
+        <segue reference="aUW-k3-e0B"/>
     </inferredMetricsTieBreakers>
 </document>
