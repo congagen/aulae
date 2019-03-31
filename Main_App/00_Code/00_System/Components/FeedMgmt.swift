@@ -191,7 +191,7 @@ class FeedMgmt {
                         "hoover":           valueIfPresent(dict: itemSpec, key: "hoover",    placeHolderValue: 0.0),
 
                         "scale":            valueIfPresent(dict: itemSpec, key: "scale",     placeHolderValue: 1.0),
-                        "world_scale":      valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: true),
+                        "world_scale":      valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: false),
                         "world_position":   valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
 
                         "lat":              valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: 80.0),

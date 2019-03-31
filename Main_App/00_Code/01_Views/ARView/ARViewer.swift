@@ -196,7 +196,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.position = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
 
         if objData.demo {
-            print("ISDEMO")
             positionDemoNodes(ctNode: ctNode, objData: objData)
         }
         
@@ -212,10 +211,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
             ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
         }
-        
-        print(rlmSession.first!.currentLat)
-        print(rlmSession.first!.currentLng)
-        print(rlmSession.first!.currentAlt)
         
         do {
             try realm.write {
@@ -343,6 +338,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @objc func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
+        
         guard gestureRecognizer.state != .ended else { return }
         
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
@@ -362,6 +358,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        
         var message: String = ""
         trackingState = 2
         

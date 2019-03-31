@@ -46,21 +46,22 @@ extension MainVC {
                     
                     if i == 2 {
                         o.filePath    = "view.png"
-                        o.x_pos = 0
-                        o.z_pos = distance
+                        o.x_pos = distance
+                        o.z_pos = -distance
                     }
                     
                     if i == 3 {
                         o.filePath    = "lib.png"
                         o.x_pos = -distance
-                        o.z_pos = 0
+                        o.z_pos = -distance
                     }
                     
-                    if i == 4 {
-                        o.filePath    = "map.png"
-                        o.x_pos = distance
-                        o.z_pos = 0
-                    }
+//                    if i == 4 {
+//                        o.filePath    = "map.png"
+//                        o.x_pos = 0
+//                        o.y_pos = distance
+//                        o.z_pos = -distance
+//                    }
                     
                     o.style       = 0
                     o.type        = "image"
