@@ -124,7 +124,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
   
     
-    func addContentToScene(objData: RLM_Obj, fPath: String, scaleFactor: Double, localDemoContent: Bool) {
+    func inserSourceObject(objData: RLM_Obj, fPath: String, scaleFactor: Double, localDemoContent: Bool) {
         print("AddContentToScene: " + String(objData.uuid))
         print("Adding: " + objData.type.lowercased() + ": " + fPath)
 
@@ -132,14 +132,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         var contentPos        = SCNVector3( objData.x_pos, objData.y_pos, objData.z_pos )
-        
+        var nodeSize: CGFloat = CGFloat(objData.scale)
+
         print(contentPos)
         
         if objData.world_position {
             contentPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
         }
         
-        var nodeSize: CGFloat = CGFloat(1 * objData.scale)
         if (rlmSession.first?.distanceScale)! && objData.world_scale {
             nodeSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
         }
@@ -148,8 +148,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if fPath != "" && objData.type.lowercased() != "text" {
             
+            if (localDemoContent) {
+                ctNode.addDemoContent(fPath: fPath, contentObj: objData)
+            }
             if objData.type.lowercased() == "marker" {
-                ctNode.addSphere(radius: 1, and: UIColor(hexColor: objData.hex_color))
+                let objSources = rlmFeeds.filter({$0.id == objData.feedId})
+                
+                if objSources.count > 0 {
+                    if objSources.first?.customMarkerUrl != "" || objData.contentUrl != ""{
+                        ctNode.addImage(fPath: fPath, contentObj: objData)
+                    } else {
+                        ctNode.addSphere(radius: 1, and: UIColor(hexColor: objData.hex_color))
+                    }
+                }
             }
             if objData.type.lowercased() == "obj" {
                 ctNode.addObj(fPath: fPath, contentObj: objData)
@@ -158,7 +169,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addUSDZ(fPath: fPath, contentObj: objData)
             }
             if objData.type.lowercased() == "image" {
-                ctNode.addImage(fPath: fPath, contentObj: objData, demo: localDemoContent)
+                ctNode.addImage(fPath: fPath, contentObj: objData)
             }
             if objData.type.lowercased() == "gif" {
                 ctNode.addGif(fPath: fPath, contentObj: objData)
@@ -268,7 +279,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         
                         if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                             print("FileManager.default.fileExists")
-                            addContentToScene(
+                            inserSourceObject(
                                 objData: o, fPath: (destinationUrl?.path)!,
                                 scaleFactor: (rlmSession.first?.scaleFactor)!,
                                 localDemoContent: false
@@ -277,7 +288,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                             if o.type == "image" {
                                 if UIImage(named: o.filePath) != nil {
                                     print("localDemoContent")
-                                    addContentToScene(
+                                    inserSourceObject(
                                         objData: o, fPath: o.filePath,
                                         scaleFactor: (rlmSession.first?.scaleFactor)!,
                                         localDemoContent: true
@@ -288,7 +299,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         }
                     } else {
                         if (o.type.lowercased() == "text") {
-                            addContentToScene(objData: o, fPath:"", scaleFactor: (rlmSession.first?.scaleFactor)!, localDemoContent: false )
+                            inserSourceObject(objData: o, fPath:"", scaleFactor: (rlmSession.first?.scaleFactor)!, localDemoContent: false )
                         }
                     }
                 }

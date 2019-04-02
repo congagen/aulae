@@ -19,7 +19,7 @@ class FeedMgmt {
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
-    let validFeedContentObjectKeys = ["name", "id", "type"]
+    let validFeedContentObjectKeys = ["name", "type"]
     
     var apiHeaderValue = ""
     var apiHeaderFeild = ""
@@ -191,7 +191,7 @@ class FeedMgmt {
                         "hoover":           valueIfPresent(dict: itemSpec, key: "hoover",    placeHolderValue: 0.0),
 
                         "scale":            valueIfPresent(dict: itemSpec, key: "scale",     placeHolderValue: 1.0),
-                        "world_scale":      valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: false),
+                        "world_scale":      valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: true),
                         "world_position":   valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
 
                         "lat":              valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: 80.0),
@@ -215,11 +215,10 @@ class FeedMgmt {
 
                         storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, feedId: feedId)
                         
-                        if let URL = URL(string: contentUrl) {
+                        if let cUrl = URL(string: contentUrl) {
                             let _ = httpDl.loadFileAsync(
-                                removeExisting:  !isInstance,
-                                url: URL as URL, destinationUrl: destinationUrl!,
-                                completion: {}
+                                removeExisting:  !isInstance, url: cUrl as URL,
+                                destinationUrl: destinationUrl!, completion: {}
                             )
                         }
                        

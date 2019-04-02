@@ -7,7 +7,7 @@ class RLM_Obj: Object {
     @objc dynamic var name:        String = ""
     @objc dynamic var feedId:      String = ""
     @objc dynamic var uuid:        String = ""
-    @objc dynamic var version:     Int = 0
+//    @objc dynamic var version:     Int = 0
     
     @objc dynamic var type:        String = ""
     @objc dynamic var contentUrl:  String = ""
@@ -39,7 +39,7 @@ class RLM_Obj: Object {
     @objc dynamic var radius:      Double = 0
     @objc dynamic var scale:       Double = 1.0
     @objc dynamic var world_position: Bool = true
-    @objc dynamic var world_scale: Bool = false
+    @objc dynamic var world_scale: Bool = true
     @objc dynamic var billboard:   Bool   = true
 
     @objc dynamic var lat:         Double = 0

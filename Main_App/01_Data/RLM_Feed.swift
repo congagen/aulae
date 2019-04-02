@@ -11,7 +11,8 @@ class RLM_Feed: Object {
     
     @objc dynamic var thumbImagePath: String = ""
     @objc dynamic var thumbImageUrl: String = ""
-    
+    @objc dynamic var customMarkerUrl: String = ""
+
     @objc dynamic var info: String = ""
     @objc dynamic var updatedUtx: Int = 0
     
@@ -29,7 +30,6 @@ class RLM_Feed: Object {
     @objc dynamic var lng: Double = 0
     
     @objc dynamic var radius: Double = 1000000000
-    
     @objc dynamic var sourceUrl: String = ""
     
 }

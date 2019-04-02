@@ -143,7 +143,6 @@ class ContentNode: SCNNode {
     
     
     func addText(contentObj: RLM_Obj, objText: String, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
-    
         var nText = "?"
         
         if objText != "" {
@@ -236,33 +235,37 @@ class ContentNode: SCNNode {
             }
         }
     }
-
     
-    func addImage(fPath: String, contentObj: RLM_Obj, demo: Bool) {
+    
+    func addDemoContent(fPath: String, contentObj: RLM_Obj) {
         let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
         
-        if demo {
-            if let img = UIImage(named: fPath) {
-                node.physicsBody? = .static()
-                node.name = contentObj.name
-                node.geometry?.materials.first?.diffuse.contents = UIColor.clear
-                node.geometry?.materials.first?.diffuse.contents = img
-                node.geometry?.materials.first?.isDoubleSided = true
-                
-                addChildNode(node)
-            }
-        } else {
-            if let img = UIImage(contentsOfFile: fPath) {
-                node.physicsBody? = .static()
-                node.name = contentObj.name
-                node.geometry?.materials.first?.diffuse.contents = UIColor.clear
-                node.geometry?.materials.first?.diffuse.contents = img
-                node.geometry?.materials.first?.isDoubleSided = true
-            }
+        if let img = UIImage(named: fPath) {
+            node.physicsBody? = .static()
+            node.name = contentObj.name
+            node.geometry?.materials.first?.diffuse.contents = UIColor.clear
+            node.geometry?.materials.first?.diffuse.contents = img
+            node.geometry?.materials.first?.isDoubleSided = true
+            
+            addChildNode(node)
         }
         
         addChildNode(node)
+    }
 
+    
+    func addImage(fPath: String, contentObj: RLM_Obj) {
+        let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
+        
+        if let img = UIImage(contentsOfFile: fPath) {
+            node.physicsBody? = .static()
+            node.name = contentObj.name
+            node.geometry?.materials.first?.diffuse.contents = UIColor.clear
+            node.geometry?.materials.first?.diffuse.contents = img
+            node.geometry?.materials.first?.isDoubleSided = true
+        }
+        
+        addChildNode(node)
     }
     
     

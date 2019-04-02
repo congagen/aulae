@@ -264,8 +264,35 @@ class FeedsTVC: UITableViewController {
         }
     }
     
-    // layer.maskToBounds
-    // layer.cornerRadius
+    
+    func handleEditMarketImage(feed: RLM_Feed) {
+        
+        do {
+            try realm.write {
+                if newSourceAlertTextField?.text != nil {
+                    feed.customMarkerUrl = (self.newSourceAlertTextField?.text)!
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    
+    func editMarketAction(topicSource: RLM_Feed) {
+        
+        let alert = UIAlertController(
+            title: "Marker URL", message: nil, preferredStyle: UIAlertController.Style.alert
+        )
+        
+        alert.addTextField(configurationHandler: urlConfigurationTextField)
+        alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: { _ in self.handleEditMarketImage(feed: topicSource) } ))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,  handler: nil ))
+        
+        alert.view.tintColor = UIColor.black
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let section = indexPath.section
@@ -276,7 +303,7 @@ class FeedsTVC: UITableViewController {
         
         let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (rowAction, indexPath) in
             if self.selected?.topicKwd != "" {
-                self.shareURLAction(url: "Topic: " + (self.selected?.topicKwd)!)
+                self.shareURLAction(url: (self.selected?.sourceUrl)!)
             } else {
                 self.shareURLAction(url: (self.selected?.sourceUrl)!)
             }
@@ -288,12 +315,21 @@ class FeedsTVC: UITableViewController {
         }
         visitSourceLink.backgroundColor = UIColor.black
         
-        let deleteAction = UITableViewRowAction(style: .normal,    title: "Delete") { (rowAction, indexPath) in
+        let deleteAction = UITableViewRowAction(style: .normal, title: "Delete") { (rowAction, indexPath) in
             self.removeFeed(indexP: indexPath)
         }
         deleteAction.backgroundColor = UIColor.black
         
-        return [shareAction, deleteAction]
+        let editMarkerAction = UITableViewRowAction(style: .normal, title: "Marker") { (rowAction, indexPath) in
+            self.editMarketAction(topicSource: self.selected!)
+        }
+        editMarkerAction.backgroundColor = UIColor.black
+        
+        if (self.selected?.topicKwd.count)! > 2 {
+            return [shareAction, deleteAction, editMarkerAction]
+        } else {
+            return [shareAction, deleteAction]
+        }
     }
 
     

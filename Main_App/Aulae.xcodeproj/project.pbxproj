@@ -322,8 +322,8 @@
 				3177251720B03AD4009FA8B1 /* Sources */,
 				3177251920B03AD4009FA8B1 /* Resources */,
 				3177251820B03AD4009FA8B1 /* Frameworks */,
-				FA6BA7CD22315EE700DB3F2A /* ShellScript */,
 				FADD4685224B6D190096DF5A /* Embed Frameworks */,
+				FA6BA7CD22315EE700DB3F2A /* ShellScript */,
 			);
 			buildRules = (
 			);

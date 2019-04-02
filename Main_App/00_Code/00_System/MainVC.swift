@@ -132,8 +132,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             let sess = RLM_Session()
             do {
                 try realm.write {
-                    sess.sessionUUID = UUID().uuidString
                     self.realm.add(sess)
+                    rlmSession.first!.sessionUUID = UUID().uuidString
                 }
             } catch {
                 print("Error: \(error)")
@@ -150,6 +150,15 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             mainUpdate()
             initLocation()
         }
+        
+        do {
+            try realm.write {
+                rlmSession.first!.sessionUUID = UUID().uuidString
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
     }
     
     
