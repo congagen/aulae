@@ -146,22 +146,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, location: rawObjectGpsCCL)
         
-        if fPath != "" && objData.type.lowercased() != "text" {
+        if fPath != "" && objData.type.lowercased() != "text" &&  objData.type.lowercased() != "marker" {
             
             if (localDemoContent) {
                 ctNode.addDemoContent(fPath: fPath, contentObj: objData)
             }
-            if objData.type.lowercased() == "marker" {
-                let objSources = rlmFeeds.filter({$0.id == objData.feedId})
-                
-                if objSources.count > 0 {
-                    if objSources.first?.customMarkerUrl != "" || objData.contentUrl != ""{
-                        ctNode.addImage(fPath: fPath, contentObj: objData)
-                    } else {
-                        ctNode.addSphere(radius: 1, and: UIColor(hexColor: objData.hex_color))
-                    }
-                }
-            }
+//            if objData.type.lowercased() == "marker" {
+//                ctNode.addSphere(radius: 1, and: UIColor(hexColor: objData.hex_color))
+//            }
             if objData.type.lowercased() == "obj" {
                 ctNode.addObj(fPath: fPath, contentObj: objData)
             }
@@ -183,7 +175,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 addAudio(contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize)
             }
         } else {
-            if objData.type.lowercased() == "text" {
+            if objData.type.lowercased() == "text" || objData.type.lowercased() == "marker" {
                 ctNode.addText(
                     contentObj: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.1),
                     fontSize: CGFloat(objData.scale), color: UIColor(hexColor: objData.hex_color)

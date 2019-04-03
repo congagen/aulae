@@ -156,9 +156,7 @@ class ContentNode: SCNNode {
         
         if UIFont.fontNames(forFamilyName: contentObj.font).count > 0 {
             text.font = UIFont(name: contentObj.font, size: fontSize)
-        } else {
-            text.font = UIFont(name: "arial", size: fontSize)
-        }
+        } 
         
         text.firstMaterial?.diffuse.contents = color
 

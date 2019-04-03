@@ -153,79 +153,84 @@ class FeedMgmt {
             }
         }
         
+        
         if feedSpec.keys.contains("content") {
             for k in (feedSpec["content"]?.allKeys)! {
                 
                 let itemSpec = feedSpec["content"]![k] as! Dictionary<String, AnyObject>
-                let contentItemIsValid = validateObj(keyList: validFeedContentObjectKeys, dict: itemSpec)
                 
                 let objUid = UUID().uuidString
                 let itemContentType = itemSpec["type"] as! String
                 
-                if contentItemIsValid {
-                    let objData: [String : Any] = [
-                        "name":             itemSpec["name"]    as! String,
-                        "version":          itemSpec["version"] as! Int,
-                        "id":               itemSpec["id"]      as! String,
-                        "uuid":             objUid,
-                        "feed_id":          feedId,
-                        "type":             itemContentType,
-                        
-                        "billboard":        valueIfPresent(dict: itemSpec, key: "billboard", placeHolderValue: true),
-
-                        "style":            valueIfPresent(dict: itemSpec, key: "style",     placeHolderValue: 1) as! Int,
-                        "mode":             valueIfPresent(dict: itemSpec, key: "mode",      placeHolderValue: "free"),
-                        "hex_color":        valueIfPresent(dict: itemSpec, key: "hex_color", placeHolderValue: "7122e8"),
-
-                        "url":              valueIfPresent(dict: itemSpec, key: "url",       placeHolderValue: ""),
-                        "content_link":     valueIfPresent(dict: itemSpec, key: "content_link", placeHolderValue: ""),
-                        "direct_link":      valueIfPresent(dict: itemSpec, key: "direct_link", placeHolderValue: false),
-                        
-                        "info":             valueIfPresent(dict: itemSpec, key: "info",      placeHolderValue: ""),
-                        "text":             valueIfPresent(dict: itemSpec, key: "text",      placeHolderValue: ""),
-                        "font":             valueIfPresent(dict: itemSpec, key: "font",      placeHolderValue: "Arial"),
-
-                        "instance":         valueIfPresent(dict: itemSpec, key: "instance",  placeHolderValue: false),
-
-                        "rotate":           valueIfPresent(dict: itemSpec, key: "rotate",    placeHolderValue: 0.0),
-                        "hoover":           valueIfPresent(dict: itemSpec, key: "hoover",    placeHolderValue: 0.0),
-
-                        "scale":            valueIfPresent(dict: itemSpec, key: "scale",     placeHolderValue: 1.0),
-                        "world_scale":      valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: true),
-                        "world_position":   valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
-
-                        "lat":              valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: 80.0),
-                        "lng":              valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: 0.0),
-                        "alt":              valueIfPresent(dict: itemSpec, key: "alt",       placeHolderValue: 0.0),
-                        
-                        "x_pos":            valueIfPresent(dict: itemSpec, key: "x_pos",     placeHolderValue: 0.0),
-                        "y_pos":            valueIfPresent(dict: itemSpec, key: "y_pos",     placeHolderValue: 0.0),
-                        "z_pos":            valueIfPresent(dict: itemSpec, key: "z_pos",     placeHolderValue: 0.0),
-
-                        "radius":           valueIfPresent(dict: itemSpec, key: "radius",    placeHolderValue: 0.0)
-                    ]
-                    
-                    let isInstance:Bool = objData["instance"]! as! Bool
-                    
-                    if itemContentType != "text" && itemSpec.keys.contains("url") {
-                        let contentUrl      = itemSpec["url"] as! String
-                        let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-                        let fileName        = feedDbItem.id + String(feedDbItem.version) + (URL(string: contentUrl)?.lastPathComponent)!
-                        let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
-
-                        storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, feedId: feedId)
-                        
-                        if let cUrl = URL(string: contentUrl) {
-                            let _ = httpDl.loadFileAsync(
-                                removeExisting:  !isInstance, url: cUrl as URL,
-                                destinationUrl: destinationUrl!, completion: {}
-                            )
-                        }
-                       
-                    } else {
-                        storeFeedObject(objInfo: objData, objFilePath: URL(fileURLWithPath: ""), feedId: feedId)
-                    }
+                var remoteContentUrl = valueIfPresent(dict: itemSpec, key: "url", placeHolderValue: "")
+                
+                if feedDbItem.customMarkerUrl != "" && itemContentType == "marker" {
+                    remoteContentUrl = feedDbItem.customMarkerUrl
                 }
+                
+                let objData: [String : Any] = [
+                    "name":             valueIfPresent(dict: itemSpec, key: "name",      placeHolderValue: String(feedObjects.count)),
+                    "id":               valueIfPresent(dict: itemSpec, key: "id",        placeHolderValue: objUid),
+                    "uuid":             objUid,
+                    "feed_id":          feedId,
+                    
+                    "type":             itemContentType,
+                    "url":              remoteContentUrl,
+                    
+                    "version":          valueIfPresent(dict: itemSpec, key: "version",   placeHolderValue: 1),
+                    "billboard":        valueIfPresent(dict: itemSpec, key: "billboard", placeHolderValue: true),
+
+                    "style":            valueIfPresent(dict: itemSpec, key: "style",     placeHolderValue: 1) as! Int,
+                    "mode":             valueIfPresent(dict: itemSpec, key: "mode",      placeHolderValue: "free"),
+                    "hex_color":        valueIfPresent(dict: itemSpec, key: "hex_color", placeHolderValue: "7122e8"),
+
+                    "content_link":     valueIfPresent(dict: itemSpec, key: "content_link", placeHolderValue: ""),
+                    "direct_link":      valueIfPresent(dict: itemSpec, key: "direct_link", placeHolderValue: false),
+                    
+                    "info":             valueIfPresent(dict: itemSpec, key: "info",      placeHolderValue: ""),
+                    "text":             valueIfPresent(dict: itemSpec, key: "text",      placeHolderValue: ""),
+                    "font":             valueIfPresent(dict: itemSpec, key: "font",      placeHolderValue: ""),
+
+                    "instance":         valueIfPresent(dict: itemSpec, key: "instance",  placeHolderValue: false),
+
+                    "rotate":           valueIfPresent(dict: itemSpec, key: "rotate",    placeHolderValue: 0.0),
+                    "hoover":           valueIfPresent(dict: itemSpec, key: "hoover",    placeHolderValue: 0.0),
+
+                    "scale":            valueIfPresent(dict: itemSpec, key: "scale",     placeHolderValue: 1.0),
+                    "world_scale":      valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: true),
+                    "world_position":   valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
+
+                    "lat":              valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: 80.0),
+                    "lng":              valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: 0.0),
+                    "alt":              valueIfPresent(dict: itemSpec, key: "alt",       placeHolderValue: 0.0),
+                    
+                    "x_pos":            valueIfPresent(dict: itemSpec, key: "x_pos",     placeHolderValue: 0.0),
+                    "y_pos":            valueIfPresent(dict: itemSpec, key: "y_pos",     placeHolderValue: 0.0),
+                    "z_pos":            valueIfPresent(dict: itemSpec, key: "z_pos",     placeHolderValue: 0.0),
+
+                    "radius":           valueIfPresent(dict: itemSpec, key: "radius",    placeHolderValue: 0.0)
+                ]
+                    
+                let isInstance:Bool = objData["instance"]! as! Bool
+                
+                if itemContentType != "text" && itemSpec.keys.contains("url") {
+                    let contentUrl      = itemSpec["url"] as! String
+                    let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                    let fileName        = feedDbItem.id + String(feedDbItem.version) + (URL(string: contentUrl)?.lastPathComponent)!
+                    let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
+
+                    storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, feedId: feedId)
+                    
+                    if let cUrl = URL(string: contentUrl) {
+                        let _ = httpDl.loadFileAsync(
+                            removeExisting:  !isInstance, url: cUrl as URL,
+                            destinationUrl: destinationUrl!, completion: {}
+                        )
+                    }
+                } else {
+                    storeFeedObject(objInfo: objData, objFilePath: URL(fileURLWithPath: ""), feedId: feedId)
+                }
+                
             }
         }
     }

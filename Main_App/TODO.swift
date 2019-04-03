@@ -1,6 +1,8 @@
 
 // URGENT:
 
+//      Fix Image Transp Bug
+//      Marker -> Image?
 //      Hide image if missing
 //      Topic Icons
 
