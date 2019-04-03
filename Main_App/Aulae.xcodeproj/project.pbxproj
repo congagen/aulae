@@ -25,6 +25,7 @@
 		FA1934E422247D2B00457C6E /* FeedActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1934E322247D2B00457C6E /* FeedActions.swift */; };
 		FA1934E72225BD0000457C6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA1934E62225BD0000457C6E /* Assets.xcassets */; };
 		FA2BDFA02246B658002CB0D4 /* ObjectGestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */; };
+		FA441DD42254BE73002A5C71 /* Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441DD32254BE73002A5C71 /* Logo.png */; };
 		FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA663146221DBD4B000FEF60 /* ContentNode.swift */; };
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
 		FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BA7D02232E5E600DB3F2A /* Demos.swift */; };
@@ -33,7 +34,6 @@
 		FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88CBFC222DBBD90078E48A /* NodeActions.swift */; };
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
-		FAAA5DA0224FE1A000E1263B /* Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAA5D9F224FE1A000E1263B /* Logo.png */; };
 		FAAA5DA2224FF7F900E1263B /* lib.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAA5DA1224FF7F900E1263B /* lib.png */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
 		FAB68C78224CB37700126867 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C76224CB37600126867 /* Realm.framework */; };
@@ -85,6 +85,7 @@
 		FA1934E322247D2B00457C6E /* FeedActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedActions.swift; sourceTree = "<group>"; };
 		FA1934E62225BD0000457C6E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectGestures.swift; sourceTree = "<group>"; };
+		FA441DD32254BE73002A5C71 /* Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Logo.png; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aulae.entitlements; sourceTree = "<group>"; };
@@ -94,7 +95,6 @@
 		FA88CBFC222DBBD90078E48A /* NodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeActions.swift; sourceTree = "<group>"; };
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
-		FAAA5D9F224FE1A000E1263B /* Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Logo.png; sourceTree = "<group>"; };
 		FAAA5DA1224FF7F900E1263B /* lib.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lib.png; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		FAB68C76224CB37600126867 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
@@ -284,7 +284,7 @@
 		FA4ABB9E223C2EC8006525AA /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				FAAA5D9F224FE1A000E1263B /* Logo.png */,
+				FA441DD32254BE73002A5C71 /* Logo.png */,
 				FAAA5DA1224FF7F900E1263B /* lib.png */,
 				FAB68C85224CCD0100126867 /* map.png */,
 				FAB68C84224CCD0100126867 /* welc.png */,
@@ -393,7 +393,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAAA5DA0224FE1A000E1263B /* Logo.png in Resources */,
+				FA441DD42254BE73002A5C71 /* Logo.png in Resources */,
 				FAB68C87224CCD0100126867 /* map.png in Resources */,
 				FAB68C81224CCBEE00126867 /* view.png in Resources */,
 				FAAA5DA2224FF7F900E1263B /* lib.png in Resources */,

@@ -247,7 +247,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
         if let o: MapAno = annotation as? MapAno {
             let fo = feedObjects.filter( {$0.uuid == o.id } )
-            print(fo.first?.hex_color)
+            print(fo.first?.hex_color ?? "")
         }
         
         updateMapSearchRadius()
