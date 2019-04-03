@@ -193,10 +193,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             ctNode.constraints = [constraint]
         }
         
-        ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
         ctNode.tagComponents(nodeTag: objData.uuid)
         ctNode.name = objData.uuid
         ctNode.position = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
+        ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
 
         if objData.demo {
             positionDemoNodes(ctNode: ctNode, objData: objData)

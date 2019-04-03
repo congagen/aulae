@@ -253,12 +253,14 @@ class ContentNode: SCNNode {
 
     
     func addImage(fPath: String, contentObj: RLM_Obj) {
+        self.geometry?.materials.first?.diffuse.contents = UIColor.clear
+
         let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
-        
+        node.geometry?.materials.first?.diffuse.contents = UIColor.clear
+
         if let img = UIImage(contentsOfFile: fPath) {
             node.physicsBody? = .static()
             node.name = contentObj.name
-            node.geometry?.materials.first?.diffuse.contents = UIColor.clear
             node.geometry?.materials.first?.diffuse.contents = img
             node.geometry?.materials.first?.isDoubleSided = true
         }

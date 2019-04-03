@@ -13,7 +13,24 @@ import RealmSwift
 
 extension MainVC {
     
-    func buildTextDemo() {
+    func addFileSourceDemo() {
+        let demoFeed = RLM_Feed()
+        demoFeed.sourceUrl = "https://abstraqata.squarespace.com/s/aulae_demo.json"
+        demoFeed.id   = "Demo Content"
+        demoFeed.name = "Example content"
+        demoFeed.info = "Quick Start Instructions"
+
+        do {
+            try realm.write {
+                self.realm.add(demoFeed)
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    
+    func addTextDemo() {
         let demoFeed = RLM_Feed()
         
         demoFeed.sourceUrl = ""

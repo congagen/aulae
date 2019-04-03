@@ -1,9 +1,8 @@
 
 // URGENT:
 
-//      Fix Image Transp Bug
+//      Launchscreen Bug
 //      Marker -> Image?
-//      Hide image if missing
 //      Topic Icons
 
 //      Action Sheet Callout Headline
