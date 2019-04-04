@@ -13,17 +13,36 @@ import RealmSwift
 
 extension MainVC {
     
-    func addFileSourceDemo() {
-        let demoFeed = RLM_Feed()
-        demoFeed.sourceUrl = "https://abstraqata.squarespace.com/s/aulae_demo.json"
-        demoFeed.id   = "Demo Content"
-        demoFeed.name = "Example content"
-        demoFeed.info = "Quick Start Instructions"
-        demoFeed.active = false
+    
+    func addAPISourceDemo() {
+        let apiDemoFeed = RLM_Feed()
+        apiDemoFeed.sourceUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
+        apiDemoFeed.id   = "Api Demo"
+        apiDemoFeed.name = "Api Demo"
+        apiDemoFeed.info = "Api Demo"
+        apiDemoFeed.active = false
         
         do {
             try realm.write {
-                self.realm.add(demoFeed)
+                self.realm.add(apiDemoFeed)
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    
+    func addFileSourceDemo() {
+        let fileDemoFeed = RLM_Feed()
+        fileDemoFeed.sourceUrl = "https://abstraqata.squarespace.com/s/aulae_demo.json"
+        fileDemoFeed.id   = "WWW Demo"
+        fileDemoFeed.name = "WWW Demo"
+        fileDemoFeed.info = "WWW Demo"
+        fileDemoFeed.active = false
+        
+        do {
+            try realm.write {
+                self.realm.add(fileDemoFeed)
             }
         } catch {
             print("Error: \(error)")

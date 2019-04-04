@@ -155,21 +155,18 @@ class ContentNode: SCNNode {
         text.chamferRadius = extrusion
         
         if UIFont.fontNames(forFamilyName: contentObj.font).count > 0 {
-            text.font = UIFont(name: contentObj.font, size: fontSize)
+            text.font = UIFont(name: contentObj.font, size: 1)
         } 
         
         text.firstMaterial?.diffuse.contents = color
 
         let ctNode = SCNNode(geometry: text)
-        let max = text.boundingBox.max
-        let min = text.boundingBox.min
-        
-        let tx = max.x / 2.0
-        let ty = min.y
+        let tx = text.boundingBox.max.x / 2.0
+        let ty = text.boundingBox.max.y / 2.0
         let tz = Float(extrusion) / 2.0
 
         ctNode.pivot = SCNMatrix4MakeTranslation(tx, ty, tz)
-        
+
         addChildNode(ctNode)
     }
     
@@ -228,15 +225,11 @@ class ContentNode: SCNNode {
                 let s: Float      = Float(0.1 * contentObj.scale)
                 node.scale        = SCNVector3(x: s, y: s, z: s)
                 
-                let max = node.boundingBox.max
-                let min = node.boundingBox.min
-                
-                let tx = max.x / 2.0
-                let ty = max.y / 2.0
-                let tz = max.x / 2.0
+                let tx = node.boundingBox.max.x / 2.0
+                let ty = node.boundingBox.max.y / 2.0
+                let tz = node.boundingBox.max.x / 2.0
 
                 node.pivot = SCNMatrix4MakeTranslation(tx, ty, tz)
-                
                 
                 addChildNode(node)
             } catch {

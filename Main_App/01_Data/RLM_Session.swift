@@ -26,7 +26,7 @@ class RLM_Session: Object {
     @objc dynamic var backgroundGps:    Bool = false
 
     @objc dynamic var showPlaceholders: Bool = true
-    @objc dynamic var allowAnimation:   Bool = true
+//    @objc dynamic var allowAnimation:   Bool = true
     
     @objc dynamic var defaultFeedUrl: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
     @objc dynamic var defaultFeedAPI: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"

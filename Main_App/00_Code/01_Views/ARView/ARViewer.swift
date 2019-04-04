@@ -153,7 +153,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addImage(fPath: fPath, contentObj: objData)
             }
             if objData.type.lowercased() == "marker" {
-                ctNode.addSphere(radius: 1, and: UIColor(hexColor: objData.hex_color))
+                let cl = UIColor(red: 0.15, green: 1, blue: 0.3, alpha: 0.01 + CGFloat( 0.99 / (objectDistance * 0.001) ))
+                
+                ctNode.addSphere(radius: 0.1 + CGFloat( ((objectDistance * 2) + 1) / ( (objectDistance) + 1) ), and: cl)
             }
             if objData.type.lowercased() == "obj" {
                 ctNode.addObj(fPath: fPath, contentObj: objData)
@@ -171,14 +173,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.removeAllAudioPlayers()
 
                 if (rlmSession.first?.showPlaceholders)! && !(rlmSession.first?.muteAudio)!{
-                    ctNode.addSphere(radius: 0.05 + (nodeSize * 0.01), and: UIColor(hexColor: objData.hex_color))
+                    ctNode.addSphere(radius: 0.1, and: UIColor(hexColor: objData.hex_color))
                 }
-                addAudio(contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize)
+                addAudio(
+                    contentObj: objData, objectDistance: objectDistance,
+                    audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize
+                )
             }
         } else {
             if objData.type.lowercased() == "text" {
                 ctNode.addText(
-                    contentObj: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.1),
+                    contentObj: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
                     fontSize: CGFloat(objData.scale), color: UIColor(hexColor: objData.hex_color)
                 )
             } else {
@@ -198,6 +203,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.name = objData.uuid
         ctNode.position = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
         ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
+        
+        if (objData.type == "text" || objData.type == "audio") && !objData.world_scale {
+            ctNode.scale  = SCNVector3(0.01 * objData.scale, 0.01 * objData.scale, 0.01 * objData.scale)
+        }
 
         if objData.demo {
             positionDemoNodes(ctNode: ctNode, objData: objData)
@@ -210,12 +219,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func positionDemoNodes(ctNode: ContentNode, objData: RLM_Obj) {
         print("positionDemoNodes")
-
-        if !isInit {
-            let ori = sceneView.pointOfView?.orientation
-            let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
-            ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-        }
         
         do {
             try realm.write {
@@ -225,7 +228,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } catch {
             print("Error: \(error)")
         }
-    
+        
+        if !isInit {
+            let ori = sceneView.pointOfView?.orientation
+            let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+            ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+        }
         
         ctNode.position = SCNVector3(
             ctNode.position.x, 0, ctNode.position.z
@@ -347,15 +355,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 if !n.isKind(of: SKLightNode.self) && !n.isKind(of: ARCamera.self) {
                     
                     let scale = Float(gestureRecognizer.scale)
-                    print(scale)
+                    let newscalex = scale * n.scale.x
+                    let newscaley = scale * n.scale.y
+                    let newscalez = scale * n.scale.z
                     
-                    if (scale * n.scale.x) > 0.1 && (scale * n.scale.x) < 5 {
-                        let newscalex = scale * n.scale.x
-                        let newscaley = scale * n.scale.y
-                        let newscalez = scale * n.scale.z
-                        
-                        n.scale = SCNVector3(newscalex, newscaley, newscalez)
-                    }
+                    print(scale)
+                    print(newscalex)
+
+                    n.scale = SCNVector3(newscalex, newscaley, newscalez)
                 }
             }
         } else {

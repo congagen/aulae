@@ -1,17 +1,13 @@
 
 // URGENT:
 
-//      Launchscreen Bug
-//      Marker -> Image?
-//      Topic Icons
+//      !! Content Update Bug !!
+//      Restrict/Fix Scaling Bug
+//      Share Photo Cancel Button TintColor?
 
-//      Action Sheet Callout Headline
 //      DEMO FEEDS: LOCAL PARKS  |  LOCAL COFFE  |  LOCAL NEWS
 //      SETTINGS -> LOCATION SHARING
 
-//      Relative Pinch Scaling
-//      Content node type: Icon / MapMarker
-//      Name & Logo
 //      Demo Content
 //      Lng -> Long
 

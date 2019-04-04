@@ -141,6 +141,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             
             addTextDemo()
             addFileSourceDemo()
+            addAPISourceDemo()
+            
             resetErrCounts()
             mainUpdate()
             initLocation()

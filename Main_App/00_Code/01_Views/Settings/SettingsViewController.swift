@@ -126,8 +126,8 @@ class SettingsViewController: UITableViewController {
                     case showPlaceholderParamName:
                         rlmSession.first!.showPlaceholders      = Int(propValue) == 1
                         
-                    case animationToggleParamName:
-                        rlmSession.first!.allowAnimation        = Int(propValue) == 1
+//                    case animationToggleParamName:
+//                        rlmSession.first!.allowAnimation        = Int(propValue) == 1
     
                     default:
                         break
@@ -157,7 +157,7 @@ class SettingsViewController: UITableViewController {
         gpsToggleSwitch.isOn             = rlmSession.first!.backgroundGps    == true
         
         showPlaceholderSwitch.isOn       = rlmSession.first!.showPlaceholders == true
-        animationToggleSwitch.isOn       = rlmSession.first!.allowAnimation   == true
+//        animationToggleSwitch.isOn       = rlmSession.first!.allowAnimation   == true
     }
     
     
