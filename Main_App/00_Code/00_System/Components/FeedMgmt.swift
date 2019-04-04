@@ -401,7 +401,7 @@ class FeedMgmt {
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                 
                 if FileManager.default.fileExists(atPath: (destinationUrl?.absoluteString)!) {
-                    do{
+                    do {
                         try FileManager.default.removeItem(atPath: (destinationUrl?.absoluteString)! )
                     } catch let error {
                         print("error occurred, here are the details:\n \(error)")
@@ -409,17 +409,14 @@ class FeedMgmt {
                 }
                 
                 var sType = "api"
-                
                 if sourceExt != nil {
                     print("Ext: " + sourceExt!)
-                    
                     if sourceExt?.lowercased() == "json" {
                         sType = "json"
                     }
                 }
                 
                 print("sType: " + sType)
-                
                 if sType == "json" {
                     if let URL = URL(string: fe.sourceUrl) {
                         print("Downloading Feed JSON: " + fe.sourceUrl)
@@ -445,7 +442,6 @@ class FeedMgmt {
                 do {
                     try realm.write {
                         fe.updatedUtx = Int( Date().timeIntervalSince1970 )
-                        
                         if fe.errors > rlmSession.first!.feedErrorThreshold && !fe.deleted {
                             fe.active = false
                         }
@@ -453,7 +449,6 @@ class FeedMgmt {
                 } catch {
                     print("Error: \(error)")
                 }
-                
             }
         }
     }

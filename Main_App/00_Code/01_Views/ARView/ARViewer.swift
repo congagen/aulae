@@ -133,8 +133,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         var contentPos        = SCNVector3( objData.x_pos, objData.y_pos, objData.z_pos )
         var nodeSize: CGFloat = CGFloat(objData.scale)
-
-        print(contentPos)
         
         if objData.world_position {
             contentPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
@@ -150,6 +148,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
             if (localDemoContent) {
                 ctNode.addDemoContent(fPath: fPath, contentObj: objData)
+            }
+            if objData.type.lowercased() == "demo" {
+                ctNode.addImage(fPath: fPath, contentObj: objData)
             }
             if objData.type.lowercased() == "marker" {
                 ctNode.addSphere(radius: 1, and: UIColor(hexColor: objData.hex_color))
@@ -263,7 +264,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 
                 if (objFeed?.active)! && inRange {
                     print("Obj in range: " + o.name)
-                    if o.filePath != "" && o.type.lowercased() != "text" {
+                    if o.filePath != "" && o.type.lowercased() != "text" && o.type.lowercased() != "demo" {
                         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                         let fileName = (URL(string: o.filePath)?.lastPathComponent)!
                         let destinationUrl = documentsUrl.appendingPathComponent(fileName)
@@ -277,22 +278,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                                 scaleFactor: (rlmSession.first?.scaleFactor)!,
                                 localDemoContent: false
                             )
-                        } else {
-                            if o.type == "image" {
-                                if UIImage(named: o.filePath) != nil {
-                                    print("localDemoContent")
-                                    inserSourceObject(
-                                        objData: o, fPath: o.filePath,
-                                        scaleFactor: (rlmSession.first?.scaleFactor)!,
-                                        localDemoContent: true
-                                    )
-                                }
-                            }
-                            print("MISSING DATA? " + String(o.filePath))
                         }
                     } else {
                         if (o.type.lowercased() == "text") {
                             inserSourceObject(objData: o, fPath:"", scaleFactor: (rlmSession.first?.scaleFactor)!, localDemoContent: false )
+                        }
+                        
+                        if o.type == "demo" {
+                            inserSourceObject( objData: o, fPath: o.filePath, scaleFactor: (rlmSession.first?.scaleFactor)!, localDemoContent: true )
                         }
                     }
                 }
@@ -342,22 +335,36 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @objc func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
+
         
-        guard gestureRecognizer.state != .ended else { return }
+//        if gestureRecognizer.state == .began {
+//            gestureRecognizer.scale = 1
+//        }
         
-        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
-            print(gestureRecognizer.scale)
-            
+        
+        if gestureRecognizer.state == .changed {
             for n in mainScene.rootNode.childNodes {
                 if !n.isKind(of: SKLightNode.self) && !n.isKind(of: ARCamera.self) {
-                    n.scale = SCNVector3(
-                        Double(gestureRecognizer.scale),
-                        Double(gestureRecognizer.scale),
-                        Double(gestureRecognizer.scale)
-                    )
+                    
+                    let scale = Float(gestureRecognizer.scale)
+                    print(scale)
+                    
+                    if (scale * n.scale.x) > 0.1 && (scale * n.scale.x) < 5 {
+                        let newscalex = scale * n.scale.x
+                        let newscaley = scale * n.scale.y
+                        let newscalez = scale * n.scale.z
+                        
+                        n.scale = SCNVector3(newscalex, newscaley, newscalez)
+                    }
                 }
             }
+        } else {
+            gestureRecognizer.scale = 1.0
         }
+        
+        //guard gestureRecognizer.state != .ended else { return }
+
+
     }
     
     

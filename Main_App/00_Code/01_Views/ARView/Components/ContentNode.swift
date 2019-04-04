@@ -227,6 +227,17 @@ class ContentNode: SCNNode {
                 let node: SCNNode = try objScene.scene().rootNode.clone()
                 let s: Float      = Float(0.1 * contentObj.scale)
                 node.scale        = SCNVector3(x: s, y: s, z: s)
+                
+                let max = node.boundingBox.max
+                let min = node.boundingBox.min
+                
+                let tx = max.x / 2.0
+                let ty = max.y / 2.0
+                let tz = max.x / 2.0
+
+                node.pivot = SCNMatrix4MakeTranslation(tx, ty, tz)
+                
+                
                 addChildNode(node)
             } catch {
                 print(error)
@@ -285,8 +296,6 @@ class ContentNode: SCNNode {
         gifMaterial.isDoubleSided = true
         gifMaterial.diffuse.contents = layer
         gifMaterial.lightingModel = .constant
-        
-        //gifMaterial.blendMode = .subtract
         
         gifPlane.materials = [gifMaterial]
         
