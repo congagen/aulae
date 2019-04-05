@@ -47,7 +47,7 @@ extension MainVC {
         demoFeed.id   = "GettingStartedId"
         demoFeed.name = "Getting Started"
         demoFeed.info = "Quick Start Instructions"
-
+    
         let itemCount = 4
         let distance: Double = 1.2
         
@@ -61,8 +61,9 @@ extension MainVC {
                     o.name           = String(i)
                     o.feedId         = demoFeed.id
                     o.y_pos          = 0
-                    o.demo           = true
+                    
                     o.type           = "demo"
+                    o.demo           = true
                     o.world_position = false
                     o.world_scale    = false
                     o.active         = true
@@ -71,30 +72,28 @@ extension MainVC {
                     if i == 1 {
                         o.filePath   = "welc.png"
                         o.x_pos      = 0
-                        o.z_pos      = -distance*1.5
+                        o.z_pos      = -distance * 1.5
                     }
                     
                     if i == 2 {
                         o.filePath   = "view.png"
                         o.x_pos      = distance
-                        o.z_pos      = -distance
+                        o.z_pos      = -distance * 1.5
                     }
                     
                     if i == 3 {
                         o.filePath   = "lib.png"
                         o.x_pos      = -distance
-                        o.z_pos      = -distance
+                        o.z_pos      = -distance * 1.5
                     }
                     
 //                    if i == 4 {
-//                        o.filePath    = "map.png"
-//                        o.x_pos = 0
-//                        o.y_pos = distance
-//                        o.z_pos = -distance
+//                        o.filePath   = "map.png"
+//                        o.x_pos      = 0
+//                        o.y_pos      = 0
+//                        o.z_pos      = distance * 1.5
 //                    }
-                    
 
-                    
                     self.realm.add(o)
                 }
                 

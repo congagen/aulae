@@ -37,7 +37,6 @@ extension ARViewer {
         
         self.present(activityViewController, animated: true, completion: nil)
         
-        resetSeletion()
     }
     
     
@@ -57,51 +56,36 @@ extension ARViewer {
     }
     
     
-    func showSeletedNodeActions(objData: RLM_Obj) {
+    func showSeletedNodeActions(selNode: ContentNode) {
         print("showSeletedNodeActions")
-        let selFeeds = rlmFeeds.filter({$0.id == self.selectedNode?.feedId})
         
-        if selectedNode != nil && selFeeds.count > 0 {
+        for f in rlmFeeds {
+            print(f.id)
+            print(selNode.feedId)
+        }
+        
+        let alert =  UIAlertController(
+            title:   selNode.sourceName + " - " + (selNode.title),
+            message: nil,
+            preferredStyle: UIAlertController.Style.actionSheet
+        )
+        
+        if (selNode.contentLink) != "" {
+            alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (selNode.contentLink)) } ))
+        }
+        
+        if selNode.sourceUrl != "" && selNode.sourceTopic == "" {
+            alert.addAction(
+                UIAlertAction(title: "Share Source", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.sourceUrl)) }))
+        }
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel,  handler: nil ))
+        alert.view.tintColor = UIColor.black
+        alert.view.tintColorDidChange()
 
-            let alert =  UIAlertController(
-                title:   (selFeeds.first?.name)! + " - " + (selectedNode?.title)!,
-                message: nil,
-                preferredStyle: UIAlertController.Style.actionSheet
-            )
-            
-            
-            if (objData.contentLink) != "" {
-                alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (objData.contentLink)) } ))
-            }
-            
-            if selFeeds.count > 0 {
-                if selFeeds.first?.sourceUrl != "" && selFeeds.first?.topicKwd == "" {
-                    alert.addAction(UIAlertAction(title: "Share Source", style: UIAlertAction.Style.default,  handler: {_ in self.shareURLAction(url: (selFeeds.first?.sourceUrl)!)      }))
-                } 
-            }
-            
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel,  handler: { _ in self.resetSeletion() } ))
-            alert.view.tintColor = UIColor.black
-            alert.view.tintColorDidChange()
-
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
-    
-    
-    @objc func resetSeletion() {
-        for n in mainScene.rootNode.childNodes {
-            n.removeAllAnimations()
-            n.removeAllActions()
-            n.isHidden = false
-        }
         
-        if (selectedNode != nil) {
-            selectedNode?.removeAllAnimations()
-        }
-        
-        selectedNode = nil
+        self.present(alert, animated: true, completion: nil)
+    
     }
     
     

@@ -1,7 +1,7 @@
 
 // URGENT:
 
-//      !! Content Update Bug !!
+//      Marker Scaling
 //      Share Photo Cancel Button TintColor?
 
 //      DEMO FEEDS: LOCAL PARKS  |  LOCAL COFFE  |  LOCAL NEWS

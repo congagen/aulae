@@ -208,19 +208,13 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     @objc func mainUpdate() {
         print("mainUpdate")
         
-        let uIv = (rlmSession.first?.mapUpdateInterval)! + 1
+        updateTimer.invalidate()
         
-        if updateTimer.timeInterval != uIv || !((rlmSession.first?.autoUpdate)!) {
-            updateTimer.invalidate()
-        }
-        
-        if (rlmSession.first?.autoUpdate)! {
-            if !updateTimer.isValid {
-                updateTimer = Timer.scheduledTimer(
-                    timeInterval: uIv,
-                    target: self, selector: #selector(mainUpdate),
-                    userInfo: nil, repeats: true)
-            }
+        if !updateTimer.isValid {
+            updateTimer = Timer.scheduledTimer(
+                timeInterval: (rlmSession.first?.mapUpdateInterval)!,
+                target: self, selector: #selector(mainUpdate),
+                userInfo: nil, repeats: true)
         }
         
         updateObjectAnnotations()
@@ -297,7 +291,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         mapView.backgroundColor = UIColor.black
         
         mapView.mapType = .standard
-
     }
 
     

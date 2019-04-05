@@ -139,8 +139,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 print("Error: \(error)")
             }
             
-            contentExamples()
             quickStartExamples()
+            contentExamples()
             
             resetErrCounts()
             mainUpdate()

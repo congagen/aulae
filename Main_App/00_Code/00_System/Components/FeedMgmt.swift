@@ -138,7 +138,7 @@ class FeedMgmt {
     }
     
     
-    func updateFeedObjects(feedSpec: Dictionary<String, AnyObject>, feedId: String, feedDbItem: RLM_Feed) {
+    func updateSourceObjects(feedSpec: Dictionary<String, AnyObject>, feedId: String, feedDbItem: RLM_Feed) {
         print("! updateFeedObjects !")
         
         print(feedSpec)
@@ -236,14 +236,13 @@ class FeedMgmt {
     }
     
     
-    func updateFeedItem(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {
+    func updateSourceData(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {
         print("updateFeedDatabase")
         
-        let vKeys = ["id", "name", "version", "updated_utx", "content"]
+        let vKeys = ["name", "version", "updated_utx", "content"]
         let valid = validateObj(keyList: vKeys, dict: feedSpec)
         
         if valid {
-            //let sID: String       = feedSpec["id"] as! String TODO
             let sID: String       = UUID().uuidString
             let sName: String     = feedSpec["name"] as! String
             let sVersion: Int     = feedSpec["version"] as! Int
@@ -257,11 +256,11 @@ class FeedMgmt {
 
             do {
                 try realm.write {
-                    feedDbItem.id         = sID
-                    feedDbItem.name       = sName
-                    feedDbItem.info       = sInfo
-                    feedDbItem.version    = sVersion
-                    feedDbItem.updatedUtx = sUpdated_utx
+                    feedDbItem.id            = sID
+                    feedDbItem.name          = sName
+                    feedDbItem.info          = sInfo
+                    feedDbItem.version       = sVersion
+                    feedDbItem.updatedUtx    = sUpdated_utx
                     feedDbItem.thumbImageUrl = thumbUrl
                 }
             } catch {
@@ -317,16 +316,21 @@ class FeedMgmt {
             downloadThumb(feedDBItem: feedDbItem, fileName: "thumb_" + feedDbItem.id)
         }
         
+        updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
+        updateSourceObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+        
         if feedData.keys.contains("version") {
-            if let v: Int = feedData["version"] as? Int {
-                if v != feedDbItem.version || !checkVersion {
-                    updateFeedItem(feedDbItem: feedDbItem, feedSpec: feedData)
-                    updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
-                }
-            } else {
-                updateFeedItem(feedDbItem: feedDbItem, feedSpec: feedData)
-                updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
-            }
+//            if let v: Int = feedData["version"] as? Int {
+//
+//                if v != feedDbItem.version || !checkVersion {
+//                    updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
+//                    updateSourceObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+//                }
+//
+//            } else {
+//                updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
+//                updateSourceObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+//            }
         } else {
             do {
                 try realm.write {
@@ -338,6 +342,7 @@ class FeedMgmt {
                 print("Error: \(error)")
             }
         }
+        
     }
     
     

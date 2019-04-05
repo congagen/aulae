@@ -27,9 +27,9 @@
 		FA441DD42254BE73002A5C71 /* Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441DD32254BE73002A5C71 /* Logo.png */; };
 		FA441DD8225533FD002A5C71 /* Launchscreen_Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441DD7225533FD002A5C71 /* Launchscreen_Logo.png */; };
 		FA441DDA2255347D002A5C71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA441DD92255347D002A5C71 /* Assets.xcassets */; };
-		FA441DEA22564E61002A5C71 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441DE922564E61002A5C71 /* view.png */; };
-		FA441DEE22564E8A002A5C71 /* lib.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441DED22564E8A002A5C71 /* lib.png */; };
-		FA441DF922573285002A5C71 /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441DF822573285002A5C71 /* welc.png */; };
+		FA441DFE2257FB3E002A5C71 /* lib.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441DFB2257FB3E002A5C71 /* lib.png */; };
+		FA441E012257FBD4002A5C71 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441E002257FBD4002A5C71 /* view.png */; };
+		FA441E0322580399002A5C71 /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441E0222580399002A5C71 /* welc.png */; };
 		FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA663146221DBD4B000FEF60 /* ContentNode.swift */; };
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
 		FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BA7D02232E5E600DB3F2A /* Demos.swift */; };
@@ -43,7 +43,6 @@
 		FAB68C79224CB37700126867 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C76224CB37600126867 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FAB68C7A224CB37700126867 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; };
 		FAB68C7B224CB37700126867 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FAB68C87224CCD0100126867 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB68C85224CCD0100126867 /* map.png */; };
 		FAE439632237B5C900F828EF /* NavBarOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE439622237B5C900F828EF /* NavBarOps.swift */; };
 		FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* NodeAppearance.swift */; };
 		FAF4C9A2223474D500C2F371 /* QrScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF4C9A1223474D500C2F371 /* QrScanner.swift */; };
@@ -88,9 +87,9 @@
 		FA441DD32254BE73002A5C71 /* Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Logo.png; sourceTree = "<group>"; };
 		FA441DD7225533FD002A5C71 /* Launchscreen_Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Launchscreen_Logo.png; sourceTree = "<group>"; };
 		FA441DD92255347D002A5C71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FA441DE922564E61002A5C71 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = view.png; sourceTree = "<group>"; };
-		FA441DED22564E8A002A5C71 /* lib.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lib.png; sourceTree = "<group>"; };
-		FA441DF822573285002A5C71 /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = welc.png; path = ../../../../../../../../../../../../../../Desktop/Aulae/welc.png; sourceTree = "<group>"; };
+		FA441DFB2257FB3E002A5C71 /* lib.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lib.png; sourceTree = "<group>"; };
+		FA441E002257FBD4002A5C71 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = view.png; sourceTree = "<group>"; };
+		FA441E0222580399002A5C71 /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = welc.png; path = ../../../../../../../../../../../../../../Desktop/Aulae/welc.png; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aulae.entitlements; sourceTree = "<group>"; };
@@ -103,7 +102,6 @@
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		FAB68C76224CB37600126867 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		FAB68C77224CB37600126867 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
-		FAB68C85224CCD0100126867 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
 		FAE439622237B5C900F828EF /* NavBarOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarOps.swift; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* NodeAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAppearance.swift; sourceTree = "<group>"; };
 		FAF4C9A1223474D500C2F371 /* QrScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrScanner.swift; sourceTree = "<group>"; };
@@ -286,12 +284,11 @@
 		FA4ABB9E223C2EC8006525AA /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				FA441DED22564E8A002A5C71 /* lib.png */,
-				FA441DF822573285002A5C71 /* welc.png */,
-				FA441DE922564E61002A5C71 /* view.png */,
+				FA441E002257FBD4002A5C71 /* view.png */,
+				FA441DFB2257FB3E002A5C71 /* lib.png */,
+				FA441E0222580399002A5C71 /* welc.png */,
 				FA441DD7225533FD002A5C71 /* Launchscreen_Logo.png */,
 				FA441DD32254BE73002A5C71 /* Logo.png */,
-				FAB68C85224CCD0100126867 /* map.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -397,14 +394,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA441DD42254BE73002A5C71 /* Logo.png in Resources */,
-				FA441DEE22564E8A002A5C71 /* lib.png in Resources */,
-				FAB68C87224CCD0100126867 /* map.png in Resources */,
 				FA441DD8225533FD002A5C71 /* Launchscreen_Logo.png in Resources */,
+				FA441E012257FBD4002A5C71 /* view.png in Resources */,
+				FA441DFE2257FB3E002A5C71 /* lib.png in Resources */,
 				FA441DDA2255347D002A5C71 /* Assets.xcassets in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
-				FA441DF922573285002A5C71 /* welc.png in Resources */,
+				FA441E0322580399002A5C71 /* welc.png in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
-				FA441DEA22564E61002A5C71 /* view.png in Resources */,
 				3177252620B03AD4009FA8B1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

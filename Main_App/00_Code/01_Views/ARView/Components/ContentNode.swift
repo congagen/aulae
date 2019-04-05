@@ -14,6 +14,13 @@ class ContentNode: SCNNode {
     let id: String
     let title: String
     let feedId: String
+    
+    var sourceName:  String = ""
+    var sourceTopic: String = ""
+    var sourceUrl:   String = ""
+    var contentLink: String = ""
+    var directLink:  Bool = false
+    
     var anchor: ARAnchor?
     var location: CLLocation!
     
@@ -96,6 +103,7 @@ class ContentNode: SCNNode {
     
     
     func tagComponents(nodeTag: String)  {
+        
         for n in self.childNodes {
             n.name = nodeTag
             

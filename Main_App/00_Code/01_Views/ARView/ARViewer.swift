@@ -11,12 +11,19 @@ import ARKit
 import Realm
 import RealmSwift
 
+
+
+
+
+
+
+
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
-    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
-    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    lazy var rlmSession:     Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds:       Results<RLM_Feed>    = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSourceItems: Results<RLM_Obj>     = { self.realm.objects(RLM_Obj.self) }()
     
     var updateTimer = Timer()
     
@@ -42,7 +49,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         loadingView.isHidden = false
         FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
         NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
-        mainTimerUpdate()
+        refreshScene()
     }
     
     @IBOutlet var sceneView: ARSCNView!
@@ -54,6 +61,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
         //activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
         activityViewController.view.tintColor = UIColor.black
+        activityViewController.view.tintColorDidChange()
         
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
@@ -84,8 +92,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         // Enable HDR camera settings for the most realistic appearance with environmental lighting and physically based materials.
         camera.wantsHDR = true
         //camera.exposureOffset = 0
-        camera.minimumExposure = 0
-        camera.maximumExposure = 1
+//        camera.minimumExposure = 0
+//        camera.maximumExposure = 1
     }
     
     
@@ -94,9 +102,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         var objList: [RLM_Obj] = []
         
         if (useManualRange) {
-            objList = feedObjects.filter({ (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double(manualRange)) })
+            objList = rlmSourceItems.filter({ (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double(manualRange)) })
         } else {
-            objList = feedObjects.filter({ (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double($0.radius))   })
+            objList = rlmSourceItems.filter({ (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double($0.radius))   })
         }
         
         return objList
@@ -122,9 +130,21 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             mainScene.rootNode.addAudioPlayer(SCNAudioPlayer(source: asrc!))
         }
     }
+    
+    
+    func defualtLatLong(objData: RLM_Obj){
+        do {
+            try realm.write {
+                objData.lat = rlmSession.first!.currentLat
+                objData.lng = rlmSession.first!.currentLng
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
   
     
-    func inserSourceObject(objData: RLM_Obj, fPath: String, scaleFactor: Double, localDemoContent: Bool) {
+    func insertSourceObject(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(objData.uuid))
         print("Adding: " + objData.type.lowercased() + ": " + fPath)
 
@@ -146,50 +166,31 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if fPath != "" && objData.type.lowercased() != "text" {
             
-            if (localDemoContent) {
-                ctNode.addDemoContent(fPath: fPath, contentObj: objData)
-            }
-            if objData.type.lowercased() == "demo" {
-                ctNode.addImage(fPath: fPath, contentObj: objData)
-            }
             if objData.type.lowercased() == "marker" {
                 let cl = UIColor(red: 0.0, green: 1, blue: 0.2, alpha: 0.1 + CGFloat( objectDistance / (objectDistance * 1.5) ))
-                
                 ctNode.addSphere(radius: 0.1 + CGFloat( ((objectDistance * 2) + 1) / ( (objectDistance) + 1) ), and: cl)
             }
-            if objData.type.lowercased() == "obj" {
-                ctNode.addObj(fPath: fPath, contentObj: objData)
-            }
-            if objData.type.lowercased() == "usdz" {
-                ctNode.addUSDZ(fPath: fPath, contentObj: objData)
-            }
-            if objData.type.lowercased() == "image" {
-                ctNode.addImage(fPath: fPath, contentObj: objData)
-            }
-            if objData.type.lowercased() == "gif" {
-                ctNode.addGif(fPath: fPath, contentObj: objData)
-            }
+            
+            if objData.type.lowercased() == "demo"  { ctNode.addDemoContent(fPath: fPath, contentObj: objData) }
+            if objData.type.lowercased() == "obj"   { ctNode.addObj(fPath:   fPath, contentObj: objData) }
+            if objData.type.lowercased() == "usdz"  { ctNode.addUSDZ(fPath:  fPath, contentObj: objData) }
+            if objData.type.lowercased() == "image" { ctNode.addImage(fPath: fPath, contentObj: objData) }
+            if objData.type.lowercased() == "gif"   { ctNode.addGif(fPath:   fPath, contentObj: objData) }
             if objData.type.lowercased() == "audio" {
                 ctNode.removeAllAudioPlayers()
-
-                if (rlmSession.first?.showPlaceholders)! && !(rlmSession.first?.muteAudio)!{
+                
+                if !(rlmSession.first?.muteAudio)! {
                     ctNode.addSphere(radius: 0.1, and: UIColor(hexColor: objData.hex_color))
+                    addAudio( contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize )
                 }
-                addAudio(
-                    contentObj: objData, objectDistance: objectDistance,
-                    audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize
-                )
             }
         } else {
             if objData.type.lowercased() == "text" {
                 ctNode.addText(
                     contentObj: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
-                    fontSize: 0.001, color: UIColor(hexColor: objData.hex_color)
-                )
+                    fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
             } else {
-                if (rlmSession.first?.showPlaceholders)! {
-                    ctNode.addSphere(radius: 10, and: UIColor.green)
-                }
+                if (rlmSession.first?.showPlaceholders)! { ctNode.addSphere(radius: 0.1, and: UIColor.purple) }
             }
         }
         
@@ -199,18 +200,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             ctNode.constraints = [constraint]
         }
         
-        ctNode.tagComponents(nodeTag: objData.uuid)
-        ctNode.name = objData.uuid
-        ctNode.position = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
-        ctNode.scale  = SCNVector3(nodeSize, nodeSize, nodeSize)
+        ctNode.tagComponents(nodeTag: String(objData.uuid))
         
-        if (objData.type == "text" || objData.type == "audio") && !objData.world_scale {
-            ctNode.scale  = SCNVector3(0.01 * objData.scale, 0.01 * objData.scale, 0.01 * objData.scale)
+        ctNode.name        = String(objData.uuid)
+        ctNode.sourceUrl   = source.sourceUrl
+        ctNode.sourceName  = source.name
+        ctNode.sourceTopic = source.topicKwd
+        ctNode.contentLink = objData.contentLink
+        ctNode.directLink  = objData.directLink
+        ctNode.position    = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
+        ctNode.scale       = SCNVector3(nodeSize, nodeSize, nodeSize)
+        
+        if (objData.type == "text" || objData.type == "audio") {
+            if !(rlmSession.first?.distanceScale)! || !objData.world_scale {
+                ctNode.scale = SCNVector3(0.05, 0.05, 0.05)
+            } else {
+                ctNode.scale = SCNVector3(nodeSize, nodeSize, nodeSize)
+            }
+        }
+        
+        if !(rlmSession.first?.distanceScale)! && (objData.type == "marker") {
+            ctNode.scale = SCNVector3(0.05, 0.05, 0.05)
         }
 
         if objData.demo {
             positionDemoNodes(ctNode: ctNode, objData: objData)
-            ctNode.scale  = SCNVector3(1, 1, 1)
+            ctNode.scale    = SCNVector3(1, 1, 1)
         }
         
         sceneView.scene.rootNode.addChildNode(ctNode)
@@ -247,12 +262,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         let curPos = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
         let range = (rlmSession.first?.searchRadius)!
-        
         let objsInRange          = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
         let activeObjectsInRange = objsInRange.filter({$0.active && !$0.deleted})
         
         for n in mainScene.rootNode.childNodes {
-            if n.isKind(of: ContentNode.self) { n.removeFromParentNode() }
+            if n.isKind(of: ContentNode.self) {
+//                if n.name != "demo" {
+                n.removeFromParentNode()
+//                }
+            }
         }
         
         mainScene.rootNode.removeAllAudioPlayers()
@@ -268,33 +286,31 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             
             if objFeeds.count > 0 {
-                let objFeed = objFeeds.first
-                
-                if (objFeed?.active)! && inRange {
+                if (objFeeds.first?.active)! && inRange {
                     print("Obj in range: " + o.name)
                     if o.filePath != "" && o.type.lowercased() != "text" && o.type.lowercased() != "demo" {
+                        print("UpdateScene: activeInRange: " + String(o.uuid))
+
                         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                         let fileName = (URL(string: o.filePath)?.lastPathComponent)!
                         let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                         
-                        print("UpdateScene: activeInRange: " + String(o.uuid))
-                        
                         if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                             print("FileManager.default.fileExists")
-                            inserSourceObject(
-                                objData: o, fPath: (destinationUrl?.path)!,
-                                scaleFactor: (rlmSession.first?.scaleFactor)!,
-                                localDemoContent: false
-                            )
+                            //   fPath: (destinationUrl?.path)!, scaleFactor: (rlmSession.first?.scaleFactor)! )
+                            insertSourceObject(objData: o, source: objFeeds.first!, fPath: (destinationUrl?.path)!, scaleFactor: (rlmSession.first?.scaleFactor)! )
                         }
                     } else {
                         if (o.type.lowercased() == "text") {
-                            inserSourceObject(objData: o, fPath:"", scaleFactor: (rlmSession.first?.scaleFactor)!, localDemoContent: false )
+                            insertSourceObject(objData: o, source: objFeeds.first!, fPath:"", scaleFactor: (rlmSession.first?.scaleFactor)! )
                         }
                         
                         if o.type == "demo" {
-                            inserSourceObject( objData: o, fPath: o.filePath, scaleFactor: (rlmSession.first?.scaleFactor)!, localDemoContent: true )
+//                            if mainScene.rootNode.childNodes.filter({$0.name == "demo"}).count < 4 {
+                            insertSourceObject( objData: o, source: objFeeds.first!, fPath: o.filePath, scaleFactor: (rlmSession.first?.scaleFactor)! )
+//                            }
                         }
+                        
                     }
                 }
             }
@@ -307,35 +323,48 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @objc func handleTap(rec: UITapGestureRecognizer) {
         print("handleTap")
         
-        for n in mainScene.rootNode.childNodes {
-            n.isHidden = false
-        }
-        
         if rec.state == .ended {
+            print("A")
+            
             let location: CGPoint = rec.location(in: sceneView)
             let hits = self.sceneView.hitTest(location, options: nil)
    
             if let tappedNode = hits.first?.node {
-                let matchingObjs = feedObjects.filter({$0.uuid == tappedNode.name})
+                print("B")
+                
+                let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
                 
                 if matchingObjs.count > 0 {
+                    print("C")
+                    
                     let sNodes = mainScene.rootNode.childNodes.filter( {$0.name == matchingObjs.first?.uuid} )
                     
                     for sn in sNodes {
                         if (sn.isKind(of: ContentNode.self)) {
+                            print("D")
                             
+                            let sCt = sn as! ContentNode
+                            print( rlmFeeds.filter( { $0.id == sCt.feedId } ).count )
+
                             if (matchingObjs.first?.directLink)! && ((matchingObjs.first?.contentLink)! != "") {
+                                print("E")
+                                
                                 self.openUrl(scheme: (matchingObjs.first?.contentLink)!)
                             } else {
+                                print("F")
+                                
                                 if let a = sNodes.first as! ContentNode? {
                                     selectedNode = a
-                                    showSeletedNodeActions(objData: matchingObjs.first!)
+                                    showSeletedNodeActions(selNode: a)
                                 }
                             }
                         }
                     }
+                } else {
+                    print("Error")
                 }
             } else {
+                print("selectedNode = nil")
                 selectedNode = nil
             }
         }
@@ -354,7 +383,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     
                     var scale: Float = 0
                     
-                    if gestureRecognizer.scale < 1{
+                    if gestureRecognizer.scale < 1 {
                         scale = (Float(gestureRecognizer.scale) * 0.1) + ( -1 )
                         let newscalex = scale * n.scale.x
                         let newscaley = scale * n.scale.y
@@ -372,10 +401,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } else {
             gestureRecognizer.scale = 1.0
         }
-        
-        //guard gestureRecognizer.state != .ended else { return }
-
-
     }
     
     
@@ -453,57 +478,28 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        for item in metadataObjects {
-            if let metadataObject = item as? AVMetadataMachineReadableCodeObject {
-                
-                if metadataObject.type == AVMetadataObject.ObjectType.qr {
-                    qrUrl = metadataObject.stringValue!
-                    
-                    if (qrUrl != "") {
-                        print(metadataObject.stringValue!)
-                        showQRURLAlert(aMessage: metadataObject.stringValue!)
-                    }
-                    
-                    qrCaptureSession.stopRunning()
-                    qrCapturePreviewLayer.removeFromSuperlayer()
-                }
-                
-                if metadataObject.type == AVMetadataObject.ObjectType.upce {
-                    print(AVMetadataObject.ObjectType.upce)
-                }
-            }
-        }
-    }
-    
-    
     @objc func mainTimerUpdate() {
         print("mainUpdate: ARViewer")
-        var needsRefresh = false
         
-        for fo in feedObjects {
+        for fo in rlmSourceItems {
             if (fo.active && !fo.deleted) {
                 if mainScene.rootNode.childNodes.filter( {$0.name == fo.uuid} ).count == 0 {
-                    needsRefresh = true
+                    print("mainUpdate: needsUpdate")
+                    refreshScene()
                 }
             }
         }
         
-        if needsRefresh {
-            print("mainUpdate: needsUpdate")
-            refreshScene()
-        }
-        
-        updateTimer.invalidate()
-        
-        if !updateTimer.isValid && (rlmSession.first?.autoUpdate)! {
-            updateTimer = Timer.scheduledTimer(
-                timeInterval: rlmSession.first!.feedUpdateInterval, target: self,
-                selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
-        }
+//        updateTimer.invalidate()
+//
+//        if !updateTimer.isValid {
+//            updateTimer = Timer.scheduledTimer(
+//                timeInterval: rlmSession.first!.feedUpdateInterval, target: self,
+//                selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
+//        }
         
         Timer.scheduledTimer(
-            withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 }
+            withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 }
         )
         
     }
@@ -568,6 +564,30 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func sessionInterruptionEnded(_ session: ARSession) {
         print("ArKit ViewerVC: sessionInterruptionEnded")
+    }
+    
+    
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        for item in metadataObjects {
+            if let metadataObject = item as? AVMetadataMachineReadableCodeObject {
+                
+                if metadataObject.type == AVMetadataObject.ObjectType.qr {
+                    qrUrl = metadataObject.stringValue!
+                    
+                    if (qrUrl != "") {
+                        print(metadataObject.stringValue!)
+                        showQRURLAlert(aMessage: metadataObject.stringValue!)
+                    }
+                    
+                    qrCaptureSession.stopRunning()
+                    qrCapturePreviewLayer.removeFromSuperlayer()
+                }
+                
+                if metadataObject.type == AVMetadataObject.ObjectType.upce {
+                    print(AVMetadataObject.ObjectType.upce)
+                }
+            }
+        }
     }
     
     
