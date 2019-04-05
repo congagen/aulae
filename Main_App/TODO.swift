@@ -2,7 +2,6 @@
 // URGENT:
 
 //      !! Content Update Bug !!
-//      Restrict/Fix Scaling Bug
 //      Share Photo Cancel Button TintColor?
 
 //      DEMO FEEDS: LOCAL PARKS  |  LOCAL COFFE  |  LOCAL NEWS

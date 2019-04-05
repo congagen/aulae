@@ -49,12 +49,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
         print("sharePhotoBtn")
         let snapShot = sceneView.snapshot()
-        let imageToShare = [snapShot]
-        let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
+        let imageToShare = [ snapShot ]
         
-        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
+        let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
+        //activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
         activityViewController.view.tintColor = UIColor.black
-
+        
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
     }
@@ -153,7 +153,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addImage(fPath: fPath, contentObj: objData)
             }
             if objData.type.lowercased() == "marker" {
-                let cl = UIColor(red: 0.15, green: 1, blue: 0.3, alpha: 0.01 + CGFloat( 0.99 / (objectDistance * 0.001) ))
+                let cl = UIColor(red: 0.0, green: 1, blue: 0.2, alpha: 0.1 + CGFloat( objectDistance / (objectDistance * 1.5) ))
                 
                 ctNode.addSphere(radius: 0.1 + CGFloat( ((objectDistance * 2) + 1) / ( (objectDistance) + 1) ), and: cl)
             }
@@ -184,7 +184,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             if objData.type.lowercased() == "text" {
                 ctNode.addText(
                     contentObj: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
-                    fontSize: CGFloat(objData.scale), color: UIColor(hexColor: objData.hex_color)
+                    fontSize: 0.001, color: UIColor(hexColor: objData.hex_color)
                 )
             } else {
                 if (rlmSession.first?.showPlaceholders)! {
@@ -342,27 +342,31 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    public func clamp<T>(_ value: T, minValue: T, maxValue: T) -> T where T : Comparable {
+        return min(max(value, minValue), maxValue)
+    }
+    
+    
     @objc func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
-
-        
-//        if gestureRecognizer.state == .began {
-//            gestureRecognizer.scale = 1
-//        }
-        
-        
         if gestureRecognizer.state == .changed {
             for n in mainScene.rootNode.childNodes {
-                if !n.isKind(of: SKLightNode.self) && !n.isKind(of: ARCamera.self) {
+                if n.isKind(of: ContentNode.self) {
                     
-                    let scale = Float(gestureRecognizer.scale)
-                    let newscalex = scale * n.scale.x
-                    let newscaley = scale * n.scale.y
-                    let newscalez = scale * n.scale.z
+                    var scale: Float = 0
                     
-                    print(scale)
-                    print(newscalex)
-
-                    n.scale = SCNVector3(newscalex, newscaley, newscalez)
+                    if gestureRecognizer.scale < 1{
+                        scale = (Float(gestureRecognizer.scale) * 0.1) + ( -1 )
+                        let newscalex = scale * n.scale.x
+                        let newscaley = scale * n.scale.y
+                        let newscalez = scale * n.scale.z
+                        n.scale = SCNVector3(newscalex, -newscaley, newscalez)
+                    } else {
+                        scale = (Float(gestureRecognizer.scale) * 0.1) + 1
+                        let newscalex = scale * n.scale.x
+                        let newscaley = scale * n.scale.y
+                        let newscalez = scale * n.scale.z
+                        n.scale = SCNVector3(newscalex, newscaley, newscalez)
+                    }
                 }
             }
         } else {
