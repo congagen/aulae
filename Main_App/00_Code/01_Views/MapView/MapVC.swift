@@ -292,6 +292,18 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         mapView.mapType = .standard
     }
+    
+    
+    func focusMap(focusLat: Double, focusLng: Double) {
+        print("focusMap")
+        
+        let center = CLLocationCoordinate2D(latitude: focusLat, longitude: focusLng)
+        let region = MKCoordinateRegion(center: center, span: mapView.region.span)
+        
+        mapView.setRegion(region, animated: true)
+        mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
+        
+    }
 
     
     override func viewDidLoad() {
@@ -306,6 +318,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         self.mapView.addGestureRecognizer(lpgr)
         
         NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+        focusMap(focusLat: rlmSession.first!.currentLat, focusLng: rlmSession.first!.currentLng)
     }
 
     

@@ -150,7 +150,7 @@ class ContentNode: SCNNode {
     }
     
     
-    func addText(contentObj: RLM_Obj, objText: String, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
+    func addText(objectData: RLM_Obj, objText: String, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
         var nText = "?"
         
         if objText != "" {
@@ -162,8 +162,8 @@ class ContentNode: SCNNode {
         text.firstMaterial?.isDoubleSided = true
         text.chamferRadius = extrusion
         
-        if UIFont.fontNames(forFamilyName: contentObj.font).count > 0 {
-            text.font = UIFont(name: contentObj.font, size: 1)
+        if UIFont.fontNames(forFamilyName: objectData.font).count > 0 {
+            text.font = UIFont(name: objectData.font, size: 1)
         } 
         
         text.firstMaterial?.diffuse.contents = color
@@ -179,7 +179,7 @@ class ContentNode: SCNNode {
     }
     
     
-    func addObj(fPath: String, contentObj: RLM_Obj) {
+    func addObj(fPath: String, objectData: RLM_Obj) {
         print("Adding OBJ")
 
         let urlPath = URL(fileURLWithPath: fPath)
@@ -189,7 +189,7 @@ class ContentNode: SCNNode {
                 let node: SCNNode = try objScene.scene().rootNode.clone()
                 let objMtl = SCNMaterial()
                 objMtl.isDoubleSided = true
-                node.geometry?.firstMaterial?.diffuse.contents = UIColor(hexColor: contentObj.hex_color)
+                node.geometry?.firstMaterial?.diffuse.contents = UIColor(hexColor: objectData.hex_color)
 
                 objMtl.lightingModel = .constant
                 node.geometry?.materials = [objMtl]
@@ -202,11 +202,11 @@ class ContentNode: SCNNode {
     }
     
     
-    func addAudio(fPath: String, contentObj: RLM_Obj) -> SCNAudioPlayer {
+    func addAudio(fPath: String, objectData: RLM_Obj) -> SCNAudioPlayer {
         print("Adding aSource: " + fPath)
 
-        let geometry = SCNPyramid(width: CGFloat(contentObj.scale*0.5), height: CGFloat(contentObj.scale), length: CGFloat(contentObj.scale*0.5))
-        geometry.firstMaterial?.diffuse.contents = UIColor(hexColor: contentObj.hex_color)
+        let geometry = SCNPyramid(width: CGFloat(objectData.scale*0.5), height: CGFloat(objectData.scale), length: CGFloat(objectData.scale*0.5))
+        geometry.firstMaterial?.diffuse.contents = UIColor(hexColor: objectData.hex_color)
         let icon = SCNNode(geometry: geometry)
         self.removeAllAudioPlayers()
         addChildNode(icon)
@@ -223,14 +223,14 @@ class ContentNode: SCNNode {
     }
     
 
-    func addUSDZ(fPath: String, contentObj: RLM_Obj) {
+    func addUSDZ(fPath: String, objectData: RLM_Obj) {
         print("Adding USDZ")
         let urlPath = URL(fileURLWithPath: fPath)
         
         if let objScene = SCNSceneSource(url: urlPath, options: nil) {
             do {
                 let node: SCNNode = try objScene.scene().rootNode.clone()
-                let s: Float      = Float(0.1 * contentObj.scale)
+                let s: Float      = Float(0.1 * objectData.scale)
                 node.scale        = SCNVector3(x: s, y: s, z: s)
                 
                 let tx = node.boundingBox.max.x / 2.0
@@ -247,12 +247,12 @@ class ContentNode: SCNNode {
     }
     
     
-    func addDemoContent(fPath: String, contentObj: RLM_Obj) {
+    func addDemoContent(fPath: String, objectData: RLM_Obj) {
         let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
         
         if let img = UIImage(named: fPath) {
             node.physicsBody? = .static()
-            node.name = contentObj.name
+            node.name = objectData.name
             node.geometry?.materials.first?.diffuse.contents = UIColor.clear
             node.geometry?.materials.first?.diffuse.contents = img
             node.geometry?.materials.first?.isDoubleSided = true
@@ -264,7 +264,7 @@ class ContentNode: SCNNode {
     }
 
     
-    func addImage(fPath: String, contentObj: RLM_Obj) {
+    func addImage(fPath: String, objectData: RLM_Obj) {
         self.geometry?.materials.first?.diffuse.contents = UIColor.clear
 
         let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
@@ -272,7 +272,7 @@ class ContentNode: SCNNode {
 
         if let img = UIImage(contentsOfFile: fPath) {
             node.physicsBody? = .static()
-            node.name = contentObj.name
+            node.name = objectData.name
             node.geometry?.materials.first?.diffuse.contents = img
             node.geometry?.materials.first?.isDoubleSided = true
         }
@@ -281,8 +281,8 @@ class ContentNode: SCNNode {
     }
     
     
-    func addGif(fPath: String, contentObj: RLM_Obj) {
-        let gifPlane = SCNPlane(width: CGFloat(contentObj.scale), height: CGFloat(contentObj.scale))
+    func addGif(fPath: String, objectData: RLM_Obj) {
+        let gifPlane = SCNPlane(width: CGFloat(objectData.scale), height: CGFloat(objectData.scale))
        
         let layer = CALayer()
         layer.bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
@@ -301,7 +301,7 @@ class ContentNode: SCNNode {
         gifPlane.materials = [gifMaterial]
         
         let node = SCNNode(geometry: gifPlane)
-        node.name = contentObj.name
+        node.name = objectData.name
         
         addChildNode(node)
     }

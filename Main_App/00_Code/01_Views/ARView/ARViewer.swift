@@ -33,6 +33,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
     var qrCaptureSession = AVCaptureSession()
     
+    var rawDeviceGpsCCL: CLLocation = CLLocation(latitude: 0, longitude: 0)
+
     var trackingState = 3
     var configuration = AROrientationTrackingConfiguration()
     
@@ -148,14 +150,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("AddContentToScene: " + String(objData.uuid))
         print("Adding: " + objData.type.lowercased() + ": " + fPath)
 
-        let rawDeviceGpsCCL   = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
         let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var contentPos        = SCNVector3( objData.x_pos, objData.y_pos, objData.z_pos )
+        var objectPos        = SCNVector3( objData.x_pos, objData.y_pos, objData.z_pos )
         var nodeSize: CGFloat = CGFloat(objData.scale)
         
         if objData.world_position {
-            contentPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
+            objectPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
         }
         
         if (rlmSession.first?.distanceScale)! && objData.world_scale {
@@ -171,11 +172,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addSphere(radius: 0.1 + CGFloat( ((objectDistance * 2) + 1) / ( (objectDistance) + 1) ), and: cl)
             }
             
-            if objData.type.lowercased() == "demo"  { ctNode.addDemoContent(fPath: fPath, contentObj: objData) }
-            if objData.type.lowercased() == "obj"   { ctNode.addObj(fPath:   fPath, contentObj: objData) }
-            if objData.type.lowercased() == "usdz"  { ctNode.addUSDZ(fPath:  fPath, contentObj: objData) }
-            if objData.type.lowercased() == "image" { ctNode.addImage(fPath: fPath, contentObj: objData) }
-            if objData.type.lowercased() == "gif"   { ctNode.addGif(fPath:   fPath, contentObj: objData) }
+            if objData.type.lowercased() == "demo"  { ctNode.addDemoContent(fPath: fPath, objectData: objData) }
+            if objData.type.lowercased() == "obj"   { ctNode.addObj(fPath:   fPath, objectData: objData) }
+            if objData.type.lowercased() == "usdz"  { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
+            if objData.type.lowercased() == "image" { ctNode.addImage(fPath: fPath, objectData: objData) }
+            if objData.type.lowercased() == "gif"   { ctNode.addGif(fPath:   fPath, objectData: objData) }
             if objData.type.lowercased() == "audio" {
                 ctNode.removeAllAudioPlayers()
                 
@@ -187,7 +188,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } else {
             if objData.type.lowercased() == "text" {
                 ctNode.addText(
-                    contentObj: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
+                    objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
                     fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
             } else {
                 if (rlmSession.first?.showPlaceholders)! { ctNode.addSphere(radius: 0.1, and: UIColor.purple) }
@@ -208,7 +209,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.sourceTopic = source.topicKwd
         ctNode.contentLink = objData.contentLink
         ctNode.directLink  = objData.directLink
-        ctNode.position    = SCNVector3(contentPos.x, contentPos.y, contentPos.z)
+        ctNode.position    = SCNVector3(objectPos.x, objectPos.y, objectPos.z)
         ctNode.scale       = SCNVector3(nodeSize, nodeSize, nodeSize)
         
         if (objData.type == "text" || objData.type == "audio") {
@@ -259,7 +260,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func refreshScene() {
         print("RefreshScene")
-        
+        rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         let curPos = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
         let range = (rlmSession.first?.searchRadius)!
         let objsInRange          = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
@@ -469,6 +470,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         sceneView.addGestureRecognizer(tapGestureRecognizer)
         tapGestureRecognizer.cancelsTouchesInView = false
         optimizeCam()
+        
+        rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         
         if (rlmSession.first?.autoUpdate)! {
             Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.mainTimerUpdate() })

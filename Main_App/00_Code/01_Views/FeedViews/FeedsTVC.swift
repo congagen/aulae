@@ -220,7 +220,7 @@ class FeedsTVC: UITableViewController {
             title: nil, message: nil, preferredStyle: UIAlertController.Style.alert
         )
         
-        alert.addAction(UIAlertAction(title: "Add Source", style: UIAlertAction.Style.default, handler: { _ in self.showURLAlert(aMessage: "") } ))
+        alert.addAction(UIAlertAction(title: "Add URL", style: UIAlertAction.Style.default, handler: { _ in self.showURLAlert(aMessage: "") } ))
         alert.addAction(UIAlertAction(title: "Add Topic",  style: UIAlertAction.Style.default, handler: { _ in self.showTopicAlert(aMessage: "") } ))
         alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.cancel,  handler: handleCancel))
         
