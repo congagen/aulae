@@ -1,11 +1,10 @@
 
 // URGENT:
 
-//      Location Data Permission Request Description
-//      Marker Scaling
+//      Demo Content -> Icon Animations
+//      Handle Non Square Images
 //      Share Photo Cancel Button TintColor?
 
-//      DEMO FEEDS: LOCAL PARKS  |  LOCAL COFFE  |  LOCAL NEWS
 //      SETTINGS -> LOCATION SHARING
 
 //      Demo Content

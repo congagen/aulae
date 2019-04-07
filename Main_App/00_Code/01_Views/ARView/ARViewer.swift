@@ -12,12 +12,6 @@ import Realm
 import RealmSwift
 
 
-
-
-
-
-
-
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
@@ -268,9 +262,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         for n in mainScene.rootNode.childNodes {
             if n.isKind(of: ContentNode.self) {
-//                if n.name != "demo" {
                 n.removeFromParentNode()
-//                }
             }
         }
         
@@ -298,7 +290,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         
                         if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                             print("FileManager.default.fileExists")
-                            //   fPath: (destinationUrl?.path)!, scaleFactor: (rlmSession.first?.scaleFactor)! )
                             insertSourceObject(objData: o, source: objFeeds.first!, fPath: (destinationUrl?.path)!, scaleFactor: (rlmSession.first?.scaleFactor)! )
                         }
                     } else {
@@ -307,11 +298,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         }
                         
                         if o.type == "demo" {
-//                            if mainScene.rootNode.childNodes.filter({$0.name == "demo"}).count < 4 {
                             insertSourceObject( objData: o, source: objFeeds.first!, fPath: o.filePath, scaleFactor: (rlmSession.first?.scaleFactor)! )
-//                            }
                         }
-                        
                     }
                 }
             }
@@ -378,6 +366,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @objc func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
+        print("handlePinch")
         if gestureRecognizer.state == .changed {
             for n in mainScene.rootNode.childNodes {
                 if n.isKind(of: ContentNode.self) {
@@ -444,7 +433,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func initScene() {
-        print("initScene")
+        print("ARScene initScene")
 
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
@@ -483,23 +472,30 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @objc func mainTimerUpdate() {
         print("mainUpdate: ARViewer")
+        var ref = false
         
-        for fo in rlmSourceItems {
-            if (fo.active && !fo.deleted) {
-                if mainScene.rootNode.childNodes.filter( {$0.name == fo.uuid} ).count == 0 {
-                    print("mainUpdate: needsUpdate")
-                    refreshScene()
+        if rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate {
+            for fo in rlmSourceItems {
+                if (fo.active && !fo.deleted) {
+                    if mainScene.rootNode.childNodes.filter( {$0.name == fo.uuid} ).count == 0 {
+                        ref = true
+                        print("mainUpdate: needsUpdate")
+                    }
                 }
             }
         }
         
-//        updateTimer.invalidate()
-//
-//        if !updateTimer.isValid {
-//            updateTimer = Timer.scheduledTimer(
-//                timeInterval: rlmSession.first!.feedUpdateInterval, target: self,
-//                selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
-//        }
+        if ref {
+            refreshScene()
+        }
+        
+        updateTimer.invalidate()
+
+        if !updateTimer.isValid {
+            updateTimer = Timer.scheduledTimer(
+                timeInterval: rlmSession.first!.feedUpdateInterval, target: self,
+                selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
+        }
         
         Timer.scheduledTimer(
             withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 }
@@ -554,9 +550,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print(error)
         print(error.localizedDescription)
         
-        if error is ARError {
-            initScene()
-        }
+//        if error is ARError {
+//            initScene()
+//        }
     }
     
     

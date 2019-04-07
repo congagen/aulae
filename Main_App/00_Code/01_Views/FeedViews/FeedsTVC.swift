@@ -26,7 +26,7 @@ class FeedsTVC: UITableViewController {
     
     let feedMgr = FeedMgmt()
     
-    let rowHeightRatio = 0.11
+    let rowHeightRatio = 0.08
     let activeColor    = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 1)
     let nonActiveColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.2)
     

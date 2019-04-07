@@ -44,11 +44,11 @@ extension MainVC {
         let demoFeed = RLM_Feed()
         
         demoFeed.sourceUrl = ""
-        demoFeed.id   = "GettingStartedId"
+        demoFeed.id   = "Quickstart"
         demoFeed.name = "Getting Started"
-        demoFeed.info = "Quick Start Instructions"
+        demoFeed.info = "Interface guide"
     
-        let itemCount = 4
+        let itemCount = 6
         let distance: Double = 1.2
         
         do {
@@ -76,23 +76,34 @@ extension MainVC {
                     }
                     
                     if i == 2 {
-                        o.filePath   = "view.png"
-                        o.x_pos      = distance
+                        o.filePath   = "map.png"
+                        o.x_pos      = -distance
                         o.z_pos      = -distance * 1.5
                     }
                     
                     if i == 3 {
                         o.filePath   = "lib.png"
-                        o.x_pos      = -distance
+                        o.x_pos      = distance
                         o.z_pos      = -distance * 1.5
                     }
                     
-//                    if i == 4 {
-//                        o.filePath   = "map.png"
-//                        o.x_pos      = 0
-//                        o.y_pos      = 0
-//                        o.z_pos      = distance * 1.5
-//                    }
+                    if i == 4 {
+                        o.filePath   = "lib.png"
+                        o.x_pos      = -distance
+                        o.z_pos      = distance * 1.5
+                    }
+                    
+                    if i == 5 {
+                        o.filePath   = "view.png"
+                        o.x_pos      = 0
+                        o.z_pos      = distance * 1.5
+                    }
+                    
+                    if i == 6 {
+                        o.filePath   = "map.png"
+                        o.x_pos      = distance
+                        o.z_pos      = distance * 1.5
+                    }
 
                     self.realm.add(o)
                 }

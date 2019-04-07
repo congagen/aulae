@@ -8,7 +8,8 @@ class RLM_Session: Object {
     
     @objc dynamic var hibernated: Bool = false
     @objc dynamic var muteAudio:  Bool = false
-
+    @objc dynamic var shouldRefreshView:  Bool = false
+    
     @objc dynamic var feedErrorThreshold: Int = 10
     
     @objc dynamic var currentLat: Double = 0.0
@@ -26,7 +27,6 @@ class RLM_Session: Object {
     @objc dynamic var backgroundGps:    Bool = false
 
     @objc dynamic var showPlaceholders: Bool = true
-//    @objc dynamic var allowAnimation:   Bool = true
     
     @objc dynamic var defaultFeedUrl: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
     @objc dynamic var defaultFeedAPI: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"

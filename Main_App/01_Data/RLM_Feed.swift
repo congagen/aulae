@@ -12,7 +12,11 @@ class RLM_Feed: Object {
     @objc dynamic var thumbImagePath: String = ""
     @objc dynamic var thumbImageUrl: String = ""
     @objc dynamic var customMarkerUrl: String = ""
-
+    
+    @objc dynamic var sourceUrl: String = ""
+    @objc dynamic var apiKey: String = ""
+    @objc dynamic var apiKeyValue: String = ""
+    
     @objc dynamic var info: String = ""
     @objc dynamic var updatedUtx: Int = 0
     
@@ -29,7 +33,18 @@ class RLM_Feed: Object {
     @objc dynamic var lat: Double = 0
     @objc dynamic var lng: Double = 0
     
+    @objc dynamic var da: Double = 0
+    @objc dynamic var ba: Bool = false
+    @objc dynamic var sa: String = ""
+    
+    @objc dynamic var db: Double = 0
+    @objc dynamic var bb: Bool = false
+    @objc dynamic var sb: String = ""
+    
+    @objc dynamic var dc: Double = 0
+    @objc dynamic var bc: Bool = false
+    @objc dynamic var sc: String = ""
+    
     @objc dynamic var radius: Double = 1000000000
-    @objc dynamic var sourceUrl: String = ""
     
 }

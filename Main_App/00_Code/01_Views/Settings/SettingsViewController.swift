@@ -44,14 +44,6 @@ class SettingsViewController: UITableViewController {
         updateUI()
     }
     
-    let gpsToggleParamName = "gpsToggle"
-    @IBOutlet var gpsToggleSwitch: UISwitch!
-    @IBAction func gpsToggleSwitchAction(_ sender: UISwitch) {
-        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
-        saveSettings(propName: gpsToggleParamName, propValue: boolDouble)
-        updateUI()
-    }
-    
     
     // CONTENT
     let scaleFactorParamName = "scaleFactor"
@@ -120,9 +112,6 @@ class SettingsViewController: UITableViewController {
                     case autoUpdateParamName:
                         rlmSession.first!.autoUpdate            = Int(propValue) == 1
                         
-                    case gpsToggleParamName:
-                        rlmSession.first!.backgroundGps         = Int(propValue) == 1
-                        
                     case showPlaceholderParamName:
                         rlmSession.first!.showPlaceholders      = Int(propValue) == 1
                         
@@ -154,7 +143,6 @@ class SettingsViewController: UITableViewController {
 
         useDistanceSwitch.isOn           = rlmSession.first!.distanceScale    == true
         autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate       == true
-        gpsToggleSwitch.isOn             = rlmSession.first!.backgroundGps    == true
         
         showPlaceholderSwitch.isOn       = rlmSession.first!.showPlaceholders == true
 //        animationToggleSwitch.isOn       = rlmSession.first!.allowAnimation   == true

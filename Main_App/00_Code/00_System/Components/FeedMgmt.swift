@@ -378,7 +378,7 @@ class FeedMgmt {
         print("updateFeeds")
         print("Feed Count:      "   + String(rlmFeeds.count))
         print("FeedObjectCount: "   + String(feedObjects.count))
-
+        var needsViewRefresh = false
         let updateInterval = Int((rlmSession.first?.feedUpdateInterval)!) + 1
         var shouldUpdate = true
 
@@ -454,8 +454,19 @@ class FeedMgmt {
                 } catch {
                     print("Error: \(error)")
                 }
+                needsViewRefresh = true
+
             }
         }
+        
+        do {
+            try realm.write {
+                rlmSession.first!.shouldRefreshView = needsViewRefresh
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
     }
     
     

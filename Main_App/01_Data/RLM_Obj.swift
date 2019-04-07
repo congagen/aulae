@@ -5,9 +5,10 @@ class RLM_Obj: Object {
     
     @objc dynamic var title:       String = ""
     @objc dynamic var name:        String = ""
+    @objc dynamic var version:     Int = 0
+
     @objc dynamic var feedId:      String = ""
     @objc dynamic var uuid:        String = ""
-//    @objc dynamic var version:     Int = 0
     
     @objc dynamic var type:        String = ""
     @objc dynamic var contentUrl:  String = ""

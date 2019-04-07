@@ -114,13 +114,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
         
-        if (rlmSession.first?.backgroundGps)! {
-            locationManager.requestAlwaysAuthorization()
-            locationManager.allowsBackgroundLocationUpdates = true
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.allowsBackgroundLocationUpdates = false
-        }
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.allowsBackgroundLocationUpdates = false
     }
     
     
