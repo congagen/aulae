@@ -47,10 +47,6 @@
 	<string>Location data is required for normal operation</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Access to the photo library is required for storing captured photos in the photo library</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>audio</string>
-	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

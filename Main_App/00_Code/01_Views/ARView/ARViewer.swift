@@ -162,11 +162,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         if fPath != "" && objData.type.lowercased() != "text" {
             
             if objData.type.lowercased() == "marker" {
-                let cl = UIColor(red: 0.0, green: 1, blue: 0.2, alpha: 0.1 + CGFloat( objectDistance / (objectDistance * 1.5) ))
-                ctNode.addSphere(radius: 0.1 + CGFloat( ((objectDistance * 2) + 1) / ( (objectDistance) + 1) ), and: cl)
+                let hexCl = UIColor(hexColor: objData.hex_color)
+                //let cl = UIColor(red: 0.0, green: 1, blue: 0.2, alpha: 0.3 + CGFloat( objectDistance / (objectDistance * objectDistance) ))
+                ctNode.addSphere(radius: 0.1 + CGFloat( ((objectDistance * 4) + 1) / ( (objectDistance) + 1) ), and: hexCl)
             }
             
-            if objData.type.lowercased() == "demo"  { ctNode.addDemoContent(fPath: fPath, objectData: objData) }
+            if objData.type.lowercased() == "demo"  { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
             if objData.type.lowercased() == "obj"   { ctNode.addObj(fPath:   fPath, objectData: objData) }
             if objData.type.lowercased() == "usdz"  { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
             if objData.type.lowercased() == "image" { ctNode.addImage(fPath: fPath, objectData: objData) }
@@ -185,7 +186,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
                     fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
             } else {
-                if (rlmSession.first?.showPlaceholders)! { ctNode.addSphere(radius: 0.1, and: UIColor.purple) }
+                if (rlmSession.first?.showPlaceholders)! { ctNode.addSphere(radius: 0.1, and: UIColor.blue) }
             }
         }
         
@@ -221,6 +222,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         if objData.demo {
             positionDemoNodes(ctNode: ctNode, objData: objData)
             ctNode.scale    = SCNVector3(1, 1, 1)
+        } else {
+            if (!objData.world_position) {
+                let ori = sceneView.pointOfView?.orientation
+                let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+                ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+            }
         }
         
         sceneView.scene.rootNode.addChildNode(ctNode)

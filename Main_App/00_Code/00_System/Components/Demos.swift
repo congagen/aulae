@@ -72,7 +72,7 @@ extension MainVC {
                     if i == 1 {
                         o.filePath   = "welc.png"
                         o.x_pos      = 0
-                        o.z_pos      = -distance * 1.5
+                        o.z_pos      = -distance * 2
                     }
                     
                     if i == 2 {

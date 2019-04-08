@@ -1,6 +1,8 @@
 
 // URGENT:
 
+//      If distance < 1-5M -> Place @ floor
+//      Orient all XYZ
 //      Demo Content -> Icon Animations
 //      Handle Non Square Images
 //      Share Photo Cancel Button TintColor?
@@ -41,7 +43,6 @@
 
 // NavigationBar:
 //        Refresh Buttons:     Spin Animations
-
 
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
