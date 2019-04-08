@@ -15,29 +15,38 @@ extension MainVC {
     
     
     func contentExamples() {
-        let apiDemoFeed = RLM_Feed()
-        apiDemoFeed.sourceUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
-        apiDemoFeed.id   = "Example Source 1"
-        apiDemoFeed.name = "Example Source 1"
-        apiDemoFeed.info = "Example Source 1"
-        apiDemoFeed.active = false
+//        let apiDemoFeed = RLM_Feed()
+//        apiDemoFeed.sourceUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
+//        apiDemoFeed.id   = "Example Source 1"
+//        apiDemoFeed.name = "Example Source 1"
+//        apiDemoFeed.info = "Example Source 1"
+//        apiDemoFeed.active = false
+//
+//        let fileDemoFeed = RLM_Feed()
+//        fileDemoFeed.sourceUrl = "https://s3.amazonaws.com/abstra-dev/1.json"
+//        fileDemoFeed.id   = "Example Source 2"
+//        fileDemoFeed.name = "Example Source 2"
+//        fileDemoFeed.info = "Example Source 2"
+//        fileDemoFeed.active = false
         
-        let fileDemoFeed = RLM_Feed()
-        fileDemoFeed.sourceUrl = "https://s3.amazonaws.com/abstra-dev/1.json"
-        fileDemoFeed.id   = "Example Source 2"
-        fileDemoFeed.name = "Example Source 2"
-        fileDemoFeed.info = "Example Source 2"
-        fileDemoFeed.active = false
+        let typeDemoFeed = RLM_Feed()
+        typeDemoFeed.sourceUrl = "https://abstraqata.squarespace.com/s/aulae_demo.json"
+        typeDemoFeed.id   = "Example Source"
+        typeDemoFeed.name = "Example Source"
+        typeDemoFeed.info = "Example Source"
+        typeDemoFeed.active = false
         
         do {
             try realm.write {
-                self.realm.add(apiDemoFeed)
-                self.realm.add(fileDemoFeed)
+                self.realm.add(typeDemoFeed)
             }
         } catch {
             print("Error: \(error)")
         }
     }
+    
+    
+    
     
     
     func quickStartExamples() {

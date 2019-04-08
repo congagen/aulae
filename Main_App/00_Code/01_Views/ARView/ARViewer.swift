@@ -221,11 +221,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             positionDemoNodes(ctNode: ctNode, objData: objData)
             ctNode.scale    = SCNVector3(1, 1, 1)
         } else {
-            if (!objData.world_position) {
-                let ori = sceneView.pointOfView?.orientation
-                let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
-                ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-            }
+//            if (!objData.world_position) {
+//                let ori = sceneView.pointOfView?.orientation
+//                let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+//                ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+//            }
         }
         
         sceneView.scene.rootNode.addChildNode(ctNode)
