@@ -162,11 +162,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         if fPath != "" && objData.type.lowercased() != "text" {
             
             if objData.type.lowercased() == "marker" {
-                let hexCl = UIColor(hexColor: objData.hex_color)
-                //let cl = UIColor(red: 0.0, green: 1, blue: 0.2, alpha: 0.3 + CGFloat( objectDistance / (objectDistance * objectDistance) ))
-                ctNode.addSphere(radius: 0.1 + CGFloat( ((objectDistance * 4) + 1) / ( (objectDistance) + 1) ), and: hexCl)
+                let hexCl = UIColor(red: 0.25, green: 1, blue: 0.25, alpha: 0.5 + CGFloat( abs(objectDistance + 1.0) / (abs(objectDistance + 1.5) * 1.1)))
+                ctNode.addSphere(radius: 0.05 + CGFloat( (((objectDistance) + 1)) / ( (objectDistance) + 1) ), and: hexCl)
             }
-            
             if objData.type.lowercased() == "demo"  { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
             if objData.type.lowercased() == "obj"   { ctNode.addObj(fPath:   fPath, objectData: objData) }
             if objData.type.lowercased() == "usdz"  { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }

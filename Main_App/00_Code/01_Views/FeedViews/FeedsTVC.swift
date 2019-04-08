@@ -303,7 +303,7 @@ class FeedsTVC: UITableViewController {
         
         let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (rowAction, indexPath) in
             if self.selected?.topicKwd != "" {
-                self.shareURLAction(url: (self.selected?.sourceUrl)!)
+                self.shareURLAction(url: "Topic: " + self.selected!.topicKwd)
             } else {
                 self.shareURLAction(url: (self.selected?.sourceUrl)!)
             }

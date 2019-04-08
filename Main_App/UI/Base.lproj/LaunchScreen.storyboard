@@ -19,15 +19,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Launchscreen_Logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="Mrs-BH-QLu">
-                                <rect key="frame" x="16" y="190" width="343" height="287"/>
+                                <rect key="frame" x="0.0" y="10" width="375" height="647"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Mrs-BH-QLu" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="170" id="DmT-4a-vF3"/>
-                            <constraint firstItem="Mrs-BH-QLu" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" id="QBY-8d-tKA"/>
-                            <constraint firstItem="Mrs-BH-QLu" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="XTd-YV-8H9"/>
-                            <constraint firstItem="Mrs-BH-QLu" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailingMargin" id="qB6-MP-wRg"/>
+                            <constraint firstItem="Mrs-BH-QLu" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="0bL-2H-v6L"/>
+                            <constraint firstItem="Mrs-BH-QLu" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="-16" id="0dx-fY-oA0"/>
+                            <constraint firstItem="Mrs-BH-QLu" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="kJW-2h-3LE"/>
+                            <constraint firstItem="Mrs-BH-QLu" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" id="xGo-Zi-cNP"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -38,6 +38,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Launchscreen_Logo.png" width="1000" height="1000"/>
+        <image name="Launchscreen_Logo.png" width="2000" height="2000"/>
     </resources>
 </document>

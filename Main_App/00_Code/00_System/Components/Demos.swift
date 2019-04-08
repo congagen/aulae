@@ -17,16 +17,16 @@ extension MainVC {
     func contentExamples() {
         let apiDemoFeed = RLM_Feed()
         apiDemoFeed.sourceUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
-        apiDemoFeed.id   = "Api Demo"
-        apiDemoFeed.name = "Api Demo"
-        apiDemoFeed.info = "Api Demo"
+        apiDemoFeed.id   = "Example Source 1"
+        apiDemoFeed.name = "Example Source 1"
+        apiDemoFeed.info = "Example Source 1"
         apiDemoFeed.active = false
         
         let fileDemoFeed = RLM_Feed()
         fileDemoFeed.sourceUrl = "https://s3.amazonaws.com/abstra-dev/1.json"
-        fileDemoFeed.id   = "WWW Demo"
-        fileDemoFeed.name = "WWW Demo"
-        fileDemoFeed.info = "WWW Demo"
+        fileDemoFeed.id   = "Example Source 2"
+        fileDemoFeed.name = "Example Source 2"
+        fileDemoFeed.info = "Example Source 2"
         fileDemoFeed.active = false
         
         do {

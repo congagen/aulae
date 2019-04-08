@@ -27,6 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let topicString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
         var urlString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
+        let msgString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
+
         
         if urlString.lowercased().contains("https") {
             print("OK")
@@ -38,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        let alertController = UIAlertController(title: "Add this source?", message: topicString, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Add to library?", message: "Value: " + msgString, preferredStyle: .alert)
         
         let urlAction    = UIAlertAction(
             title: "URL", style: UIAlertAction.Style.default,
