@@ -146,43 +146,44 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var objectPos        = SCNVector3( objData.x_pos, objData.y_pos, objData.z_pos )
-        var nodeSize: CGFloat = CGFloat(objData.scale)
+        var objectPos         = SCNVector3(objData.x_pos, objData.y_pos, objData.z_pos)
+        var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
         
         if objData.world_position {
-            objectPos = getNodeWorldPosition(baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
+            objectPos = getNodeWorldPosition(objectDistance: objectDistance, deviceGPS: rawObjectGpsCCL, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
         }
         
         if (rlmSession.first?.distanceScale)! && objData.world_scale {
-            nodeSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+            let nSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+            objSize = SCNVector3(nSize, nSize, nSize)
+        } else {
+            if (objData.type == "text" || objData.type == "audio") || (objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
         }
         
         let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, location: rawObjectGpsCCL)
+        ctNode.sourceUrl   = source.sourceUrl
+        ctNode.sourceName  = source.name
+        ctNode.sourceTopic = source.topicKwd
+        ctNode.contentLink = objData.contentLink
+        ctNode.directLink  = objData.directLink
         
         if fPath != "" && objData.type.lowercased() != "text" {
-            
-            if objData.type.lowercased() == "marker" {
-                let hexCl = UIColor(red: 0.25, green: 1, blue: 0.25, alpha: 0.5 + CGFloat( abs(objectDistance + 1.0) / (abs(objectDistance + 1.5) * 1.1)))
-                ctNode.addSphere(radius: 0.05 + CGFloat( (((objectDistance) + 1)) / ( (objectDistance) + 1) ), and: hexCl)
-            }
-            if objData.type.lowercased() == "demo"  { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
-            if objData.type.lowercased() == "obj"   { ctNode.addObj(fPath:   fPath, objectData: objData) }
-            if objData.type.lowercased() == "usdz"  { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
-            if objData.type.lowercased() == "image" { ctNode.addImage(fPath: fPath, objectData: objData) }
-            if objData.type.lowercased() == "gif"   { ctNode.addGif(fPath:   fPath, objectData: objData) }
-            if objData.type.lowercased() == "audio" {
+            if objData.type.lowercased() == "marker" { ctNode.addSphere(radius: 0.05 + CGFloat( (((objectDistance) + 1)) / ( (objectDistance) + 1) ), and: UIColor(hexColor: objData.hex_color))}
+            if objData.type.lowercased() == "demo"   { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
+            if objData.type.lowercased() == "obj"    { ctNode.addObj(fPath:   fPath, objectData: objData) }
+            if objData.type.lowercased() == "usdz"   { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
+            if objData.type.lowercased() == "image"  { ctNode.addImage(fPath: fPath, objectData: objData) }
+            if objData.type.lowercased() == "gif"    { ctNode.addGif(fPath:   fPath, objectData: objData) }
+            if objData.type.lowercased() == "audio"  {
                 ctNode.removeAllAudioPlayers()
-                
                 if !(rlmSession.first?.muteAudio)! {
                     ctNode.addSphere(radius: 0.1, and: UIColor(hexColor: objData.hex_color))
-                    addAudio( contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: nodeSize )
+                    addAudio( contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x) )
                 }
             }
         } else {
             if objData.type.lowercased() == "text" {
-                ctNode.addText(
-                    objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
-                    fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
+                ctNode.addText( objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01), fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
             } else {
                 if (rlmSession.first?.showPlaceholders)! { ctNode.addSphere(radius: 0.1, and: UIColor.blue) }
             }
@@ -195,37 +196,20 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         ctNode.tagComponents(nodeTag: String(objData.uuid))
-        
+    
         ctNode.name        = String(objData.uuid)
-        ctNode.sourceUrl   = source.sourceUrl
-        ctNode.sourceName  = source.name
-        ctNode.sourceTopic = source.topicKwd
-        ctNode.contentLink = objData.contentLink
-        ctNode.directLink  = objData.directLink
         ctNode.position    = SCNVector3(objectPos.x, objectPos.y, objectPos.z)
-        ctNode.scale       = SCNVector3(nodeSize, nodeSize, nodeSize)
+        ctNode.scale       = objSize
         
-        if (objData.type == "text" || objData.type == "audio") {
-            if !(rlmSession.first?.distanceScale)! || !objData.world_scale {
-                ctNode.scale = SCNVector3(0.05, 0.05, 0.05)
-            } else {
-                ctNode.scale = SCNVector3(nodeSize, nodeSize, nodeSize)
-            }
-        }
-        
-        if !(rlmSession.first?.distanceScale)! && (objData.type == "marker") {
-            ctNode.scale = SCNVector3(0.05, 0.05, 0.05)
-        }
-
         if objData.demo {
             positionDemoNodes(ctNode: ctNode, objData: objData)
             ctNode.scale    = SCNVector3(1, 1, 1)
         } else {
-//            if (!objData.world_position) {
-//                let ori = sceneView.pointOfView?.orientation
-//                let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
-//                ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-//            }
+            if !objData.world_position && objData.localOrient {
+                let ori = sceneView.pointOfView?.orientation
+                let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+                ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+            }
         }
         
         sceneView.scene.rootNode.addChildNode(ctNode)

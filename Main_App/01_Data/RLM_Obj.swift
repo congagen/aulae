@@ -42,6 +42,7 @@ class RLM_Obj: Object {
     @objc dynamic var world_position: Bool = true
     @objc dynamic var world_scale: Bool = true
     @objc dynamic var billboard:   Bool   = true
+    @objc dynamic var localOrient: Bool   = false
 
     @objc dynamic var lat:         Double = 0
     @objc dynamic var lng:         Double = 0

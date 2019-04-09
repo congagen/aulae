@@ -46,9 +46,6 @@ extension MainVC {
     }
     
     
-    
-    
-    
     func quickStartExamples() {
         let demoFeed = RLM_Feed()
         

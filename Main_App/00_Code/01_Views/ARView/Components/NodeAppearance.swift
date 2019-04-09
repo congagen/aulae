@@ -31,15 +31,13 @@ extension UIColor {
 
 extension ARViewer {
     
-    func getNodeWorldPosition(baseOffset: Double, contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
+    func getNodeWorldPosition(objectDistance: Double, deviceGPS: CLLocation, baseOffset: Double, contentObj: RLM_Obj, scaleFactor: Double) -> SCNVector3 {
         print("getNodeWorldPosition")
-        
-        let rawDeviceGpsCCL      = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
+
         let rawObjectGpsCCL      = CLLocation(latitude: contentObj.lat, longitude: contentObj.lng)
-        let objectDistance       = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         let scaleDivider: Double = (objectDistance / scaleFactor)
         
-        let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: rawDeviceGpsCCL, location: rawObjectGpsCCL)
+        let translation      = MatrixHelper.transformMatrix(for: matrix_identity_float4x4, originLocation: deviceGPS, location: rawObjectGpsCCL)
         let translationSCNV  = SCNVector3.positionFromTransform(translation)
         
         var xPos: Double = 0

@@ -96,6 +96,8 @@ class FeedMgmt {
                 rlmObj.lng         = objInfo["lng"] as! Double
                 rlmObj.alt         = objInfo["alt"] as! Double
                 
+                rlmObj.localOrient = objInfo["local_orientation"] as! Bool
+                
                 rlmObj.x_pos       = objInfo["x_pos"] as! Double
                 rlmObj.y_pos       = objInfo["y_pos"] as! Double
                 rlmObj.z_pos       = objInfo["z_pos"] as! Double
@@ -199,6 +201,7 @@ class FeedMgmt {
                     "scale":            valueIfPresent(dict: itemSpec, key: "scale",     placeHolderValue: 1.0),
                     "world_scale":      valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: true),
                     "world_position":   valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
+                    "local_orientation": valueIfPresent(dict: itemSpec, key: "local_orientation", placeHolderValue: false),
 
                     "lat":              valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: 80.0),
                     "lng":              valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: 0.0),
