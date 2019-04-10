@@ -64,15 +64,13 @@ class FeedsTVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = indexPath.section
         let feed = rlmFeeds[section]
+        
+        tableView.reloadData()
+        self.tableView.reloadInputViews()
 
         do {
             try realm.write {
-                if !feed.deleted {
-                    feed.active = !feed.active
-                } else {
-                    feed.active = false
-                }
-                
+                feed.active = !feed.active
                 feed.errors = 0
             }
         } catch {
@@ -82,6 +80,8 @@ class FeedsTVC: UITableViewController {
         feedMgr.updateFeeds(checkTimeSinceUpdate: false)
         
         tableView.reloadData()
+        self.tableView.reloadInputViews()
+
     }
     
 

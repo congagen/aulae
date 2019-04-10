@@ -1,6 +1,7 @@
 
 // URGENT:
 
+//      ArViewer -> [objUUID: CustomScale]
 //      If distance < 1-5M -> Place @ floor
 //      Orient all XYZ
 //      Demo Content -> Icon Animations

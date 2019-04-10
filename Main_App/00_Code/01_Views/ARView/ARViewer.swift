@@ -21,7 +21,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     var updateTimer = Timer()
     
-    var isInit = false
     var isTrackingQR = false
     var qrUrl = ""
     var qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
@@ -43,9 +42,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var loadingView: UIView!
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
-        FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
         NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
-        refreshScene()
+
+        // FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: {_ in self.refreshScene() })
+
     }
     
     @IBOutlet var sceneView: ARSCNView!
@@ -150,14 +151,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
         
         if objData.world_position {
-            objectPos = getNodeWorldPosition(objectDistance: objectDistance, deviceGPS: rawObjectGpsCCL, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
+            objectPos = getNodeWorldPosition(objectDistance: objectDistance, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
         }
         
         if (rlmSession.first?.distanceScale)! && objData.world_scale {
             let nSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
             objSize = SCNVector3(nSize, nSize, nSize)
         } else {
-            if (objData.type == "text" || objData.type == "audio") || (objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
+            if (objData.type == "text" || objData.type == "audio" || objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
         }
         
         let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, location: rawObjectGpsCCL)
@@ -168,12 +169,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.directLink  = objData.directLink
         
         if fPath != "" && objData.type.lowercased() != "text" {
-            if objData.type.lowercased() == "marker" { ctNode.addSphere(radius: 0.05 + CGFloat( (((objectDistance) + 1)) / ( (objectDistance) + 1) ), and: UIColor(hexColor: objData.hex_color))}
+
             if objData.type.lowercased() == "demo"   { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
             if objData.type.lowercased() == "obj"    { ctNode.addObj(fPath:   fPath, objectData: objData) }
             if objData.type.lowercased() == "usdz"   { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
             if objData.type.lowercased() == "image"  { ctNode.addImage(fPath: fPath, objectData: objData) }
             if objData.type.lowercased() == "gif"    { ctNode.addGif(fPath:   fPath, objectData: objData) }
+            
+            if objData.type.lowercased() == "marker" {
+                let mR = 0.05 + CGFloat( (((objectDistance) + 1)) / ( (objectDistance) + 1) )
+                ctNode.addSphere(radius: mR, and: UIColor(hexColor: objData.hex_color))
+            }
+            
             if objData.type.lowercased() == "audio"  {
                 ctNode.removeAllAudioPlayers()
                 if !(rlmSession.first?.muteAudio)! {
@@ -181,6 +188,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     addAudio( contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x) )
                 }
             }
+            
         } else {
             if objData.type.lowercased() == "text" {
                 ctNode.addText( objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01), fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
@@ -228,11 +236,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print("Error: \(error)")
         }
         
-        if !isInit {
-            let ori = sceneView.pointOfView?.orientation
-            let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
-            ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-        }
+        let ori = sceneView.pointOfView?.orientation
+        let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+        ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
         
         ctNode.position = SCNVector3(
             ctNode.position.x, 0, ctNode.position.z
@@ -453,7 +459,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if (rlmSession.first?.autoUpdate)! {
             Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.mainTimerUpdate() })
-            Timer.scheduledTimer(withTimeInterval: 1 + ((rlmSession.first?.feedUpdateInterval)! * 0.25), repeats: false, block: { _ in self.isInit = true })
         }
         
     }
@@ -511,7 +516,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
-        isInit = false
+
         loadingView.isHidden = false
         initScene()
         
@@ -527,7 +532,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        isInit = false
 
         loadingView.isHidden = false
         sceneView.session.pause()

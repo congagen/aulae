@@ -288,7 +288,7 @@ class ContentNode: SCNNode {
         layer.bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
         
         let animation: CAKeyframeAnimation = createGIFAnimation(
-            url: URL(fileURLWithPath: fPath), fDuration: 0.1 )!
+            url: URL(fileURLWithPath: fPath), fDuration: 0.05 )!
         
         layer.add(animation, forKey: "contents")
         layer.anchorPoint = CGPoint(x:0.0, y:1.0)

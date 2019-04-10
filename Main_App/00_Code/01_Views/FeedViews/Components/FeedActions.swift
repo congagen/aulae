@@ -49,7 +49,7 @@ class FeedActions {
                 try realm.write {
                     newFeed.sourceUrl  = feedUrl
                     newFeed.id   = UUID().uuidString
-                    newFeed.name = "Downloading..."
+                    newFeed.name = "Updating..."
                     newFeed.topicKwd = feedApiKwd
                     
                     self.realm.add(newFeed)

@@ -15,29 +15,23 @@ extension MainVC {
     
     
     func contentExamples() {
-//        let apiDemoFeed = RLM_Feed()
-//        apiDemoFeed.sourceUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
-//        apiDemoFeed.id   = "Example Source 1"
-//        apiDemoFeed.name = "Example Source 1"
-//        apiDemoFeed.info = "Example Source 1"
-//        apiDemoFeed.active = false
-//
-//        let fileDemoFeed = RLM_Feed()
-//        fileDemoFeed.sourceUrl = "https://s3.amazonaws.com/abstra-dev/1.json"
-//        fileDemoFeed.id   = "Example Source 2"
-//        fileDemoFeed.name = "Example Source 2"
-//        fileDemoFeed.info = "Example Source 2"
-//        fileDemoFeed.active = false
+        let apiDemoFeed = RLM_Feed()
+        apiDemoFeed.sourceUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae"
+        apiDemoFeed.id   = "Demo Source A"
+        apiDemoFeed.name = "Demo Source A"
+        apiDemoFeed.info = "Demo Source A"
+        apiDemoFeed.active = false
         
         let typeDemoFeed = RLM_Feed()
-        typeDemoFeed.sourceUrl = "https://abstraqata.squarespace.com/s/aulae_demo.json"
-        typeDemoFeed.id   = "Example Source"
-        typeDemoFeed.name = "Example Source"
-        typeDemoFeed.info = "Example Source"
+        typeDemoFeed.sourceUrl = "https://s3.amazonaws.com/aulae-examples/sources/images/aulae_demo.json"
+        typeDemoFeed.id   = "Demo Source B"
+        typeDemoFeed.name = "Demo Source B"
+        typeDemoFeed.info = "Demo Source B"
         typeDemoFeed.active = false
         
         do {
             try realm.write {
+                self.realm.add(apiDemoFeed)
                 self.realm.add(typeDemoFeed)
             }
         } catch {
@@ -108,7 +102,7 @@ extension MainVC {
                     if i == 6 {
                         o.filePath   = "map.png"
                         o.x_pos      = distance
-                        o.z_pos      = distance * 1.5
+                        o.z_pos      = distance * 2
                     }
 
                     self.realm.add(o)

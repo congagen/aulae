@@ -28,10 +28,9 @@ class RLM_Session: Object {
 
     @objc dynamic var showPlaceholders: Bool = true
     
-    @objc dynamic var defaultFeedUrl: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
-    @objc dynamic var defaultFeedAPI: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
-
-    @objc dynamic var feedSearchApi:  String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/test"
+    @objc dynamic var defaultFeedUrl: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae"
+    @objc dynamic var defaultFeedAPI: String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae"
+    @objc dynamic var feedSearchApi:  String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae"
     
     @objc dynamic var apiHeaderValue: String = "VYtA9KZdQ26y4isktSKba59ME8h4WOCuajYwblvn"
     @objc dynamic var apiHeaderFeild: String = "x-api-key"
