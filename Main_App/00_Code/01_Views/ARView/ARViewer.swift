@@ -202,8 +202,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             constraint.freeAxes = [.Y]
             ctNode.constraints = [constraint]
         }
-        
-        ctNode.tagComponents(nodeTag: String(objData.uuid))
     
         ctNode.name        = String(objData.uuid)
         ctNode.position    = SCNVector3(objectPos.x, objectPos.y, objectPos.z)
@@ -219,6 +217,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
             }
         }
+        
+        ctNode.tagComponents(nodeTag: String(objData.uuid))
         
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
@@ -520,7 +520,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         loadingView.isHidden = false
         initScene()
         
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.refreshScene() })
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.refreshScene() })
     }
     
     

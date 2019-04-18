@@ -44,6 +44,7 @@ class HttpDownloader {
                     print("Success: \(statusCode)")
                 }
                 
+                // TODO: Fix File exists
                 do {
                     try FileManager.default.copyItem(at: tempLocalUrl, to: destinationUrl)
                     completion()

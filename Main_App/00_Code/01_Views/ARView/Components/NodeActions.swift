@@ -56,6 +56,36 @@ extension ARViewer {
     }
     
     
+    func muteSourceAction(feedID: String) {
+        
+        if rlmFeeds.filter({$0.id == feedID}).count > 0 {
+            let f = rlmFeeds.filter({$0.id == feedID}).first
+            
+            do {
+                try realm.write {
+                    f!.active = false
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+            
+            loadingView.isHidden = false
+
+//            DispatchQueue.main.async {
+//                FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
+//                self.refreshScene()
+//            }
+            
+            FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
+            self.refreshScene()
+
+        }
+        
+
+        
+    }
+    
+    
     func showSeletedNodeActions(selNode: ContentNode) {
         print("showSeletedNodeActions")
         
@@ -78,6 +108,11 @@ extension ARViewer {
             alert.addAction(
                 UIAlertAction(title: "Share Source", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.sourceUrl)) }))
         }
+        
+        let muteAction = UIAlertAction(
+            title: "Hide Source",
+            style: UIAlertAction.Style.default, handler: { _ in self.muteSourceAction(feedID: selNode.feedId) } )
+        alert.addAction(muteAction)
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel,  handler: nil ))
         alert.view.tintColor = UIColor.black
