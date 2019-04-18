@@ -106,11 +106,11 @@ extension ARViewer {
         
         if selNode.sourceUrl != "" && selNode.sourceTopic == "" {
             alert.addAction(
-                UIAlertAction(title: "Share Source", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.sourceUrl)) }))
+                UIAlertAction(title: "Share", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.sourceUrl)) }))
         }
         
         let muteAction = UIAlertAction(
-            title: "Hide Source",
+            title: "Hide",
             style: UIAlertAction.Style.default, handler: { _ in self.muteSourceAction(feedID: selNode.feedId) } )
         alert.addAction(muteAction)
         

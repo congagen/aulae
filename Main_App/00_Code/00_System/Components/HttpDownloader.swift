@@ -45,8 +45,14 @@ class HttpDownloader {
                 }
                 
                 // TODO: Fix File exists
+
+                
                 do {
-                    try FileManager.default.copyItem(at: tempLocalUrl, to: destinationUrl)
+                    if !FileManager.default.fileExists(atPath: destinationUrl.path) {
+                        try FileManager.default.copyItem(at: tempLocalUrl, to: destinationUrl)
+                    } else {
+                        _ = try FileManager.default.replaceItemAt(destinationUrl, withItemAt: tempLocalUrl)
+                    }
                     completion()
                 } catch (let writeError) {
                     print(writeError)

@@ -1,9 +1,9 @@
 
 // URGENT:
 
-//      Audio Bugs
+//      Remove Source Menu Option
 //      Viewver Bugs
-//      Remove Source Menu Option 
+//      Audio Bugs
 
 //      ArViewer -> [objUUID: CustomScale]
 //      If distance < 1-5M -> Place @ floor
@@ -13,28 +13,26 @@
 //      Share Photo Cancel Button TintColor?
 
 //      SETTINGS -> LOCATION SHARING
-
 //      Demo Content
 //      Lng -> Long
 
-// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
-//      Menu Link / Direct Link
+// Menu Link / Direct Link
 //
 //      Content Display Modes:  Floor / Wall / World Position / Static
 //      Extensions: Target: Info: URL Types
 //      Duplicate feed ID Bug (?)
 
-// Feeds
+// Feeds:
 //      Feed Feeds / RSS / ?
 //      Update feed/items if deef version id !=
 //      Remove/Invalidate removed FeedItems
 //      Feed Update Timeout / Error Thresh
 
-
 // Feeds JSON SCHEMA:
-//     Object Settings:
-//         Animate:            {Hoover: SPEED, DISTANCE} / {Rotate: SPEED, DISTANCE} / {Wander: SPEED, DISTANCE}
+//      Object Settings:
+//         Animate:            { Hoover: SPEED, DISTANCE} / {Rotate: SPEED, DISTANCE} / {Wander: SPEED, DISTANCE }
 //         ARView Positioning: GPS / CAM OFFSET
 //         ARView Text:        Tapped Action -> Show Text?
 //         Content Type:       SCN
@@ -44,13 +42,13 @@
 //        Timer Updadate
 
 // TabBar:
-//        Icons:               Map View Feeds Settings
+//        Icons:            Map View Feeds Settings
 
 // NavigationBar:
-//        Refresh Buttons:     Spin Animations
+//        Refresh Buttons: Spin Animations
 
 
-// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 // BUGS:
 
 // FEED MGMT: DELETE FEED:
