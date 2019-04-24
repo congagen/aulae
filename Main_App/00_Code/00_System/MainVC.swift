@@ -51,7 +51,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             self.feedMgr.updateFeeds(checkTimeSinceUpdate: true)
         }
         
-
         do {
             try realm.write {
                 rlmSession.first!.showPlaceholders = (CLLocationManager.locationServicesEnabled() && rlmSession.first!.showPlaceholders)
