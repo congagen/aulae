@@ -201,10 +201,17 @@ class FeedsTVC: UITableViewController {
     
     
     func showTopicAlert(aMessage: String?){
+        
+        if rlmSession.first!.showPlaceholders {
+            newSourceAlertTextField?.text = ""
+        } else {
+            newSourceAlertTextField?.text = "You must enable GPS content in order to view topic content"
+        }
+        
         let alert = UIAlertController(
-            title: "Topic", message: nil, preferredStyle: UIAlertController.Style.alert
+            title: "Topic", message: newSourceAlertTextField?.text, preferredStyle: UIAlertController.Style.alert
         )
-        newSourceAlertTextField?.text = ""
+
         alert.addTextField(configurationHandler: urlConfigurationTextField)
         
         alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: handleEnterTopic))

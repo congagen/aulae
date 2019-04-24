@@ -71,19 +71,11 @@ class SettingsViewController: UITableViewController {
     }
     
     
-    let showPlaceholderParamName = "showPlaceholders"
-    @IBOutlet var showPlaceholderSwitch: UISwitch!
-    @IBAction func showPlaceholderSwitchAction(_ sender: UISwitch) {
+    let locationToggleParamName = "animationToggle"
+    @IBOutlet var locationSharingSwitch: UISwitch!
+    @IBAction func locationSharingSwitchAction(_ sender: UISwitch) {
         let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
-        saveSettings(propName: showPlaceholderParamName, propValue: boolDouble)
-        updateUI()
-    }
-    
-    let animationToggleParamName = "animationToggle"
-    @IBOutlet var animationToggleSwitch: UISwitch!
-    @IBAction func anitmationToggleSwitchAction(_ sender: UISwitch) {
-        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
-        saveSettings(propName: animationToggleParamName, propValue: boolDouble)
+        saveSettings(propName: locationToggleParamName, propValue: boolDouble)
         updateUI()
     }
     
@@ -112,11 +104,8 @@ class SettingsViewController: UITableViewController {
                     case autoUpdateParamName:
                         rlmSession.first!.autoUpdate            = Int(propValue) == 1
                         
-                    case showPlaceholderParamName:
+                    case locationToggleParamName:
                         rlmSession.first!.showPlaceholders      = Int(propValue) == 1
-                        
-//                    case animationToggleParamName:
-//                        rlmSession.first!.allowAnimation        = Int(propValue) == 1
     
                     default:
                         break
@@ -144,8 +133,7 @@ class SettingsViewController: UITableViewController {
         useDistanceSwitch.isOn           = rlmSession.first!.distanceScale    == true
         autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate       == true
         
-        showPlaceholderSwitch.isOn       = rlmSession.first!.showPlaceholders == true
-//        animationToggleSwitch.isOn       = rlmSession.first!.allowAnimation   == true
+        locationSharingSwitch.isOn       = rlmSession.first!.showPlaceholders == true
     }
     
     

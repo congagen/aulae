@@ -193,7 +193,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             if objData.type.lowercased() == "text" {
                 ctNode.addText( objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01), fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
             } else {
-                if (rlmSession.first?.showPlaceholders)! { ctNode.addSphere(radius: 0.1, and: UIColor.blue) }
+                ctNode.addSphere(radius: 0.01, and: UIColor.blue)
             }
         }
         

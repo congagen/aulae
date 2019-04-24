@@ -50,6 +50,15 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         DispatchQueue.main.async {
             self.feedMgr.updateFeeds(checkTimeSinceUpdate: true)
         }
+        
+
+        do {
+            try realm.write {
+                rlmSession.first!.showPlaceholders = (CLLocationManager.locationServicesEnabled() && rlmSession.first!.showPlaceholders)
+            }
+        } catch {
+            print("Error: \(error)")
+        }
 
     }
     
@@ -141,7 +150,11 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             mainUpdate()
             initLocation()
             
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in self.selectedIndex = 1 })
+            Timer.scheduledTimer(
+                withTimeInterval: 0.5,
+                repeats: false,
+                block: { _ in self.selectedIndex = 1 }
+            )
         } else {
             resetErrCounts()
             mainUpdate()

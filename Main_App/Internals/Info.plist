@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0.2</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -44,7 +44,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>This application will use the camera for Augmented Reality.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location data is required for normal operation</string>
+	<string>This application uses location data in order to select and position content in the viewport. Location data may also be shared to third parties depending on your subscriptions.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Access to the photo library is required for storing captured photos in the photo library</string>
 	<key>UILaunchStoryboardName</key>

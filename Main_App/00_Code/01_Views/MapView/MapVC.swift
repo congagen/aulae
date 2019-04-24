@@ -334,6 +334,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         }
         
         updateObjectAnnotations()
+        updateMapSearchRadius()
         updateSearchRadiusDB(rDistance: (rlmSession.first?.searchRadius)!)
     }
 
