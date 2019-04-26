@@ -298,9 +298,9 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         print("focusMap")
         
         let center = CLLocationCoordinate2D(latitude: focusLat, longitude: focusLng)
-        let region = MKCoordinateRegion(center: center, span: mapView.region.span)
+        let i_region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 135.68020269231502, longitudeDelta: 131.8359359933973))
         
-        mapView.setRegion(region, animated: true)
+        mapView.setRegion(i_region, animated: false)
         mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
         
     }
@@ -317,7 +317,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         lpgr.delegate = self
         self.mapView.addGestureRecognizer(lpgr)
         
-        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+        //NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
         focusMap(focusLat: rlmSession.first!.currentLat, focusLng: rlmSession.first!.currentLng)
     }
 
@@ -325,6 +325,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
 
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MapVC" )

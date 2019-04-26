@@ -77,7 +77,9 @@ class FeedsTVC: UITableViewController {
             print("Error: \(error)")
         }
         
-        feedMgr.updateFeeds(checkTimeSinceUpdate: false)
+        DispatchQueue.main.async {
+            self.feedMgr.updateFeeds(checkTimeSinceUpdate: false)
+        }
         
         tableView.reloadData()
         self.tableView.reloadInputViews()
@@ -379,7 +381,7 @@ class FeedsTVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+        // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
 
         rCtrl.tintColor = view.superview?.tintColor
         tableView.addSubview(rCtrl)

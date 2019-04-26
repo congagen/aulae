@@ -38,11 +38,38 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var currentPlanes: [SCNNode]? = nil
     let progressBar = UIProgressView()
     
-    @IBOutlet var loadingViewLabel: UILabel!
+    @IBOutlet var MapViewCV: UIView!
+    @IBOutlet var settingsCv: UIView!
+    
+    @IBAction func toggleMapAction(_ sender: UIButton) {
+        MapViewCV.isHidden = false
+        MapViewCV.isUserInteractionEnabled = true
+        closeBtn.isHidden = false
+    }
+    
+    @IBAction func toggleSettingsBtnAction(_ sender: UIButton) {
+        settingsCv.isHidden = false
+        settingsCv.isUserInteractionEnabled = true
+        closeBtn.isHidden = false
+    }
+    
+    @IBOutlet var closeBtn: UIButton!
+    
+    @IBAction func closeCvBtnAction(_ sender: UIButton) {
+        closeBtn.isHidden = true
+
+        MapViewCV.isHidden = true
+        MapViewCV.isUserInteractionEnabled = false
+        
+        settingsCv.isHidden = true
+        MapViewCV.isUserInteractionEnabled = false
+    }
+    
     @IBOutlet var loadingView: UIView!
-    @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
+    
+    @IBAction func refreshBtnAction(_ sender: UIButton) {
         loadingView.isHidden = false
-        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
+        // NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
 
         // FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: {_ in self.refreshScene() })
@@ -50,7 +77,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     @IBOutlet var sceneView: ARSCNView!
-    @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
+    
+    
+    
+    @IBAction func sharePhotoBtn(_ sender: UIButton) {
         print("sharePhotoBtn")
         let snapShot = sceneView.snapshot()
         let imageToShare = [ snapShot ]
@@ -65,8 +95,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    @IBOutlet var searchQRBtn: UIBarButtonItem!
-    @IBAction func searchQrBtnAction(_ sender: UIBarButtonItem) {
+    @IBOutlet var searchQRBtn: UIButton!
+    @IBAction func searchQrBtnAction(_ sender: UIButton) {
         print("searchQrBtnAction")
     
         if isTrackingQR {
@@ -139,6 +169,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print("Error: \(error)")
         }
     }
+    
+
   
     
     func insertSourceObject(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
@@ -243,7 +275,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.position = SCNVector3(
             ctNode.position.x, 0, ctNode.position.z
         )
-        
+    }
+    
+    
+    func hideNodesWithId(nodeId:String) {
+        for n in mainScene.rootNode.childNodes {
+            if n.isKind(of: ContentNode.self) {
+                if let no: ContentNode? = (n as! ContentNode) {
+                    if no!.feedId == nodeId {
+                        n.removeFromParentNode()
+                    }
+                }
+            }
+        }
     }
     
     
@@ -302,56 +346,58 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 })
     }
-
     
-    @objc func handleTap(rec: UITapGestureRecognizer) {
+    
+    func handleTap(touches: Set<UITouch>) {
         print("handleTap")
-        
-        if rec.state == .ended {
-            print("A")
-            
-            let location: CGPoint = rec.location(in: sceneView)
-            let hits = self.sceneView.hitTest(location, options: nil)
-   
-            if let tappedNode = hits.first?.node {
-                print("B")
-                
-                let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
-                
-                if matchingObjs.count > 0 {
-                    print("C")
-                    
-                    let sNodes = mainScene.rootNode.childNodes.filter( {$0.name == matchingObjs.first?.uuid} )
-                    
-                    for sn in sNodes {
-                        if (sn.isKind(of: ContentNode.self)) {
-                            print("D")
-                            
-                            let sCt = sn as! ContentNode
-                            print( rlmFeeds.filter( { $0.id == sCt.feedId } ).count )
 
-                            if (matchingObjs.first?.directLink)! && ((matchingObjs.first?.contentLink)! != "") {
-                                print("E")
+        if isTrackingQR {
+            searchQRBtn.tintColor = self.view.window?.tintColor
+            qrCaptureSession.stopRunning()
+            qrCapturePreviewLayer.removeFromSuperlayer()
+            isTrackingQR = false
+        } else {
+            if MapViewCV.isHidden && settingsCv.isHidden {
+                let location: CGPoint = touches.first!.location(in: sceneView)
+                let hits = self.sceneView.hitTest(location, options: nil)
+                
+                if let tappedNode = hits.first?.node {
+                    let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
+                    
+                    if matchingObjs.count > 0 {
+                        let sNodes = mainScene.rootNode.childNodes.filter( {$0.name == matchingObjs.first?.uuid} )
+                        
+                        for sn in sNodes {
+                            if (sn.isKind(of: ContentNode.self)) {
+                                let sCt = sn as! ContentNode
+                                print( rlmFeeds.filter( { $0.id == sCt.feedId } ).count )
                                 
-                                self.openUrl(scheme: (matchingObjs.first?.contentLink)!)
-                            } else {
-                                print("F")
-                                
-                                if let a = sNodes.first as! ContentNode? {
-                                    selectedNode = a
-                                    showSeletedNodeActions(selNode: a)
+                                if (matchingObjs.first?.directLink)! && ((matchingObjs.first?.contentLink)! != "") {
+                                    self.openUrl(scheme: (matchingObjs.first?.contentLink)!)
+                                } else {
+                                    
+                                    if let a = sNodes.first as! ContentNode? {
+                                        selectedNode = a
+                                        showSeletedNodeActions(selNode: a)
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        print("Error")
                     }
                 } else {
-                    print("Error")
+                    print("selectedNode = nil")
+                    selectedNode = nil
                 }
-            } else {
-                print("selectedNode = nil")
-                selectedNode = nil
             }
         }
+        
+    }
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        handleTap(touches: touches)
     }
     
     
@@ -422,7 +468,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             message = "INITIALIZING"
         }
 
-        loadingViewLabel.text = message
+//        loadingViewLabel.text = message
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 })
     }
     
@@ -434,7 +480,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         qrCapturePreviewLayer.removeFromSuperlayer()
         searchQRBtn.tintColor = self.view.window?.tintColor
         
-        loadingViewLabel.text = "LOADING"
+//        loadingViewLabel.text = "LOADING"
         loadingView.isHidden  = false
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
@@ -450,9 +496,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        sceneView.addGestureRecognizer(tapGestureRecognizer)
-        tapGestureRecognizer.cancelsTouchesInView = false
+//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+//        sceneView.addGestureRecognizer(tapGestureRecognizer)
+//        tapGestureRecognizer.cancelsTouchesInView = false
         optimizeCam()
         
         rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
@@ -501,7 +547,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad")
-        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+        // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
 
         loadingView.isHidden = false
 

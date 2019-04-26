@@ -67,12 +67,16 @@ extension ARViewer {
                 print("Error: \(error)")
             }
             
-            loadingView.isHidden = false
             
-            //FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
-            self.refreshScene()
+//            loadingView.isHidden = false
+//
+//            FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
+//            self.refreshScene()
 
         }
+        
+        hideNodesWithId(nodeId: feedID)
+
         
     }
     
