@@ -28,7 +28,6 @@ extension CLLocation {
     }
     
     func bearingToLocationRadian(_ destinationLocation: CLLocation) -> Double {
-        
         let lat1 = deg2rad(self.coordinate.latitude)
         let lon1 = deg2rad(self.coordinate.longitude)
         
@@ -72,4 +71,6 @@ class MatrixHelper {
         let transformMatrix = simd_mul(rotationMatrix, translationMatrix)
         return simd_mul(matrix, transformMatrix)
     }
+    
+    
 }

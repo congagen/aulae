@@ -27,6 +27,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
+    var mapInit = 0
+    
     var userSearchRadiusIndicator: MKCircle = MKCircle()
 
     let progressBar = UIProgressView()
@@ -302,7 +304,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         mapView.setRegion(i_region, animated: false)
         mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
-        
     }
 
     
@@ -324,6 +325,15 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        if mapInit < 3 {
+            focusMap(focusLat: rlmSession.first!.currentLat, focusLng: rlmSession.first!.currentLng)
+            mapInit += 1
+        }
+        
     }
     
 

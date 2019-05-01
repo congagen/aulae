@@ -42,13 +42,25 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var settingsCv: UIView!
     
     @IBAction func toggleMapAction(_ sender: UIButton) {
-        MapViewCV.isHidden = false
+        ViewAnimation().fade(
+            viewToAnimate: self.MapViewCV,
+            aDuration: 0.25,
+            hideView: false,
+            aMode: UIView.AnimationOptions.curveEaseIn
+        )
+        
         MapViewCV.isUserInteractionEnabled = true
         closeBtn.isHidden = false
     }
     
     @IBAction func toggleSettingsBtnAction(_ sender: UIButton) {
-        settingsCv.isHidden = false
+        ViewAnimation().fade(
+            viewToAnimate: self.settingsCv,
+            aDuration: 0.25,
+            hideView: false,
+            aMode: UIView.AnimationOptions.curveEaseIn
+        )
+        
         settingsCv.isUserInteractionEnabled = true
         closeBtn.isHidden = false
     }
@@ -57,11 +69,23 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBAction func closeCvBtnAction(_ sender: UIButton) {
         closeBtn.isHidden = true
-
-        MapViewCV.isHidden = true
+        
+        ViewAnimation().fade(
+            viewToAnimate: self.MapViewCV,
+            aDuration: 0.25,
+            hideView: true,
+            aMode: UIView.AnimationOptions.curveEaseIn
+        )
+        
         MapViewCV.isUserInteractionEnabled = false
         
-        settingsCv.isHidden = true
+        ViewAnimation().fade(
+            viewToAnimate: self.settingsCv,
+            aDuration: 0.25,
+            hideView: true,
+            aMode: UIView.AnimationOptions.curveEaseIn
+        )
+        
         MapViewCV.isUserInteractionEnabled = false
     }
     
@@ -230,9 +254,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         if objData.billboard {
-            let constraint = SCNBillboardConstraint()
+            let constraint      = SCNBillboardConstraint()
             constraint.freeAxes = [.Y]
-            ctNode.constraints = [constraint]
+            ctNode.constraints  = [constraint]
         }
     
         ctNode.name        = String(objData.uuid)
@@ -281,8 +305,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     func hideNodesWithId(nodeId:String) {
         for n in mainScene.rootNode.childNodes {
             if n.isKind(of: ContentNode.self) {
-                if let no: ContentNode? = (n as! ContentNode) {
-                    if no!.feedId == nodeId {
+                if let no: ContentNode = (n as? ContentNode) {
+                    if no.feedId == nodeId {
                         n.removeFromParentNode()
                     }
                 }
