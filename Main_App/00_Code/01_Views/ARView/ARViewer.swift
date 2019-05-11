@@ -15,7 +15,9 @@ import RealmSwift
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
+    lazy var rlmSystem:     Results<RLM_System> = { self.realm.objects(RLM_System.self) }()
     lazy var rlmSession:     Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmCamera: Results<RLM_Camera> = { self.realm.objects(RLM_Camera.self) }()
     lazy var rlmFeeds:       Results<RLM_Feed>    = { self.realm.objects(RLM_Feed.self) }()
     lazy var rlmSourceItems: Results<RLM_Obj>     = { self.realm.objects(RLM_Obj.self) }()
     
@@ -87,6 +89,22 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         )
         
         MapViewCV.isUserInteractionEnabled = false
+        
+        if rlmSystem.first!.needsRefresh {
+            loadingView.isHidden = false
+            initScene()
+            Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.refreshScene() })
+            
+            do {
+                try realm.write {
+                    rlmSystem.first?.needsRefresh = false
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+
+        
     }
     
     @IBOutlet var loadingView: UIView!
@@ -101,7 +119,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     @IBOutlet var sceneView: ARSCNView!
-    
     
     
     @IBAction func sharePhotoBtn(_ sender: UIButton) {
@@ -136,15 +153,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    private func optimizeCam() {
+    private func updateCameraSettings() {
         guard let camera = sceneView.pointOfView?.camera else {
             fatalError("Expected a valid `pointOfView` from the scene.")
         }
         // Enable HDR camera settings for the most realistic appearance with environmental lighting and physically based materials.
         camera.wantsHDR = true
-        //camera.exposureOffset = 0
-//        camera.minimumExposure = 0
-//        camera.maximumExposure = 1
+        camera.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
+        camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
+        camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
+        
     }
     
     
@@ -194,8 +212,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
     }
     
-
-  
     
     func insertSourceObject(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(objData.uuid))
@@ -385,35 +401,38 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 let location: CGPoint = touches.first!.location(in: sceneView)
                 let hits = self.sceneView.hitTest(location, options: nil)
                 
-                if let tappedNode = hits.first?.node {
-                    let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
-                    
-                    if matchingObjs.count > 0 {
-                        let sNodes = mainScene.rootNode.childNodes.filter( {$0.name == matchingObjs.first?.uuid} )
+                if touches.count < 2 {
+                    if let tappedNode = hits.first?.node {
+                        let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
                         
-                        for sn in sNodes {
-                            if (sn.isKind(of: ContentNode.self)) {
-                                let sCt = sn as! ContentNode
-                                print( rlmFeeds.filter( { $0.id == sCt.feedId } ).count )
-                                
-                                if (matchingObjs.first?.directLink)! && ((matchingObjs.first?.contentLink)! != "") {
-                                    self.openUrl(scheme: (matchingObjs.first?.contentLink)!)
-                                } else {
+                        if matchingObjs.count > 0 {
+                            let sNodes = mainScene.rootNode.childNodes.filter( {$0.name == matchingObjs.first?.uuid} )
+                            
+                            for sn in sNodes {
+                                if (sn.isKind(of: ContentNode.self)) {
+                                    let sCt = sn as! ContentNode
+                                    print( rlmFeeds.filter( { $0.id == sCt.feedId } ).count )
                                     
-                                    if let a = sNodes.first as! ContentNode? {
-                                        selectedNode = a
-                                        showSeletedNodeActions(selNode: a)
+                                    if (matchingObjs.first?.directLink)! && ((matchingObjs.first?.contentLink)! != "") {
+                                        self.openUrl(scheme: (matchingObjs.first?.contentLink)!)
+                                    } else {
+                                        
+                                        if let a = sNodes.first as! ContentNode? {
+                                            selectedNode = a
+                                            showSeletedNodeActions(selNode: a)
+                                        }
                                     }
                                 }
                             }
+                        } else {
+                            print("Error")
                         }
                     } else {
-                        print("Error")
+                        print("selectedNode = nil")
+                        selectedNode = nil
                     }
-                } else {
-                    print("selectedNode = nil")
-                    selectedNode = nil
                 }
+                
             }
         }
         
@@ -523,7 +542,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
 //        sceneView.addGestureRecognizer(tapGestureRecognizer)
 //        tapGestureRecognizer.cancelsTouchesInView = false
-        optimizeCam()
+        updateCameraSettings()
         
         rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         
@@ -537,6 +556,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @objc func mainTimerUpdate() {
         print("mainUpdate: ARViewer")
         var ref = false
+        
+        updateCameraSettings()
         
         if rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate {
             for fo in rlmSourceItems {

@@ -538,7 +538,7 @@
                             <tableViewSection headerTitle="Content" id="ZFV-y9-Ekk">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="70" id="tj4-a4-2gm">
-                                        <rect key="frame" x="0.0" y="55.333333333333343" width="375" height="70"/>
+                                        <rect key="frame" x="0.0" y="55.333333333333336" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tj4-a4-2gm" id="j5Q-uN-sVu">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -690,7 +690,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Automatic Updates" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SON-Qy-aHr">
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Auto Update" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SON-Qy-aHr">
                                                     <rect key="frame" x="16" y="20" width="189" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="189" id="oWe-Un-uKQ"/>
@@ -740,7 +740,7 @@
                                                         <action selector="systemUpdateSpeedStepperAction:" destination="CjR-vc-y1M" eventType="valueChanged" id="uBP-PM-K9Y"/>
                                                     </connections>
                                                 </stepper>
-                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="60" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Lvt-6F-D1D">
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="20" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Lvt-6F-D1D">
                                                     <rect key="frame" x="164" y="21" width="94" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="94" id="Y3b-0B-Ihb"/>
@@ -810,6 +810,140 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Camera" id="1aa-96-2UF">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="70" id="DH9-Ro-wvu">
+                                        <rect key="frame" x="0.0" y="657.33333333333337" width="375" height="70"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DH9-Ro-wvu" id="M0X-LS-ZYS">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Exposure" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Iue-f1-AWd">
+                                                    <rect key="frame" x="16" y="21" width="344" height="28"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" minimumValue="-3" maximumValue="3" stepValue="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="ume-8A-puJ">
+                                                    <rect key="frame" x="266" y="21" width="94" height="29"/>
+                                                    <connections>
+                                                        <action selector="camExposureStepperAction:" destination="CjR-vc-y1M" eventType="valueChanged" id="JL6-Hl-bsi"/>
+                                                    </connections>
+                                                </stepper>
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="0" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FU8-yf-iCd">
+                                                    <rect key="frame" x="164" y="21" width="94" height="28"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="94" id="aie-Cl-q69"/>
+                                                    </constraints>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="10"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Iue-f1-AWd" firstAttribute="centerX" secondItem="FU8-yf-iCd" secondAttribute="centerX" constant="-23" id="1pA-hg-rL2"/>
+                                                <constraint firstItem="ume-8A-puJ" firstAttribute="leading" secondItem="FU8-yf-iCd" secondAttribute="trailing" constant="8" id="2x2-Ml-U4h"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ume-8A-puJ" secondAttribute="trailing" constant="-1" id="KOn-fJ-njC"/>
+                                                <constraint firstItem="ume-8A-puJ" firstAttribute="bottom" secondItem="Iue-f1-AWd" secondAttribute="bottom" id="Re6-Vs-dq1"/>
+                                                <constraint firstItem="Iue-f1-AWd" firstAttribute="leading" secondItem="M0X-LS-ZYS" secondAttribute="leadingMargin" id="a0V-CN-PYd"/>
+                                                <constraint firstItem="Iue-f1-AWd" firstAttribute="centerY" secondItem="M0X-LS-ZYS" secondAttribute="centerY" id="bz1-jN-KxR"/>
+                                                <constraint firstItem="ume-8A-puJ" firstAttribute="top" secondItem="FU8-yf-iCd" secondAttribute="top" id="jDD-QJ-TDJ"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="FU8-yf-iCd" secondAttribute="bottom" constant="10" id="pKd-ON-hon"/>
+                                                <constraint firstItem="ume-8A-puJ" firstAttribute="centerY" secondItem="FU8-yf-iCd" secondAttribute="centerY" id="pN5-AI-7XU"/>
+                                                <constraint firstItem="FU8-yf-iCd" firstAttribute="centerY" secondItem="M0X-LS-ZYS" secondAttribute="centerY" id="paI-FF-V8f"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="70" id="pRc-Pi-kXn">
+                                        <rect key="frame" x="0.0" y="727.33333333333337" width="375" height="70"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pRc-Pi-kXn" id="GGp-RC-hif">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Contrast" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="LM6-6f-prc">
+                                                    <rect key="frame" x="16" y="30" width="343" height="20"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" minimumValue="-3" maximumValue="3" stepValue="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="chT-n2-KBw">
+                                                    <rect key="frame" x="265" y="20" width="94" height="29"/>
+                                                    <connections>
+                                                        <action selector="camContrastStepperAction:" destination="CjR-vc-y1M" eventType="valueChanged" id="oW8-5v-5Y0"/>
+                                                    </connections>
+                                                </stepper>
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="0" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="j8p-6A-0RQ">
+                                                    <rect key="frame" x="163" y="20" width="94" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="94" id="Be8-Dj-bNz"/>
+                                                    </constraints>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="10"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="LM6-6f-prc" firstAttribute="trailing" secondItem="chT-n2-KBw" secondAttribute="trailing" id="0V1-f7-OG7"/>
+                                                <constraint firstItem="j8p-6A-0RQ" firstAttribute="centerY" secondItem="GGp-RC-hif" secondAttribute="centerY" id="5K5-vw-YJA"/>
+                                                <constraint firstItem="LM6-6f-prc" firstAttribute="trailing" secondItem="GGp-RC-hif" secondAttribute="trailingMargin" id="BkF-Rb-TYf"/>
+                                                <constraint firstItem="LM6-6f-prc" firstAttribute="bottom" secondItem="j8p-6A-0RQ" secondAttribute="bottom" id="MQF-WH-Ih9"/>
+                                                <constraint firstItem="j8p-6A-0RQ" firstAttribute="centerY" secondItem="chT-n2-KBw" secondAttribute="centerY" id="PDI-Np-wd2"/>
+                                                <constraint firstItem="chT-n2-KBw" firstAttribute="leading" secondItem="j8p-6A-0RQ" secondAttribute="trailing" constant="8" symbolic="YES" id="c3o-d6-ddT"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="LM6-6f-prc" secondAttribute="bottom" constant="9" id="jf1-sa-RQ5"/>
+                                                <constraint firstItem="LM6-6f-prc" firstAttribute="bottom" secondItem="chT-n2-KBw" secondAttribute="bottom" id="kg0-T1-gBI"/>
+                                                <constraint firstItem="LM6-6f-prc" firstAttribute="leading" secondItem="GGp-RC-hif" secondAttribute="leadingMargin" id="ztx-ap-zhe"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="70" id="8dE-ci-8Sv">
+                                        <rect key="frame" x="0.0" y="797.33333333333337" width="375" height="70"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8dE-ci-8Sv" id="rum-C6-DxF">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Saturation" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5px-1e-1IF">
+                                                    <rect key="frame" x="16" y="30" width="343" height="20"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" minimumValue="-3" maximumValue="3" stepValue="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="px6-aE-bUc">
+                                                    <rect key="frame" x="265" y="20" width="94" height="29"/>
+                                                    <connections>
+                                                        <action selector="camSaturationStepperAction:" destination="CjR-vc-y1M" eventType="valueChanged" id="B9b-Vb-iuR"/>
+                                                    </connections>
+                                                </stepper>
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="0" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="LB6-FB-bMW">
+                                                    <rect key="frame" x="163" y="20" width="94" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="94" id="6GH-Jw-Zi6"/>
+                                                    </constraints>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="10"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="LB6-FB-bMW" firstAttribute="centerY" secondItem="rum-C6-DxF" secondAttribute="centerY" id="1pK-iR-77h"/>
+                                                <constraint firstItem="5px-1e-1IF" firstAttribute="trailing" secondItem="px6-aE-bUc" secondAttribute="trailing" id="2vJ-8o-4E9"/>
+                                                <constraint firstItem="5px-1e-1IF" firstAttribute="bottom" secondItem="px6-aE-bUc" secondAttribute="bottom" id="42T-Iw-VL0"/>
+                                                <constraint firstItem="px6-aE-bUc" firstAttribute="leading" secondItem="LB6-FB-bMW" secondAttribute="trailing" constant="8" symbolic="YES" id="5rR-fp-7i4"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="5px-1e-1IF" secondAttribute="bottom" constant="9" id="Aft-fm-jLh"/>
+                                                <constraint firstItem="5px-1e-1IF" firstAttribute="leading" secondItem="rum-C6-DxF" secondAttribute="leadingMargin" id="FYX-t7-0jC"/>
+                                                <constraint firstItem="5px-1e-1IF" firstAttribute="bottom" secondItem="LB6-FB-bMW" secondAttribute="bottom" id="TVx-ZO-dYG"/>
+                                                <constraint firstItem="5px-1e-1IF" firstAttribute="trailing" secondItem="rum-C6-DxF" secondAttribute="trailingMargin" id="pJ0-Uk-dMp"/>
+                                                <constraint firstItem="LB6-FB-bMW" firstAttribute="centerY" secondItem="px6-aE-bUc" secondAttribute="centerY" id="wMi-RY-leg"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="CjR-vc-y1M" id="BBj-aJ-EvB"/>
@@ -822,6 +956,12 @@
                     <connections>
                         <outlet property="allowAudioSwitch" destination="BA6-kn-EMk" id="0JE-yv-orn"/>
                         <outlet property="autoUpdateSwitch" destination="p7f-cx-1eF" id="oS6-I7-QOu"/>
+                        <outlet property="camContrastDisplay" destination="j8p-6A-0RQ" id="sHh-Wu-b64"/>
+                        <outlet property="camContrastStepper" destination="chT-n2-KBw" id="FqU-iG-sQw"/>
+                        <outlet property="camExposureDisplay" destination="FU8-yf-iCd" id="7EP-Ss-NKL"/>
+                        <outlet property="camExposureStepper" destination="ume-8A-puJ" id="gNu-A7-H1J"/>
+                        <outlet property="camSaturationDisplay" destination="LB6-FB-bMW" id="nJn-KF-xdQ"/>
+                        <outlet property="camSaturationStepper" destination="px6-aE-bUc" id="yBR-HG-jhI"/>
                         <outlet property="feedUpdateSpeedDisplay" destination="Nn8-z1-xot" id="dS3-A9-8oY"/>
                         <outlet property="feedUpdateSpeedStepper" destination="gBx-3R-PJD" id="LGs-17-OB1"/>
                         <outlet property="locationSharingSwitch" destination="8IF-r6-Jj4" id="moe-I0-lR6"/>
@@ -970,14 +1110,13 @@
         <image name="TabBarIcon_01" width="26" height="16"/>
         <image name="TabBarIcon_03" width="19" height="16"/>
         <image name="a_layers" width="43" height="44"/>
-        <image name="a_map" width="47" height="49"/>
+        <image name="a_map" width="50" height="52"/>
         <image name="a_photo" width="113" height="115"/>
         <image name="a_qr" width="62" height="64"/>
         <image name="a_refresh" width="56" height="59"/>
         <image name="a_settings" width="42" height="46"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="2xN-RA-Tmt"/>
         <segue reference="s8Y-4w-3ll"/>
     </inferredMetricsTieBreakers>
 </document>

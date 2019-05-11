@@ -15,6 +15,8 @@ import Foundation
 class FeedsTVC: UITableViewController {
 
     let realm = try! Realm()
+    
+    lazy var rlmSystem:     Results<RLM_System> = { self.realm.objects(RLM_System.self) }()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
@@ -79,6 +81,14 @@ class FeedsTVC: UITableViewController {
         
         DispatchQueue.main.async {
             self.feedMgr.updateFeeds(checkTimeSinceUpdate: false)
+        }
+        
+        do {
+            try realm.write {
+                rlmSystem.first?.needsRefresh = true
+            }
+        } catch {
+            print("Error: \(error)")
         }
         
         tableView.reloadData()
@@ -172,6 +182,14 @@ class FeedsTVC: UITableViewController {
                 feedUrl: (self.newSourceAlertTextField?.text)!, feedApiKwd: "", refreshExisting: true)
         }
         
+        do {
+            try realm.write {
+                rlmSystem.first?.needsRefresh = true
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
     }
@@ -181,6 +199,14 @@ class FeedsTVC: UITableViewController {
         
         if newSourceAlertTextField?.text != nil {
             feedAct.addNewSource(feedUrl: rlmSession.first!.defaultFeedUrl, feedApiKwd: (self.newSourceAlertTextField?.text)!, refreshExisting: true)
+        }
+        
+        do {
+            try realm.write {
+                rlmSystem.first?.needsRefresh = true
+            }
+        } catch {
+            print("Error: \(error)")
         }
         
         self.tableView.reloadData()

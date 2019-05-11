@@ -22,9 +22,9 @@
 		31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869020B355A30038F4D5 /* FeedsTVC.swift */; };
 		31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869520B3FB040038F4D5 /* MapVC.swift */; };
 		31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D284BE20D3B079004451A6 /* RLM_Feed.swift */; };
+		FA03CAA9227B490B00E0BFC3 /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA03CAA8227B490A00E0BFC3 /* welc.png */; };
 		FA1934E422247D2B00457C6E /* FeedActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1934E322247D2B00457C6E /* FeedActions.swift */; };
 		FA2BDFA02246B658002CB0D4 /* ObjectGestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */; };
-		FA3A7BF52276E2880090C11C /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA3A7BF42276E2880090C11C /* welc.png */; };
 		FA3A7BF722771DD50090C11C /* RLM_System.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BF622771DD50090C11C /* RLM_System.swift */; };
 		FA3A7BF9227852510090C11C /* RLM_Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BF8227852510090C11C /* RLM_Camera.swift */; };
 		FA3A7BFB2279AF670090C11C /* ViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BFA2279AF670090C11C /* ViewAnimation.swift */; };
@@ -87,9 +87,9 @@
 		31AB869020B355A30038F4D5 /* FeedsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsTVC.swift; sourceTree = "<group>"; };
 		31AB869520B3FB040038F4D5 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
 		31D284BE20D3B079004451A6 /* RLM_Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Feed.swift; sourceTree = "<group>"; };
+		FA03CAA8227B490A00E0BFC3 /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = welc.png; path = ../../../../../01_Assets/00_UI/1.0.25/welc.png; sourceTree = "<group>"; };
 		FA1934E322247D2B00457C6E /* FeedActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedActions.swift; sourceTree = "<group>"; };
 		FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectGestures.swift; sourceTree = "<group>"; };
-		FA3A7BF42276E2880090C11C /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = welc.png; path = ../../../../../../../../../../../../../../Desktop/welc.png; sourceTree = "<group>"; };
 		FA3A7BF622771DD50090C11C /* RLM_System.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_System.swift; sourceTree = "<group>"; };
 		FA3A7BF8227852510090C11C /* RLM_Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Camera.swift; sourceTree = "<group>"; };
 		FA3A7BFA2279AF670090C11C /* ViewAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnimation.swift; sourceTree = "<group>"; };
@@ -297,7 +297,7 @@
 		FA4ABB9E223C2EC8006525AA /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				FA3A7BF42276E2880090C11C /* welc.png */,
+				FA03CAA8227B490A00E0BFC3 /* welc.png */,
 				FA441E0D2259D98B002A5C71 /* lib.png */,
 				FA441E16225A84FD002A5C71 /* map.png */,
 				FA441E0E2259D98B002A5C71 /* view.png */,
@@ -410,10 +410,10 @@
 			files = (
 				FA441DDA2255347D002A5C71 /* Assets.xcassets in Resources */,
 				FA441E0B2259482E002A5C71 /* Launchscreen_Logo.png in Resources */,
+				FA03CAA9227B490B00E0BFC3 /* welc.png in Resources */,
 				FA441E102259D98B002A5C71 /* lib.png in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
 				FA441E17225A84FD002A5C71 /* map.png in Resources */,
-				FA3A7BF52276E2880090C11C /* welc.png in Resources */,
 				FA441E112259D98B002A5C71 /* view.png in Resources */,
 				FA3FCCBC225BEE090083F4EC /* Demo_1.png in Resources */,
 				FA441E0A2259482E002A5C71 /* Logo.png in Resources */,

@@ -30,7 +30,7 @@ extension ARViewer {
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
         
-        searchQRBtn.tintColor = self.view.window?.tintColor
+        //searchQRBtn.tintColor = self.view.window?.tintColor
     }
     
     
@@ -48,7 +48,7 @@ extension ARViewer {
         
         qrCaptureSession.stopRunning()
         qrCapturePreviewLayer.removeFromSuperlayer()
-        searchQRBtn.tintColor = self.view.window?.tintColor
+        //searchQRBtn.tintColor = self.view.window?.tintColor
     }
     
     

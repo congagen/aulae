@@ -1,6 +1,11 @@
 
 // URGENT:
 
+//      Prevent Node selection if touches > 1
+//      Add Source Button in Main View
+//      Greeting Cards
+
+//      Fade QR Capture Session / Source Manager
 //      Map Update
 //      Exposure Settings
 //      

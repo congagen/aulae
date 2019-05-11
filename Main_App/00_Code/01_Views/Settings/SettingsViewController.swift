@@ -15,9 +15,13 @@ import Foundation
 class SettingsViewController: UITableViewController {
 
     let realm = try! Realm()
+    lazy var rlmSystem:     Results<RLM_System> = { self.realm.objects(RLM_System.self) }()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    lazy var rlmCamera: Results<RLM_Camera> = { self.realm.objects(RLM_Camera.self) }()
     
     
     let systemUpdateSpeedParamName = "systemUpdateSpeed"
@@ -79,13 +83,59 @@ class SettingsViewController: UITableViewController {
         updateUI()
     }
     
+    let cameraExposureParamName   = "cameraExposure"
+    @IBOutlet var camExposureStepper: UIStepper!
+    @IBOutlet var camExposureDisplay: UITextField!
+    
+    @IBAction func camExposureStepperAction(_ sender: UIStepper) {
+        saveSettings(propName: cameraExposureParamName, propValue: Double(sender.value))
+        updateUI()
+    }
+    
+    let cameraContrastParamName   = "cameraContrast"
+    @IBOutlet var camContrastStepper: UIStepper!
+    @IBOutlet var camContrastDisplay: UITextField!
+    
+    @IBAction func camContrastStepperAction(_ sender: UIStepper) {
+        saveSettings(propName: cameraContrastParamName, propValue: Double(sender.value))
+        updateUI()
+    }
+    
+    let cameraSaturationParamName = "cameraSaturation"
+    @IBOutlet var camSaturationStepper: UIStepper!
+    @IBOutlet var camSaturationDisplay: UITextField!
+    
+    @IBAction func camSaturationStepperAction(_ sender: UIStepper) {
+        saveSettings(propName: cameraSaturationParamName, propValue: Double(sender.value))
+        updateUI()
+    }
+    
+    
     
     func saveSettings(propName: String, propValue: Double) {
+        
+        do {
+            try realm.write {
+                rlmSystem.first?.needsRefresh = true
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
         if rlmSession.count > 0 {
             do {
                 try realm.write {
                     switch propName {
                         
+                    case cameraExposureParamName:
+                        rlmCamera.first!.exposureOffset         = propValue
+                        
+                    case cameraContrastParamName:
+                        rlmCamera.first!.contrast               = propValue
+
+                    case cameraSaturationParamName:
+                        rlmCamera.first!.saturation             = propValue
+
                     case systemUpdateSpeedParamName:
                         rlmSession.first!.sysUpdateInterval     = propValue
                         
@@ -134,6 +184,15 @@ class SettingsViewController: UITableViewController {
         autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate       == true
         
         locationSharingSwitch.isOn       = rlmSession.first!.showPlaceholders == true
+        
+        camExposureStepper.value         = rlmCamera.first!.exposureOffset
+        camExposureDisplay.text          = String( Double(round(1000 * camExposureStepper.value)/1000))
+        
+        camContrastStepper.value         = rlmCamera.first!.contrast
+        camContrastDisplay.text          = String( Double(round(1000 * camContrastStepper.value)/1000))
+        
+        camSaturationStepper.value       = rlmCamera.first!.saturation
+        camSaturationDisplay.text        = String( Double(round(1000 * camSaturationStepper.value)/1000))
     }
     
     

@@ -14,18 +14,19 @@ class RLM_Camera: Object {
     @objc dynamic var focalBlurSampleCount: Int = 1
     @objc dynamic var colorGrading: Int = 1
 
-    @objc dynamic var contrast: Double = 0.5
-    @objc dynamic var saturation: Double = 0.5
+    @objc dynamic var contrast: Double = 0
+    @objc dynamic var saturation: Double = 0
+    @objc dynamic var exposureOffset: Double = 0
     
-    @objc dynamic var exposureOffset: Double = 0.5
-    @objc dynamic var averageGray: Double = 0.5
-    @objc dynamic var whitePoint: Double = 0.5
-    @objc dynamic var minimumExposure: Double = 0.5
-    @objc dynamic var maximumExposure: Double = 0.5
+    @objc dynamic var averageGray: Double = 1
+    @objc dynamic var whitePoint: Double = 1
+    @objc dynamic var minimumExposure: Double = 1
+    @objc dynamic var maximumExposure: Double = 1
 
     @objc dynamic var colorFringeIntensity: Double = 0.5
     @objc dynamic var colorFringeStrength: Double = 0.5
     @objc dynamic var vignettingIntensity: Double = 0.5
+    
     @objc dynamic var vignettingPower: Double = 0.5
     @objc dynamic var bloomIntensity: Double = 0.5
     @objc dynamic var bloomThreshold: Double = 0.5
