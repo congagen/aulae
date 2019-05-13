@@ -146,8 +146,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             qrCapturePreviewLayer.removeFromSuperlayer()
             isTrackingQR = false
         } else {
-            isTrackingQR = true
-            captureQRCode()
+            
+            ViewAnimation().fade(viewToAnimate: loadingView, aDuration: 0.5, hideView: false, aMode: .curveEaseIn)
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in  self.captureQRCode() })
+            
+            //captureQRCode()
             searchQRBtn.tintColor = UIColor.green
         }
     }
@@ -390,12 +393,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func handleTap(touches: Set<UITouch>) {
         print("handleTap")
-
+        loadingView.isHidden = true
+        
         if isTrackingQR {
             searchQRBtn.tintColor = self.view.window?.tintColor
-            qrCaptureSession.stopRunning()
+            qrCapturePreviewLayer.isHidden = true
             qrCapturePreviewLayer.removeFromSuperlayer()
+            qrCaptureSession.stopRunning()
             isTrackingQR = false
+
         } else {
             if MapViewCV.isHidden && settingsCv.isHidden {
                 let location: CGPoint = touches.first!.location(in: sceneView)
@@ -547,7 +553,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         
         if (rlmSession.first?.autoUpdate)! {
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.mainTimerUpdate() })
+            Timer.scheduledTimer(withTimeInterval: rlmSession.first!.mapUpdateInterval, repeats: false, block: {_ in self.mainTimerUpdate() })
         }
         
     }
@@ -650,28 +656,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        for item in metadataObjects {
-            if let metadataObject = item as? AVMetadataMachineReadableCodeObject {
-                
-                if metadataObject.type == AVMetadataObject.ObjectType.qr {
-                    qrUrl = metadataObject.stringValue!
-                    
-                    if (qrUrl != "") {
-                        print(metadataObject.stringValue!)
-                        showQRURLAlert(aMessage: metadataObject.stringValue!)
-                    }
-                    
-                    qrCaptureSession.stopRunning()
-                    qrCapturePreviewLayer.removeFromSuperlayer()
-                }
-                
-                if metadataObject.type == AVMetadataObject.ObjectType.upce {
-                    print(AVMetadataObject.ObjectType.upce)
-                }
-            }
-        }
-    }
+
     
     
 }

@@ -71,17 +71,46 @@ extension ARViewer {
     }
     
     
-    func captureQRCode() {
-        
-        // TODO: Add if Image?
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        for item in metadataObjects {
+            if let metadataObject = item as? AVMetadataMachineReadableCodeObject {
+                
+                if metadataObject.type == AVMetadataObject.ObjectType.qr {
+                    qrUrl = metadataObject.stringValue!
+                    
+                    if (qrUrl != "") {
+                        print(metadataObject.stringValue!)
+                        showQRURLAlert(aMessage: metadataObject.stringValue!)
+                    }
+                    
+                    loadingView.isHidden = true
+                    qrCaptureSession.stopRunning()
+                    qrCapturePreviewLayer.removeFromSuperlayer()
+                }
+                
+                if metadataObject.type == AVMetadataObject.ObjectType.upce {
+                    print(AVMetadataObject.ObjectType.upce)
+                }
+            }
+        }
+    }
     
+    
+    func captureQRCode() {
+        isTrackingQR = true
+
+        // TODO: Add if Image?
+        self.view.isHidden = true
+
         qrCaptureSession.stopRunning()
         qrCaptureSession = AVCaptureSession()
         
-        let device = AVCaptureDevice.default(for: AVMediaType.video)
+        guard let device = AVCaptureDevice.default(for: .video) else { return }
+        
+        //let device = AVCaptureDevice.default(for: AVMediaType.video)
 
         do {
-            let input = try AVCaptureDeviceInput(device: device!)
+            let input = try AVCaptureDeviceInput(device: device)
             qrCaptureSession.addInput(input)
         } catch (let writeError) {
             print(writeError)
@@ -96,10 +125,12 @@ extension ARViewer {
         let bounds = self.view.layer.bounds
         qrCapturePreviewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         qrCapturePreviewLayer.bounds = bounds
-        /////////////////////qrCapturePreviewLayer.position = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds))
+                
         qrCapturePreviewLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        
         self.view.layer.addSublayer(qrCapturePreviewLayer)
+        
+        ViewAnimation().fade(viewToAnimate: self.view, aDuration: 0.5, hideView: false, aMode: .curveEaseIn)
+        
         qrCaptureSession.startRunning()
     }    
     
