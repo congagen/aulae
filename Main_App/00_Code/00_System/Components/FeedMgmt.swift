@@ -401,6 +401,8 @@ class FeedMgmt {
                 shouldUpdate = Int(timeSinceUpdate) > updateInterval
             }
             
+            // TODO: If not auto update && All feeds objects present -> Skip Update?
+            
             print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.sourceUrl))
             
             if fe.active && !fe.deleted && shouldUpdate && fe.sourceUrl != "" {

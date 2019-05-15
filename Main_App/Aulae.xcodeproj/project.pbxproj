@@ -35,6 +35,7 @@
 		FA441E102259D98B002A5C71 /* lib.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441E0D2259D98B002A5C71 /* lib.png */; };
 		FA441E112259D98B002A5C71 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441E0E2259D98B002A5C71 /* view.png */; };
 		FA441E17225A84FD002A5C71 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441E16225A84FD002A5C71 /* map.png */; };
+		FA461A60228BE81600358FFF /* RLM_Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA461A5F228BE81600358FFF /* RLM_Cache.swift */; };
 		FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA663146221DBD4B000FEF60 /* ContentNode.swift */; };
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
 		FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BA7D02232E5E600DB3F2A /* Demos.swift */; };
@@ -100,6 +101,7 @@
 		FA441E0D2259D98B002A5C71 /* lib.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lib.png; sourceTree = "<group>"; };
 		FA441E0E2259D98B002A5C71 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = view.png; sourceTree = "<group>"; };
 		FA441E16225A84FD002A5C71 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
+		FA461A5F228BE81600358FFF /* RLM_Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Cache.swift; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aulae.entitlements; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 		316B86B420D9005C0076E63D /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				FA789D202221629F009DC15F /* FeedSearchTVC.swift */,
 				316B86B520D900940076E63D /* FeedsTVCMain.swift */,
 				FA1934E322247D2B00457C6E /* FeedActions.swift */,
 			);
@@ -260,7 +263,6 @@
 			children = (
 				316B86B420D9005C0076E63D /* Components */,
 				31AB869020B355A30038F4D5 /* FeedsTVC.swift */,
-				FA789D202221629F009DC15F /* FeedSearchTVC.swift */,
 			);
 			path = FeedViews;
 			sourceTree = "<group>";
@@ -282,6 +284,7 @@
 				31D284BE20D3B079004451A6 /* RLM_Feed.swift */,
 				FA3A7BF622771DD50090C11C /* RLM_System.swift */,
 				FA3A7BF8227852510090C11C /* RLM_Camera.swift */,
+				FA461A5F228BE81600358FFF /* RLM_Cache.swift */,
 			);
 			path = 01_Data;
 			sourceTree = "<group>";
@@ -461,6 +464,7 @@
 				FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
 				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
+				FA461A60228BE81600358FFF /* RLM_Cache.swift in Sources */,
 				FAB2AE7A22088315004D5819 /* TODO.swift in Sources */,
 				FA1934E422247D2B00457C6E /* FeedActions.swift in Sources */,
 				FAF4C9A2223474D500C2F371 /* QrScanner.swift in Sources */,

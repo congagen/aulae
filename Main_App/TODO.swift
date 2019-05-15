@@ -1,6 +1,12 @@
 
 // URGENT:
 
+//      Delete Bug (Feed Manager)
+//      Refresh Bug
+//      Content Bug
+//      Selection Bug
+
+
 //      Prevent Node selection if touches > 1
 //      Add Source Button in Main View
 //      Greeting Cards

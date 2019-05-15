@@ -397,9 +397,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if isTrackingQR {
             searchQRBtn.tintColor = self.view.window?.tintColor
+            qrCaptureSession.stopRunning()
             qrCapturePreviewLayer.isHidden = true
             qrCapturePreviewLayer.removeFromSuperlayer()
-            qrCaptureSession.stopRunning()
             isTrackingQR = false
 
         } else {

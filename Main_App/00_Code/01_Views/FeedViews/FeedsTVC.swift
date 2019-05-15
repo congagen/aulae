@@ -160,7 +160,7 @@ class FeedsTVC: UITableViewController {
         let section = indexP.section
         let feed = rlmFeeds[section]
         
-        feedAct.deleteFeed(feedId: feed.id, deleteFeedObjects: true, deleteFeed: false)
+        feedAct.deleteFeed(feedId: feed.id, deleteFeedObjects: true, deleteFeed: true)
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
