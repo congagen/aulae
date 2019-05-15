@@ -7,11 +7,17 @@
 //
 
 import Foundation
-
+import Realm
+import RealmSwift
 
 class HttpDownloader {
     
-
+    lazy var realm = try! Realm()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    
     func deviceRemainingFreeSpaceInBytes() -> Int64? {
         let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last!
         guard
@@ -24,7 +30,7 @@ class HttpDownloader {
     }
     
     
-    func loadFileAsync(removeExisting: Bool, url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
+    func loadFileAsync(prevFeedUid: String, removeExisting: Bool, url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
         let sessionConfig = URLSessionConfiguration.default
         let urlSession = URLSession(configuration: sessionConfig)
         let request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
@@ -53,6 +59,19 @@ class HttpDownloader {
                     completion()
                 } catch (let writeError) {
                     print(writeError)
+                }
+                
+                if prevFeedUid != "" {
+//                    for o in self.feedObjects.filter( {$0.uuid == prevFeedUid} ) {
+//                        do {
+//                            try self.realm.write {
+//                                o.deleted = true
+//                                self.realm.delete(o)
+//                            }
+//                        } catch {
+//                            print("Error: \(error)")
+//                        }
+//                    }
                 }
                 
             } else {

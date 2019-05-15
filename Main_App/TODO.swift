@@ -1,11 +1,9 @@
 
 // URGENT:
 
-//      Delete Bug (Feed Manager)
-//      Refresh Bug
-//      Content Bug
-//      Selection Bug
-
+//      iPad Support
+//      Refresh Bugs
+//      Selection Bugs
 
 //      Prevent Node selection if touches > 1
 //      Add Source Button in Main View

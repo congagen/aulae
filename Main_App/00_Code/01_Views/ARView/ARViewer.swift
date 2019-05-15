@@ -336,6 +336,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func refreshScene() {
         print("RefreshScene")
+        
+        updateCameraSettings()
+        
         rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         let curPos = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
         let range = (rlmSession.first?.searchRadius)!
@@ -401,7 +404,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             qrCapturePreviewLayer.isHidden = true
             qrCapturePreviewLayer.removeFromSuperlayer()
             isTrackingQR = false
-
         } else {
             if MapViewCV.isHidden && settingsCv.isHidden {
                 let location: CGPoint = touches.first!.location(in: sceneView)
@@ -409,30 +411,27 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 
                 if touches.count < 2 {
                     if let tappedNode = hits.first?.node {
-                        let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
+                        //let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
+                        print(tappedNode)
+                        print(tappedNode.name!)
                         
-                        if matchingObjs.count > 0 {
-                            let sNodes = mainScene.rootNode.childNodes.filter( {$0.name == matchingObjs.first?.uuid} )
-                            
-                            for sn in sNodes {
-                                if (sn.isKind(of: ContentNode.self)) {
-                                    let sCt = sn as! ContentNode
-                                    print( rlmFeeds.filter( { $0.id == sCt.feedId } ).count )
-                                    
-                                    if (matchingObjs.first?.directLink)! && ((matchingObjs.first?.contentLink)! != "") {
-                                        self.openUrl(scheme: (matchingObjs.first?.contentLink)!)
-                                    } else {
-                                        
-                                        if let a = sNodes.first as! ContentNode? {
-                                            selectedNode = a
-                                            showSeletedNodeActions(selNode: a)
-                                        }
-                                    }
+                        let selno = sceneView.scene.rootNode.childNodes.filter({$0.name == tappedNode.name})
+                        
+                        if selno.count > 0 {
+                            if let ctno: ContentNode = (selno.first as? ContentNode) {
+                                
+                                if (ctno.directLink) && ((ctno.contentLink) != "") {
+                                    self.openUrl(scheme: (ctno.contentLink))
+                                } else {
+                                    showSeletedNodeActions(selNode: ctno)
                                 }
+                                
+                            } else {
+                                print(tappedNode.name!)
+                                print("Error")
                             }
-                        } else {
-                            print("Error")
                         }
+                        
                     } else {
                         print("selectedNode = nil")
                         selectedNode = nil

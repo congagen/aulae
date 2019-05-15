@@ -84,11 +84,6 @@ extension ARViewer {
     func showSeletedNodeActions(selNode: ContentNode) {
         print("showSeletedNodeActions")
         
-        for f in rlmFeeds {
-            print(f.id)
-            print(selNode.feedId)
-        }
-        
         let alert =  UIAlertController(
             title:   selNode.sourceName + " - " + (selNode.title),
             message: nil,
@@ -104,10 +99,8 @@ extension ARViewer {
                 UIAlertAction(title: "Share", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.sourceUrl)) }))
         }
         
-        let muteAction = UIAlertAction(
-            title: "Hide",
-            style: UIAlertAction.Style.default, handler: { _ in self.muteSourceAction(feedID: selNode.feedId) } )
-        alert.addAction(muteAction)
+        let hideAction = UIAlertAction(title: "Hide", style: UIAlertAction.Style.default, handler: { _ in self.muteSourceAction(feedID: selNode.feedId) } )
+        alert.addAction(hideAction)
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel,  handler: nil ))
         alert.view.tintColor = UIColor.black

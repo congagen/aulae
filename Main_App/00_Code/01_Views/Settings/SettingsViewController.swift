@@ -41,12 +41,12 @@ class SettingsViewController: UITableViewController {
     }
     
     let autoUpdateParamName = "autoUpdate"
-    @IBOutlet var autoUpdateSwitch: UISwitch!
-    @IBAction func autoUpdateSwitchAction(_ sender: UISwitch) {
-        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
-        saveSettings(propName: autoUpdateParamName, propValue: boolDouble)
-        updateUI()
-    }
+//    @IBOutlet var autoUpdateSwitch: UISwitch!
+//    @IBAction func autoUpdateSwitchAction(_ sender: UISwitch) {
+//        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+//        saveSettings(propName: autoUpdateParamName, propValue: boolDouble)
+//        updateUI()
+//    }
     
     
     // CONTENT
@@ -181,7 +181,7 @@ class SettingsViewController: UITableViewController {
         allowAudioSwitch.isOn            = rlmSession.first!.muteAudio         != true
 
         useDistanceSwitch.isOn           = rlmSession.first!.distanceScale    == true
-        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate       == true
+//        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate       == true
         
         locationSharingSwitch.isOn       = rlmSession.first!.showPlaceholders == true
         

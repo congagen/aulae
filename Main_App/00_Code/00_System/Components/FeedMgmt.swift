@@ -53,6 +53,8 @@ class FeedMgmt {
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
         print("storeFeedObject")
         
+        // Current = feedId + prevUTX
+        
         let current = feedObjects.filter( {$0.feedId == feedId && ($0.uuid == objInfo["uuid"] as! String)} )
         let rlmObj = RLM_Obj()
         
@@ -140,16 +142,20 @@ class FeedMgmt {
     }
     
     
-    func updateSourceObjects(feedSpec: Dictionary<String, AnyObject>, feedId: String, feedDbItem: RLM_Feed) {
+    func updateSourceObjects(sourceData: Dictionary<String, AnyObject>, feedId: String, feedDbItem: RLM_Feed) {
         print("! updateFeedObjects !")
         
-        print(feedSpec)
+        print(sourceData)
         
+        let deleteExisting: Bool = Int(feedDbItem.version) != sourceData["version"]! as! Int
+        
+        // id = feedID + prevUtx
+        
+        let prevFeedUid = feedId + "OLD"
         for o in feedObjects.filter( {$0.feedId == feedId} ) {
             do {
                 try realm.write {
-                    o.deleted = true
-                    //realm.delete(o)
+                    o.uuid = prevFeedUid
                 }
             } catch {
                 print("Error: \(error)")
@@ -157,14 +163,14 @@ class FeedMgmt {
         }
         
         
-        if feedSpec.keys.contains("content") {
-            for k in (feedSpec["content"]?.allKeys)! {
+        if sourceData.keys.contains("content") {
+            
+            for k in (sourceData["content"]?.allKeys)! {
                 
-                let itemSpec = feedSpec["content"]![k] as! Dictionary<String, AnyObject>
+                let itemSpec = sourceData["content"]![k] as! Dictionary<String, AnyObject>
                 
                 let objUid = UUID().uuidString
                 let itemContentType = itemSpec["type"] as! String
-                
                 var remoteContentUrl = valueIfPresent(dict: itemSpec, key: "url", placeHolderValue: "")
                 
                 if feedDbItem.customMarkerUrl != "" && itemContentType == "marker" {
@@ -194,7 +200,7 @@ class FeedMgmt {
                     "text":              valueIfPresent(dict: itemSpec, key: "text",      placeHolderValue: ""),
                     "font":              valueIfPresent(dict: itemSpec, key: "font",      placeHolderValue: ""),
 
-                    "instance":          valueIfPresent(dict: itemSpec, key: "instance",  placeHolderValue: false),
+                    "instance":          valueIfPresent(dict: itemSpec, key: "instance",  placeHolderValue: true),
 
                     "rotate":            valueIfPresent(dict: itemSpec, key: "rotate",    placeHolderValue: 0.0),
                     "hoover":            valueIfPresent(dict: itemSpec, key: "hoover",    placeHolderValue: 0.0),
@@ -215,7 +221,7 @@ class FeedMgmt {
                     "radius":            valueIfPresent(dict: itemSpec, key: "radius",    placeHolderValue: 0.0)
                 ]
                     
-                let isInstance:Bool = objData["instance"]! as! Bool
+                let isInstance: Bool = objData["instance"]! as! Bool
                 
                 if itemContentType != "text" && itemSpec.keys.contains("url") {
                     let contentUrl      = itemSpec["url"] as! String
@@ -225,9 +231,11 @@ class FeedMgmt {
 
                     storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, feedId: feedId)
                     
+                    // If version != version -> delete
                     if let cUrl = URL(string: contentUrl) {
                         let _ = httpDl.loadFileAsync(
-                            removeExisting:  !isInstance, url: cUrl as URL,
+                            prevFeedUid: prevFeedUid,
+                            removeExisting: deleteExisting && !isInstance, url: cUrl as URL,
                             destinationUrl: destinationUrl!, completion: {}
                         )
                     }
@@ -236,6 +244,19 @@ class FeedMgmt {
                 }
             }
         }
+        
+        // After all async downloads == Done:
+        for o in feedObjects.filter( {$0.uuid == prevFeedUid} ) {
+            do {
+                try realm.write {
+                    o.deleted = true
+                    realm.delete(o)
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
     }
     
     
@@ -309,6 +330,7 @@ class FeedMgmt {
         let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
         
         let _ = httpDl.loadFileAsync(
+            prevFeedUid: "",
             removeExisting: true, url: thImgUrl!, destinationUrl: destinationUrl!,
             completion: { DispatchQueue.main.async { self.storeThumb(feedDBItem: feedDBItem, thumbImageFilePath: destinationUrl!) } }
         )
@@ -323,7 +345,7 @@ class FeedMgmt {
         }
         
         updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
-        updateSourceObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+        updateSourceObjects(sourceData: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
         
         if feedData.keys.contains("version") {
 //            if let v: Int = feedData["version"] as? Int {
@@ -434,6 +456,7 @@ class FeedMgmt {
                     if let URL = URL(string: fe.sourceUrl) {
                         print("Downloading Feed JSON: " + fe.sourceUrl)
                         let _ = httpDl.loadFileAsync(
+                            prevFeedUid: "",
                             removeExisting: true, url: URL as URL, destinationUrl: destinationUrl!,
                             completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl!, feedDbItem: fe) } }
                         )
