@@ -15,12 +15,12 @@ import RealmSwift
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
-    lazy var rlmSystem:     Results<RLM_System> = { self.realm.objects(RLM_System.self) }()
+    lazy var rlmSystem:      Results<RLM_System>  = { self.realm.objects(RLM_System.self) }()
     lazy var rlmSession:     Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var rlmCamera: Results<RLM_Camera> = { self.realm.objects(RLM_Camera.self) }()
     lazy var rlmFeeds:       Results<RLM_Feed>    = { self.realm.objects(RLM_Feed.self) }()
     lazy var rlmSourceItems: Results<RLM_Obj>     = { self.realm.objects(RLM_Obj.self) }()
-    
+    lazy var rlmCamera:      Results<RLM_Camera>  = { self.realm.objects(RLM_Camera.self) }()
+
     var updateTimer = Timer()
     
     var isTrackingQR = false
@@ -161,7 +161,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             fatalError("Expected a valid `pointOfView` from the scene.")
         }
         // Enable HDR camera settings for the most realistic appearance with environmental lighting and physically based materials.
-        camera.wantsHDR = true
+        camera.wantsHDR       = true
         camera.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
         camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
         camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
@@ -256,7 +256,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.addSphere(radius: mR, and: UIColor(hexColor: objData.hex_color))
             }
             
-            if objData.type.lowercased() == "audio"  {
+            if objData.type.lowercased() == "audio" {
                 ctNode.removeAllAudioPlayers()
                 if !(rlmSession.first?.muteAudio)! {
                     ctNode.addSphere(radius: 0.1, and: UIColor(hexColor: objData.hex_color))
@@ -339,9 +339,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         updateCameraSettings()
         
-        rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
-        let curPos = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
-        let range = (rlmSession.first?.searchRadius)!
+        rawDeviceGpsCCL          = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
+        let curPos               = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
+        let range                = (rlmSession.first?.searchRadius)!
         let objsInRange          = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
         let activeObjectsInRange = objsInRange.filter({$0.active && !$0.deleted})
         

@@ -30,6 +30,23 @@ class HttpDownloader {
     }
     
     
+    func sourecObjectGC(id: String) {
+        let objs = feedObjects.filter({$0.uuid == id})
+        
+        for o in objs {
+            do {
+                try realm.write {
+                    o.deleted = true
+                    realm.delete(o)
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
+    }
+    
+    
     func loadFileAsync(prevFeedUid: String, removeExisting: Bool, url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
         let sessionConfig = URLSessionConfiguration.default
         let urlSession = URLSession(configuration: sessionConfig)

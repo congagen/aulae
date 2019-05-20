@@ -145,11 +145,11 @@ class FeedMgmt {
     func updateSourceObjects(sourceData: Dictionary<String, AnyObject>, feedId: String, feedDbItem: RLM_Feed) {
         print("! updateFeedObjects !")
         
-        print(sourceData)
+        var deleteExisting = true
         
-        let deleteExisting: Bool = Int(feedDbItem.version) != sourceData["version"]! as! Int
-        
-        // id = feedID + prevUtx
+        if sourceData.keys.contains("version") {
+            deleteExisting = Int(feedDbItem.version) != sourceData["version"]! as! Int
+        }
         
         let prevFeedUid = feedId + "OLD"
         for o in feedObjects.filter( {$0.feedId == feedId} ) {
@@ -162,9 +162,7 @@ class FeedMgmt {
             }
         }
         
-        
         if sourceData.keys.contains("content") {
-            
             for k in (sourceData["content"]?.allKeys)! {
                 
                 let itemSpec = sourceData["content"]![k] as! Dictionary<String, AnyObject>
@@ -210,8 +208,8 @@ class FeedMgmt {
                     "world_position":    valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
                     "local_orientation": valueIfPresent(dict: itemSpec, key: "local_orientation", placeHolderValue: false),
 
-                    "lat":               valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: 80.0),
-                    "lng":               valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: 0.0),
+                    "lat":               valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: rlmSession.first?.currentLat ?? 0.0),
+                    "lng":               valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: rlmSession.first?.currentLng ?? 0.0),
                     "alt":               valueIfPresent(dict: itemSpec, key: "alt",       placeHolderValue: 0.0),
                     
                     "x_pos":             valueIfPresent(dict: itemSpec, key: "x_pos",     placeHolderValue: 0.0),
@@ -245,8 +243,16 @@ class FeedMgmt {
             }
         }
         
+        // Auto show loading screen until refresh is done?
         // After all async downloads == Done:
-        for o in feedObjects.filter( {$0.uuid == prevFeedUid} ) {
+        // TODO:
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.removeOld(oldId: prevFeedUid) })
+        
+    }
+    
+    
+    func removeOld(oldId: String)  {
+        for o in feedObjects.filter( {$0.uuid == oldId} ) {
             do {
                 try realm.write {
                     o.deleted = true
@@ -256,8 +262,8 @@ class FeedMgmt {
                 print("Error: \(error)")
             }
         }
-        
     }
+    
     
     
     func updateSourceData(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {

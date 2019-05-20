@@ -1,9 +1,14 @@
 
 // URGENT:
 
-//      iPad Support
-//      Refresh Bugs
+//      Audio Bug
 //      Selection Bugs
+//      Refresh Bugs
+//      QR Lag bug
+//      iPad Support
+
+// Feature:
+//      Add custom content in mapview
 
 //      Prevent Node selection if touches > 1
 //      Add Source Button in Main View

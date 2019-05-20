@@ -215,8 +215,11 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         if !updateTimer.isValid {
             updateTimer = Timer.scheduledTimer(
                 timeInterval: (rlmSession.first?.mapUpdateInterval)!,
-                target: self, selector: #selector(mainUpdate),
-                userInfo: nil, repeats: true)
+                target:   self,
+                selector: #selector(mainUpdate),
+                userInfo: nil,
+                repeats:  true
+            )
         }
         
         updateObjectAnnotations()
