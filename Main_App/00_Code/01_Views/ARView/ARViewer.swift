@@ -236,10 +236,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             if (objData.type == "text" || objData.type == "audio" || objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
         }
         
-        let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, location: rawObjectGpsCCL)
-        ctNode.sourceUrl   = source.sourceUrl
-        ctNode.sourceName  = source.name
-        ctNode.sourceTopic = source.topicKwd
+        let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, info: objData.info, location: rawObjectGpsCCL)
+        ctNode.feedUrl   = source.sourceUrl
+        ctNode.feedName  = source.name
+        ctNode.feedTopic = source.topicKwd
         ctNode.contentLink = objData.contentLink
         ctNode.directLink  = objData.directLink
         
@@ -437,10 +437,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         selectedNode = nil
                     }
                 }
-                
             }
         }
-        
     }
     
     

@@ -14,10 +14,11 @@ class ContentNode: SCNNode {
     let id: String
     let title: String
     let feedId: String
-    
-    var sourceName:  String = ""
-    var sourceTopic: String = ""
-    var sourceUrl:   String = ""
+    let info: String
+
+    var feedName:  String = ""
+    var feedTopic: String = ""
+    var feedUrl:   String = ""
     var contentLink: String = ""
     var directLink:  Bool = false
     
@@ -25,9 +26,10 @@ class ContentNode: SCNNode {
     var location: CLLocation!
     
     
-    init(id: String, title: String, feedId:String, location: CLLocation) {
+    init(id: String, title: String, feedId:String, info:String, location: CLLocation) {
         self.id = id
         self.title = title
+        self.info  = info
         self.feedId = feedId
         self.location = location
 

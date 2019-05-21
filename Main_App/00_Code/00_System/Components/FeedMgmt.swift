@@ -142,13 +142,13 @@ class FeedMgmt {
     }
     
     
-    func updateSourceObjects(sourceData: Dictionary<String, AnyObject>, feedId: String, feedDbItem: RLM_Feed) {
+    func updateFeedObjects(feedData: Dictionary<String, AnyObject>, feedId: String, feedDbItem: RLM_Feed) {
         print("! updateFeedObjects !")
         
         var deleteExisting = true
         
-        if sourceData.keys.contains("version") {
-            deleteExisting = Int(feedDbItem.version) != sourceData["version"]! as! Int
+        if feedData.keys.contains("version") {
+            deleteExisting = Int(feedDbItem.version) != feedData["version"]! as! Int
         }
         
         let prevFeedUid = feedId + "OLD"
@@ -162,10 +162,10 @@ class FeedMgmt {
             }
         }
         
-        if sourceData.keys.contains("content") {
-            for k in (sourceData["content"]?.allKeys)! {
+        if feedData.keys.contains("content") {
+            for k in (feedData["content"]?.allKeys)! {
                 
-                let itemSpec = sourceData["content"]![k] as! Dictionary<String, AnyObject>
+                let itemSpec = feedData["content"]![k] as! Dictionary<String, AnyObject>
                 
                 let objUid = UUID().uuidString
                 let itemContentType = itemSpec["type"] as! String
@@ -266,7 +266,7 @@ class FeedMgmt {
     
     
     
-    func updateSourceData(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {
+    func updateFeedData(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {
         print("updateFeedDatabase")
         
         let vKeys = ["name", "version", "updated_utx", "content"]
@@ -350,20 +350,20 @@ class FeedMgmt {
             downloadThumb(feedDBItem: feedDbItem, fileName: "thumb_" + feedDbItem.id)
         }
         
-        updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
-        updateSourceObjects(sourceData: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+        updateFeedData(feedDbItem: feedDbItem, feedSpec: feedData)
+        updateFeedObjects(feedData: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
         
         if feedData.keys.contains("version") {
 //            if let v: Int = feedData["version"] as? Int {
 //
 //                if v != feedDbItem.version || !checkVersion {
 //                    updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
-//                    updateSourceObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+//                    updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
 //                }
 //
 //            } else {
 //                updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
-//                updateSourceObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+//                updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
 //            }
         } else {
             do {
@@ -434,8 +434,8 @@ class FeedMgmt {
             print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.sourceUrl))
             
             if fe.active && !fe.deleted && shouldUpdate && fe.sourceUrl != "" {
-                let sourceUrl      = URL(string: fe.sourceUrl)
-                let sourceExt      = sourceUrl?.pathExtension.lowercased()
+                let feedUrl      = URL(string: fe.sourceUrl)
+                let feedExt      = feedUrl?.pathExtension.lowercased()
                 
                 let fileName       = fe.id + ".json"
                 let documentsUrl   = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
@@ -450,9 +450,9 @@ class FeedMgmt {
                 }
                 
                 var sType = "api"
-                if sourceExt != nil {
-                    print("Ext: " + sourceExt!)
-                    if sourceExt?.lowercased() == "json" {
+                if feedExt != nil {
+                    print("Ext: " + feedExt!)
+                    if feedExt?.lowercased() == "json" {
                         sType = "json"
                     }
                 }

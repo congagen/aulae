@@ -66,18 +66,25 @@ extension ARViewer {
             } catch {
                 print("Error: \(error)")
             }
-            
-            
-//            loadingView.isHidden = false
-//
-//            FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
-//            self.refreshScene()
-
         }
         
         hideNodesWithId(nodeId: feedID)
-
+    }
+    
+    
+    func shoNodeInfo(selNode: ContentNode) {
         
+        let alert =  UIAlertController(
+            title:   (selNode.title),
+            message: selNode.info,
+            preferredStyle: UIAlertController.Style.actionSheet
+        )
+        
+        alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (selNode.contentLink)) } ))
+        alert.addAction(UIAlertAction(title: "Done",  style: UIAlertAction.Style.default, handler: nil ))
+        alert.view.tintColor = UIColor.black
+        self.present(alert, animated: true, completion: nil)
+
     }
     
     
@@ -85,18 +92,22 @@ extension ARViewer {
         print("showSeletedNodeActions")
         
         let alert =  UIAlertController(
-            title:   selNode.sourceName + " - " + (selNode.title),
+            title:   selNode.feedName + " - " + (selNode.title),
             message: nil,
             preferredStyle: UIAlertController.Style.actionSheet
         )
+        
+        if (selNode.info) != "" {
+            alert.addAction(UIAlertAction(title: "Show Info",  style: UIAlertAction.Style.default, handler: { _ in self.shoNodeInfo(selNode: selNode) } ))
+        }
         
         if (selNode.contentLink) != "" {
             alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (selNode.contentLink)) } ))
         }
         
-        if selNode.sourceUrl != "" && selNode.sourceTopic == "" {
+        if selNode.feedUrl != "" && selNode.feedTopic == "" {
             alert.addAction(
-                UIAlertAction(title: "Share", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.sourceUrl)) }))
+                UIAlertAction(title: "Share", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.feedUrl)) }))
         }
         
         let hideAction = UIAlertAction(title: "Hide", style: UIAlertAction.Style.default, handler: { _ in self.muteSourceAction(feedID: selNode.feedId) } )
