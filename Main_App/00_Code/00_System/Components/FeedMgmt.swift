@@ -151,8 +151,10 @@ class FeedMgmt {
             deleteExisting = Int(feedDbItem.version) != feedData["version"]! as! Int
         }
         
-        let prevFeedUid = feedId + "OLD"
-        for o in feedObjects.filter( {$0.feedId == feedId} ) {
+        let prevFeedUid        = feedId + "OLD"
+        let currentFeedObjects = feedObjects.filter( {$0.feedId == feedId})
+        
+        for o in currentFeedObjects {
             do {
                 try realm.write {
                     o.uuid = prevFeedUid
@@ -197,7 +199,6 @@ class FeedMgmt {
                     "info":              valueIfPresent(dict: itemSpec, key: "info",      placeHolderValue: ""),
                     "text":              valueIfPresent(dict: itemSpec, key: "text",      placeHolderValue: ""),
                     "font":              valueIfPresent(dict: itemSpec, key: "font",      placeHolderValue: ""),
-
                     "instance":          valueIfPresent(dict: itemSpec, key: "instance",  placeHolderValue: true),
 
                     "rotate":            valueIfPresent(dict: itemSpec, key: "rotate",    placeHolderValue: 0.0),
@@ -208,8 +209,8 @@ class FeedMgmt {
                     "world_position":    valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
                     "local_orientation": valueIfPresent(dict: itemSpec, key: "local_orientation", placeHolderValue: false),
 
-                    "lat":               valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: rlmSession.first?.currentLat ?? 0.0),
-                    "lng":               valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: rlmSession.first?.currentLng ?? 0.0),
+                    "lat":               valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: rlmSession.first?.currentLat ?? 80.0),
+                    "lng":               valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: rlmSession.first?.currentLng ?? 10.0),
                     "alt":               valueIfPresent(dict: itemSpec, key: "alt",       placeHolderValue: 0.0),
                     
                     "x_pos":             valueIfPresent(dict: itemSpec, key: "x_pos",     placeHolderValue: 0.0),
@@ -243,11 +244,7 @@ class FeedMgmt {
             }
         }
         
-        // Auto show loading screen until refresh is done?
-        // After all async downloads == Done:
-        // TODO:
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.removeOld(oldId: prevFeedUid) })
-        
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.removeOld(oldId: prevFeedUid) })
     }
     
     
@@ -265,7 +262,6 @@ class FeedMgmt {
     }
     
     
-    
     func updateFeedData(feedDbItem: RLM_Feed, feedSpec: Dictionary<String, AnyObject>) {
         print("updateFeedDatabase")
         
@@ -273,7 +269,6 @@ class FeedMgmt {
         let valid = validateObj(keyList: vKeys, dict: feedSpec)
         
         if valid {
- 
             let sID: String       = UUID().uuidString
             let sName: String     = feedSpec["name"] as! String
             let sVersion: Int     = feedSpec["version"] as! Int

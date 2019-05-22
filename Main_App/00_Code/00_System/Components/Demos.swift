@@ -29,10 +29,18 @@ extension MainVC {
         typeDemoFeed.info = "Demo Source B"
         typeDemoFeed.active = false
         
+        let asciiDemo = RLM_Feed()
+        asciiDemo.sourceUrl = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae-avr"
+        asciiDemo.id   = "Demo Source C"
+        asciiDemo.name = "Demo Source C"
+        asciiDemo.info = "Demo Source C"
+        asciiDemo.active = false
+        
         do {
             try realm.write {
                 self.realm.add(apiDemoFeed)
                 self.realm.add(typeDemoFeed)
+                self.realm.add(asciiDemo)
             }
         } catch {
             print("Error: \(error)")

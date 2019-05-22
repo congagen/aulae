@@ -54,8 +54,23 @@ extension ARViewer {
         } else {
             zPos = Double(Double(translationSCNV.z) / scaleDivider) + baseOffset
         }
-                
-        return SCNVector3(xPos, contentObj.alt, zPos)
+        
+        var worldYPos: Double = 0
+        
+        if Int(contentObj.alt) != 0 && Int(rlmSession.first!.currentAlt) != 0 {
+            let diff = abs(contentObj.alt - rlmSession.first!.currentAlt)
+            
+            if contentObj.alt < rlmSession.first!.currentAlt {
+                worldYPos = -(diff * 0.05)
+            } else {
+                worldYPos =  (diff * 0.05)
+            }
+        }
+        
+        print("worldYPos: " + String(worldYPos))
+        print(contentObj.alt)
+        
+        return SCNVector3(xPos, worldYPos, zPos)
     }
     
     

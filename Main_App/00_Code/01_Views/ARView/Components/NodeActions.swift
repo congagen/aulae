@@ -92,8 +92,8 @@ extension ARViewer {
         print("showSeletedNodeActions")
         
         let alert =  UIAlertController(
-            title:   selNode.feedName + " - " + (selNode.title),
-            message: nil,
+            title:   selNode.feedName,
+            message: (selNode.title),
             preferredStyle: UIAlertController.Style.actionSheet
         )
         
@@ -107,7 +107,7 @@ extension ARViewer {
         
         if selNode.feedUrl != "" && selNode.feedTopic == "" {
             alert.addAction(
-                UIAlertAction(title: "Share", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.feedUrl)) }))
+                UIAlertAction(title: "Share Source", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.feedUrl)) }))
         }
         
         let hideAction = UIAlertAction(title: "Hide", style: UIAlertAction.Style.default, handler: { _ in self.muteSourceAction(feedID: selNode.feedId) } )
@@ -117,9 +117,7 @@ extension ARViewer {
         alert.view.tintColor = UIColor.black
         alert.view.tintColorDidChange()
 
-        
         self.present(alert, animated: true, completion: nil)
-    
     }
     
     

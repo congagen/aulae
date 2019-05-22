@@ -361,12 +361,16 @@ class FeedsTVC: UITableViewController {
         }
         editMarkerAction.backgroundColor = UIColor.black
         
-        if (self.selected?.topicKwd.count)! > 2 {
-            // return [shareAction, deleteAction, editMarkerAction]
-            return [shareAction, deleteAction]
-        } else {
-            return [shareAction, deleteAction]
-        }
+//        if self.selected != nil {
+//            if (self.selected?.topicKwd.count)! > 2 {
+//                // return [shareAction, deleteAction, editMarkerAction]
+//                return [shareAction, deleteAction]
+//            } else {
+//                return [shareAction, deleteAction]
+//            }
+//        }
+        
+        return [shareAction, deleteAction]
     }
 
     

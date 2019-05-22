@@ -33,6 +33,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     }
     
     
+    
     @objc func mainUpdate() {
         print("mainUpdate: MainVC")
         dbGc()
@@ -105,7 +106,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("locationManager")
-     
 
         do {
             try realm.write {

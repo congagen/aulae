@@ -114,7 +114,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         // NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
 
         // FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: {_ in self.refreshScene() })
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: {_ in self.initScene() })
+        Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false, block: {_ in self.refreshScene() })
+        //initScene
 
     }
     
@@ -156,7 +158,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        
+    }
+    
+    
     private func updateCameraSettings() {
+        print("updateCameraSettings")
+        
         guard let camera = sceneView.pointOfView?.camera else {
             fatalError("Expected a valid `pointOfView` from the scene.")
         }
@@ -165,7 +174,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         camera.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
         camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
         camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
-        
     }
     
     
@@ -244,7 +252,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.directLink  = objData.directLink
         
         if fPath != "" && objData.type.lowercased() != "text" {
-
             if objData.type.lowercased() == "demo"   { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
             if objData.type.lowercased() == "obj"    { ctNode.addObj(fPath:   fPath, objectData: objData) }
             if objData.type.lowercased() == "usdz"   { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
@@ -266,7 +273,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
         } else {
             if objData.type.lowercased() == "text" {
-                ctNode.addText( objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01), fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
+                ctNode.addText(
+                    objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
+                    fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
             } else {
                 ctNode.addSphere(radius: 0.01, and: UIColor.blue)
             }
@@ -294,7 +303,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         ctNode.tagComponents(nodeTag: String(objData.uuid))
-        
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
     
@@ -322,6 +330,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func hideNodesWithId(nodeId:String) {
+        print("hideNodesWithId")
         for n in mainScene.rootNode.childNodes {
             if n.isKind(of: ContentNode.self) {
                 if let no: ContentNode = (n as? ContentNode) {
@@ -336,8 +345,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func refreshScene() {
         print("RefreshScene")
-        
-        updateCameraSettings()
         
         rawDeviceGpsCCL          = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         let curPos               = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
@@ -389,6 +396,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             }
         }
+        
+        updateCameraSettings()
         
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 })
     }
@@ -515,19 +524,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
 
 //        loadingViewLabel.text = message
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden  = self.trackingState == 0 })
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 })
     }
     
     
     func initScene() {
         print("ARScene initScene")
-
-        qrCaptureSession.stopRunning()
-        qrCapturePreviewLayer.removeFromSuperlayer()
-        searchQRBtn.tintColor = self.view.window?.tintColor
-        
-//        loadingViewLabel.text = "LOADING"
         loadingView.isHidden  = false
+
+        searchQRBtn.tintColor = self.view.window?.tintColor
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
@@ -541,11 +546,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isLightEstimationEnabled = true
 
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-
-//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-//        sceneView.addGestureRecognizer(tapGestureRecognizer)
-//        tapGestureRecognizer.cancelsTouchesInView = false
-        updateCameraSettings()
         
         rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         
@@ -553,6 +553,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             Timer.scheduledTimer(withTimeInterval: rlmSession.first!.mapUpdateInterval, repeats: false, block: {_ in self.mainTimerUpdate() })
         }
         
+        updateCameraSettings()
     }
     
     
@@ -634,6 +635,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func session(_ session: ARSession, didFailWithError error: Error) {
+        print("didFailWithError")
         print(error)
         print(error.localizedDescription)
         
