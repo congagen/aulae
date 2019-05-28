@@ -15,11 +15,11 @@ import RealmSwift
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
-    lazy var rlmSystem:      Results<RLM_System>  = { self.realm.objects(RLM_System.self) }()
-    lazy var rlmSession:     Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var rlmFeeds:       Results<RLM_Feed>    = { self.realm.objects(RLM_Feed.self) }()
-    lazy var rlmSourceItems: Results<RLM_Obj>     = { self.realm.objects(RLM_Obj.self) }()
-    lazy var rlmCamera:      Results<RLM_Camera>  = { self.realm.objects(RLM_Camera.self) }()
+    lazy var rlmSystem:      Results<RLM_System>  = {self.realm.objects(RLM_System.self)}()
+    lazy var rlmSession:     Results<RLM_Session> = {self.realm.objects(RLM_Session.self)}()
+    lazy var rlmFeeds:       Results<RLM_Feed>    = {self.realm.objects(RLM_Feed.self)}()
+    lazy var rlmSourceItems: Results<RLM_Obj>     = {self.realm.objects(RLM_Obj.self)}()
+    lazy var rlmCamera:      Results<RLM_Camera>  = {self.realm.objects(RLM_Camera.self)}()
 
     var updateTimer = Timer()
     
@@ -46,7 +46,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBAction func toggleMapAction(_ sender: UIButton) {
         ViewAnimation().fade(
             viewToAnimate: self.MapViewCV,
-            aDuration: 0.25,
+            aDuration: 0.15,
             hideView: false,
             aMode: UIView.AnimationOptions.curveEaseIn
         )
@@ -58,7 +58,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBAction func toggleSettingsBtnAction(_ sender: UIButton) {
         ViewAnimation().fade(
             viewToAnimate: self.settingsCv,
-            aDuration: 0.25,
+            aDuration: 0.15,
             hideView: false,
             aMode: UIView.AnimationOptions.curveEaseIn
         )
@@ -74,7 +74,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         ViewAnimation().fade(
             viewToAnimate: self.MapViewCV,
-            aDuration: 0.25,
+            aDuration: 0.15,
             hideView: true,
             aMode: UIView.AnimationOptions.curveEaseIn
         )
@@ -83,7 +83,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         ViewAnimation().fade(
             viewToAnimate: self.settingsCv,
-            aDuration: 0.25,
+            aDuration: 0.15,
             hideView: true,
             aMode: UIView.AnimationOptions.curveEaseIn
         )
@@ -91,7 +91,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         MapViewCV.isUserInteractionEnabled = false
         
         if rlmSystem.first!.needsRefresh {
-            loadingView.isHidden = false
+//            loadingView.isHidden = false
+            
+            ViewAnimation().fade(
+                viewToAnimate: self.loadingView,
+                aDuration: 0.15,
+                hideView: false,
+                aMode: UIView.AnimationOptions.curveEaseIn
+            )
+            
             initScene()
             Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.refreshScene() })
             
@@ -110,7 +118,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var loadingView: UIView!
     
     @IBAction func refreshBtnAction(_ sender: UIButton) {
-        loadingView.isHidden = false
+        //loadingView.isHidden = false
+        
+        ViewAnimation().fade(
+            viewToAnimate: self.loadingView,
+            aDuration: 0.15,
+            hideView: false,
+            aMode: UIView.AnimationOptions.curveEaseIn
+        )
         // NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
 
         // FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
@@ -399,13 +414,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         updateCameraSettings()
         
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 })
+        manageLoading(interval: 2)
+
+//        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 })
     }
     
     
     func handleTap(touches: Set<UITouch>) {
         print("handleTap")
-        loadingView.isHidden = true
+        // loadingView.isHidden = true
+        manageLoading(interval: 2)
         
         if isTrackingQR {
             searchQRBtn.tintColor = self.view.window?.tintColor
@@ -522,9 +540,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         case .limited(_):
             message = "INITIALIZING"
         }
-
+        print(message)
+        
 //        loadingViewLabel.text = message
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 })
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.manageLoading(interval: 2) })
     }
     
     
@@ -586,10 +605,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
         }
         
-        Timer.scheduledTimer(
-            withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 }
-        )
+//        let positionOK = (rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0 && trackingState == 0
+//
+//        Timer.scheduledTimer(
+//            withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 && positionOK }
+//        )
         
+        manageLoading(interval: 2)
+        
+    }
+    
+    func manageLoading(interval: Int) {
+        let canStopLoading = ((rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0) && self.trackingState == 0
+
+        if canStopLoading && !self.loadingView.isHidden {
+            ViewAnimation().fade(
+                viewToAnimate: self.loadingView,
+                aDuration: 0.5,
+                hideView: true,
+                aMode: UIView.AnimationOptions.curveEaseIn
+            )
+        } else {
+            Timer.scheduledTimer(
+                withTimeInterval: TimeInterval(interval), repeats: false, block: {_ in self.manageLoading(interval: interval) }
+            )
+        }
+    
     }
     
     
@@ -599,6 +640,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
 
         loadingView.isHidden = false
+        
 
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
@@ -653,9 +695,5 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     func sessionInterruptionEnded(_ session: ARSession) {
         print("ArKit ViewerVC: sessionInterruptionEnded")
     }
-    
-    
-
-    
     
 }

@@ -403,10 +403,65 @@ class FeedMgmt {
     }
     
     
+    
+    func manageFeedUpdate(originalFeedName:String, sType: String, fe: RLM_Feed, destinationUrl: URL) {
+        if sType == "json" {
+            if let URL = URL(string: fe.sourceUrl) {
+                print("Downloading Feed JSON: " + fe.sourceUrl)
+                let _ = httpDl.loadFileAsync(
+                    prevFeedUid: "",
+                    removeExisting: true, url: URL as URL, destinationUrl: destinationUrl,
+                    completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl, feedDbItem: fe) } }
+                )
+            }
+        } else {
+            print("Calling Feed API: " + fe.sourceUrl)
+            
+            if !rlmSession.first!.showPlaceholders {
+                NetworkTools().postReq(
+                    completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
+                    apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
+                    reqParams: [
+                        "lat": "",
+                        "lng": "",
+                        "kwd": "",
+                        "sid": (rlmSession.first?.sessionUUID)!
+                    ]
+                )
+            } else {
+                NetworkTools().postReq(
+                    completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
+                    apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
+                    reqParams: [
+                        "lat": String(rlmSession.first!.currentLat),
+                        "lng": String(rlmSession.first!.currentLng),
+                        "kwd": String(fe.topicKwd),
+                        "sid": (rlmSession.first?.sessionUUID)!
+                    ]
+                )
+            }
+        }
+        
+        do {
+            try realm.write {
+                fe.name = originalFeedName
+                fe.updatedUtx = Int( Date().timeIntervalSince1970 )
+                if fe.errors > rlmSession.first!.feedErrorThreshold && !fe.deleted {
+                    fe.active = false
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+    }
+    
+    
     func updateFeeds(checkTimeSinceUpdate: Bool) {
         print("updateFeeds")
         print("Feed Count:      "   + String(rlmFeeds.count))
         print("FeedObjectCount: "   + String(feedObjects.count))
+        
         var needsViewRefresh = false
         let updateInterval = Int((rlmSession.first?.feedUpdateInterval)!) + 1
         var shouldUpdate = true
@@ -414,9 +469,20 @@ class FeedMgmt {
         refreshObjects()
 
         for fe in rlmFeeds {
+            let feedName = fe.name
             print("Updating Feed: " + fe.name)
             print("Feed ID:       " + String(fe.id))
             print("Feed URL:      " + fe.sourceUrl)
+            
+            do {
+                try realm.write {
+                    if fe.id.lowercased() != "quickstart" {
+                        fe.name = "Updating.."
+                    }
+                }
+            } catch {
+                print("Error: \(error)")
+            }
             
             if checkTimeSinceUpdate {
                 let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
@@ -453,55 +519,10 @@ class FeedMgmt {
                 }
                 
                 print("sType: " + sType)
-                if sType == "json" {
-                    if let URL = URL(string: fe.sourceUrl) {
-                        print("Downloading Feed JSON: " + fe.sourceUrl)
-                        let _ = httpDl.loadFileAsync(
-                            prevFeedUid: "",
-                            removeExisting: true, url: URL as URL, destinationUrl: destinationUrl!,
-                            completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl!, feedDbItem: fe) } }
-                        )
-                    }
-                } else {
-                    print("Calling Feed API: " + fe.sourceUrl)
-                    
-                    if !rlmSession.first!.showPlaceholders {
-                        NetworkTools().postReq(
-                            completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
-                            apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
-                            reqParams: [
-                                "lat": "",
-                                "lng": "",
-                                "kwd": "",
-                                "sid": (rlmSession.first?.sessionUUID)!
-                            ]
-                        )
-                    } else {
-                        NetworkTools().postReq(
-                            completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
-                            apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
-                            reqParams: [
-                                "lat": String(rlmSession.first!.currentLat),
-                                "lng": String(rlmSession.first!.currentLng),
-                                "kwd": String(fe.topicKwd),
-                                "sid": (rlmSession.first?.sessionUUID)!
-                            ]
-                        )
-                    }
-                }
                 
-                do {
-                    try realm.write {
-                        fe.updatedUtx = Int( Date().timeIntervalSince1970 )
-                        if fe.errors > rlmSession.first!.feedErrorThreshold && !fe.deleted {
-                            fe.active = false
-                        }
-                    }
-                } catch {
-                    print("Error: \(error)")
-                }
+                manageFeedUpdate(originalFeedName: feedName, sType: sType, fe: fe, destinationUrl: destinationUrl!)
+                
                 needsViewRefresh = true
-
             }
         }
         
@@ -512,6 +533,7 @@ class FeedMgmt {
         } catch {
             print("Error: \(error)")
         }
+
         
     }
     

@@ -74,6 +74,11 @@ class FeedsTVC: UITableViewController {
             try realm.write {
                 feed.active = !feed.active
                 feed.errors = 0
+
+                if feed.active && feed.id.lowercased() != "quickstart" {
+                    feed.name   = "Updating..."
+                }
+                
             }
         } catch {
             print("Error: \(error)")
