@@ -86,7 +86,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         } catch {
             print("Error: \(error)")
         }
-
     }
     
     
@@ -124,7 +123,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
-        
         locationManager.requestWhenInUseAuthorization()
         locationManager.allowsBackgroundLocationUpdates = false
     }

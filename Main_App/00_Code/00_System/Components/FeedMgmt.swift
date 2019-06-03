@@ -240,11 +240,13 @@ class FeedMgmt {
                     }
                 } else {
                     storeFeedObject(objInfo: objData, objFilePath: URL(fileURLWithPath: ""), feedId: feedId)
+                    removeOld(oldId: prevFeedUid)
                 }
             }
         }
         
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.removeOld(oldId: prevFeedUid) })
+        //Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in self.removeOld(oldId: prevFeedUid) })
+        removeOld(oldId: prevFeedUid)
     }
     
     

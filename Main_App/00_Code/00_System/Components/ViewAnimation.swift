@@ -44,6 +44,7 @@ class ViewAnimation {
     
     
     func fade(viewToAnimate: UIView, aDuration: Double, hideView: Bool, aMode: UIView.AnimationOptions) {
+        
         if !hideView && viewToAnimate.isHidden {
             viewToAnimate.layer.opacity = 0
             viewToAnimate.isHidden = false

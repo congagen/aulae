@@ -80,7 +80,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circleRenderer = MKCircleRenderer(circle: overlay as! MKCircle)
-        circleRenderer.fillColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.05)
+        circleRenderer.fillColor   = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.05)
         circleRenderer.strokeColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.5)
         circleRenderer.lineWidth = 1
         
@@ -89,7 +89,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func updateMapSearchRadius() {
-        print("updateMapSearchRadius")
+        //print("updateMapSearchRadius")
 
         mapView.removeOverlay(userSearchRadiusIndicator)
         
@@ -110,7 +110,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     func updateSearchRadiusDB(rDistance: Double) {
         print("updateSearchRadiusDB")
-        print(rDistance)
+        //print(rDistance)
         
         do {
             try realm.write {
@@ -246,7 +246,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
         if let o: MapAno = annotation as? MapAno {
             let fo = feedObjects.filter( {$0.uuid == o.id } )
-            print(fo.first?.hex_color ?? "")
+            //print(fo.first?.hex_color ?? "")
         }
         
         updateMapSearchRadius()

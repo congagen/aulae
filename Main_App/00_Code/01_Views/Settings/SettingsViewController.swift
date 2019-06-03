@@ -169,6 +169,7 @@ class SettingsViewController: UITableViewController {
     
 
     func updateUI()  {
+        
         feedUpdateSpeedDisplay.text      = String(Int(rlmSession.first!.feedUpdateInterval))
         feedUpdateSpeedStepper.value     = rlmSession.first!.feedUpdateInterval
         
@@ -186,13 +187,13 @@ class SettingsViewController: UITableViewController {
         locationSharingSwitch.isOn       = rlmSession.first!.showPlaceholders == true
         
         camExposureStepper.value         = rlmCamera.first!.exposureOffset
-        camExposureDisplay.text          = String( Double(round(1000 * camExposureStepper.value)/1000))
+        camExposureDisplay.text          = String( Double(round(1000 * camExposureStepper.value) / 1000))
         
         camContrastStepper.value         = rlmCamera.first!.contrast
-        camContrastDisplay.text          = String( Double(round(1000 * camContrastStepper.value)/1000))
+        camContrastDisplay.text          = String( Double(round(1000 * camContrastStepper.value) / 1000))
         
         camSaturationStepper.value       = rlmCamera.first!.saturation
-        camSaturationDisplay.text        = String( Double(round(1000 * camSaturationStepper.value)/1000))
+        camSaturationDisplay.text        = String( Double(round(1000 * camSaturationStepper.value) / 1000))
     }
     
     
@@ -201,19 +202,28 @@ class SettingsViewController: UITableViewController {
         updateUI()
     }
     
+    
     override func viewDidAppear(_ animated: Bool) {
+        print("SETTINGSVIEW: viewDidAppear")
+
+        tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: false)
+
         updateUI()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         print("SETTINGSVIEW: viewDidDisappear")
+        tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: false)
+
         self.navigationController?.popViewController(animated: true)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         print("WILLAPPEAR")
+        tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: false)
         updateUI()
     }
+
 
 }

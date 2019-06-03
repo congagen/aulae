@@ -19,17 +19,19 @@ extension ARViewer {
     func handleEnterURL(alertView: UIAlertAction!) {
         print("Adding QRURL: " + qrUrl)
         FeedActions().addNewSource(feedUrl: qrUrl, feedApiKwd: "", refreshExisting: true)
-        qrCaptureSession.stopRunning()
-        qrCapturePreviewLayer.removeFromSuperlayer()
+        qrCaptureSession?.stopRunning()
+        qrCapturePreviewLayer?.removeFromSuperlayer()
         
         searchQRBtn.tintColor = self.view.window?.tintColor
     }
     
     
     func cancelHandler(alertView: UIAlertAction!) {
-        qrCaptureSession.stopRunning()
-        qrCapturePreviewLayer.removeFromSuperlayer()
+        qrCaptureSession?.stopRunning()
+        qrCapturePreviewLayer?.removeFromSuperlayer()
         
+        qrCapturePreviewLayer = nil
+        qrCaptureSession = nil
         //searchQRBtn.tintColor = self.view.window?.tintColor
     }
     
@@ -46,8 +48,11 @@ extension ARViewer {
             }
         }
         
-        qrCaptureSession.stopRunning()
-        qrCapturePreviewLayer.removeFromSuperlayer()
+        qrCaptureSession?.stopRunning()
+        qrCapturePreviewLayer?.removeFromSuperlayer()
+        
+        qrCapturePreviewLayer = nil
+        qrCaptureSession = nil
         //searchQRBtn.tintColor = self.view.window?.tintColor
     }
     
@@ -84,8 +89,11 @@ extension ARViewer {
                     }
                     
                     loadingView.isHidden = true
-                    qrCaptureSession.stopRunning()
-                    qrCapturePreviewLayer.removeFromSuperlayer()
+                    qrCaptureSession?.stopRunning()
+                    qrCapturePreviewLayer?.removeFromSuperlayer()
+                    
+                    qrCapturePreviewLayer = nil
+                    qrCaptureSession = nil
                 }
                 
                 if metadataObject.type == AVMetadataObject.ObjectType.upce {
@@ -102,7 +110,7 @@ extension ARViewer {
         // TODO: Add if Image?
         self.view.isHidden = true
 
-        qrCaptureSession.stopRunning()
+        qrCaptureSession?.stopRunning()
         qrCaptureSession = AVCaptureSession()
         
         guard let device = AVCaptureDevice.default(for: .video) else { return }
@@ -111,27 +119,27 @@ extension ARViewer {
 
         do {
             let input = try AVCaptureDeviceInput(device: device)
-            qrCaptureSession.addInput(input)
+            qrCaptureSession?.addInput(input)
         } catch (let writeError) {
             print(writeError)
         }
         
         let output = AVCaptureMetadataOutput()
         output.setMetadataObjectsDelegate((self as AVCaptureMetadataOutputObjectsDelegate), queue: DispatchQueue.main)
-        qrCaptureSession.addOutput(output)
+        qrCaptureSession?.addOutput(output)
         output.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
         
-        qrCapturePreviewLayer = AVCaptureVideoPreviewLayer(session: qrCaptureSession)
+        qrCapturePreviewLayer = AVCaptureVideoPreviewLayer(session: qrCaptureSession!)
         let bounds = self.view.layer.bounds
-        qrCapturePreviewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        qrCapturePreviewLayer.bounds = bounds
+        qrCapturePreviewLayer!.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        qrCapturePreviewLayer!.bounds = bounds
                 
-        qrCapturePreviewLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        self.view.layer.addSublayer(qrCapturePreviewLayer)
+        qrCapturePreviewLayer!.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        self.view.layer.addSublayer(qrCapturePreviewLayer!)
         
-        ViewAnimation().fade(viewToAnimate: self.view, aDuration: 0.5, hideView: false, aMode: .curveEaseIn)
+        ViewAnimation().fade(viewToAnimate: self.view, aDuration: 1, hideView: false, aMode: .curveEaseIn)
         
-        qrCaptureSession.startRunning()
+        qrCaptureSession!.startRunning()
     }    
     
 }

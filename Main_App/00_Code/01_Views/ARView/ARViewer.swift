@@ -25,8 +25,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     var isTrackingQR = false
     var qrUrl = ""
-    var qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
-    var qrCaptureSession = AVCaptureSession()
+    var qrCapturePreviewLayer: AVCaptureVideoPreviewLayer? = nil
+    var qrCaptureSession: AVCaptureSession? = nil
     
     var rawDeviceGpsCCL: CLLocation = CLLocation(latitude: 0, longitude: 0)
 
@@ -38,7 +38,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     let audioRangeRadius: Double = 1000
     
     var currentPlanes: [SCNNode]? = nil
-    let progressBar = UIProgressView()
+    //let progressBar = UIProgressView()
+    
+
+    @IBOutlet var ChatView: UIView!
+    @IBOutlet var inputTextfield: UITextField!
     
     @IBOutlet var MapViewCV: UIView!
     @IBOutlet var settingsCv: UIView!
@@ -56,13 +60,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     @IBAction func toggleSettingsBtnAction(_ sender: UIButton) {
+
         ViewAnimation().fade(
             viewToAnimate: self.settingsCv,
             aDuration: 0.15,
             hideView: false,
             aMode: UIView.AnimationOptions.curveEaseIn
         )
-        
+
         settingsCv.isUserInteractionEnabled = true
         closeBtn.isHidden = false
     }
@@ -71,6 +76,21 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBAction func closeCvBtnAction(_ sender: UIButton) {
         closeBtn.isHidden = true
+        MapViewCV.isUserInteractionEnabled = false
+        MapViewCV.isUserInteractionEnabled = false
+        ChatView.isUserInteractionEnabled = false
+        
+        inputTextfield.resignFirstResponder()
+
+        
+        print("NeedsRefresh:")
+        print(rlmSystem.first!.needsRefresh)
+        
+        if rlmSystem.first!.needsRefresh {
+            initScene()
+            manageLoading(interval: 0.5)
+            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: {_ in self.refreshScene() })
+        }
         
         ViewAnimation().fade(
             viewToAnimate: self.MapViewCV,
@@ -78,9 +98,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             hideView: true,
             aMode: UIView.AnimationOptions.curveEaseIn
         )
-        
-        MapViewCV.isUserInteractionEnabled = false
-        
+
         ViewAnimation().fade(
             viewToAnimate: self.settingsCv,
             aDuration: 0.15,
@@ -88,30 +106,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             aMode: UIView.AnimationOptions.curveEaseIn
         )
         
-        MapViewCV.isUserInteractionEnabled = false
-        
-        if rlmSystem.first!.needsRefresh {
-//            loadingView.isHidden = false
-            
-            ViewAnimation().fade(
-                viewToAnimate: self.loadingView,
-                aDuration: 0.15,
-                hideView: false,
-                aMode: UIView.AnimationOptions.curveEaseIn
-            )
-            
-            initScene()
-            Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.refreshScene() })
-            
-            do {
-                try realm.write {
-                    rlmSystem.first?.needsRefresh = false
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-        }
-
+        ViewAnimation().fade(
+            viewToAnimate: self.ChatView,
+            aDuration: 0.15,
+            hideView: true,
+            aMode: UIView.AnimationOptions.curveEaseIn
+        )
         
     }
     
@@ -122,7 +122,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         ViewAnimation().fade(
             viewToAnimate: self.loadingView,
-            aDuration: 0.15,
+            aDuration: 0.1,
             hideView: false,
             aMode: UIView.AnimationOptions.curveEaseIn
         )
@@ -157,18 +157,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBAction func searchQrBtnAction(_ sender: UIButton) {
         print("searchQrBtnAction")
     
-        if isTrackingQR {
-            searchQRBtn.tintColor = self.view.window?.tintColor
-            qrCaptureSession.stopRunning()
-            qrCapturePreviewLayer.removeFromSuperlayer()
+        if isTrackingQR && (qrCapturePreviewLayer != nil) && (qrCaptureSession != nil) {
+            qrCaptureSession?.stopRunning()
+            qrCapturePreviewLayer?.removeFromSuperlayer()
             isTrackingQR = false
+            
+            qrCapturePreviewLayer = nil
+            qrCaptureSession = nil
         } else {
-            
-            ViewAnimation().fade(viewToAnimate: loadingView, aDuration: 0.5, hideView: false, aMode: .curveEaseIn)
+            qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
+            qrCaptureSession = AVCaptureSession()
+            ViewAnimation().fade(viewToAnimate: loadingView, aDuration: 1, hideView: false, aMode: .curveEaseIn)
             Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in  self.captureQRCode() })
-            
-            //captureQRCode()
-            searchQRBtn.tintColor = UIColor.green
         }
     }
     
@@ -176,7 +176,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         
     }
-    
     
     private func updateCameraSettings() {
         print("updateCameraSettings")
@@ -414,23 +413,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         updateCameraSettings()
         
-        manageLoading(interval: 2)
-
-//        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 })
+        do {
+            try realm.write {
+                rlmSystem.first?.needsRefresh = false
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        manageLoading(interval: 0.5)
+ 
     }
     
     
     func handleTap(touches: Set<UITouch>) {
         print("handleTap")
-        // loadingView.isHidden = true
-        manageLoading(interval: 2)
+        loadingView.isHidden = true
         
         if isTrackingQR {
             searchQRBtn.tintColor = self.view.window?.tintColor
-            qrCaptureSession.stopRunning()
-            qrCapturePreviewLayer.isHidden = true
-            qrCapturePreviewLayer.removeFromSuperlayer()
+            qrCaptureSession?.stopRunning()
+            qrCapturePreviewLayer?.isHidden = true
+            qrCapturePreviewLayer?.removeFromSuperlayer()
             isTrackingQR = false
+            
+            qrCapturePreviewLayer = nil
+            qrCaptureSession = nil
         } else {
             if MapViewCV.isHidden && settingsCv.isHidden {
                 let location: CGPoint = touches.first!.location(in: sceneView)
@@ -542,16 +550,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         print(message)
         
-//        loadingViewLabel.text = message
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.manageLoading(interval: 2) })
+        // loadingView.isHidden = trackingState == 0
+        // loadingViewLabel.text = message
+        // Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.manageLoading(interval: 0.2) })
     }
     
     
     func initScene() {
         print("ARScene initScene")
         loadingView.isHidden  = false
-
-        searchQRBtn.tintColor = self.view.window?.tintColor
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
@@ -565,7 +572,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isLightEstimationEnabled = true
 
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        
         rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         
         if (rlmSession.first?.autoUpdate)! {
@@ -615,19 +621,29 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
     }
     
-    func manageLoading(interval: Int) {
-        let canStopLoading = ((rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0) && self.trackingState == 0
+    func manageLoading(interval: Double) {
+        // let canStopLoading = ((rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0) && self.trackingState == 0 && !rlmSystem.first!.needsRefresh
+        let canStopLoading = ((rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0) && !rlmSystem.first!.needsRefresh
 
         if canStopLoading && !self.loadingView.isHidden {
             ViewAnimation().fade(
                 viewToAnimate: self.loadingView,
-                aDuration: 0.5,
+                aDuration: interval,
                 hideView: true,
                 aMode: UIView.AnimationOptions.curveEaseIn
             )
         } else {
+            if loadingView.isHidden {
+                ViewAnimation().fade(
+                    viewToAnimate: self.loadingView,
+                    aDuration: interval,
+                    hideView: false,
+                    aMode: UIView.AnimationOptions.curveEaseIn
+                )
+            }
+            
             Timer.scheduledTimer(
-                withTimeInterval: TimeInterval(interval), repeats: false, block: {_ in self.manageLoading(interval: interval) }
+                withTimeInterval: TimeInterval(interval), repeats: false, block: {_ in self.manageLoading(interval: interval + 0.1) }
             )
         }
     
@@ -640,7 +656,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
 
         loadingView.isHidden = false
-        
 
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
@@ -663,7 +678,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear")
-        progressBar.removeFromSuperview()
+        //progressBar.removeFromSuperview()
     }
     
     
@@ -672,7 +687,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         loadingView.isHidden = false
         sceneView.session.pause()
-        progressBar.removeFromSuperview()
+        //progressBar.removeFromSuperview()
     }
     
     
