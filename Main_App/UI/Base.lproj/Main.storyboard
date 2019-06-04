@@ -982,7 +982,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="pG8-aU-eqS">
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7xN-nc-qN9">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="zkq-dn-2rd">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L9T-UQ-tjA">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="7vs-RF-U4u">
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </view>
+                                            <vibrancyEffect>
+                                                <blurEffect style="light"/>
+                                            </vibrancyEffect>
+                                        </visualEffectView>
+                                    </subviews>
+                                </view>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pG8-aU-eqS">
                                 <rect key="frame" x="8" y="44" width="398" height="852"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -997,7 +1018,7 @@
                                     <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fm7-aM-pTy" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                         <subviews>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" placeholder="Message" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1Du-xA-iQd">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" placeholder="   Message" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1Du-xA-iQd">
                                                 <rect key="frame" x="0.0" y="823" width="414" height="73"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1027,15 +1048,19 @@
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.74639634683098588" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="79w-pY-Z7s" secondAttribute="bottom" id="Eyl-cI-p9u"/>
+                            <constraint firstItem="7xN-nc-qN9" firstAttribute="leading" secondItem="79w-pY-Z7s" secondAttribute="leading" id="NuF-ld-wWZ"/>
                             <constraint firstAttribute="trailing" secondItem="79w-pY-Z7s" secondAttribute="trailing" id="Pnx-7N-rZr"/>
                             <constraint firstItem="pG8-aU-eqS" firstAttribute="top" secondItem="omO-Oe-qcM" secondAttribute="top" id="Srh-uR-znV"/>
+                            <constraint firstItem="7xN-nc-qN9" firstAttribute="height" secondItem="omO-Oe-qcM" secondAttribute="height" constant="78" id="Vxr-q5-GCT"/>
                             <constraint firstItem="pG8-aU-eqS" firstAttribute="bottom" secondItem="79w-pY-Z7s" secondAttribute="bottom" id="cKZ-qW-NLn"/>
                             <constraint firstItem="79w-pY-Z7s" firstAttribute="leading" secondItem="Ymb-DI-wbC" secondAttribute="leading" id="dHK-u0-RI4"/>
                             <constraint firstItem="pG8-aU-eqS" firstAttribute="leading" secondItem="omO-Oe-qcM" secondAttribute="leading" constant="8" id="eeQ-XY-fam"/>
+                            <constraint firstItem="7xN-nc-qN9" firstAttribute="width" secondItem="omO-Oe-qcM" secondAttribute="width" id="jGP-Lb-brC"/>
                             <constraint firstItem="pG8-aU-eqS" firstAttribute="centerX" secondItem="79w-pY-Z7s" secondAttribute="centerX" id="rWs-6B-czC"/>
+                            <constraint firstItem="7xN-nc-qN9" firstAttribute="top" secondItem="79w-pY-Z7s" secondAttribute="top" id="uo7-oA-szz"/>
                             <constraint firstItem="79w-pY-Z7s" firstAttribute="top" secondItem="Ymb-DI-wbC" secondAttribute="top" id="xsR-jM-HdR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="omO-Oe-qcM"/>

@@ -19,8 +19,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var chatInputField: UITextField!
     @IBOutlet var contentView: UIView!
     
-    var chatApiUrl = ""
-    
     lazy var realm = try! Realm()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
@@ -29,7 +27,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     
-    let greetingMsg = "\n\n Mention /exit to return \n"
+    let greetingMsg = "\n\n\n Mention /exit to return to viewport\n"
     let exitKeywords = ["/quit", "/exit", "exit", "quit"]
     
     var keyboardHeight: Int = 0
@@ -42,10 +40,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     func callApi(message: String) {
         print("callApi")
         
-        if chatApiUrl != "" {
+        if rlmChatSession.first!.apiUrl != "" {
             NetworkTools().postReq(
                 completion: { r in self.handleResponseText(result: r) }, apiHeaderValue: apiHeaderValue,
-                apiHeaderFeild: apiHeaderFeild, apiUrl: chatApiUrl,
+                apiHeaderFeild: apiHeaderFeild, apiUrl: rlmChatSession.first!.apiUrl,
                 reqParams: [
                     "lat": "",
                     "lng": "",
@@ -59,23 +57,40 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     
     
     @objc func handleResponseText(result: Dictionary<String, AnyObject>) {
-        print("insertResponseText")
+        print("handleResponseText")
         print(result)
         
-        if result.keys.contains("chat_response") {
-            if let rsp: String = (result["chat_response"] as? String) {
+        DispatchQueue.main.async {
+            self.insertResponseText(chatData: result)
+        }
+    }
+    
+    func insertResponseText(chatData: Dictionary<String, AnyObject>) {
+        print("insertResponseText")
+        print(chatData)
+        
+        if chatData.keys.contains("chat_response") {
+            if let rsp: String = (chatData["chat_response"] as? String) {
                 chatView.text = "\n" + rsp + "\n" + chatView.text
             }
         }
     }
     
- 
+    
     func endChat() {
         self.view.superview?.isHidden = true
         hideChatKeyboard()
         dismissKeyboard()
         chatView.text = greetingMsg
         chatInputField.text = ""
+        
+        do {
+            try realm.write {
+                rlmChatSession.first?.apiUrl = ""
+            }
+        } catch {
+            print("Error: \(error)")
+        }
     }
     
     
@@ -91,16 +106,17 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             endChat()
         } else {
             if chatInputField.text! != "" {
-                chatView.text = "\n You: " + chatInputField.text! + "\n" + chatView.text
+                chatView.text = "\nYou: " + chatInputField.text! + "\n" + chatView.text
                 
                 if rlmChatSession.first?.apiUrl != "" {
-                    chatApiUrl = rlmChatSession.first!.apiUrl
                     callApi(message: chatInputField.text!)
                 }
                 
                 chatInputField.text = ""
             }
         }
+
+
         
         if chatInputField.text == "" {
             print("chatInputField.text! !=")

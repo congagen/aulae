@@ -125,7 +125,7 @@ extension ARViewer {
             alert.addAction(UIAlertAction(title: "Show Info",  style: UIAlertAction.Style.default, handler: { _ in self.shoNodeInfo(selNode: selNode) } ))
         }
         
-        if (rlmChatSession.first?.apiUrl) != "" || !(rlmChatSession.first?.apiUrl == nil) {
+        if (rlmChatSession.first?.apiUrl) != "" && !(rlmChatSession.first?.apiUrl == nil) {
             alert.addAction(UIAlertAction(title: "Open Chat",  style: UIAlertAction.Style.default, handler: { _ in self.openChatWindow() } ))
         }
 
