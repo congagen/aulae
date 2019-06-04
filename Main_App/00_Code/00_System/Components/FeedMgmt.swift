@@ -66,17 +66,16 @@ class FeedMgmt {
                 }
                 
                 rlmObj.feedId      = feedId
-                rlmObj.contentUrl  = objInfo["url"] as! String
                 rlmObj.uuid        = objInfo["uuid"] as! String
-                
                 rlmObj.instance    = objInfo["instance"] as! Bool
 
                 rlmObj.name        = objInfo["name"] as! String
                 rlmObj.info        = objInfo["info"] as! String
                 rlmObj.filePath    = objFilePath.absoluteString
             
-                rlmObj.contentLink = objInfo["content_link"] as! String
-                rlmObj.directLink  = objInfo["direct_link"] as! Bool
+                rlmObj.contentUrl  = objInfo["url"] as! String
+                rlmObj.contentLink = (objInfo["content_link"] as! String) + " " + (objInfo["chat_url"] as! String)
+                rlmObj.directLink  = objInfo["direct_link"] as! Bool 
 
                 rlmObj.text        = objInfo["text"] as! String
                 rlmObj.font        = objInfo["font"] as! String
@@ -186,6 +185,7 @@ class FeedMgmt {
                     "type":              itemContentType,
                     "url":               remoteContentUrl,
                     
+
                     "version":           valueIfPresent(dict: itemSpec, key: "version",   placeHolderValue: 1),
                     "billboard":         valueIfPresent(dict: itemSpec, key: "billboard", placeHolderValue: true),
 
@@ -195,7 +195,8 @@ class FeedMgmt {
 
                     "content_link":      valueIfPresent(dict: itemSpec, key: "content_link", placeHolderValue: ""),
                     "direct_link":       valueIfPresent(dict: itemSpec, key: "direct_link", placeHolderValue: false),
-                    
+                    "chat_url":          valueIfPresent(dict: itemSpec, key: "chat_url",   placeHolderValue: ""),
+
                     "info":              valueIfPresent(dict: itemSpec, key: "info",      placeHolderValue: ""),
                     "text":              valueIfPresent(dict: itemSpec, key: "text",      placeHolderValue: ""),
                     "font":              valueIfPresent(dict: itemSpec, key: "font",      placeHolderValue: ""),
@@ -223,15 +224,14 @@ class FeedMgmt {
                 let isInstance: Bool = objData["instance"]! as! Bool
                 
                 if itemContentType != "text" && itemSpec.keys.contains("url") {
-                    let contentUrl      = itemSpec["url"] as! String
                     let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-                    let fileName        = feedDbItem.id + String(feedDbItem.version) + (URL(string: contentUrl)?.lastPathComponent)!
+                    let fileName        = feedDbItem.id + String(feedDbItem.version) + (URL(string: remoteContentUrl as! String)?.lastPathComponent)!
                     let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
 
                     storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, feedId: feedId)
                     
                     // If version != version -> delete
-                    if let cUrl = URL(string: contentUrl) {
+                    if let cUrl = URL(string: remoteContentUrl as! String) {
                         let _ = httpDl.loadFileAsync(
                             prevFeedUid: prevFeedUid,
                             removeExisting: deleteExisting && !isInstance, url: cUrl as URL,
@@ -327,9 +327,9 @@ class FeedMgmt {
 
         let thImgUrl = URL(string: feedDBItem.thumbImageUrl)
         
-        let contentUrl      = feedDBItem.thumbImageUrl
+        let thumbUrl        = feedDBItem.thumbImageUrl
         let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-        let fileName        = feedDBItem.id + String(feedDBItem.id) + "_" + (URL(string: contentUrl)?.lastPathComponent)!
+        let fileName        = feedDBItem.id + String(feedDBItem.id) + "_" + (URL(string: thumbUrl)?.lastPathComponent)!
         let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
         
         let _ = httpDl.loadFileAsync(

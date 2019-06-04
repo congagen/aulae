@@ -11,14 +11,13 @@ class RLM_Obj: Object {
     @objc dynamic var uuid:        String = ""
     
     @objc dynamic var type:        String = ""
-    @objc dynamic var contentUrl:  String = ""
-    
     @objc dynamic var info:        String = ""
     
     @objc dynamic var demo:        Bool = false
     @objc dynamic var active:      Bool = true
     @objc dynamic var deleted:     Bool = false
 
+    @objc dynamic var contentUrl:  String = ""
     @objc dynamic var contentLink: String = ""
     @objc dynamic var directLink:  Bool   = false
     

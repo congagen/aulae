@@ -80,16 +80,40 @@ extension ARViewer {
             preferredStyle: UIAlertController.Style.actionSheet
         )
         
-        alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (selNode.contentLink)) } ))
         alert.addAction(UIAlertAction(title: "Done",  style: UIAlertAction.Style.default, handler: nil ))
         alert.view.tintColor = UIColor.black
         self.present(alert, animated: true, completion: nil)
 
     }
     
+    func openChatWindow() {
+        self.ChatView.isHidden = false
+        
+    }
+    
     
     func showSeletedNodeActions(selNode: ContentNode) {
         print("showSeletedNodeActions")
+        
+        selectedNodeChatUrl = ""
+        let contentLinkItems = selNode.contentLink.components(separatedBy: " ")
+        let contentLinkItemA = contentLinkItems[0]
+    
+        if contentLinkItems.count >= 2 {
+            if contentLinkItems[1] != "" {
+                selectedNodeChatUrl = contentLinkItems[1]
+            }
+        }
+        
+        do {
+            try realm.write {
+                rlmChatSession.first?.apiUrl = selectedNodeChatUrl
+                rlmChatSession.first?.agentName = selNode.name ?? ""
+                rlmChatSession.first?.agentId = selNode.id
+            }
+        } catch {
+            print("Error: \(error)")
+        }
         
         let alert =  UIAlertController(
             title:   selNode.feedName,
@@ -101,8 +125,12 @@ extension ARViewer {
             alert.addAction(UIAlertAction(title: "Show Info",  style: UIAlertAction.Style.default, handler: { _ in self.shoNodeInfo(selNode: selNode) } ))
         }
         
-        if (selNode.contentLink) != "" {
-            alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (selNode.contentLink)) } ))
+        if (rlmChatSession.first?.apiUrl) != "" || !(rlmChatSession.first?.apiUrl == nil) {
+            alert.addAction(UIAlertAction(title: "Open Chat",  style: UIAlertAction.Style.default, handler: { _ in self.openChatWindow() } ))
+        }
+
+        if (contentLinkItemA) != "" {
+            alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (contentLinkItemA)) } ))
         }
         
         if selNode.feedUrl != "" && selNode.feedTopic == "" {

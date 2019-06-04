@@ -17,6 +17,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     let realm = try! Realm()
     lazy var rlmSystem:      Results<RLM_System>  = {self.realm.objects(RLM_System.self)}()
     lazy var rlmSession:     Results<RLM_Session> = {self.realm.objects(RLM_Session.self)}()
+    lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
+
     lazy var rlmFeeds:       Results<RLM_Feed>    = {self.realm.objects(RLM_Feed.self)}()
     lazy var rlmSourceItems: Results<RLM_Obj>     = {self.realm.objects(RLM_Obj.self)}()
     lazy var rlmCamera:      Results<RLM_Camera>  = {self.realm.objects(RLM_Camera.self)}()
@@ -38,6 +40,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     let audioRangeRadius: Double = 1000
     
     var currentPlanes: [SCNNode]? = nil
+    var selectedNodeChatUrl = ""
     //let progressBar = UIProgressView()
     
 
@@ -78,10 +81,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         closeBtn.isHidden = true
         MapViewCV.isUserInteractionEnabled = false
         MapViewCV.isUserInteractionEnabled = false
-        ChatView.isUserInteractionEnabled = false
-        
-        inputTextfield.resignFirstResponder()
-
         
         print("NeedsRefresh:")
         print(rlmSystem.first!.needsRefresh)
@@ -262,6 +261,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.feedUrl   = source.sourceUrl
         ctNode.feedName  = source.name
         ctNode.feedTopic = source.topicKwd
+        
+        //let contentLinkItemA = objData.contentLink.components(separatedBy: " ")[0]
+
         ctNode.contentLink = objData.contentLink
         ctNode.directLink  = objData.directLink
         

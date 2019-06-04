@@ -16,6 +16,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     lazy var realm = try! Realm()
     lazy var rlmSystem: Results<RLM_System> = { self.realm.objects(RLM_System.self) }()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
+
     lazy var rlmCamera: Results<RLM_Camera> = { self.realm.objects(RLM_Camera.self) }()
 
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
@@ -37,6 +39,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     @objc func mainUpdate() {
         print("mainUpdate: MainVC")
         dbGc()
+    
 
         if rlmSession.count > 0 {
             if mainUpdateTimer.timeInterval != rlmSession.first?.sysUpdateInterval {
@@ -149,6 +152,18 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             do {
                 try realm.write {
                     self.realm.add(camSettings)
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
+        if rlmChatSession.count < 1 {
+            let chatSess = RLM_ChatSession()
+            do {
+                try realm.write {
+                    self.realm.add(chatSess)
+                    rlmChatSession.first!.sessionUUID = UUID().uuidString
                 }
             } catch {
                 print("Error: \(error)")
