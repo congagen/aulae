@@ -91,7 +91,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="6i5-Lb-1Ur">
                             <connections>
-                                <segue destination="cNO-cb-Srl" kind="showDetail" animates="NO" id="s8Y-4w-3ll"/>
+                                <action selector="closeBtnAction:" destination="4ZI-rx-Clo" id="fMJ-Ct-W9j"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -99,7 +99,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QzA-Tt-Q7F" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="0.0" y="1685"/>
+            <point key="canvasLocation" x="125" y="1683"/>
         </scene>
         <!--Aulae-->
         <scene sceneID="9h0-ey-GEW">
@@ -109,13 +109,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="clz-mZ-NVC">
-                                <rect key="frame" x="184" y="433" width="46" height="30"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="closeCvBtnAction:" destination="cNO-cb-Srl" eventType="touchUpInside" id="uoj-Yj-XKO"/>
-                                </connections>
-                            </button>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fEs-rS-yaY">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </arscnView>
@@ -194,7 +187,6 @@
                                                         </state>
                                                         <connections>
                                                             <action selector="toggleMapAction:" destination="cNO-cb-Srl" eventType="touchUpInside" id="2vp-rD-ZqD"/>
-                                                            <segue destination="1v6-P6-Dct" kind="showDetail" animates="NO" id="ySZ-Ui-dab"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8kX-J4-M4p" userLabel="Spacer">
@@ -213,7 +205,6 @@
                                                         </state>
                                                         <connections>
                                                             <action selector="toggleSettingsBtnAction:" destination="cNO-cb-Srl" eventType="touchUpInside" id="tJt-dA-oZO"/>
-                                                            <segue destination="0U2-3G-bcM" kind="showDetail" animates="NO" id="7G9-7K-7cX"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HQN-cB-kHi" userLabel="Spacer">
@@ -221,7 +212,7 @@
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Button"/>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vBP-XS-FBm" userLabel="SourceMgr">
+                                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vBP-XS-FBm" userLabel="LibMgr">
                                                         <rect key="frame" x="265" y="0.0" width="44" height="44"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="44" id="3Om-1P-Qq9"/>
@@ -231,7 +222,7 @@
                                                             <color key="titleColor" red="0.93237388809999999" green="0.94403151409999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </state>
                                                         <connections>
-                                                            <segue destination="MG5-zE-uY9" kind="showDetail" identifier="libViewSegue" animates="NO" id="2xN-RA-Tmt"/>
+                                                            <action selector="toggleLibManager:" destination="cNO-cb-Srl" eventType="touchUpInside" id="7Ah-tn-fob"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uzq-Ee-aAQ" userLabel="Spacer">
@@ -358,78 +349,21 @@
                                     <constraint firstItem="ChI-9Y-3xn" firstAttribute="leading" secondItem="Ygv-zD-sAb" secondAttribute="leading" id="rge-WS-b6C"/>
                                 </constraints>
                             </stackView>
-                            <containerView hidden="YES" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bhm-HG-C7Z" userLabel="SettingsCV">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="NO"/>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="0"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                        <integer key="value" value="0"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor">
-                                        <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </containerView>
-                            <containerView hidden="YES" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LtI-xG-DVt" userLabel="MapCV">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="20"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </containerView>
-                            <containerView hidden="YES" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CAI-IA-8Ce" userLabel="ChatCV">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="NO"/>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="0"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                        <integer key="value" value="0"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor">
-                                        <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <segue destination="U16-1Z-sjA" kind="embed" identifier="chatViewSegue" id="hqW-HE-i27"/>
-                                </connections>
-                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="centerX" secondItem="1yb-qm-Ox7" secondAttribute="centerX" id="2yY-TO-HhA"/>
-                            <constraint firstItem="CAI-IA-8Ce" firstAttribute="bottom" secondItem="a8e-Fq-kSU" secondAttribute="bottom" id="3kK-nN-HIO"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="centerY" secondItem="1yb-qm-Ox7" secondAttribute="centerY" id="43F-n3-UPO"/>
-                            <constraint firstItem="bhm-HG-C7Z" firstAttribute="width" secondItem="1yb-qm-Ox7" secondAttribute="width" id="4BH-tm-hht"/>
-                            <constraint firstItem="CAI-IA-8Ce" firstAttribute="centerY" secondItem="clz-mZ-NVC" secondAttribute="centerY" id="6cU-rT-fCs"/>
-                            <constraint firstItem="CAI-IA-8Ce" firstAttribute="top" secondItem="cVh-GF-OBP" secondAttribute="top" id="9AE-9m-oxg"/>
                             <constraint firstItem="a8e-Fq-kSU" firstAttribute="width" secondItem="1yb-qm-Ox7" secondAttribute="width" id="FD7-m8-nan"/>
-                            <constraint firstItem="CAI-IA-8Ce" firstAttribute="centerX" secondItem="clz-mZ-NVC" secondAttribute="centerX" id="LYL-WY-2HS"/>
                             <constraint firstItem="a8e-Fq-kSU" firstAttribute="leading" secondItem="fEs-rS-yaY" secondAttribute="leading" id="LmT-mD-Gc1"/>
                             <constraint firstItem="a8e-Fq-kSU" firstAttribute="leading" secondItem="cVh-GF-OBP" secondAttribute="leading" id="M2F-6b-Dne"/>
-                            <constraint firstItem="bhm-HG-C7Z" firstAttribute="height" secondItem="1yb-qm-Ox7" secondAttribute="height" id="NbF-RD-UEx"/>
-                            <constraint firstItem="bhm-HG-C7Z" firstAttribute="trailing" secondItem="fEs-rS-yaY" secondAttribute="trailing" id="VXZ-5n-nfB"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="width" secondItem="1yb-qm-Ox7" secondAttribute="width" id="Xmw-bP-Xdr"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="height" secondItem="1yb-qm-Ox7" secondAttribute="height" id="YtK-It-447"/>
                             <constraint firstItem="cVh-GF-OBP" firstAttribute="bottom" secondItem="fEs-rS-yaY" secondAttribute="bottom" id="auv-WP-eza"/>
-                            <constraint firstItem="bhm-HG-C7Z" firstAttribute="leading" secondItem="fEs-rS-yaY" secondAttribute="leading" id="dHZ-1J-Kxq"/>
                             <constraint firstItem="cVh-GF-OBP" firstAttribute="trailing" secondItem="fEs-rS-yaY" secondAttribute="trailing" id="e1C-uo-eMn"/>
-                            <constraint firstItem="bhm-HG-C7Z" firstAttribute="top" secondItem="fEs-rS-yaY" secondAttribute="top" id="emK-GH-plp"/>
-                            <constraint firstItem="LtI-xG-DVt" firstAttribute="top" secondItem="bhm-HG-C7Z" secondAttribute="top" id="fdo-H1-mFW"/>
                             <constraint firstItem="a8e-Fq-kSU" firstAttribute="height" secondItem="1yb-qm-Ox7" secondAttribute="height" id="h8y-fk-fe8"/>
-                            <constraint firstItem="LtI-xG-DVt" firstAttribute="height" secondItem="bhm-HG-C7Z" secondAttribute="height" id="hgw-6r-6rR"/>
-                            <constraint firstItem="CAI-IA-8Ce" firstAttribute="trailing" secondItem="fEs-rS-yaY" secondAttribute="trailing" id="jJ1-R0-6dn"/>
                             <constraint firstItem="cVh-GF-OBP" firstAttribute="top" secondItem="fEs-rS-yaY" secondAttribute="top" id="mDU-w5-6AR"/>
                             <constraint firstItem="a8e-Fq-kSU" firstAttribute="top" secondItem="fEs-rS-yaY" secondAttribute="top" id="sh3-5b-Sqx"/>
-                            <constraint firstItem="LtI-xG-DVt" firstAttribute="width" secondItem="bhm-HG-C7Z" secondAttribute="width" id="v9I-wa-HAE"/>
-                            <constraint firstItem="CAI-IA-8Ce" firstAttribute="leading" secondItem="a8e-Fq-kSU" secondAttribute="leading" id="ypt-Ke-Qvi"/>
-                            <constraint firstItem="LtI-xG-DVt" firstAttribute="leading" secondItem="a8e-Fq-kSU" secondAttribute="leading" id="zZP-b4-SDD"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
@@ -447,23 +381,19 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="ChatView" destination="CAI-IA-8Ce" id="Od1-WR-GYF"/>
-                        <outlet property="MapViewCV" destination="LtI-xG-DVt" id="omV-YU-BBs"/>
-                        <outlet property="closeBtn" destination="clz-mZ-NVC" id="6mT-W7-BKy"/>
                         <outlet property="loadingView" destination="cVh-GF-OBP" id="Mig-i4-6yC"/>
                         <outlet property="sceneView" destination="fEs-rS-yaY" id="cxZ-S7-Spe"/>
                         <outlet property="searchQRBtn" destination="PZk-td-kRg" id="5Dp-zg-Lxj"/>
-                        <outlet property="settingsCv" destination="bhm-HG-C7Z" id="9Uj-wB-v7Y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0yF-0m-H2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="907.24637681159425" y="1683.4821428571429"/>
+            <point key="canvasLocation" x="907" y="1681"/>
         </scene>
-        <!--Map-->
+        <!--MapVC-->
         <scene sceneID="CcG-m6-yJt">
             <objects>
-                <viewController title="Map" extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="shz-14-nLG" customClass="MapVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="MapVC" extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" useStoryboardIdentifierAsRestorationIdentifier="YES" id="shz-14-nLG" customClass="MapVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="raj-ma-XdT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -495,7 +425,7 @@
                         <rightBarButtonItems>
                             <barButtonItem systemItem="done" id="SvZ-XF-1hu">
                                 <connections>
-                                    <segue destination="cNO-cb-Srl" kind="showDetail" id="eAT-LN-LAe"/>
+                                    <action selector="closeMapBtnAction:" destination="shz-14-nLG" id="Hwl-rW-vR4"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem image="Spacer" id="tP4-NO-MBE"/>
@@ -512,7 +442,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jQb-Zr-Rmt" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Ikh-eE-mb5"/>
             </objects>
-            <point key="canvasLocation" x="1817.3913043478262" y="2434.1517857142858"/>
+            <point key="canvasLocation" x="125" y="2403"/>
         </scene>
         <!--Settings-->
         <scene sceneID="Fts-l3-fo1">
@@ -939,7 +869,7 @@
                     <navigationItem key="navigationItem" title="Settings" id="fOE-Ez-pBU">
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="aaY-fM-hKS">
                             <connections>
-                                <segue destination="cNO-cb-Srl" kind="showDetail" animates="NO" id="Kfi-b5-zZZ"/>
+                                <action selector="closeBtnAction:" destination="CjR-vc-y1M" id="TZs-4z-Qpz"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -963,7 +893,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aqq-r3-8tt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2713.04347826087" y="1684.8214285714284"/>
+            <point key="canvasLocation" x="1707" y="1683"/>
         </scene>
         <!--Test-->
         <scene sceneID="sQS-aF-0VM">
@@ -1094,14 +1024,9 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="Username" id="Zb7-WW-Fuy">
-                        <barButtonItem key="leftBarButtonItem" systemItem="action" id="LfE-PY-kcQ">
-                            <connections>
-                                <action selector="doneBtnAction:" destination="J0L-Ic-Tgp" id="d3Q-AH-l4L"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="93e-px-ixl">
                             <connections>
-                                <segue destination="cNO-cb-Srl" kind="showDetail" id="iHa-V8-1Vl"/>
+                                <action selector="doneBtnAction:" destination="J0L-Ic-Tgp" id="CoM-yD-8tE"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -1110,12 +1035,13 @@
                         <outlet property="chatTableView" destination="zDp-zo-6j6" id="0CP-tg-RmC"/>
                         <outlet property="chatView" destination="pG8-aU-eqS" id="feg-to-X8J"/>
                         <outlet property="contentView" destination="Fm7-aM-pTy" id="AmL-SP-kMw"/>
+                        <outlet property="navBarTitle" destination="Zb7-WW-Fuy" id="dDG-Md-iJ7"/>
                         <outlet property="scrollView" destination="79w-pY-Z7s" id="dp1-yc-Euc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wy3-VW-llK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4528.985507246377" y="2433.4821428571427"/>
+            <point key="canvasLocation" x="125" y="950"/>
         </scene>
         <!--Aulae-->
         <scene sceneID="1XM-Tk-eYm">
@@ -1177,7 +1103,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tNu-ip-EAX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="0.0" y="950"/>
+            <point key="canvasLocation" x="-1484" y="1681"/>
         </scene>
         <!--MainVC-->
         <scene sceneID="Wui-Ci-rQu">
@@ -1227,7 +1153,7 @@
         <!--Navigation Controller-->
         <scene sceneID="ZGr-jt-GDh">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="MG5-zE-uY9" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="LibViewController" automaticallyAdjustsScrollViewInsets="NO" id="MG5-zE-uY9" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="EJd-gz-thy">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -1240,12 +1166,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qe0-1P-2X1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1" y="2434"/>
+            <point key="canvasLocation" x="-684" y="1682"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="LDD-JB-6lr">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0U2-3G-bcM" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="SettingsViewController" automaticallyAdjustsScrollViewInsets="NO" id="0U2-3G-bcM" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="apg-mv-huH">
@@ -1259,12 +1185,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rgl-Yv-hks" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1802.8985507246377" y="1684.8214285714284"/>
+            <point key="canvasLocation" x="1707" y="952"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="UsZ-WG-Zje">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="U16-1Z-sjA" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ChatViewController" automaticallyAdjustsScrollViewInsets="NO" id="U16-1Z-sjA" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="cf8-SU-KU1">
@@ -1278,14 +1204,15 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jn5-v0-jJP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3617.3913043478265" y="2433.4821428571427"/>
+            <point key="canvasLocation" x="-684" y="950"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="eJg-Wd-uAP">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="1v6-P6-Dct" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MapViewController" automaticallyAdjustsScrollViewInsets="NO" id="1v6-P6-Dct" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="jF5-Gh-jEU">
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="jF5-Gh-jEU">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1296,7 +1223,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RvT-cx-eba" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="905.79710144927549" y="2433.4821428571427"/>
+            <point key="canvasLocation" x="-684" y="2404"/>
         </scene>
     </scenes>
     <resources>
@@ -1312,8 +1239,4 @@
         <image name="a_refresh" width="56" height="59"/>
         <image name="a_settings" width="44" height="44"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="7G9-7K-7cX"/>
-        <segue reference="Kfi-b5-zZZ"/>
-    </inferredMetricsTieBreakers>
 </document>

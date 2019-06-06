@@ -35,6 +35,13 @@ class FeedsTVC: UITableViewController {
     var newSourceAlertTextField: UITextField? = nil
     var selected: RLM_Feed? = nil
     
+    
+    @IBAction func closeBtnAction(_ sender: UIBarButtonItem) {
+        self.navigationController?.dismiss(animated: true, completion: nil)
+        self.view.removeFromSuperview()
+    }
+    
+    
     private let rCtrl = UIRefreshControl()
 
     let feedAct = FeedActions()

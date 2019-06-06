@@ -88,7 +88,6 @@ extension ARViewer {
     
     
     func openChatWindow(sessionId: String, apiUrl: String) {
-        closeBtn.isHidden = false
 
         if selectedNode != nil {
             do {
@@ -101,8 +100,7 @@ extension ARViewer {
             }
         }
         
-        self.ChatView.isHidden = false
-        
+        showChatView()
     }
     
     
@@ -117,16 +115,16 @@ extension ARViewer {
             if contentLinkItems[1] != "" {
                 selectedNodeChatUrl = contentLinkItems[1]
             }
-        }
-        
-        do {
-            try realm.write {
-                rlmChatSession.first?.apiUrl    = selectedNodeChatUrl
-                rlmChatSession.first?.agentName = selNode.name ?? ""
-                rlmChatSession.first?.agentId   = selNode.id
+            
+            do {
+                try realm.write {
+                    rlmChatSession.first?.apiUrl    = selectedNodeChatUrl
+                    rlmChatSession.first?.agentName = selNode.name ?? ""
+                    rlmChatSession.first?.agentId   = selNode.title
+                }
+            } catch {
+                print("Error: \(error)")
             }
-        } catch {
-            print("Error: \(error)")
         }
         
         let alert =  UIAlertController(

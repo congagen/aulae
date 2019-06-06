@@ -48,7 +48,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     @IBAction func doneBtnAction(_ sender: UIBarButtonItem) {
         endChat()
         self.navigationController?.dismiss(animated: true, completion: nil)
+        self.view.removeFromSuperview()
     }
+    
+    @IBOutlet var navBarTitle: UINavigationItem!
     
 
     func addMessage(msgText: String, incomming: Bool) {
@@ -68,7 +71,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             print("Error: \(error)")
         }
         
-        
         chatTableView.reloadData()
     }
 
@@ -81,10 +83,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
                 completion: { r in self.handleResponseText(result: r) }, apiHeaderValue: apiHeaderValue,
                 apiHeaderFeild: apiHeaderFeild, apiUrl: rlmChatSession.first!.apiUrl,
                 reqParams: [
-                    "lat": "",
-                    "lng": "",
-                    "kwd": "",
-                    "sid": (rlmSession.first?.sessionUUID)!,
+                    "lat": "", "lng": "", "kwd": "", "sid": (rlmSession.first?.sessionUUID)!,
                     "chat_msg": message
                 ]
             )
@@ -112,7 +111,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         }
         
         chatTableView.reloadData()
-        chatTableView.reloadInputViews()
     }
     
     
@@ -129,8 +127,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             print("Error: \(error)")
         }
         
-        super.viewWillDisappear(true)
-        self.navigationController?.isNavigationBarHidden = true
+//        super.viewWillDisappear(true)
+//        self.navigationController?.isNavigationBarHidden = true
     }
     
     
@@ -244,8 +242,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let sessionMsgs = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl})
-        let reverseIdx  = sessionMsgs.count - (indexPath.item + 1)
+        let reverseIdx  = sessionMsgs.count - (indexPath.item + 1) + 1
         let msgForIdx   = sessionMsgs.filter({$0.indexPos == reverseIdx})
+
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatTableViewCell
         cell.backgroundColor = .clear
@@ -279,7 +278,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     
-    func initSession(){
+    func initSession() {
         print("ChatView: refreshChatView")
         
         super.viewWillDisappear(false)
@@ -333,6 +332,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             name: UIResponder.keyboardWillHideNotification, object: nil
         )
         
+        navBarTitle.title = rlmChatSession.first?.agentId
+        
         chatTableView.delegate = self
         chatTableView.dataSource = self
         
@@ -344,9 +345,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         chatTableView.separatorStyle = .none
         chatTableView.register(ChatTableViewCell.self, forCellReuseIdentifier: cellId)
-        
         chatTableView.transform = CGAffineTransform(scaleX: 1, y: -1)
-        
         chatTableView.reloadData()
     }
     

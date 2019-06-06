@@ -40,6 +40,12 @@ class SettingsViewController: UITableViewController {
         updateUI()
     }
     
+    @IBAction func closeBtnAction(_ sender: UIBarButtonItem) {
+        self.navigationController?.dismiss(animated: true, completion: nil)
+        self.view.removeFromSuperview()
+    }
+    
+    
     let autoUpdateParamName = "autoUpdate"
 //    @IBOutlet var autoUpdateSwitch: UISwitch!
 //    @IBAction func autoUpdateSwitchAction(_ sender: UISwitch) {

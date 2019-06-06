@@ -22,7 +22,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     lazy var rlmFeeds:       Results<RLM_Feed>    = {self.realm.objects(RLM_Feed.self)}()
     lazy var rlmSourceItems: Results<RLM_Obj>     = {self.realm.objects(RLM_Obj.self)}()
     lazy var rlmCamera:      Results<RLM_Camera>  = {self.realm.objects(RLM_Camera.self)}()
-
+    
     var updateTimer = Timer()
     
     var isTrackingQR = false
@@ -43,74 +43,41 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var selectedNodeChatUrl = ""
     //let progressBar = UIProgressView()
     
-    @IBOutlet var ChatView: UIView!
-    @IBOutlet var MapViewCV: UIView!
-    @IBOutlet var settingsCv: UIView!
+    let layerView: UIStoryboard! = nil
+    let mapView: UIStoryboard! = nil
+    let settingsView: UIStoryboard! = nil
+    let chatView: UIStoryboard! = nil
     
     
     @IBAction func toggleMapAction(_ sender: UIButton) {
-        ViewAnimation().fade(
-            viewToAnimate: self.MapViewCV,
-            aDuration: 0.15,
-            hideView: false,
-            aMode: UIView.AnimationOptions.curveEaseIn
-        )
-        
-        MapViewCV.isUserInteractionEnabled = true
-        closeBtn.isHidden = false
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController")
+        vc!.modalPresentationStyle = .overCurrentContext
+        vc!.modalTransitionStyle = .crossDissolve
+        present(vc!, animated: true, completion: nil)
     }
     
     @IBAction func toggleSettingsBtnAction(_ sender: UIButton) {
-
-        ViewAnimation().fade(
-            viewToAnimate: self.settingsCv,
-            aDuration: 0.15,
-            hideView: false,
-            aMode: UIView.AnimationOptions.curveEaseIn
-        )
-
-        settingsCv.isUserInteractionEnabled = true
-        closeBtn.isHidden = false
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController")
+        vc!.modalPresentationStyle = .overCurrentContext
+        vc!.modalTransitionStyle = .crossDissolve
+        present(vc!, animated: true, completion: nil)
     }
     
-    @IBOutlet var closeBtn: UIButton!
-    
-    @IBAction func closeCvBtnAction(_ sender: UIButton) {
-        closeBtn.isHidden = true
-        MapViewCV.isUserInteractionEnabled = false
-        MapViewCV.isUserInteractionEnabled = false
-        
-        print("NeedsRefresh:")
-        print(rlmSystem.first!.needsRefresh)
-        
-        if rlmSystem.first!.needsRefresh {
-            initScene()
-            manageLoading(interval: 0.5)
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: {_ in self.refreshScene() })
-        }
-        
-        ViewAnimation().fade(
-            viewToAnimate: self.MapViewCV,
-            aDuration: 0.15,
-            hideView: true,
-            aMode: UIView.AnimationOptions.curveEaseIn
-        )
-
-        ViewAnimation().fade(
-            viewToAnimate: self.settingsCv,
-            aDuration: 0.15,
-            hideView: true,
-            aMode: UIView.AnimationOptions.curveEaseIn
-        )
-        
-        ViewAnimation().fade(
-            viewToAnimate: self.ChatView,
-            aDuration: 0.15,
-            hideView: true,
-            aMode: UIView.AnimationOptions.curveEaseIn
-        )
-        
+    @IBAction func toggleLibManager(_ sender: UIButton) {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "LibViewController")
+        vc!.modalPresentationStyle = .overCurrentContext
+        vc!.modalTransitionStyle = .crossDissolve
+        present(vc!, animated: true, completion: nil)
     }
+    
+    func showChatView() {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "ChatViewController")
+        vc!.modalPresentationStyle = .overCurrentContext
+        vc!.modalTransitionStyle = .crossDissolve
+        present(vc!, animated: true, completion: nil)
+    }
+    
+
     
     @IBOutlet var loadingView: UIView!
     
@@ -134,7 +101,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBOutlet var sceneView: ARSCNView!
     
-    
     @IBAction func sharePhotoBtn(_ sender: UIButton) {
         print("sharePhotoBtn")
         let snapShot = sceneView.snapshot()
@@ -148,7 +114,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
     }
-    
     
     @IBOutlet var searchQRBtn: UIButton!
     @IBAction func searchQrBtnAction(_ sender: UIButton) {
@@ -169,7 +134,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
     }
     
-    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         
     }
@@ -186,7 +150,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
         camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
     }
-    
     
     func objectsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
         print("objectsInRange")
@@ -314,6 +277,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
             }
         }
+    
         
         ctNode.tagComponents(nodeTag: String(objData.uuid))
         sceneView.scene.rootNode.addChildNode(ctNode)
@@ -439,37 +403,35 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             qrCapturePreviewLayer = nil
             qrCaptureSession = nil
         } else {
-            if MapViewCV.isHidden && settingsCv.isHidden {
-                let location: CGPoint = touches.first!.location(in: sceneView)
-                let hits = self.sceneView.hitTest(location, options: nil)
-                
-                if touches.count < 2 {
-                    if let tappedNode = hits.first?.node {
-                        //let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
-                        print(tappedNode)
-                        print(tappedNode.name!)
-                        
-                        let selno = sceneView.scene.rootNode.childNodes.filter({$0.name == tappedNode.name})
-                        
-                        if selno.count > 0 {
-                            if let ctno: ContentNode = (selno.first as? ContentNode) {
-                                
-                                if (ctno.directLink) && ((ctno.contentLink) != "") {
-                                    self.openUrl(scheme: (ctno.contentLink))
-                                } else {
-                                    showSeletedNodeActions(selNode: ctno)
-                                }
-                                
+            let location: CGPoint = touches.first!.location(in: sceneView)
+            let hits = self.sceneView.hitTest(location, options: nil)
+            
+            if touches.count < 2 {
+                if let tappedNode = hits.first?.node {
+                    //let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
+                    print(tappedNode)
+                    print(tappedNode.name!)
+                    
+                    let selno = sceneView.scene.rootNode.childNodes.filter({$0.name == tappedNode.name})
+                    
+                    if selno.count > 0 {
+                        if let ctno: ContentNode = (selno.first as? ContentNode) {
+                            
+                            if (ctno.directLink) && ((ctno.contentLink) != "") {
+                                self.openUrl(scheme: (ctno.contentLink))
                             } else {
-                                print(tappedNode.name!)
-                                print("Error")
+                                showSeletedNodeActions(selNode: ctno)
                             }
+                            
+                        } else {
+                            print(tappedNode.name!)
+                            print("Error")
                         }
-                        
-                    } else {
-                        print("selectedNode = nil")
-                        selectedNode = nil
                     }
+                    
+                } else {
+                    print("selectedNode = nil")
+                    selectedNode = nil
                 }
             }
         }

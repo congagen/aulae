@@ -49,6 +49,12 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var navBar: UINavigationItem!
     
+    
+    @IBAction func closeMapBtnAction(_ sender: UIBarButtonItem) {
+        self.navigationController?.dismiss(animated: true, completion: nil)
+        self.view.removeFromSuperview()
+    }
+    
 
     func handleCancel(alertView: UIAlertAction!)
     {
@@ -305,8 +311,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         let center = CLLocationCoordinate2D(latitude: focusLat, longitude: focusLng)
         let i_region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 135.68020269231502, longitudeDelta: 131.8359359933973))
         
-        mapView.setRegion(i_region, animated: false)
-        mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
+        //mapView.setRegion(i_region, animated: false)
+        mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
     }
 
     
@@ -332,10 +338,10 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        if mapInit < 3 {
-            focusMap(focusLat: rlmSession.first!.currentLat, focusLng: rlmSession.first!.currentLng)
-            mapInit += 1
-        }
+//        if mapInit < 3 {
+//            focusMap(focusLat: rlmSession.first!.currentLat, focusLng: rlmSession.first!.currentLng)
+//            mapInit += 1
+//        }
         
     }
     
