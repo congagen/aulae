@@ -18,7 +18,6 @@ class RLM_ChatSession: Object {
     
     @objc dynamic var speakText: String = ""
 
-    
     @objc dynamic var apiUrl: String = ""
     @objc dynamic var rawConversationString: String = ""
     

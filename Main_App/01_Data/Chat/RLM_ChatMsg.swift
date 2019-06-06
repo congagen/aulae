@@ -11,11 +11,12 @@ import RealmSwift
 
 
 class RLM_ChatMsg: Object {
-    
+
     @objc dynamic var sessionUUID: String = ""
+
     @objc dynamic var objectID: String = ""
     @objc dynamic var feedID: String = ""
-    
+
     @objc dynamic var msgText: String = ""
 
 }

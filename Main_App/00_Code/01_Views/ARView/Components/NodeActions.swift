@@ -86,7 +86,21 @@ extension ARViewer {
 
     }
     
-    func openChatWindow() {
+    
+    func openChatWindow(sessionId: String, apiUrl: String) {
+        closeBtn.isHidden = false
+
+        if selectedNode != nil {
+            do {
+                try realm.write {
+                    rlmChatSession.first?.sessionUUID = sessionId
+                    rlmChatSession.first?.apiUrl = apiUrl
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
         self.ChatView.isHidden = false
         
     }
@@ -107,9 +121,9 @@ extension ARViewer {
         
         do {
             try realm.write {
-                rlmChatSession.first?.apiUrl = selectedNodeChatUrl
+                rlmChatSession.first?.apiUrl    = selectedNodeChatUrl
                 rlmChatSession.first?.agentName = selNode.name ?? ""
-                rlmChatSession.first?.agentId = selNode.id
+                rlmChatSession.first?.agentId   = selNode.id
             }
         } catch {
             print("Error: \(error)")
@@ -126,7 +140,9 @@ extension ARViewer {
         }
         
         if (rlmChatSession.first?.apiUrl) != "" && !(rlmChatSession.first?.apiUrl == nil) {
-            alert.addAction(UIAlertAction(title: "Open Chat",  style: UIAlertAction.Style.default, handler: { _ in self.openChatWindow() } ))
+            alert.addAction(UIAlertAction(title: "Open Chat",  style: UIAlertAction.Style.default, handler: {
+                _ in self.openChatWindow(sessionId: self.rlmChatSession.first!.apiUrl, apiUrl: self.rlmChatSession.first!.apiUrl)
+            } ))
         }
 
         if (contentLinkItemA) != "" {

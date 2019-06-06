@@ -43,12 +43,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var selectedNodeChatUrl = ""
     //let progressBar = UIProgressView()
     
-
     @IBOutlet var ChatView: UIView!
-    @IBOutlet var inputTextfield: UITextField!
-    
     @IBOutlet var MapViewCV: UIView!
     @IBOutlet var settingsCv: UIView!
+    
     
     @IBAction func toggleMapAction(_ sender: UIButton) {
         ViewAnimation().fade(
@@ -258,14 +256,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, info: objData.info, location: rawObjectGpsCCL)
-        ctNode.feedUrl   = source.sourceUrl
-        ctNode.feedName  = source.name
-        ctNode.feedTopic = source.topicKwd
-        
-        //let contentLinkItemA = objData.contentLink.components(separatedBy: " ")[0]
-
+        ctNode.feedUrl     = source.sourceUrl
+        ctNode.feedName    = source.name
+        ctNode.feedTopic   = source.topicKwd
         ctNode.contentLink = objData.contentLink
         ctNode.directLink  = objData.directLink
+        
+        //let contentLinkItemA = objData.contentLink.components(separatedBy: " ")[0]
         
         if fPath != "" && objData.type.lowercased() != "text" {
             if objData.type.lowercased() == "demo"   { ctNode.addDemoContent( fPath: fPath, objectData: objData) }

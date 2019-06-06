@@ -12,13 +12,37 @@ import Realm
 import RealmSwift
 
 
+struct ChatMessage {
+    var message: String = ""
+    var isIncomming: Bool = false
+}
+
+
 class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
+    
+    lazy var realm = try! Realm()
+    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
+    lazy var rlmChatMsgs: Results<RLM_ChatMessage> = { self.realm.objects(RLM_ChatMessage.self) }()
+
+    fileprivate let cellId = "cell"
+    
+    var sessionID = ""
+    let greetingMsg = "\n\n\n Mention /exit to return to viewport\n"
+    let exitKeywords = ["/quit", "/exit", "exit", "quit"]
+
+    var keyboardHeight: Int = 0
+    var apiHeaderValue = ""
+    var apiHeaderFeild = ""
+    var keyboard = false
     
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var chatView: UITextView!
     @IBOutlet var chatInputField: UITextField!
     @IBOutlet var contentView: UIView!
-
     @IBOutlet var chatTableView: UITableView!
     
     @IBAction func doneBtnAction(_ sender: UIBarButtonItem) {
@@ -26,25 +50,29 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
-    lazy var realm = try! Realm()
-    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
 
-    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
-    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    func addMessage(msgText: String, incomming: Bool) {
+        print("addMessage: " + msgText)
+        let chatMsg  = RLM_ChatMessage()
+        let indexPos = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first!.apiUrl}).count + 1
     
-    
-    let greetingMsg = "\n\n\n Mention /exit to return to viewport\n"
-    let exitKeywords = ["/quit", "/exit", "exit", "quit"]
-    
-    var keyboardHeight: Int = 0
-    var keyboardIsPresent = false
-    var conv: String = ""
-    var apiHeaderValue = ""
-    var apiHeaderFeild = ""
-    var keyboard = false
-    
-    var chatConvList = ["a"]
+        do {
+            try realm.write {
+                chatMsg.indexPos     = indexPos
+                chatMsg.apiId        = rlmChatSession.first!.apiUrl
+                chatMsg.msgText      = msgText
+                chatMsg.isIncomming  = incomming
+                self.realm.add(chatMsg)
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        
+        chatTableView.reloadData()
+        chatTableView.reloadInputViews()
+    }
+
     
     func callApi(message: String) {
         print("callApi")
@@ -80,17 +108,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         if chatData.keys.contains("chat_response") {
             if let rsp: String = (chatData["chat_response"] as? String) {
-                chatView.text = "\n" + rsp + "\n" + chatView.text
+                addMessage(msgText: rsp, incomming: true)
             }
         }
+        
+        chatTableView.reloadData()
+        chatTableView.reloadInputViews()
     }
     
     
     func endChat() {
-        self.view.superview?.isHidden = true
         hideChatKeyboard()
         dismissKeyboard()
-        chatView.text = greetingMsg
         chatInputField.text = ""
         
         do {
@@ -100,28 +129,21 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         } catch {
             print("Error: \(error)")
         }
+        
+        super.viewWillDisappear(true)
+        self.navigationController?.isNavigationBarHidden = true
     }
     
     
     @objc func sendMessage() {
         print("sendMessage")
         print(keyboardHeight)
-        
-        if chatView.text == greetingMsg {
-           chatView.text = ""
-        }
-        
-        if exitKeywords.contains(chatInputField.text!.lowercased()) {
-            endChat()
-        } else {
-            if chatInputField.text! != "" {
-                chatView.text = "\nYou: " + chatInputField.text! + "\n" + chatView.text
-                
-                if rlmChatSession.first?.apiUrl != "" {
-                    callApi(message: chatInputField.text!)
-                }
-                
-                chatInputField.text = ""
+
+        if chatInputField.text! != "" {
+            addMessage(msgText: chatInputField.text!, incomming: false)
+            
+            if rlmChatSession.first?.apiUrl != "" {
+                callApi(message: chatInputField.text!)
             }
         }
 
@@ -130,7 +152,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             hideChatKeyboard()
         }
         
-        print("sendBtnPressed")
+        chatInputField.text = ""
+        chatTableView.reloadData()
+        chatTableView.reloadInputViews()
     }
     
     
@@ -146,6 +170,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             tap.cancelsTouchesInView = false
             view.addGestureRecognizer(tap)
         }
+        
     }
     
     
@@ -200,11 +225,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     
-    func initSession(){
-        chatView.text = greetingMsg
-    }
-    
-    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         print("touchesEnded")
     }
@@ -216,40 +236,33 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 100
+        let sessionMsgs = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl})
+        print("Msg Count: " + String(sessionMsgs.count))
+        
+        return sessionMsgs.count
     }
     
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.detailTextLabel?.numberOfLines = 100
-        cell.textLabel?.numberOfLines = 100
+        let sessionMsgs = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl})
+        let reverseIdx  = sessionMsgs.count - (indexPath.item + 1)
+        let msgForIdx   = sessionMsgs.filter({$0.indexPos == reverseIdx})
         
-        cell.detailTextLabel?.text = "2019-06-06 00:15:22.1 34477+0200 Aulae[22 53:193477] [DYMTLIni tPlatform] platform 2019-06-06 00:15:2 2.13447 7+0200 Aulae[2253 :193477] [DYMTLIni tPlatform] platform"
-        cell.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatTableViewCell
+        cell.backgroundColor = .clear
         
-        if indexPath.item % 2 == 0 {
-            cell.textLabel?.textAlignment = .left
-            cell.detailTextLabel?.textAlignment = .left
+        if msgForIdx.count > 0 {
+            cell.messageLabel.text = msgForIdx.first?.msgText
+            cell.isIncomming       = msgForIdx.first?.isIncomming
         } else {
-            cell.textLabel?.textAlignment = .right
-            cell.detailTextLabel?.textAlignment = .right
+            print("cellForRowAt: " + String(reverseIdx))
+            print("ERROR")
+            cell.messageLabel.text = "Umme"
+            cell.isIncomming       = false
         }
-        
-        var frame = cell.frame
-        let newWidth = frame.width * 0.50
-        let space = (frame.width - newWidth) / 2
-        frame.size.width = newWidth
-        frame.origin.x += space
-        
-        cell.frame = frame
-        
-        return cell
-    }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        // TODO: Scale to fit chat message
-        return 150
+        cell.messageLabel.transform = CGAffineTransform(scaleX: 1, y: -1)
+        return cell
     }
     
     
@@ -264,6 +277,19 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         } else {
             chatInputField.becomeFirstResponder()
         }
+    }
+    
+    
+    func initSession(){
+        print("ChatView: refreshChatView")
+        
+        super.viewWillDisappear(false)
+        self.navigationController?.isNavigationBarHidden = false
+        if chatTableView != nil {
+            chatTableView.reloadData()
+            chatTableView.reloadInputViews()
+        }
+
     }
     
     
@@ -283,14 +309,22 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         return true
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        print("ChatView: viewDidAppear")
+        chatTableView.reloadData()
+        chatTableView.reloadInputViews()
+
+    }
+
     
     override func viewDidLoad() {
+        print("ChatView: viewDidLoad")
+        
         super.viewDidLoad()
         initSession()
         
         scrollView.isScrollEnabled = false
         configureCustomTextField(customTextField: chatInputField)
-        
         chatInputField.delegate = self
         
         NotificationCenter.default.addObserver(
@@ -305,13 +339,18 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         chatTableView.delegate = self
         chatTableView.dataSource = self
         
-        let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self,action: #selector(viewWasTapped))
+        let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewWasTapped))
         singleTap.numberOfTapsRequired = 1
         singleTap.numberOfTouchesRequired = 1
         self.chatView.addGestureRecognizer(singleTap)
         self.chatView.isUserInteractionEnabled = true
         
+        chatTableView.separatorStyle = .none
+        chatTableView.register(ChatTableViewCell.self, forCellReuseIdentifier: cellId)
+        
         chatTableView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        
+        chatTableView.reloadData()
     }
     
     @objc func viewWasTapped(recognizer: UITapGestureRecognizer) {
@@ -333,6 +372,20 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //    @objc func hideKeyboardNow(notification: NSNotification) {
 //        print("hideKeyboardNow")
 //        self.hideKeyboard()
@@ -349,3 +402,31 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 //        return true
 //    }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//let mockupMsgs = [
+//    ChatMessage(message: "Lorenz tulip line flying rhombus hexagonal euphoric joyous synthesis meta caracal rose under squirrel?", isIncomming: false),
+//    ChatMessage(message: "Is wombat reason neon perfecting towering spirit aural", isIncomming: true),
+//    ChatMessage(message: "Intersecting lorenz is magenta spirited silicon fluorescent spatial to shimmering caracal rising clear ", isIncomming: false),
+//    ChatMessage(message: "Perfect audible line hamster harmony ", isIncomming: false),
+//    ChatMessage(message: "Yes?", isIncomming: true),
+//    ChatMessage(message: "Longitude lattice infinite lorenz lateral lemon rhombus hexagon eternal. Aural line lorenz mint gaussian curve frenzied hoovering wombat to clouds fluorescent vast. Levitating tulip sine delirious gerbil ideal rambling beaming concave curve? Delirious triangular pu", isIncomming: true),
+//    ChatMessage(message: "winged?", isIncomming: false),
+//    ChatMessage(message: "Be eternal rose infinite maybe perfecting could energetic gerbil green.", isIncomming: true),
+//    ChatMessage(message: "Triangular spatial pinwheel over spectral levitating gerbil bright towering hoovering.", isIncomming: false),
+//    ChatMessage(message: "Latent spirit silicon meta is cantor bright. Triangular servals clear circus jesting pinwheel", isIncomming: false),
+//    ChatMessage(message: "Is wombat reason neon perfecting towering spirit aural vertex cantor koch flying meta?", isIncomming: true),
+//    ChatMessage(message: "Latent spirit silicon meta is cantor bright. Triangular servals clear circus jesting pinwheel", isIncomming: false),
+//    ChatMessage(message: "horizontal vast linear opal squirrel perhaps levitating granular?", isIncomming: true)
+//]
