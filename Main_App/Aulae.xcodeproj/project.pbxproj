@@ -36,12 +36,15 @@
 		FA441E17225A84FD002A5C71 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = FA441E16225A84FD002A5C71 /* map.png */; };
 		FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA663146221DBD4B000FEF60 /* ContentNode.swift */; };
 		FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA66314E221E91B8000FEF60 /* MatrixHelper.swift */; };
+		FA69BE8522A8219C009B1FD7 /* ChatItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA69BE8422A8219C009B1FD7 /* ChatItem.swift */; };
+		FA69BE8722A854FB009B1FD7 /* ChatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA69BE8622A854FB009B1FD7 /* ChatTableViewController.swift */; };
 		FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BA7D02232E5E600DB3F2A /* Demos.swift */; };
 		FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */; };
 		FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA789D202221629F009DC15F /* FeedSearchTVC.swift */; };
 		FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88CBFC222DBBD90078E48A /* NodeActions.swift */; };
 		FA8B0C5C229D6B64000093D7 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B0C5B229D6B64000093D7 /* ChatViewController.swift */; };
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
+		FA90857122A812120049B4CC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA90857022A812120049B4CC /* CollectionViewCell.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
 		FAA2562222A520F300C0A3BD /* ChatCollectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA2562122A520F300C0A3BD /* ChatCollectionVC.swift */; };
 		FAA2562422A5700000C0A3BD /* TextFieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA2562322A56FFF00C0A3BD /* TextFieldViewController.swift */; };
@@ -106,6 +109,8 @@
 		FA441E16225A84FD002A5C71 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
 		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
+		FA69BE8422A8219C009B1FD7 /* ChatItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatItem.swift; sourceTree = "<group>"; };
+		FA69BE8622A854FB009B1FD7 /* ChatTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewController.swift; sourceTree = "<group>"; };
 		FA6BA7CC22315EAD00DB3F2A /* Aulae.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aulae.entitlements; sourceTree = "<group>"; };
 		FA6BA7D02232E5E600DB3F2A /* Demos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demos.swift; sourceTree = "<group>"; };
 		FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -113,6 +118,7 @@
 		FA88CBFC222DBBD90078E48A /* NodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeActions.swift; sourceTree = "<group>"; };
 		FA8B0C5B229D6B64000093D7 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
+		FA90857022A812120049B4CC /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
 		FAA2562122A520F300C0A3BD /* ChatCollectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCollectionVC.swift; sourceTree = "<group>"; };
 		FAA2562322A56FFF00C0A3BD /* TextFieldViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldViewController.swift; sourceTree = "<group>"; };
@@ -362,6 +368,9 @@
 				FA8B0C5B229D6B64000093D7 /* ChatViewController.swift */,
 				FAA2562122A520F300C0A3BD /* ChatCollectionVC.swift */,
 				FAA2562322A56FFF00C0A3BD /* TextFieldViewController.swift */,
+				FA90857022A812120049B4CC /* CollectionViewCell.swift */,
+				FA69BE8422A8219C009B1FD7 /* ChatItem.swift */,
+				FA69BE8622A854FB009B1FD7 /* ChatTableViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -490,6 +499,7 @@
 			files = (
 				FA66314F221E91B8000FEF60 /* MatrixHelper.swift in Sources */,
 				FA3A7BFB2279AF670090C11C /* ViewAnimation.swift in Sources */,
+				FA90857122A812120049B4CC /* CollectionViewCell.swift in Sources */,
 				FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */,
 				FAC030C7229C2E53009D1E28 /* RLM_ChatMsg.swift in Sources */,
 				FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */,
@@ -498,6 +508,7 @@
 				FA3A7BF9227852510090C11C /* RLM_Camera.swift in Sources */,
 				FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
+				FA69BE8722A854FB009B1FD7 /* ChatTableViewController.swift in Sources */,
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
 				FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
@@ -517,6 +528,7 @@
 				319AA77F20B418E800F99223 /* MainVC.swift in Sources */,
 				FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */,
 				FAE439632237B5C900F828EF /* NavBarOps.swift in Sources */,
+				FA69BE8522A8219C009B1FD7 /* ChatItem.swift in Sources */,
 				FAA2562422A5700000C0A3BD /* TextFieldViewController.swift in Sources */,
 				319D3F2820D7965B007FEECA /* FeedMgmt.swift in Sources */,
 				FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */,

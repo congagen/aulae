@@ -12,12 +12,19 @@ import Realm
 import RealmSwift
 
 
-class ChatViewController: UIViewController, UITextFieldDelegate {
+class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var chatView: UITextView!
     @IBOutlet var chatInputField: UITextField!
     @IBOutlet var contentView: UIView!
+
+    @IBOutlet var chatTableView: UITableView!
+    
+    @IBAction func doneBtnAction(_ sender: UIBarButtonItem) {
+        endChat()
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
     
     lazy var realm = try! Realm()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
@@ -35,7 +42,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     var conv: String = ""
     var apiHeaderValue = ""
     var apiHeaderFeild = ""
+    var keyboard = false
     
+    var chatConvList = ["a"]
     
     func callApi(message: String) {
         print("callApi")
@@ -116,8 +125,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             }
         }
 
-
-        
         if chatInputField.text == "" {
             print("chatInputField.text! !=")
             hideChatKeyboard()
@@ -125,6 +132,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         
         print("sendBtnPressed")
     }
+    
     
     @objc func hideChatKeyboard() {
         print("hideChatKeyboard")
@@ -162,7 +170,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         print("keyboardWillShowOrHide")
         print(keyboardHeight)
 
-        print("keyboardWillShowOrHide")
         if let userInfo = notification.userInfo,
             let scrollView = scrollView,
             let durationValue = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] {
@@ -187,17 +194,75 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
                 }, completion: {_ in scrollView.isScrollEnabled = false})
             }
         }
+        
+        //let indexPath = IndexPath(row: 90, section: 0)
+        //self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    }
+    
+    
+    func initSession(){
+        chatView.text = greetingMsg
+    }
+    
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("touchesEnded")
+    }
+    
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 100
     }
     
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.detailTextLabel?.numberOfLines = 100
+        cell.textLabel?.numberOfLines = 100
+        
+        cell.detailTextLabel?.text = "2019-06-06 00:15:22.1 34477+0200 Aulae[22 53:193477] [DYMTLIni tPlatform] platform 2019-06-06 00:15:2 2.13447 7+0200 Aulae[2253 :193477] [DYMTLIni tPlatform] platform"
+        cell.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        
+        if indexPath.item % 2 == 0 {
+            cell.textLabel?.textAlignment = .left
+            cell.detailTextLabel?.textAlignment = .left
+        } else {
+            cell.textLabel?.textAlignment = .right
+            cell.detailTextLabel?.textAlignment = .right
+        }
+        
+        var frame = cell.frame
+        let newWidth = frame.width * 0.50
+        let space = (frame.width - newWidth) / 2
+        frame.size.width = newWidth
+        frame.origin.x += space
+        
+        cell.frame = frame
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        // TODO: Scale to fit chat message
+        return 150
+    }
+    
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        print("touchesBegan")
         let ch: Int = Int(chatInputField.frame.maxY)
         let keyHeight: Int = Int(keyboardHeight) + ch
         print(keyHeight)
-
+        
         if (Int(((touches.first?.location(in: self.view).y)!)) > keyHeight) {
             hideChatKeyboard()
+        } else {
+            chatInputField.becomeFirstResponder()
         }
     }
     
@@ -206,7 +271,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         print("textFieldDidEndEditing")
         sendMessage()
     }
-    
     
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         print("textFieldDidEndEditing")
@@ -220,11 +284,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    func initSession(){
-        chatView.text = greetingMsg
-    }
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         initSession()
@@ -233,7 +292,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
         configureCustomTextField(customTextField: chatInputField)
         
         chatInputField.delegate = self
-        // Do any additional setup after loading the view, typically from a nib.
         
         NotificationCenter.default.addObserver(
             self, selector: #selector(keyboardWillShowOrHide),
@@ -243,15 +301,34 @@ class ChatViewController: UIViewController, UITextFieldDelegate {
             self, selector: #selector(keyboardWillShowOrHide),
             name: UIResponder.keyboardWillHideNotification, object: nil
         )
+        
+        chatTableView.delegate = self
+        chatTableView.dataSource = self
+        
+        let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self,action: #selector(viewWasTapped))
+        singleTap.numberOfTapsRequired = 1
+        singleTap.numberOfTouchesRequired = 1
+        self.chatView.addGestureRecognizer(singleTap)
+        self.chatView.isUserInteractionEnabled = true
+        
+        chatTableView.transform = CGAffineTransform(scaleX: 1, y: -1)
     }
     
+    @objc func viewWasTapped(recognizer: UITapGestureRecognizer) {
+        if(recognizer.state == .ended){
+            keyboard = !keyboard
+            
+            if keyboard {
+                chatInputField.becomeFirstResponder()
+            } else {
+                hideChatKeyboard()
+            }
+            
+        }
+    }
 
     
 }
-
-
-
-
 
 
 
