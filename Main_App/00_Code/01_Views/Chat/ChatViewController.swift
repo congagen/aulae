@@ -70,7 +70,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         
         chatTableView.reloadData()
-        chatTableView.reloadInputViews()
     }
 
     
@@ -287,7 +286,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         self.navigationController?.isNavigationBarHidden = false
         if chatTableView != nil {
             chatTableView.reloadData()
-            chatTableView.reloadInputViews()
         }
 
     }
@@ -312,7 +310,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     override func viewDidAppear(_ animated: Bool) {
         print("ChatView: viewDidAppear")
         chatTableView.reloadData()
-        chatTableView.reloadInputViews()
 
     }
 
