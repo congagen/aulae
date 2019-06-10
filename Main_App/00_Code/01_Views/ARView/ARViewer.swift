@@ -50,30 +50,31 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @IBAction func toggleMapAction(_ sender: UIButton) {
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController")
-        vc!.modalPresentationStyle = .overCurrentContext
-        vc!.modalTransitionStyle = .crossDissolve
-        present(vc!, animated: true, completion: nil)
+//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController")
+//        vc!.modalPresentationStyle = .overCurrentContext
+//        vc!.modalTransitionStyle = .crossDissolve
+//        present(vc!, animated: true, completion: nil)
     }
     
     @IBAction func toggleSettingsBtnAction(_ sender: UIButton) {
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController")
-        vc!.modalPresentationStyle = .overCurrentContext
-        vc!.modalTransitionStyle = .crossDissolve
-        present(vc!, animated: true, completion: nil)
+//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController")
+//        vc!.modalPresentationStyle = .overCurrentContext
+//        vc!.modalTransitionStyle = .crossDissolve
+//        present(vc!, animated: true, completion: nil)
     }
     
     @IBAction func toggleLibManager(_ sender: UIButton) {
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "LibViewController")
-        vc!.modalPresentationStyle = .overCurrentContext
-        vc!.modalTransitionStyle = .crossDissolve
-        present(vc!, animated: true, completion: nil)
+//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "LibViewController")
+//        vc!.modalPresentationStyle = .overCurrentContext
+//        vc!.modalTransitionStyle = .crossDissolve
+//        present(vc!, animated: true, completion: nil)
     }
     
     func showChatView() {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "ChatViewController")
-        vc!.modalPresentationStyle = .overCurrentContext
+        vc!.modalPresentationStyle = .overFullScreen
         vc!.modalTransitionStyle = .crossDissolve
+        
         present(vc!, animated: true, completion: nil)
     }
     
@@ -81,7 +82,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBOutlet var loadingView: UIView!
     
-    @IBAction func refreshBtnAction(_ sender: UIButton) {
+    @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         //loadingView.isHidden = false
         
         ViewAnimation().fade(
@@ -101,7 +102,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBOutlet var sceneView: ARSCNView!
     
-    @IBAction func sharePhotoBtn(_ sender: UIButton) {
+    @IBAction func sharePhotoBtn(_ sender: UIBarButtonItem) {
         print("sharePhotoBtn")
         let snapShot = sceneView.snapshot()
         let imageToShare = [ snapShot ]
@@ -116,7 +117,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     @IBOutlet var searchQRBtn: UIButton!
-    @IBAction func searchQrBtnAction(_ sender: UIButton) {
+    @IBAction func searchQrBtnAction(_ sender: UIBarButtonItem) {
         print("searchQrBtnAction")
     
         if isTrackingQR && (qrCapturePreviewLayer != nil) && (qrCaptureSession != nil) {
@@ -394,7 +395,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         loadingView.isHidden = true
         
         if isTrackingQR {
-            searchQRBtn.tintColor = self.view.window?.tintColor
+            //searchQRBtn.tintColor = self.view.window?.tintColor
             qrCaptureSession?.stopRunning()
             qrCapturePreviewLayer?.isHidden = true
             qrCapturePreviewLayer?.removeFromSuperlayer()
@@ -583,7 +584,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     func manageLoading(interval: Double) {
-        // let canStopLoading = ((rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0) && self.trackingState == 0 && !rlmSystem.first!.needsRefresh
         let canStopLoading = ((rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0) && !rlmSystem.first!.needsRefresh
 
         if canStopLoading && !self.loadingView.isHidden {
@@ -607,7 +607,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 withTimeInterval: TimeInterval(interval), repeats: false, block: {_ in self.manageLoading(interval: interval + 0.1) }
             )
         }
-    
     }
     
     
@@ -622,6 +621,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             target: self, action: #selector(ARViewer.handlePinch(_:))
         )
         
+        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo")
+
         pinchGR.delegate = self
         view.addGestureRecognizer(pinchGR)
     }
@@ -637,18 +638,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    override func viewWillAppear(_ animated: Bool) {
-        print("viewWillAppear")
-        //progressBar.removeFromSuperview()
-    }
-    
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
         loadingView.isHidden = false
         sceneView.session.pause()
-        //progressBar.removeFromSuperview()
     }
     
     
@@ -657,19 +651,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print(error)
         print(error.localizedDescription)
         
-//        if error is ARError {
-//            initScene()
-//        }
+        if error is ARError {
+            print(error)
+        }
     }
     
     
     func sessionWasInterrupted(_ session: ARSession) {
-        print("ArKit ViewerVC: sessionWasInterrupted")
+        print("ArViewer: sessionWasInterrupted")
     }
     
     
     func sessionInterruptionEnded(_ session: ARSession) {
-        print("ArKit ViewerVC: sessionInterruptionEnded")
+        print("ArViewer: sessionInterruptionEnded")
     }
     
 }

@@ -192,17 +192,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         print("keyboardWillShowOrHide")
         print(keyboardHeight)
 
-        if let userInfo = notification.userInfo,
-            let scrollView = scrollView,
-            let durationValue = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] {
-            
-            print("userInfo")
+        if let userInfo = notification.userInfo, let scrollView = scrollView, let durationValue = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] {
+            scrollView.isScrollEnabled = true
+
             if let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 print("keyboardSize")
                 keyboardHeight = Int(keyboardSize.maxY)
                 
-                scrollView.isScrollEnabled = true
-
                 let endRect = view.convert(keyboardSize, from: view.window)
                 let keyboardOverlap = scrollView.frame.maxY - endRect.origin.y
                 
@@ -216,9 +212,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
                 }, completion: {_ in scrollView.isScrollEnabled = false})
             }
         }
-        
-        //let indexPath = IndexPath(row: 90, section: 0)
-        //self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
     
     
@@ -245,7 +238,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         let reverseIdx  = sessionMsgs.count - (indexPath.item + 1) + 1
         let msgForIdx   = sessionMsgs.filter({$0.indexPos == reverseIdx})
 
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatTableViewCell
         cell.backgroundColor = .clear
         
@@ -265,16 +257,16 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("touchesBegan")
-        let ch: Int = Int(chatInputField.frame.maxY)
-        let keyHeight: Int = Int(keyboardHeight) + ch
-        print(keyHeight)
-        
-        if (Int(((touches.first?.location(in: self.view).y)!)) > keyHeight) {
-            hideChatKeyboard()
-        } else {
-            chatInputField.becomeFirstResponder()
-        }
+//        print("touchesBegan")
+//        let ch: Int = Int(chatInputField.frame.maxY)
+//        let keyHeight: Int = Int(keyboardHeight) + ch
+//        print(keyHeight)
+//
+//        if (Int(((touches.first?.location(in: self.view).y)!)) > keyHeight) {
+//            hideChatKeyboard()
+//        } else {
+//            chatInputField.becomeFirstResponder()
+//        }
     }
     
     
@@ -283,6 +275,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         super.viewWillDisappear(false)
         self.navigationController?.isNavigationBarHidden = false
+        
         if chatTableView != nil {
             chatTableView.reloadData()
         }
@@ -291,11 +284,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        print("textFieldDidEndEditing")
-        sendMessage()
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         print("textFieldDidEndEditing")
         sendMessage()
     }
@@ -309,7 +297,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     override func viewDidAppear(_ animated: Bool) {
         print("ChatView: viewDidAppear")
         chatTableView.reloadData()
-
     }
 
     
@@ -321,21 +308,21 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         scrollView.isScrollEnabled = false
         configureCustomTextField(customTextField: chatInputField)
+        
         chatInputField.delegate = self
+        chatTableView.delegate = self
+        chatTableView.dataSource = self
         
         NotificationCenter.default.addObserver(
             self, selector: #selector(keyboardWillShowOrHide),
             name: UIResponder.keyboardWillShowNotification, object: nil)
-        
+
         NotificationCenter.default.addObserver(
             self, selector: #selector(keyboardWillShowOrHide),
             name: UIResponder.keyboardWillHideNotification, object: nil
         )
         
         navBarTitle.title = rlmChatSession.first?.agentId
-        
-        chatTableView.delegate = self
-        chatTableView.dataSource = self
         
         let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewWasTapped))
         singleTap.numberOfTapsRequired = 1
@@ -347,18 +334,22 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         chatTableView.register(ChatTableViewCell.self, forCellReuseIdentifier: cellId)
         chatTableView.transform = CGAffineTransform(scaleX: 1, y: -1)
         chatTableView.reloadData()
+        
+        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "keyboardWillShowNotification")))
     }
+        
     
     @objc func viewWasTapped(recognizer: UITapGestureRecognizer) {
+        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "keyboardWillShowNotification")))
+
         if(recognizer.state == .ended){
             keyboard = !keyboard
-            
+
             if keyboard {
                 chatInputField.becomeFirstResponder()
             } else {
                 hideChatKeyboard()
             }
-            
         }
     }
 

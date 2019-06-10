@@ -250,10 +250,10 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         pinView?.image              = UIImage(named: "pin_ds")
         pinView?.canShowCallout     = true
 
-        if let o: MapAno = annotation as? MapAno {
-            let fo = feedObjects.filter( {$0.uuid == o.id } )
-            //print(fo.first?.hex_color ?? "")
-        }
+//        if let o: MapAno = annotation as? MapAno {
+//            let fo = feedObjects.filter( {$0.uuid == o.id } )
+//            //print(fo.first?.hex_color ?? "")
+//        }
         
         updateMapSearchRadius()
         return pinView
@@ -308,10 +308,10 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     func focusMap(focusLat: Double, focusLng: Double) {
         print("focusMap")
         
-        let center = CLLocationCoordinate2D(latitude: focusLat, longitude: focusLng)
-        let i_region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 135.68020269231502, longitudeDelta: 131.8359359933973))
-        
+//        let center = CLLocationCoordinate2D(latitude: focusLat, longitude: focusLng)
+//        let i_region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 135.68020269231502, longitudeDelta: 131.8359359933973))
         //mapView.setRegion(i_region, animated: false)
+        
         mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
     }
 

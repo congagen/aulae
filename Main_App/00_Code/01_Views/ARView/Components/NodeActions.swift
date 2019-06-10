@@ -72,12 +72,37 @@ extension ARViewer {
     }
     
     
-    func shoNodeInfo(selNode: ContentNode) {
+    func styleAltertViewText() -> NSAttributedString{
+        let strings = [
+            ["text" : "My String red\n", "color" : UIColor.blue],
+            ["text" : "My string green", "color" : UIColor.green]
+        ];
+        
+        let attributedString = NSMutableAttributedString()
+        
+        for configDict in strings {
+            if let color = configDict["color"] as? UIColor, let text = configDict["text"] as? String {
+                attributedString.append(
+                    NSAttributedString(
+                        string: text, attributes: [NSAttributedString.Key.foregroundColor : color]
+                    )
+                )
+            }
+        }
+        
+        let alert = UIAlertController(title: "Title", message: "", preferredStyle: .alert)
+        alert.setValue(attributedString, forKey: "attributedMessage")
+        
+        return attributedString
+    }
+    
+    
+    func showNodeInfo(selNode: ContentNode) {
         
         let alert =  UIAlertController(
             title:   (selNode.title),
-            message: selNode.info,
-            preferredStyle: UIAlertController.Style.actionSheet
+            message: "\n" + selNode.info,
+            preferredStyle: UIAlertController.Style.alert
         )
         
         alert.addAction(UIAlertAction(title: "Done",  style: UIAlertAction.Style.default, handler: nil ))
@@ -134,7 +159,7 @@ extension ARViewer {
         )
         
         if (selNode.info) != "" {
-            alert.addAction(UIAlertAction(title: "Show Info",  style: UIAlertAction.Style.default, handler: { _ in self.shoNodeInfo(selNode: selNode) } ))
+            alert.addAction(UIAlertAction(title: "Show Info",  style: UIAlertAction.Style.default, handler: { _ in self.showNodeInfo(selNode: selNode) } ))
         }
         
         if (rlmChatSession.first?.apiUrl) != "" && !(rlmChatSession.first?.apiUrl == nil) {

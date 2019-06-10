@@ -285,7 +285,7 @@ class FeedMgmt {
             do {
                 try realm.write {
                     if feedDbItem.id == "" || rlmFeeds.filter({$0.id == feedDbItem.id}).count > 1 {
-                        feedDbItem.id          = sID
+                        feedDbItem.id = sID
                     }
                     feedDbItem.name          = sName
                     feedDbItem.info          = sInfo

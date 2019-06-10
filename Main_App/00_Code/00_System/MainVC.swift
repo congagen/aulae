@@ -133,7 +133,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     
     func initSession() {
         dbGc()
-        
+        self.selectedIndex = 1
         
         if rlmSystem.count < 1 {
             let rlmSys = RLM_System()
@@ -189,11 +189,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             mainUpdate()
             initLocation()
             
-            Timer.scheduledTimer(
-                withTimeInterval: 0.5,
-                repeats: false,
-                block: { _ in self.selectedIndex = 1 }
-            )
         } else {
             resetErrCounts()
             mainUpdate()
@@ -214,6 +209,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         initSession()
+        
         
         if let viewControllers = tabBarController?.viewControllers {
             for viewController in viewControllers {
