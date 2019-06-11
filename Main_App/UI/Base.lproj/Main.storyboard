@@ -189,7 +189,7 @@
                                 </connections>
                             </barButtonItem>
                             <barButtonItem systemItem="camera" id="etU-3N-bVO">
-                                <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.75286091549295775" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                 <connections>
                                     <action selector="sharePhotoBtn:" destination="cNO-cb-Srl" id="1w8-3W-Y2v"/>
                                 </connections>
@@ -746,11 +746,12 @@
                                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zDp-zo-6j6">
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zDp-zo-6j6">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="727"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <prototypes>
-                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" textLabel="6tc-03-Rtd" detailTextLabel="00l-e5-Z7V" rowHeight="100" style="IBUITableViewCellStyleSubtitle" id="akY-1G-gNr">
+                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" textLabel="6tc-03-Rtd" detailTextLabel="00l-e5-Z7V" rowHeight="100" style="IBUITableViewCellStyleSubtitle" id="akY-1G-gNr">
                                                         <rect key="frame" x="0.0" y="28" width="414" height="100"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="akY-1G-gNr" id="csf-lE-kSL">
@@ -832,6 +833,12 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Username" id="Zb7-WW-Fuy">
+                        <barButtonItem key="leftBarButtonItem" title="-" id="RE5-eY-PsH">
+                            <color key="tintColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                            <connections>
+                                <action selector="toggleBgAction:" destination="J0L-Ic-Tgp" id="Y1i-lb-yDQ"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="93e-px-ixl">
                             <color key="tintColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -845,6 +852,7 @@
                         <outlet property="chatTableView" destination="zDp-zo-6j6" id="0CP-tg-RmC"/>
                         <outlet property="chatView" destination="pG8-aU-eqS" id="feg-to-X8J"/>
                         <outlet property="contentView" destination="Fm7-aM-pTy" id="AmL-SP-kMw"/>
+                        <outlet property="fxBg" destination="7xN-nc-qN9" id="NZ9-mk-F7K"/>
                         <outlet property="navBarTitle" destination="Zb7-WW-Fuy" id="dDG-Md-iJ7"/>
                         <outlet property="scrollView" destination="79w-pY-Z7s" id="dp1-yc-Euc"/>
                     </connections>
@@ -956,7 +964,8 @@
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
-                            <fontDescription key="fontDescription" type="system" weight="black" pointSize="19"/>
+                            <fontDescription key="fontDescription" type="system" weight="black" pointSize="16"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.75286091550000001" colorSpace="custom" customColorSpace="sRGB"/>
                         </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>

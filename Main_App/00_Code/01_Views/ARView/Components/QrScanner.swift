@@ -22,7 +22,7 @@ extension ARViewer {
         qrCaptureSession?.stopRunning()
         qrCapturePreviewLayer?.removeFromSuperlayer()
         
-        searchQRBtn.tintColor = self.view.window?.tintColor
+        //searchQRBtn.tintColor = self.view.window?.tintColor
     }
     
     
@@ -125,7 +125,8 @@ extension ARViewer {
         }
         
         let output = AVCaptureMetadataOutput()
-        output.setMetadataObjectsDelegate((self as AVCaptureMetadataOutputObjectsDelegate), queue: DispatchQueue.main)
+        output.setMetadataObjectsDelegate((self as AVCaptureMetadataOutputObjectsDelegate),
+                                          queue: DispatchQueue.main)
         qrCaptureSession?.addOutput(output)
         output.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
         

@@ -57,7 +57,7 @@ extension MainVC {
         demoFeed.info = "Interface guide"
     
         let itemCount = 6
-        let distance: Double = 1.2
+        let distance: Double = 0.5
         
         do {
             try realm.write {
@@ -78,40 +78,17 @@ extension MainVC {
                     o.contentLink    = "https://www.abstraqata.com/aulae"
                     
                     if i == 1 {
-                        o.filePath   = "welc.png"
+                        o.filePath   = "Guide.png"
                         o.x_pos      = 0
-                        o.z_pos      = -distance * 2
+                        o.z_pos      = -distance
                     }
                     
                     if i == 2 {
-                        o.filePath   = "map.png"
-                        o.x_pos      = -distance
-                        o.z_pos      = -distance * 1.5
-                    }
-                    
-                    if i == 3 {
-                        o.filePath   = "lib.png"
-                        o.x_pos      = distance
-                        o.z_pos      = -distance * 1.5
-                    }
-                    
-                    if i == 4 {
-                        o.filePath   = "lib.png"
-                        o.x_pos      = -distance
-                        o.z_pos      = distance * 1.5
-                    }
-                    
-                    if i == 5 {
-                        o.filePath   = "view.png"
+                        o.filePath   = "Guide.png"
                         o.x_pos      = 0
-                        o.z_pos      = distance * 1.5
+                        o.z_pos      = distance
                     }
-                    
-                    if i == 6 {
-                        o.filePath   = "map.png"
-                        o.x_pos      = distance
-                        o.z_pos      = distance * 2
-                    }
+                
 
                     self.realm.add(o)
                 }

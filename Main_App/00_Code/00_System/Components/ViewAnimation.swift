@@ -43,6 +43,15 @@ class ViewAnimation {
     }
     
     
+    func resetOpacity(v: UIView, hideView: Bool) {
+        v.isHidden = hideView
+        
+        if v.isHidden {
+            v.layer.opacity = 1
+        }
+    }
+    
+    
     func fade(viewToAnimate: UIView, aDuration: Double, hideView: Bool, aMode: UIView.AnimationOptions) {
         
         if !hideView && viewToAnimate.isHidden {
@@ -54,8 +63,10 @@ class ViewAnimation {
                           duration: aDuration,
                           options: aMode,
                           animations: { viewToAnimate.layer.opacity = Float(hideView ? 0 : 1)},
-                          completion: { _ in viewToAnimate.isHidden = hideView }
+                          completion: { _ in self.resetOpacity(v: viewToAnimate, hideView: hideView) }
         )
+        
+
         
     }
     

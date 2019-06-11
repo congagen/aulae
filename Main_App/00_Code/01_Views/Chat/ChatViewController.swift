@@ -21,12 +21,12 @@ struct ChatMessage {
 class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     
     lazy var realm = try! Realm()
-    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var rlmSession:  Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds:    Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
-    lazy var rlmChatMsgs: Results<RLM_ChatMessage> = { self.realm.objects(RLM_ChatMessage.self) }()
+    lazy var rlmChatMsgs:    Results<RLM_ChatMessage> = { self.realm.objects(RLM_ChatMessage.self) }()
 
     fileprivate let cellId = "cell"
     
@@ -44,6 +44,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     @IBOutlet var chatInputField: UITextField!
     @IBOutlet var contentView: UIView!
     @IBOutlet var chatTableView: UITableView!
+    
+    @IBOutlet var fxBg: UIVisualEffectView!
+    @IBAction func toggleBgAction(_ sender: UIBarButtonItem) {
+        fxBg.isHidden = !fxBg.isHidden
+    }
+    
     
     @IBAction func doneBtnAction(_ sender: UIBarButtonItem) {
         endChat()
@@ -83,7 +89,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
                 completion: { r in self.handleResponseText(result: r) }, apiHeaderValue: apiHeaderValue,
                 apiHeaderFeild: apiHeaderFeild, apiUrl: rlmChatSession.first!.apiUrl,
                 reqParams: [
-                    "lat": "", "lng": "", "kwd": "", "sid": (rlmSession.first?.sessionUUID)!,
+                    "lat": String(Int(rlmSession.first!.currentLat)),
+                    "lng": String(Int(rlmSession.first!.currentLng)),
+                    "kwd": "",
+                    "sid": (rlmSession.first?.sessionUUID)!,
                     "chat_msg": message
                 ]
             )
@@ -159,14 +168,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         print("hideChatKeyboard")
         print(keyboardHeight)
         
-        if chatInputField.text == "" {
-            let tap: UITapGestureRecognizer = UITapGestureRecognizer(
-                target: self, action: #selector(dismissKeyboard)
-            )
-            
-            tap.cancelsTouchesInView = false
-            view.addGestureRecognizer(tap)
-        }
+//        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
+//            target: self, action: #selector(dismissKeyboard)
+//        )
+//
+//        tap.cancelsTouchesInView = false
+//        view.addGestureRecognizer(tap)
         
     }
     
@@ -175,6 +182,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         print("dismissKeyboard")
         print(keyboardHeight)
         
+        chatInputField.resignFirstResponder()
         view.endEditing(true)
     }
     
@@ -240,7 +248,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatTableViewCell
         cell.backgroundColor = .clear
-        
+        cell.selectionStyle = .none
+
         if msgForIdx.count > 0 {
             cell.messageLabel.text = msgForIdx.first?.msgText
             cell.isIncomming       = msgForIdx.first?.isIncomming
@@ -256,20 +265,45 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        print("touchesBegan")
-//        let ch: Int = Int(chatInputField.frame.maxY)
-//        let keyHeight: Int = Int(keyboardHeight) + ch
-//        print(keyHeight)
-//
-//        if (Int(((touches.first?.location(in: self.view).y)!)) > keyHeight) {
-//            hideChatKeyboard()
-//        } else {
-//            chatInputField.becomeFirstResponder()
-//        }
+    func openUrl(scheme: String) {
+        print("openUrl")
+
+        if let url = URL(string: scheme) {
+            if #available(iOS 10, *) {
+                UIApplication.shared.open(
+                    url, options: [:], completionHandler: { (success) in print("Open \(scheme): \(success)") }
+                )
+            } else {
+                let success = UIApplication.shared.openURL(url)
+                print("Open \(scheme): \(success)")
+            }
+        }
     }
     
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("didSelectRowAt")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatTableViewCell
+        cell.selectionStyle = .none
+        print(cell.messageLabel.text!)
+        openUrl(scheme: cell.messageLabel.text ?? "")
+    }
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("touchesBegan")
+        let ch: Int = Int(chatInputField.frame.maxY)
+        let keyHeight: Int = Int(keyboardHeight) + ch
+        print(keyHeight)
+
+        if (Int(((touches.first?.location(in: self.view).y)!)) > keyHeight) {
+            hideChatKeyboard()
+        } else {
+            chatInputField.becomeFirstResponder()
+        }
+    }
+    
+
     func initSession() {
         print("ChatView: refreshChatView")
         
@@ -279,15 +313,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         if chatTableView != nil {
             chatTableView.reloadData()
         }
+    }
+    
 
-    }
-    
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        print("textFieldDidEndEditing")
-        sendMessage()
-    }
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("textFieldShouldReturn")
         sendMessage()
@@ -299,6 +327,20 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         chatTableView.reloadData()
     }
 
+    
+    @objc func viewWasTapped(recognizer: UITapGestureRecognizer) {
+        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "keyboardWillShowNotification")))
+        
+        if(recognizer.state == .ended){
+            keyboard = !keyboard
+            if keyboard {
+                chatInputField.becomeFirstResponder()
+            } else {
+                hideChatKeyboard()
+            }
+        }
+    }
+    
     
     override func viewDidLoad() {
         print("ChatView: viewDidLoad")
@@ -324,6 +366,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         navBarTitle.title = rlmChatSession.first?.agentId
         
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
+            target: self, action: #selector(dismissKeyboard)
+        )
+        
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+
         let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewWasTapped))
         singleTap.numberOfTapsRequired = 1
         singleTap.numberOfTouchesRequired = 1
@@ -337,22 +386,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "keyboardWillShowNotification")))
     }
-        
     
-    @objc func viewWasTapped(recognizer: UITapGestureRecognizer) {
-        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "keyboardWillShowNotification")))
-
-        if(recognizer.state == .ended){
-            keyboard = !keyboard
-
-            if keyboard {
-                chatInputField.becomeFirstResponder()
-            } else {
-                hideChatKeyboard()
-            }
-        }
-    }
-
     
 }
 
@@ -363,31 +397,20 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
 
 
-
-
-
-
-
-
-
-
-
-
-//    @objc func hideKeyboardNow(notification: NSNotification) {
-//        print("hideKeyboardNow")
-//        self.hideKeyboard()
-//    }
-//
-//
 //    override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
 //        return true
 //    }
 
 
-//    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//        print("textFieldShouldReturn")
-//        return true
-//    }
+
+
+
+
+
+
+
+
+
 
 
 

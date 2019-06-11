@@ -35,6 +35,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var trackingState = 3
     var configuration = AROrientationTrackingConfiguration()
     
+    var mainVC: MainVC? = nil
     var mainScene = SCNScene()
     var selectedNode: ContentNode? = nil
     let audioRangeRadius: Double = 1000
@@ -85,18 +86,20 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         //loadingView.isHidden = false
         
-        ViewAnimation().fade(
-            viewToAnimate: self.loadingView,
-            aDuration: 0.1,
-            hideView: false,
-            aMode: UIView.AnimationOptions.curveEaseIn
-        )
+//        ViewAnimation().fade(
+//            viewToAnimate: self.loadingView,
+//            aDuration: 0.1,
+//            hideView: false,
+//            aMode: UIView.AnimationOptions.curveEaseIn
+//        )
         // NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
 
         // FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: {_ in self.initScene() })
-        Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false, block: {_ in self.refreshScene() })
-        //initScene
+        //initScene()
+        //refreshScene()
+        
+        self.viewDidAppear(true)
+        //manageLoadingScreen(interval: 2)
 
     }
     
@@ -279,7 +282,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
         }
     
-        
         ctNode.tagComponents(nodeTag: String(objData.uuid))
         sceneView.scene.rootNode.addChildNode(ctNode)
     }
@@ -323,6 +325,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func refreshScene() {
         print("RefreshScene")
+        loadingView.isHidden = false
         
         rawDeviceGpsCCL          = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         let curPos               = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
@@ -385,8 +388,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print("Error: \(error)")
         }
         
-        manageLoading(interval: 0.5)
- 
     }
     
     
@@ -545,12 +546,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     @objc func mainTimerUpdate() {
-        print("mainUpdate: ARViewer")
+        print("ARViewer: mainTimerUpdate")
         var ref = false
         
         updateCameraSettings()
         
         if rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate {
+            print("rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate")
             for fo in rlmSourceItems {
                 if (fo.active && !fo.deleted) {
                     if mainScene.rootNode.childNodes.filter( {$0.name == fo.uuid} ).count == 0 {
@@ -579,12 +581,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 //            withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 && positionOK }
 //        )
         
-        manageLoading(interval: 2)
+        manageLoadingScreen(interval: 2)
         
     }
     
-    func manageLoading(interval: Double) {
-        let canStopLoading = ((rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0) && !rlmSystem.first!.needsRefresh
+    func manageLoadingScreen(interval: Double) {
+        print("manageLoadingScreen")
+        
+        let canStopLoading = (
+            (rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0) && !rlmSystem.first!.needsRefresh
 
         if canStopLoading && !self.loadingView.isHidden {
             ViewAnimation().fade(
@@ -604,45 +609,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             
             Timer.scheduledTimer(
-                withTimeInterval: TimeInterval(interval), repeats: false, block: {_ in self.manageLoading(interval: interval + 0.1) }
+                withTimeInterval: TimeInterval(interval), repeats: false, block: {_ in self.manageLoadingScreen(interval: interval + 0.1) }
             )
         }
-    }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        print("viewDidLoad")
-        // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
-
-        loadingView.isHidden = false
-
-        let pinchGR = UIPinchGestureRecognizer(
-            target: self, action: #selector(ARViewer.handlePinch(_:))
-        )
-        
-        NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo")
-
-        pinchGR.delegate = self
-        view.addGestureRecognizer(pinchGR)
-    }
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
-        print("viewDidAppear")
-
-        loadingView.isHidden = false
-        initScene()
-        
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.refreshScene() })
-    }
-    
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        loadingView.isHidden = false
-        sceneView.session.pause()
     }
     
     
@@ -664,6 +633,78 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func sessionInterruptionEnded(_ session: ARSession) {
         print("ArViewer: sessionInterruptionEnded")
+    }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("viewWillDisappear")
+        super.viewWillDisappear(animated)
+    }
+    
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        do {
+            try realm.write {
+                rlmSystem.first?.needsRefresh = true
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        loadingView.isHidden = false
+    }
+    
+    
+    func debugChat() {
+        do {
+            try realm.write {
+                rlmChatSession.first?.sessionUUID = "debugsession"
+                rlmChatSession.first?.apiUrl    = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae-avr"
+                rlmChatSession.first?.agentName = "Chaty Bot"
+                rlmChatSession.first?.agentId   = "Chaty Bot"
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        showChatView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear")
+        
+        do {
+            try realm.write {
+                rlmSystem.first?.needsRefresh = true
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+
+        loadingView.isHidden = false
+        manageLoadingScreen(interval: 1)
+
+        refreshScene()
+        //debugChat()
+    }
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print("viewDidLoad")
+        
+        // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo_B")
+
+        loadingView.isHidden = false
+        initScene()
+        refreshScene()
+
+        let pinchGR = UIPinchGestureRecognizer(
+            target: self, action: #selector(ARViewer.handlePinch(_:))
+        )
+        
+        pinchGR.delegate = self
+        view.addGestureRecognizer(pinchGR)
     }
     
 }

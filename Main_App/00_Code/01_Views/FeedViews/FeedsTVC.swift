@@ -82,9 +82,9 @@ class FeedsTVC: UITableViewController {
                 feed.active = !feed.active
                 feed.errors = 0
 
-                if feed.active && feed.id.lowercased() != "quickstart" {
-                    feed.name   = "Updating..."
-                }
+//                if feed.active && feed.id.lowercased() != "quickstart" {
+//                    feed.name   = "Updating..."
+//                }
                 
             }
         } catch {
@@ -424,7 +424,6 @@ class FeedsTVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
 
         rCtrl.tintColor = view.superview?.tintColor
         tableView.addSubview(rCtrl)

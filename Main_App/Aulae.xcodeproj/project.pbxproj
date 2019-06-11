@@ -25,6 +25,8 @@
 		FA03CAA9227B490B00E0BFC3 /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA03CAA8227B490A00E0BFC3 /* welc.png */; };
 		FA1934E422247D2B00457C6E /* FeedActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1934E322247D2B00457C6E /* FeedActions.swift */; };
 		FA2BDFA02246B658002CB0D4 /* ObjectGestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */; };
+		FA32DA8922AE8D300068EA96 /* bg_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FA32DA8822AE8D300068EA96 /* bg_1.png */; };
+		FA32DA8F22AEFE400068EA96 /* Logo_B.png in Resources */ = {isa = PBXBuildFile; fileRef = FA32DA8E22AEFE400068EA96 /* Logo_B.png */; };
 		FA3A7BF722771DD50090C11C /* RLM_System.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BF622771DD50090C11C /* RLM_System.swift */; };
 		FA3A7BF9227852510090C11C /* RLM_Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BF8227852510090C11C /* RLM_Camera.swift */; };
 		FA3A7BFB2279AF670090C11C /* ViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BFA2279AF670090C11C /* ViewAnimation.swift */; };
@@ -42,6 +44,8 @@
 		FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6BA7D02232E5E600DB3F2A /* Demos.swift */; };
 		FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */; };
 		FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA789D202221629F009DC15F /* FeedSearchTVC.swift */; };
+		FA7981A122AF9118002411C7 /* bg_2.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7981A022AF9118002411C7 /* bg_2.png */; };
+		FA7981A322AFB79D002411C7 /* Guide.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7981A222AFB79D002411C7 /* Guide.png */; };
 		FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88CBFC222DBBD90078E48A /* NodeActions.swift */; };
 		FA8B0C5C229D6B64000093D7 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B0C5B229D6B64000093D7 /* ChatViewController.swift */; };
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
@@ -96,6 +100,8 @@
 		FA03CAA8227B490A00E0BFC3 /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = welc.png; path = ../../../../../01_Assets/00_UI/1.0.25/welc.png; sourceTree = "<group>"; };
 		FA1934E322247D2B00457C6E /* FeedActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedActions.swift; sourceTree = "<group>"; };
 		FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectGestures.swift; sourceTree = "<group>"; };
+		FA32DA8822AE8D300068EA96 /* bg_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_1.png; sourceTree = "<group>"; };
+		FA32DA8E22AEFE400068EA96 /* Logo_B.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Logo_B.png; sourceTree = "<group>"; };
 		FA3A7BF622771DD50090C11C /* RLM_System.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_System.swift; sourceTree = "<group>"; };
 		FA3A7BF8227852510090C11C /* RLM_Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Camera.swift; sourceTree = "<group>"; };
 		FA3A7BFA2279AF670090C11C /* ViewAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnimation.swift; sourceTree = "<group>"; };
@@ -114,6 +120,8 @@
 		FA6BA7D02232E5E600DB3F2A /* Demos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demos.swift; sourceTree = "<group>"; };
 		FA6E5ACC221F20D400A5DF17 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		FA789D202221629F009DC15F /* FeedSearchTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedSearchTVC.swift; sourceTree = "<group>"; };
+		FA7981A022AF9118002411C7 /* bg_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_2.png; sourceTree = "<group>"; };
+		FA7981A222AFB79D002411C7 /* Guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Guide.png; sourceTree = "<group>"; };
 		FA88CBFC222DBBD90078E48A /* NodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeActions.swift; sourceTree = "<group>"; };
 		FA8B0C5B229D6B64000093D7 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
@@ -307,6 +315,10 @@
 		FA4ABB9E223C2EC8006525AA /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				FA7981A222AFB79D002411C7 /* Guide.png */,
+				FA32DA8E22AEFE400068EA96 /* Logo_B.png */,
+				FA32DA8822AE8D300068EA96 /* bg_1.png */,
+				FA7981A022AF9118002411C7 /* bg_2.png */,
 				FAE719BD22948C3C00E00C58 /* lib.png */,
 				FA03CAA8227B490A00E0BFC3 /* welc.png */,
 				FA441E16225A84FD002A5C71 /* map.png */,
@@ -454,10 +466,14 @@
 				FA441E0B2259482E002A5C71 /* Launchscreen_Logo.png in Resources */,
 				FA03CAA9227B490B00E0BFC3 /* welc.png in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
+				FA32DA8F22AEFE400068EA96 /* Logo_B.png in Resources */,
 				FA441E17225A84FD002A5C71 /* map.png in Resources */,
 				FA441E112259D98B002A5C71 /* view.png in Resources */,
+				FA7981A322AFB79D002411C7 /* Guide.png in Resources */,
 				FA3FCCBC225BEE090083F4EC /* Demo_1.png in Resources */,
 				FA441E0A2259482E002A5C71 /* Logo.png in Resources */,
+				FA7981A122AF9118002411C7 /* bg_2.png in Resources */,
+				FA32DA8922AE8D300068EA96 /* bg_1.png in Resources */,
 				3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */,
 				FAE719BE22948C3C00E00C58 /* lib.png in Resources */,
 				3177252620B03AD4009FA8B1 /* Main.storyboard in Resources */,
@@ -685,7 +701,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -708,7 +724,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

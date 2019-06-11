@@ -27,7 +27,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     var mainUpdateTimer = Timer()
     var activeDownloads: [String: String] = [:]
-    
+        
     let httpDl = HttpDownloader()
     
     func randRange (lower: Int , upper: Int) -> Int {
@@ -35,11 +35,9 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     }
     
     
-    
     @objc func mainUpdate() {
         print("mainUpdate: MainVC")
         dbGc()
-    
 
         if rlmSession.count > 0 {
             if mainUpdateTimer.timeInterval != rlmSession.first?.sysUpdateInterval {
@@ -206,10 +204,17 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     }
     
     
+    override func transition(from fromViewController: UIViewController, to toViewController: UIViewController, duration: TimeInterval, options: UIView.AnimationOptions = [], animations: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
+        if let v: ARViewer = toViewController as! ARViewer {
+            v.loadingView.isHidden = false
+            v.manageLoadingScreen(interval: 2)
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initSession()
-        
         
         if let viewControllers = tabBarController?.viewControllers {
             for viewController in viewControllers {

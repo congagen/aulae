@@ -406,7 +406,7 @@ class FeedMgmt {
     
     
     
-    func manageFeedUpdate(originalFeedName:String, sType: String, fe: RLM_Feed, destinationUrl: URL) {
+    func manageFeedUpdate(originalFeedInfo: String, sType: String, fe: RLM_Feed, destinationUrl: URL) {
         if sType == "json" {
             if let URL = URL(string: fe.sourceUrl) {
                 print("Downloading Feed JSON: " + fe.sourceUrl)
@@ -446,7 +446,7 @@ class FeedMgmt {
         
         do {
             try realm.write {
-                fe.name = originalFeedName
+                fe.info = originalFeedInfo
                 fe.updatedUtx = Int( Date().timeIntervalSince1970 )
                 if fe.errors > rlmSession.first!.feedErrorThreshold && !fe.deleted {
                     fe.active = false
@@ -472,6 +472,8 @@ class FeedMgmt {
 
         for fe in rlmFeeds {
             let feedName = fe.name
+            let feedInfo = fe.info
+
             print("Updating Feed: " + fe.name)
             print("Feed ID:       " + String(fe.id))
             print("Feed URL:      " + fe.sourceUrl)
@@ -479,7 +481,7 @@ class FeedMgmt {
             do {
                 try realm.write {
                     if fe.id.lowercased() != "quickstart" {
-                        fe.name = "Updating.."
+                        fe.info = "Updating..."
                     }
                 }
             } catch {
@@ -522,7 +524,7 @@ class FeedMgmt {
                 
                 print("sType: " + sType)
                 
-                manageFeedUpdate(originalFeedName: feedName, sType: sType, fe: fe, destinationUrl: destinationUrl!)
+                manageFeedUpdate(originalFeedInfo: feedInfo, sType: sType, fe: fe, destinationUrl: destinationUrl!)
                 
                 needsViewRefresh = true
             }
