@@ -23,11 +23,13 @@
 		31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869520B3FB040038F4D5 /* MapVC.swift */; };
 		31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D284BE20D3B079004451A6 /* RLM_Feed.swift */; };
 		FA03CAA9227B490B00E0BFC3 /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA03CAA8227B490A00E0BFC3 /* welc.png */; };
+		FA1514D722B27B080012BEA4 /* RLM_SysSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D622B27B080012BEA4 /* RLM_SysSettings.swift */; };
+		FA1514D922B289380012BEA4 /* DefaultNVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D822B289380012BEA4 /* DefaultNVC.swift */; };
 		FA1934E422247D2B00457C6E /* FeedActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1934E322247D2B00457C6E /* FeedActions.swift */; };
 		FA2BDFA02246B658002CB0D4 /* ObjectGestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */; };
 		FA32DA8922AE8D300068EA96 /* bg_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FA32DA8822AE8D300068EA96 /* bg_1.png */; };
 		FA32DA8F22AEFE400068EA96 /* Logo_B.png in Resources */ = {isa = PBXBuildFile; fileRef = FA32DA8E22AEFE400068EA96 /* Logo_B.png */; };
-		FA3A7BF722771DD50090C11C /* RLM_System.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BF622771DD50090C11C /* RLM_System.swift */; };
+		FA3A7BF722771DD50090C11C /* RLM_System_.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BF622771DD50090C11C /* RLM_System_.swift */; };
 		FA3A7BF9227852510090C11C /* RLM_Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BF8227852510090C11C /* RLM_Camera.swift */; };
 		FA3A7BFB2279AF670090C11C /* ViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A7BFA2279AF670090C11C /* ViewAnimation.swift */; };
 		FA3FCCBC225BEE090083F4EC /* Demo_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FA3FCCBB225BEE090083F4EC /* Demo_1.png */; };
@@ -57,7 +59,7 @@
 		FAB68C7B224CB37700126867 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FAC030C5229C2DF8009D1E28 /* RLM_ChatSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC030C4229C2DF8009D1E28 /* RLM_ChatSession.swift */; };
 		FAC030C7229C2E53009D1E28 /* RLM_ChatMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC030C6229C2E53009D1E28 /* RLM_ChatMsg.swift */; };
-		FAE439632237B5C900F828EF /* NavBarOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE439622237B5C900F828EF /* NavBarOps.swift */; };
+		FAE439632237B5C900F828EF /* UIOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE439622237B5C900F828EF /* UIOps.swift */; };
 		FAE719BE22948C3C00E00C58 /* lib.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE719BD22948C3C00E00C58 /* lib.png */; };
 		FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* NodeAppearance.swift */; };
 		FAF4C9A2223474D500C2F371 /* QrScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF4C9A1223474D500C2F371 /* QrScanner.swift */; };
@@ -98,11 +100,13 @@
 		31AB869520B3FB040038F4D5 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
 		31D284BE20D3B079004451A6 /* RLM_Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Feed.swift; sourceTree = "<group>"; };
 		FA03CAA8227B490A00E0BFC3 /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = welc.png; path = ../../../../../01_Assets/00_UI/1.0.25/welc.png; sourceTree = "<group>"; };
+		FA1514D622B27B080012BEA4 /* RLM_SysSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_SysSettings.swift; sourceTree = "<group>"; };
+		FA1514D822B289380012BEA4 /* DefaultNVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNVC.swift; sourceTree = "<group>"; };
 		FA1934E322247D2B00457C6E /* FeedActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedActions.swift; sourceTree = "<group>"; };
 		FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectGestures.swift; sourceTree = "<group>"; };
 		FA32DA8822AE8D300068EA96 /* bg_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_1.png; sourceTree = "<group>"; };
 		FA32DA8E22AEFE400068EA96 /* Logo_B.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Logo_B.png; sourceTree = "<group>"; };
-		FA3A7BF622771DD50090C11C /* RLM_System.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_System.swift; sourceTree = "<group>"; };
+		FA3A7BF622771DD50090C11C /* RLM_System_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_System_.swift; sourceTree = "<group>"; };
 		FA3A7BF8227852510090C11C /* RLM_Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Camera.swift; sourceTree = "<group>"; };
 		FA3A7BFA2279AF670090C11C /* ViewAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnimation.swift; sourceTree = "<group>"; };
 		FA3FCCBB225BEE090083F4EC /* Demo_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Demo_1.png; sourceTree = "<group>"; };
@@ -131,7 +135,7 @@
 		FAB68C77224CB37600126867 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		FAC030C4229C2DF8009D1E28 /* RLM_ChatSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_ChatSession.swift; sourceTree = "<group>"; };
 		FAC030C6229C2E53009D1E28 /* RLM_ChatMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_ChatMsg.swift; sourceTree = "<group>"; };
-		FAE439622237B5C900F828EF /* NavBarOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarOps.swift; sourceTree = "<group>"; };
+		FAE439622237B5C900F828EF /* UIOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOps.swift; sourceTree = "<group>"; };
 		FAE719BD22948C3C00E00C58 /* lib.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lib.png; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* NodeAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAppearance.swift; sourceTree = "<group>"; };
 		FAF4C9A1223474D500C2F371 /* QrScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrScanner.swift; sourceTree = "<group>"; };
@@ -260,10 +264,11 @@
 				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 				318FE8F120B0BB730050528B /* HttpDownloader.swift */,
 				FA9E933E222183AC00346073 /* NetworkTools.swift */,
-				FAE439622237B5C900F828EF /* NavBarOps.swift */,
+				FAE439622237B5C900F828EF /* UIOps.swift */,
 				319D3F2720D7965B007FEECA /* FeedMgmt.swift */,
 				FA6BA7D02232E5E600DB3F2A /* Demos.swift */,
 				FA3A7BFA2279AF670090C11C /* ViewAnimation.swift */,
+				FA1514D822B289380012BEA4 /* DefaultNVC.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -366,8 +371,9 @@
 				319AA77C20B3FE0C00F99223 /* RLM_Session.swift */,
 				3164AF4920B47E79009EDA27 /* RLM_Obj.swift */,
 				31D284BE20D3B079004451A6 /* RLM_Feed.swift */,
-				FA3A7BF622771DD50090C11C /* RLM_System.swift */,
+				FA3A7BF622771DD50090C11C /* RLM_System_.swift */,
 				FA3A7BF8227852510090C11C /* RLM_Camera.swift */,
+				FA1514D622B27B080012BEA4 /* RLM_SysSettings.swift */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -514,6 +520,7 @@
 				FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */,
 				FAC030C5229C2DF8009D1E28 /* RLM_ChatSession.swift in Sources */,
 				31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */,
+				FA1514D722B27B080012BEA4 /* RLM_SysSettings.swift in Sources */,
 				FA3A7BF9227852510090C11C /* RLM_Camera.swift in Sources */,
 				FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
@@ -530,13 +537,14 @@
 				31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */,
 				FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */,
 				FA69BE8922A8FBDB009B1FD7 /* ChatTableViewCell.swift in Sources */,
-				FA3A7BF722771DD50090C11C /* RLM_System.swift in Sources */,
+				FA3A7BF722771DD50090C11C /* RLM_System_.swift in Sources */,
 				FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */,
 				3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */,
+				FA1514D922B289380012BEA4 /* DefaultNVC.swift in Sources */,
 				FA2BDFA02246B658002CB0D4 /* ObjectGestures.swift in Sources */,
 				319AA77F20B418E800F99223 /* MainVC.swift in Sources */,
 				FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */,
-				FAE439632237B5C900F828EF /* NavBarOps.swift in Sources */,
+				FAE439632237B5C900F828EF /* UIOps.swift in Sources */,
 				319D3F2820D7965B007FEECA /* FeedMgmt.swift in Sources */,
 				FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */,
 				318FE8F220B0BB730050528B /* HttpDownloader.swift in Sources */,

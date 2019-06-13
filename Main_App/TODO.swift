@@ -1,6 +1,22 @@
 
 // URGENT:
 
+//      Settings: Modes: Dark / Light
+//      Docs: Init Chat Session Message
+
+//      Init Chat -> Send Init Msg 
+//      Blank Camera Input Bug
+//      Viewport Object Selection (Select obj if distance < N)
+
+//      Accessibility
+//      SF-Symbols
+
+//      Selectable Chat Text
+//      Chat View Mode Button
+
+//      Audio Bugs
+//      Lib/Source Manager -> CollectionView? Reorder
+
 //      Audio Bug
 //      Selection Bugs
 //      Refresh Bugs
@@ -14,15 +30,11 @@
 //      Add Source Button in Main View
 //      Greeting Cards
 
-//      Fade QR Capture Session / Source Manager
 //      Map Update
-//      Exposure Settings
-//      
 
 //      Fix Map Radius 
 //      Remove Source Menu Option
 //      Viewver Bugs
-//      Audio Bugs
 
 //      ArViewer -> [objUUID: CustomScale]
 //      If distance < 1-5M -> Place @ floor

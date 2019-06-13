@@ -15,7 +15,7 @@ import RealmSwift
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
-    lazy var rlmSystem:      Results<RLM_System>  = {self.realm.objects(RLM_System.self)}()
+    lazy var rlmSystem:      Results<RLM_SysSettings>  = {self.realm.objects(RLM_SysSettings.self)}()
     lazy var rlmSession:     Results<RLM_Session> = {self.realm.objects(RLM_Session.self)}()
     lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
 
@@ -92,7 +92,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 //            hideView: false,
 //            aMode: UIView.AnimationOptions.curveEaseIn
 //        )
-        // NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
+        // UIOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
 
         // FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
         //initScene()
@@ -670,8 +670,23 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         showChatView()
     }
     
+    
+//    func initUI(){
+//        if rlmSystem.first?.uiMode == 0 {
+//            self.navigationController?.navigationBar.barStyle = .default
+//            self.tabBarController?.tabBar.barStyle = .default
+//        } else {
+//            self.navigationController?.navigationBar.barStyle = .blackTranslucent
+//            self.tabBarController?.tabBar.barStyle = .blackTranslucent
+//        }
+//    }
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
+        // initUI()
+        
+        UIOps().updateUiMode(navCtrl: self.navigationController!, darkMode: rlmSystem.first?.uiMode == 1)
         
         do {
             try realm.write {
@@ -693,8 +708,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         super.viewDidLoad()
         print("viewDidLoad")
         
-        // NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo_B")
-
+        // UIOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo_B")
+        UIOps().updateUiMode(navCtrl: self.navigationController!, darkMode: rlmSystem.first?.uiMode == 1)
+        
         loadingView.isHidden = false
         initScene()
         refreshScene()

@@ -16,7 +16,7 @@ class FeedsTVC: UITableViewController {
 
     let realm = try! Realm()
     
-    lazy var rlmSystem:     Results<RLM_System> = { self.realm.objects(RLM_System.self) }()
+    lazy var rlmSystem:     Results<RLM_SysSettings> = { self.realm.objects(RLM_SysSettings.self) }()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()

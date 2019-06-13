@@ -15,7 +15,7 @@ import Foundation
 class SettingsViewController: UITableViewController {
 
     let realm = try! Realm()
-    lazy var rlmSystem:     Results<RLM_System> = { self.realm.objects(RLM_System.self) }()
+    lazy var rlmSystem:     Results<RLM_SysSettings> = { self.realm.objects(RLM_SysSettings.self) }()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
@@ -79,6 +79,15 @@ class SettingsViewController: UITableViewController {
         saveSettings(propName: allowAudioParamName, propValue: boolDouble)
         updateUI()
     }
+    
+    let darkModeParamName = "darkModeState"
+    @IBOutlet var darkModeSwitch: UISwitch!
+    @IBAction func darkModeSwitchAction(_ sender: UISwitch) {
+        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+        saveSettings(propName: darkModeParamName, propValue: boolDouble)
+        updateUI()
+    }
+    
     
     
     let locationToggleParamName = "animationToggle"
@@ -154,6 +163,9 @@ class SettingsViewController: UITableViewController {
                     case allowAudioParamName:
                         rlmSession.first?.muteAudio             = Int(propValue) != 1
                         
+                    case darkModeParamName:
+                        rlmSystem.first?.uiMode                 = Int(propValue)
+                        
                     case useDistanceParamName:
                         rlmSession.first!.distanceScale         = Int(propValue) == 1
                         
@@ -189,6 +201,8 @@ class SettingsViewController: UITableViewController {
 
         useDistanceSwitch.isOn           = rlmSession.first!.distanceScale    == true
 //        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate       == true
+        
+        darkModeSwitch.isOn              = rlmSystem.first?.uiMode == 1
         
         locationSharingSwitch.isOn       = rlmSession.first!.showPlaceholders == true
         

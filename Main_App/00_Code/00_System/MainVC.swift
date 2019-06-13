@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 import CoreLocation
 import Realm
 import RealmSwift
@@ -14,7 +15,7 @@ import RealmSwift
 class MainVC: UITabBarController, CLLocationManagerDelegate {
 
     lazy var realm = try! Realm()
-    lazy var rlmSystem: Results<RLM_System> = { self.realm.objects(RLM_System.self) }()
+    lazy var rlmSystem: Results<RLM_SysSettings> = { self.realm.objects(RLM_SysSettings.self) }()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
 
@@ -134,7 +135,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         self.selectedIndex = 1
         
         if rlmSystem.count < 1 {
-            let rlmSys = RLM_System()
+            let rlmSys = RLM_SysSettings()
             do {
                 try realm.write {
                     self.realm.add(rlmSys)
@@ -205,10 +206,28 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     
     
     override func transition(from fromViewController: UIViewController, to toViewController: UIViewController, duration: TimeInterval, options: UIView.AnimationOptions = [], animations: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
-        if let v: ARViewer = toViewController as! ARViewer {
+        if let v: ARViewer = toViewController as? ARViewer {
             v.loadingView.isHidden = false
             v.manageLoadingScreen(interval: 2)
         }
+    }
+    
+    
+    func initUIMode(){
+        
+        if rlmSystem.first?.uiMode == 0 {
+            self.tabBar.barStyle = .default
+            self.tabBar.isTranslucent = true
+            self.tabBar.tintColor = .black
+        } else {
+            self.tabBar.barStyle = .blackOpaque
+            self.tabBar.isTranslucent = true
+            self.tabBar.tintColor = .white
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        initUIMode()
     }
     
     
@@ -222,6 +241,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
+        
+        
     }
 
     

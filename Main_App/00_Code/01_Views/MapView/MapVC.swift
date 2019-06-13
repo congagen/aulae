@@ -39,7 +39,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     @IBAction func reloadBtnAction(_ sender: UIBarButtonItem) {
         print("reloadBtnAction")
 
-        NavBarOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
+        UIOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
         
         initMapView()
         mainUpdate()
@@ -327,7 +327,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         lpgr.delegate = self
         self.mapView.addGestureRecognizer(lpgr)
         
-        //NavBarOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
+        //UIOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo.png")
         focusMap(focusLat: rlmSession.first!.currentLat, focusLng: rlmSession.first!.currentLng)
     }
 

@@ -1,5 +1,5 @@
 //
-//  NavBarOps.swift
+//  UIOps.swift
 //  Aulae
 //
 //  Created by Tim Sandgren on 2019-03-12.
@@ -9,7 +9,22 @@
 import Foundation
 import UIKit
 
-class NavBarOps {
+class UIOps {
+    
+    
+    func updateUiMode(navCtrl: UINavigationController, darkMode: Bool){
+        
+        if darkMode {
+            navCtrl.navigationBar.barStyle       = .blackTranslucent
+            navCtrl.navigationBar.isTranslucent  = true
+            navCtrl.navigationBar.barTintColor   = .black
+        } else {
+            navCtrl.navigationBar.barStyle       = .default
+            navCtrl.navigationBar.isTranslucent  = true
+            navCtrl.navigationBar.barTintColor   = .white
+        }
+        
+    }
     
     
     func showLogo(navCtrl: UINavigationController, imageName: String) {

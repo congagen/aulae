@@ -81,7 +81,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
 
     
-    func callApi(message: String) {
+    func callApi(message: String, init_session_msg: String = "") {
         print("callApi")
         
         if rlmChatSession.first!.apiUrl != "" {
@@ -89,10 +89,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
                 completion: { r in self.handleResponseText(result: r) }, apiHeaderValue: apiHeaderValue,
                 apiHeaderFeild: apiHeaderFeild, apiUrl: rlmChatSession.first!.apiUrl,
                 reqParams: [
-                    "lat": String(Int(rlmSession.first!.currentLat)),
-                    "lng": String(Int(rlmSession.first!.currentLng)),
-                    "kwd": "",
-                    "sid": (rlmSession.first?.sessionUUID)!,
+                    "init_message": init_session_msg,
+                    "sid":  (rlmSession.first?.sessionUUID)!,
+                    "lat":  String(Int(rlmSession.first!.currentLat)),
+                    "lng":  String(Int(rlmSession.first!.currentLng)),
                     "chat_msg": message
                 ]
             )
@@ -171,7 +171,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 //        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
 //            target: self, action: #selector(dismissKeyboard)
 //        )
-//
 //        tap.cancelsTouchesInView = false
 //        view.addGestureRecognizer(tap)
         
@@ -254,8 +253,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             cell.messageLabel.text = msgForIdx.first?.msgText
             cell.isIncomming       = msgForIdx.first?.isIncomming
         } else {
-            print("cellForRowAt: " + String(reverseIdx))
-            print("ERROR")
+            print("ERROR: cellForRowAt: " + String(reverseIdx))
             cell.messageLabel.text = "Umme"
             cell.isIncomming       = false
         }
@@ -267,7 +265,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     func openUrl(scheme: String) {
         print("openUrl")
-
+        print(scheme)
+        
         if let url = URL(string: scheme) {
             if #available(iOS 10, *) {
                 UIApplication.shared.open(
@@ -306,6 +305,12 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
     func initSession() {
         print("ChatView: refreshChatView")
+        
+        let msgCount = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl}).count
+        
+        if rlmChatSession.first?.apiUrl != "" && msgCount == 0 {
+            callApi(message: "", init_session_msg: rlmSession.first!.sessionUUID)
+        }
         
         super.viewWillDisappear(false)
         self.navigationController?.isNavigationBarHidden = false

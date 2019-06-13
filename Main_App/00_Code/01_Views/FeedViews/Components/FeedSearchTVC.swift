@@ -182,7 +182,7 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     func sourcesSearch(_ searchBar: UISearchBar) {
         print("performSearch")
         
-        NavBarOps().showProgressBar(
+        UIOps().showProgressBar(
             navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1
         )
         

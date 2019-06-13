@@ -471,7 +471,7 @@ class FeedMgmt {
         refreshObjects()
 
         for fe in rlmFeeds {
-            let feedName = fe.name
+            // let feedName = fe.name
             let feedInfo = fe.info
 
             print("Updating Feed: " + fe.name)
