@@ -1,6 +1,8 @@
 
 // URGENT:
 
+//      Copy selected cell text
+
 //      Settings: Modes: Dark / Light
 //      Docs: Init Chat Session Message
 

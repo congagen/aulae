@@ -21,30 +21,34 @@ class DefaultNVC: UINavigationController {
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
     
+
     
-    func updateUiMode(darkMode: Bool){
-        
-        if darkMode {
-            self.navigationBar.barStyle       = .blackTranslucent
-            self.navigationBar.isTranslucent  = true
-            self.navigationBar.barTintColor   = .white
-        } else {
-            self.navigationBar.barStyle       = .default
-            self.navigationBar.isTranslucent  = true
-            self.navigationBar.barTintColor   = .black
-        }
-        
+    override func viewWillAppear(_ animated: Bool) {
+        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
     }
     
+    override func viewWillLayoutSubviews() {
+        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+    }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+    }
+    
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+    }
     
     override func viewDidAppear(_ animated: Bool) {
-        updateUiMode(darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
     }
+    
+
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateUiMode(darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
     }
     
 

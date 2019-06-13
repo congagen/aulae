@@ -30,6 +30,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
     fileprivate let cellId = "cell"
     
+    var curAgentName = ""
     var sessionID = ""
     let greetingMsg = "\n\n\n Mention /exit to return to viewport\n"
     let exitKeywords = ["/quit", "/exit", "exit", "quit"]
@@ -221,24 +222,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         }
     }
     
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("touchesEnded")
-    }
-    
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sessionMsgs = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl})
-        print("Msg Count: " + String(sessionMsgs.count))
-        
-        return sessionMsgs.count
-    }
-    
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let sessionMsgs = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl})
@@ -254,7 +237,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             cell.isIncomming       = msgForIdx.first?.isIncomming
         } else {
             print("ERROR: cellForRowAt: " + String(reverseIdx))
-            cell.messageLabel.text = "Umme"
+            cell.messageLabel.text = "Hmm..."
             cell.isIncomming       = false
         }
     
@@ -263,29 +246,49 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     
-    func openUrl(scheme: String) {
-        print("openUrl")
-        print(scheme)
+    func handleSelectedText(cellText: String) {
+        print(cellText)
         
-        if let url = URL(string: scheme) {
-            if #available(iOS 10, *) {
-                UIApplication.shared.open(
-                    url, options: [:], completionHandler: { (success) in print("Open \(scheme): \(success)") }
-                )
-            } else {
-                let success = UIApplication.shared.openURL(url)
-                print("Open \(scheme): \(success)")
+    }
+    
+
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let sessionMsgs = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl})
+        let reverseIdx  = sessionMsgs.count - (indexPath.item + 1) + 1
+        let msgForIdx   = sessionMsgs.filter({$0.indexPos == reverseIdx})
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatTableViewCell
+        cell.transform = CGAffineTransform(scaleX: 1, y: -1)
+
+        if msgForIdx.count > 0 {
+            
+            let actionSheet = UITableViewRowAction(style: .normal, title: "...") { (rowAction, indexPath) in
+                self.showActionMenu(cellText: msgForIdx.first!.msgText)
             }
+            actionSheet.backgroundColor = UIColor(white: 1, alpha: 0.001)
+
+            return [actionSheet]
+        } else {
+            return []
         }
+        
     }
     
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("didSelectRowAt")
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatTableViewCell
-        cell.selectionStyle = .none
-        print(cell.messageLabel.text!)
-        openUrl(scheme: cell.messageLabel.text ?? "")
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("touchesEnded")
+    }
+    
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let sessionMsgs = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl})
+        print("Msg Count: " + String(sessionMsgs.count))
+        
+        return sessionMsgs.count
     }
     
     
@@ -369,6 +372,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             name: UIResponder.keyboardWillHideNotification, object: nil
         )
         
+        curAgentName = rlmChatSession.first!.agentId
         navBarTitle.title = rlmChatSession.first?.agentId
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(

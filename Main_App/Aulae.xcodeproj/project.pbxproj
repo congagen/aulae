@@ -25,6 +25,7 @@
 		FA03CAA9227B490B00E0BFC3 /* welc.png in Resources */ = {isa = PBXBuildFile; fileRef = FA03CAA8227B490A00E0BFC3 /* welc.png */; };
 		FA1514D722B27B080012BEA4 /* RLM_SysSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D622B27B080012BEA4 /* RLM_SysSettings.swift */; };
 		FA1514D922B289380012BEA4 /* DefaultNVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D822B289380012BEA4 /* DefaultNVC.swift */; };
+		FA1514DB22B2C4010012BEA4 /* ChatMsgActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514DA22B2C4010012BEA4 /* ChatMsgActions.swift */; };
 		FA1934E422247D2B00457C6E /* FeedActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1934E322247D2B00457C6E /* FeedActions.swift */; };
 		FA2BDFA02246B658002CB0D4 /* ObjectGestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */; };
 		FA32DA8922AE8D300068EA96 /* bg_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FA32DA8822AE8D300068EA96 /* bg_1.png */; };
@@ -102,6 +103,7 @@
 		FA03CAA8227B490A00E0BFC3 /* welc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = welc.png; path = ../../../../../01_Assets/00_UI/1.0.25/welc.png; sourceTree = "<group>"; };
 		FA1514D622B27B080012BEA4 /* RLM_SysSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_SysSettings.swift; sourceTree = "<group>"; };
 		FA1514D822B289380012BEA4 /* DefaultNVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNVC.swift; sourceTree = "<group>"; };
+		FA1514DA22B2C4010012BEA4 /* ChatMsgActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMsgActions.swift; sourceTree = "<group>"; };
 		FA1934E322247D2B00457C6E /* FeedActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedActions.swift; sourceTree = "<group>"; };
 		FA2BDF9F2246B658002CB0D4 /* ObjectGestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectGestures.swift; sourceTree = "<group>"; };
 		FA32DA8822AE8D300068EA96 /* bg_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_1.png; sourceTree = "<group>"; };
@@ -383,6 +385,7 @@
 			children = (
 				FA8B0C5B229D6B64000093D7 /* ChatViewController.swift */,
 				FA69BE8822A8FBDB009B1FD7 /* ChatTableViewCell.swift */,
+				FA1514DA22B2C4010012BEA4 /* ChatMsgActions.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -541,6 +544,7 @@
 				FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */,
 				3177251F20B03AD4009FA8B1 /* AppDelegate.swift in Sources */,
 				FA1514D922B289380012BEA4 /* DefaultNVC.swift in Sources */,
+				FA1514DB22B2C4010012BEA4 /* ChatMsgActions.swift in Sources */,
 				FA2BDFA02246B658002CB0D4 /* ObjectGestures.swift in Sources */,
 				319AA77F20B418E800F99223 /* MainVC.swift in Sources */,
 				FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */,

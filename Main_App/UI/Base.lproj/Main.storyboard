@@ -964,7 +964,6 @@
             <objects>
                 <tabBarController extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="jBl-tO-DwV" customClass="MainVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" selectionIndicatorImage="Spacer" itemPositioning="centered" id="4T4-ar-U71">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1015,7 +1014,7 @@
         <!--Lib-->
         <scene sceneID="ZGr-jt-GDh">
             <objects>
-                <navigationController storyboardIdentifier="LibViewController" title="Lib" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="MG5-zE-uY9" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="LibViewController" title="Lib" extendedLayoutIncludesOpaqueBars="YES" id="MG5-zE-uY9" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Lib" image="TabBarIcon_02" id="iKP-pm-ygA"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -1052,13 +1051,12 @@
             </objects>
             <point key="canvasLocation" x="-326" y="2395"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--DefaultNVC-->
         <scene sceneID="UsZ-WG-Zje">
             <objects>
-                <navigationController storyboardIdentifier="ChatViewController" automaticallyAdjustsScrollViewInsets="NO" id="U16-1Z-sjA" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ChatViewController" automaticallyAdjustsScrollViewInsets="NO" id="U16-1Z-sjA" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="cf8-SU-KU1">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -1076,7 +1074,7 @@
         <!--Map-->
         <scene sceneID="eJg-Wd-uAP">
             <objects>
-                <navigationController storyboardIdentifier="MapViewController" title="Map" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="1v6-P6-Dct" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MapViewController" title="Map" extendedLayoutIncludesOpaqueBars="YES" id="1v6-P6-Dct" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Map" image="TabBarIcon_00" id="7XE-az-nRS"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>

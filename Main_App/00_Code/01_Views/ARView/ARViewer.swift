@@ -671,22 +671,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-//    func initUI(){
-//        if rlmSystem.first?.uiMode == 0 {
-//            self.navigationController?.navigationBar.barStyle = .default
-//            self.tabBarController?.tabBar.barStyle = .default
-//        } else {
-//            self.navigationController?.navigationBar.barStyle = .blackTranslucent
-//            self.tabBarController?.tabBar.barStyle = .blackTranslucent
-//        }
-//    }
-    
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
         // initUI()
         
-        UIOps().updateUiMode(navCtrl: self.navigationController!, darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!, darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().initTabUIMode(tabCtrl: self.tabBarController!, darkMode: rlmSystem.first?.uiMode == 1)
         
         do {
             try realm.write {
@@ -709,7 +700,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("viewDidLoad")
         
         // UIOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo_B")
-        UIOps().updateUiMode(navCtrl: self.navigationController!, darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!, darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().initTabUIMode(tabCtrl: self.tabBarController!, darkMode: rlmSystem.first?.uiMode == 1)
         
         loadingView.isHidden = false
         initScene()
@@ -722,5 +714,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         pinchGR.delegate = self
         view.addGestureRecognizer(pinchGR)
     }
+    
     
 }

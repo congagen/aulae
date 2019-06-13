@@ -212,25 +212,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         }
     }
     
-    
-    func initUIMode(){
-        
-        if rlmSystem.first?.uiMode == 0 {
-            self.tabBar.barStyle = .default
-            self.tabBar.isTranslucent = true
-            self.tabBar.tintColor = .black
-        } else {
-            self.tabBar.barStyle = .blackOpaque
-            self.tabBar.isTranslucent = true
-            self.tabBar.tintColor = .white
-        }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        initUIMode()
-    }
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initSession()
@@ -241,10 +223,21 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
-        
-        
-    }
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        UIOps().initTabUIMode(tabCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        UIOps().initTabUIMode(tabCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+    }
+    
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        UIOps().initTabUIMode(tabCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

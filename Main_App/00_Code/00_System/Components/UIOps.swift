@@ -12,16 +12,35 @@ import UIKit
 class UIOps {
     
     
-    func updateUiMode(navCtrl: UINavigationController, darkMode: Bool){
+    func updateNavUiMode(navCtrl: UINavigationController, darkMode: Bool){
         
         if darkMode {
             navCtrl.navigationBar.barStyle       = .blackTranslucent
+            navCtrl.navigationBar.tintColor      = .black
+            navCtrl.navigationBar.tintColor      = .white
             navCtrl.navigationBar.isTranslucent  = true
-            navCtrl.navigationBar.barTintColor   = .black
         } else {
             navCtrl.navigationBar.barStyle       = .default
+            navCtrl.navigationBar.tintColor      = .white
+            navCtrl.navigationBar.tintColor      = .black
             navCtrl.navigationBar.isTranslucent  = true
-            navCtrl.navigationBar.barTintColor   = .white
+        }
+        
+    }
+    
+    
+    func initTabUIMode(tabCtrl: UITabBarController, darkMode: Bool){
+        
+        if darkMode {
+            //tabCtrl.tabBar.backgroundColor = .clear
+            tabCtrl.tabBar.isTranslucent = true
+            tabCtrl.tabBar.barStyle      = .black
+            tabCtrl.tabBar.tintColor     = .white
+        } else {
+            //tabCtrl.tabBar.backgroundColor = .clear
+            tabCtrl.tabBar.isTranslucent = true
+            tabCtrl.tabBar.barStyle      = .default
+            tabCtrl.tabBar.tintColor     = .black
         }
         
     }

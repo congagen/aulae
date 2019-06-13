@@ -9,7 +9,8 @@
 import UIKit
 
 class ChatTableViewCell: UITableViewCell {
-
+    
+    let curAgentName = ""
     let messageLabel = UILabel()
     let bubbleBackgroundView = UIView()
     
