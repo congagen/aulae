@@ -59,6 +59,8 @@ class ViewAnimation {
             viewToAnimate.isHidden = false
         }
         
+        // let startVal = viewToAnimate.layer.opacity
+        
         UIView.transition(with: viewToAnimate,
                           duration: aDuration,
                           options: aMode,

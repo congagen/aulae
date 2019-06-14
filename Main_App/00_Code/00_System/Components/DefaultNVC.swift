@@ -21,45 +21,33 @@ class DefaultNVC: UINavigationController {
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
     
+    
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
-    
-    override func viewWillAppear(_ animated: Bool) {
-        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
-    }
-    
-    override func viewWillLayoutSubviews() {
-        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
-    }
-    
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
-    }
     
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().updateNavUiMode(navCtrl: self)
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
-    }
-    
 
-    
-    
+    override func viewDidAppear(_ animated: Bool) {
+        UIOps().updateNavUiMode(navCtrl: self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        UIOps().updateNavUiMode(navCtrl: self)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        UIOps().updateNavUiMode(navCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
-    }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        setNeedsStatusBarAppearanceUpdate()
+        UIOps().updateNavUiMode(navCtrl: self)
     }
-    */
 
 }

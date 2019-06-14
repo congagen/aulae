@@ -85,23 +85,19 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         //loadingView.isHidden = false
-        
-//        ViewAnimation().fade(
-//            viewToAnimate: self.loadingView,
-//            aDuration: 0.1,
-//            hideView: false,
-//            aMode: UIView.AnimationOptions.curveEaseIn
-//        )
-        // UIOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
+        loadingView.layer.opacity = 1
 
-        // FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
-        //initScene()
-        //refreshScene()
-        
-        self.viewDidAppear(true)
-        //manageLoadingScreen(interval: 2)
+//        UIOps().showProgressBar(
+//            navCtrl: self.navigationController!, progressBar: progressBar,
+//            view: self.view, timeoutPeriod: 1)
 
+        FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
+        initScene()
+        refreshScene()
+        
+        manageLoadingScreen(interval: 1)
     }
+    
     
     @IBOutlet var sceneView: ARSCNView!
     
@@ -325,7 +321,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func refreshScene() {
         print("RefreshScene")
-        loadingView.isHidden = false
+        //loadingView.isHidden = false
+        loadingView.layer.opacity = 1
         
         rawDeviceGpsCCL          = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         let curPos               = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
@@ -387,13 +384,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } catch {
             print("Error: \(error)")
         }
-        
+        manageLoadingScreen(interval: 1)
     }
     
     
     func handleTap(touches: Set<UITouch>) {
         print("handleTap")
-        loadingView.isHidden = true
+        //loadingView.isHidden = true
+        loadingView.layer.opacity = 0
         
         if isTrackingQR {
             //searchQRBtn.tintColor = self.view.window?.tintColor
@@ -521,7 +519,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func initScene() {
         print("ARScene initScene")
-        loadingView.isHidden  = false
+        //loadingView.isHidden  = false
+        loadingView.layer.opacity = 1
         
         mainScene = SCNScene(named: "art.scnassets/main.scn")!
         sceneView.scene = mainScene
@@ -535,11 +534,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isLightEstimationEnabled = true
 
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        rawDeviceGpsCCL = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         
-        if (rlmSession.first?.autoUpdate)! {
-            Timer.scheduledTimer(withTimeInterval: rlmSession.first!.mapUpdateInterval, repeats: false, block: {_ in self.mainTimerUpdate() })
-        }
+        rawDeviceGpsCCL = CLLocation(
+            latitude: rlmSession.first!.currentLat,
+            longitude: rlmSession.first!.currentLng
+        )
+        
+        //if (rlmSession.first?.autoUpdate)! {
+        Timer.scheduledTimer(
+            withTimeInterval: rlmSession.first!.mapUpdateInterval,
+            repeats: false, block: {_ in self.mainTimerUpdate()}
+        )
+        //}
         
         updateCameraSettings()
     }
@@ -575,12 +581,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
         }
         
-//        let positionOK = (rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0 && trackingState == 0
-//
-//        Timer.scheduledTimer(
-//            withTimeInterval: 2, repeats: false, block: {_ in self.loadingView.isHidden = self.trackingState == 0 && positionOK }
-//        )
-        
         manageLoadingScreen(interval: 2)
         
     }
@@ -588,30 +588,38 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     func manageLoadingScreen(interval: Double) {
         print("manageLoadingScreen")
         
-        let canStopLoading = (
-            (rlmSession.first?.currentLat) != 0 && (rlmSession.first?.currentLng) != 0) && !rlmSystem.first!.needsRefresh
-
-        if canStopLoading && !self.loadingView.isHidden {
+        if rlmSystem.first!.needsRefresh {
             ViewAnimation().fade(
-                viewToAnimate: self.loadingView,
-                aDuration: interval,
-                hideView: true,
-                aMode: UIView.AnimationOptions.curveEaseIn
+                viewToAnimate: self.loadingView, aDuration: interval,
+                hideView: false, aMode: UIView.AnimationOptions.curveEaseIn
             )
-        } else {
-            if loadingView.isHidden {
-                ViewAnimation().fade(
-                    viewToAnimate: self.loadingView,
-                    aDuration: interval,
-                    hideView: false,
-                    aMode: UIView.AnimationOptions.curveEaseIn
-                )
+            
+            do {
+                try realm.write {
+                    rlmSystem.first?.needsRefresh = false
+                }
+            } catch {
+                print("Error: \(error)")
             }
             
-            Timer.scheduledTimer(
-                withTimeInterval: TimeInterval(interval), repeats: false, block: {_ in self.manageLoadingScreen(interval: interval + 0.1) }
+        } else {
+            
+            loadingView.layer.removeAllAnimations()
+            
+            ViewAnimation().fade(
+                viewToAnimate: self.loadingView, aDuration: interval,
+                hideView: true, aMode: UIView.AnimationOptions.curveEaseIn
             )
+            
         }
+        
+        if !rlmSystem.first!.needsRefresh {
+            Timer.scheduledTimer(
+                withTimeInterval: TimeInterval(interval), repeats: false,
+                block: {_ in self.manageLoadingScreen(interval: interval + 0.1)
+            })
+        }
+        
     }
     
     
@@ -651,7 +659,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print("Error: \(error)")
         }
         
-        loadingView.isHidden = false
+        //loadingView.isHidden = false
+        loadingView.layer.removeAllAnimations()
+        loadingView.layer.opacity = 1
+
     }
     
     
@@ -671,13 +682,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
         // initUI()
         
-        UIOps().updateNavUiMode(navCtrl: self.navigationController!, darkMode: rlmSystem.first?.uiMode == 1)
-        UIOps().initTabUIMode(tabCtrl: self.tabBarController!, darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
         
         do {
             try realm.write {
@@ -686,24 +695,27 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } catch {
             print("Error: \(error)")
         }
+        
+        loadingView.layer.removeAllAnimations()
+        loadingView.layer.opacity = 1
+        initScene()
+        refreshScene()
 
-        loadingView.isHidden = false
         manageLoadingScreen(interval: 1)
 
-        refreshScene()
-        //debugChat()
     }
-    
+  
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad")
         
         // UIOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo_B")
-        UIOps().updateNavUiMode(navCtrl: self.navigationController!, darkMode: rlmSystem.first?.uiMode == 1)
-        UIOps().initTabUIMode(tabCtrl: self.tabBarController!, darkMode: rlmSystem.first?.uiMode == 1)
-        
-        loadingView.isHidden = false
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+
+        //loadingView.isHidden = false
+        loadingView.layer.opacity = 1
+
         initScene()
         refreshScene()
 
@@ -715,5 +727,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         view.addGestureRecognizer(pinchGR)
     }
     
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
     
 }

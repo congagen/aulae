@@ -118,7 +118,7 @@
 		FA441E0E2259D98B002A5C71 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = view.png; sourceTree = "<group>"; };
 		FA441E16225A84FD002A5C71 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
 		FA663146221DBD4B000FEF60 /* ContentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentNode.swift; sourceTree = "<group>"; };
-		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
+		FA66314E221E91B8000FEF60 /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MatrixHelper.swift; path = ../../../00_System/Components/MatrixHelper.swift; sourceTree = "<group>"; };
 		FA69BE8822A8FBDB009B1FD7 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		FA69BE8A22A91876009B1FD7 /* SegueMgmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegueMgmt.swift; sourceTree = "<group>"; };
 		FA69BE8C22A93BE3009B1FD7 /* RLM_ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_ChatMessage.swift; sourceTree = "<group>"; };
@@ -170,6 +170,7 @@
 		316B86B720D94B4E0076E63D /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 				FA663146221DBD4B000FEF60 /* ContentNode.swift */,
 				FAF37EB8221D65610065B18A /* NodeAppearance.swift */,
 				FA88CBFC222DBBD90078E48A /* NodeActions.swift */,
@@ -263,13 +264,12 @@
 		319D3F2620D7963A007FEECA /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				FA66314E221E91B8000FEF60 /* MatrixHelper.swift */,
 				318FE8F120B0BB730050528B /* HttpDownloader.swift */,
 				FA9E933E222183AC00346073 /* NetworkTools.swift */,
-				FAE439622237B5C900F828EF /* UIOps.swift */,
 				319D3F2720D7965B007FEECA /* FeedMgmt.swift */,
 				FA6BA7D02232E5E600DB3F2A /* Demos.swift */,
 				FA3A7BFA2279AF670090C11C /* ViewAnimation.swift */,
+				FAE439622237B5C900F828EF /* UIOps.swift */,
 				FA1514D822B289380012BEA4 /* DefaultNVC.swift */,
 			);
 			path = Components;

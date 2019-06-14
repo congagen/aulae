@@ -36,13 +36,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This application will use the camera for Augmented Reality.</string>
+	<string>This application will use the camera for Augmented Reality</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This application uses location data in order to select and position content in the viewport. Anonymous location data may also be shared with the third-party content providers that you chose to subscribe to.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -61,7 +61,7 @@
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
+	<string>UIStatusBarStyleDefault</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

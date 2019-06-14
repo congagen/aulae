@@ -316,7 +316,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         }
         
         super.viewWillDisappear(false)
-        self.navigationController?.isNavigationBarHidden = false
+//        self.navigationController?.isNavigationBarHidden = false
         
         if chatTableView != nil {
             chatTableView.reloadData()

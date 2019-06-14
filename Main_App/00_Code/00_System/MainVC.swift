@@ -132,7 +132,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     
     func initSession() {
         dbGc()
-        self.selectedIndex = 1
         
         if rlmSystem.count < 1 {
             let rlmSys = RLM_SysSettings()
@@ -205,11 +204,20 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     }
     
     
-    override func transition(from fromViewController: UIViewController, to toViewController: UIViewController, duration: TimeInterval, options: UIView.AnimationOptions = [], animations: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
-        if let v: ARViewer = toViewController as? ARViewer {
-            v.loadingView.isHidden = false
-            v.manageLoadingScreen(interval: 2)
-        }
+//    override func transition(from fromViewController: UIViewController, to toViewController: UIViewController, duration: TimeInterval, options: UIView.AnimationOptions = [], animations: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
+//        if let v: ARViewer = toViewController as? ARViewer {
+//            v.loadingView.isHidden = false
+//            v.manageLoadingScreen(interval: 2)
+//        }
+//    }
+    
+    
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
 
@@ -223,19 +231,22 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
-
-    }
+            }
+    
     
     override func viewWillAppear(_ animated: Bool) {
-        UIOps().initTabUIMode(tabCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+        self.selectedIndex = 1
+        UIOps().updateTabUIMode(tabCtrl: self)
     }
+    
     
     override func viewDidAppear(_ animated: Bool) {
-        UIOps().initTabUIMode(tabCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().updateTabUIMode(tabCtrl: self)
     }
     
+    
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        UIOps().initTabUIMode(tabCtrl: self, darkMode: rlmSystem.first?.uiMode == 1)
+        UIOps().updateTabUIMode(tabCtrl: self)
     }
     
     
