@@ -21,7 +21,6 @@ class FeedActions {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     var textField: UITextField? = nil
-
     
     func urlConfigurationTextField(textField: UITextField!)
     {

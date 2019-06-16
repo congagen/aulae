@@ -15,14 +15,31 @@ import Foundation
 class SettingsViewController: UITableViewController {
 
     let realm = try! Realm()
-    lazy var rlmSystem:     Results<RLM_SysSettings> = { self.realm.objects(RLM_SysSettings.self) }()
+    lazy var rlmSystem:  Results<RLM_SysSettings> = { self.realm.objects(RLM_SysSettings.self) }()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var chatSessions: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
     
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
-    
     lazy var rlmCamera: Results<RLM_Camera> = { self.realm.objects(RLM_Camera.self) }()
     
+    
+    @IBOutlet var usernameBtn: UIButton!
+
+    let chatUsernameParamName = "chatUsername"
+    var textField: UITextField? = nil
+    func usernameTextField(textField: UITextField!)
+    {
+        if let _ = textField {
+            self.textField = textField!
+            textField.text! = ""
+        }
+    }
+    
+    @IBAction func editUsernameAction(_ sender: UIButton) {
+        print("editUsernameAction")
+        showEditUsernameAlert(aMessage: "")
+    }
     
     let systemUpdateSpeedParamName = "systemUpdateSpeed"
     @IBOutlet var systemUpdateSpeedStepper: UIStepper!
@@ -46,6 +63,33 @@ class SettingsViewController: UITableViewController {
     }
     
     
+    func showEditUsernameAlert(aMessage: String?){
+        let alert = UIAlertController(
+            title: "Username", message: nil, preferredStyle: UIAlertController.Style.alert
+        )
+        
+        alert.addTextField(configurationHandler: usernameTextField)
+        alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: saveNewUsername))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,  handler: nil))
+        
+        alert.view.tintColor = UIColor.black
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func saveNewUsername(alertView: UIAlertAction!) {
+        
+        if textField?.text != nil {
+            saveSettings(propName: chatUsernameParamName, propValue: 0, propString: textField!.text!)
+        }
+        
+        updateUI()
+
+        self.tableView.reloadData()
+        self.tableView.reloadInputViews()
+    }
+    
+
     let autoUpdateParamName = "autoUpdate"
 //    @IBOutlet var autoUpdateSwitch: UISwitch!
 //    @IBAction func autoUpdateSwitchAction(_ sender: UISwitch) {
@@ -127,7 +171,7 @@ class SettingsViewController: UITableViewController {
     
     
     
-    func saveSettings(propName: String, propValue: Double) {
+    func saveSettings(propName: String, propValue: Double, propString: String = "") {
         
         do {
             try realm.write {
@@ -175,6 +219,9 @@ class SettingsViewController: UITableViewController {
                     case locationToggleParamName:
                         rlmSession.first!.showPlaceholders      = Int(propValue) == 1
     
+                    case chatUsernameParamName:
+                        chatSessions.first?.username            = propString
+                        
                     default:
                         break
                     }
@@ -214,6 +261,11 @@ class SettingsViewController: UITableViewController {
         
         camSaturationStepper.value       = rlmCamera.first!.saturation
         camSaturationDisplay.text        = String( Double(round(1000 * camSaturationStepper.value) / 1000))
+        
+        for state: UIControl.State in [.normal, .highlighted, .disabled, .selected, .focused, .application, .reserved] {
+            usernameBtn.setTitle(NSLocalizedString(chatSessions.first!.username, comment: ""), for: state)
+        }
+
     }
     
     

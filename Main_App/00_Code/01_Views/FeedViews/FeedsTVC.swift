@@ -232,7 +232,6 @@ class FeedsTVC: UITableViewController {
         )
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
-        
         alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: handleEnterURL))
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: handleCancel))
         

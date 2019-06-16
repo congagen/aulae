@@ -17,7 +17,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     let realm = try! Realm()
     lazy var rlmSystem:      Results<RLM_SysSettings>  = {self.realm.objects(RLM_SysSettings.self)}()
     lazy var rlmSession:     Results<RLM_Session> = {self.realm.objects(RLM_Session.self)}()
-    lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
+    lazy var rlmChatSession: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
 
     lazy var rlmFeeds:       Results<RLM_Feed>    = {self.realm.objects(RLM_Feed.self)}()
     lazy var rlmSourceItems: Results<RLM_Obj>     = {self.realm.objects(RLM_Obj.self)}()
@@ -50,27 +50,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     let chatView: UIStoryboard! = nil
     
     
-    @IBAction func toggleMapAction(_ sender: UIButton) {
-//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController")
-//        vc!.modalPresentationStyle = .overCurrentContext
-//        vc!.modalTransitionStyle = .crossDissolve
-//        present(vc!, animated: true, completion: nil)
-    }
-    
-    @IBAction func toggleSettingsBtnAction(_ sender: UIButton) {
-//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController")
-//        vc!.modalPresentationStyle = .overCurrentContext
-//        vc!.modalTransitionStyle = .crossDissolve
-//        present(vc!, animated: true, completion: nil)
-    }
-    
-    @IBAction func toggleLibManager(_ sender: UIButton) {
-//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "LibViewController")
-//        vc!.modalPresentationStyle = .overCurrentContext
-//        vc!.modalTransitionStyle = .crossDissolve
-//        present(vc!, animated: true, completion: nil)
-    }
-    
     func showChatView() {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "ChatViewController")
         vc!.modalPresentationStyle = .overFullScreen
@@ -79,10 +58,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         present(vc!, animated: true, completion: nil)
     }
     
-
-    
     @IBOutlet var loadingView: UIView!
-    
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         //loadingView.isHidden = false
         loadingView.layer.opacity = 1
@@ -228,6 +204,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         //let contentLinkItemA = objData.contentLink.components(separatedBy: " ")[0]
         
         if fPath != "" && objData.type.lowercased() != "text" {
+            // ***************************************************************
+            // TODO Add loading indicator and schedule retry if not present
+            // ***************************************************************
+            
             if objData.type.lowercased() == "demo"   { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
             if objData.type.lowercased() == "obj"    { ctNode.addObj(fPath:   fPath, objectData: objData) }
             if objData.type.lowercased() == "usdz"   { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
@@ -555,7 +535,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("ARViewer: mainTimerUpdate")
         var ref = false
         
-        updateCameraSettings()
+        // updateCameraSettings()
         
         if rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate {
             print("rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate")
@@ -732,3 +712,25 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
 }
+
+
+//    @IBAction func toggleMapAction(_ sender: UIButton) {
+////        let vc = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController")
+////        vc!.modalPresentationStyle = .overCurrentContext
+////        vc!.modalTransitionStyle = .crossDissolve
+////        present(vc!, animated: true, completion: nil)
+//    }
+//
+//    @IBAction func toggleSettingsBtnAction(_ sender: UIButton) {
+////        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController")
+////        vc!.modalPresentationStyle = .overCurrentContext
+////        vc!.modalTransitionStyle = .crossDissolve
+////        present(vc!, animated: true, completion: nil)
+//    }
+//
+//    @IBAction func toggleLibManager(_ sender: UIButton) {
+////        let vc = self.storyboard?.instantiateViewController(withIdentifier: "LibViewController")
+////        vc!.modalPresentationStyle = .overCurrentContext
+////        vc!.modalTransitionStyle = .crossDissolve
+////        present(vc!, animated: true, completion: nil)
+//    }

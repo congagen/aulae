@@ -1,23 +1,29 @@
 //
-//  RLM_ChatSession.swift
+//  RLM_ChatSess.swift
 //  Aulae
 //
-//  Created by Tim Sandgren on 2019-05-27.
+//  Created by Tim Sandgren on 2019-06-15.
 //  Copyright © 2019 Abstraqata. All rights reserved.
 //
+
+import Foundation
+
 
 import Foundation
 import RealmSwift
 
 
-class RLM_ChatSession: Object {
+class RLM_ChatSess: Object {
+    
+    @objc dynamic var username: String = "Username"
+    @objc dynamic var password: String = "aulae"
     
     @objc dynamic var sessionUUID: String = ""
     @objc dynamic var objectID: String = ""
     @objc dynamic var feedID: String = ""
     
     @objc dynamic var speakText: String = ""
-
+    
     @objc dynamic var apiUrl: String = ""
     @objc dynamic var rawConversationString: String = ""
     
@@ -33,7 +39,6 @@ class RLM_ChatSession: Object {
     @objc dynamic var b: String = ""
     @objc dynamic var c: String = ""
     @objc dynamic var d: String = ""
-
-    var msgList = List<RLM_ChatMsg>()
+    
     
 }

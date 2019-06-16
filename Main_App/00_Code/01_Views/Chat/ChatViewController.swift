@@ -21,11 +21,12 @@ struct ChatMessage {
 class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     
     lazy var realm = try! Realm()
-    lazy var rlmSession:  Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var rlmFeeds:    Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
-    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
-    lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
+    lazy var rlmSession:     Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmFeeds:       Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feedObjects:    Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    lazy var rlmChatSession: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
     lazy var rlmChatMsgs:    Results<RLM_ChatMessage> = { self.realm.objects(RLM_ChatMessage.self) }()
 
     fileprivate let cellId = "cell"

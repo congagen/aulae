@@ -17,7 +17,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     lazy var realm = try! Realm()
     lazy var rlmSystem: Results<RLM_SysSettings> = { self.realm.objects(RLM_SysSettings.self) }()
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var rlmChatSession: Results<RLM_ChatSession> = { self.realm.objects(RLM_ChatSession.self) }()
+    lazy var rlmChatSession: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
 
     lazy var rlmCamera: Results<RLM_Camera> = { self.realm.objects(RLM_Camera.self) }()
 
@@ -157,7 +157,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         }
         
         if rlmChatSession.count < 1 {
-            let chatSess = RLM_ChatSession()
+            let chatSess = RLM_ChatSess()
             do {
                 try realm.write {
                     self.realm.add(chatSess)
@@ -217,7 +217,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
+        return .default
     }
     
 
