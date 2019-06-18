@@ -18,13 +18,15 @@ extension UIColor {
         var rgbValue: UInt64 = 0
         scannHex.scanLocation = 0
         scannHex.scanHexInt64(&rgbValue)
+        
         let r = (rgbValue & 0xff0000) >> 16
         let g = (rgbValue & 0xff00) >> 8
         let b = rgbValue & 0xff
+        
         self.init(
-            red: CGFloat(r) / 0xff,
+            red:   CGFloat(r) / 0xff,
             green: CGFloat(g) / 0xff,
-            blue: CGFloat(b) / 0xff, alpha: 1
+            blue:  CGFloat(b) / 0xff, alpha: 1
         )
     }
 }

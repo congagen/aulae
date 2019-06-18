@@ -38,37 +38,28 @@ class ViewAnimation {
     }
     
     
-    func hideCompletion(viewToHide: UIView) {
-        viewToHide.isHidden = true
-    }
-    
-    
     func resetOpacity(v: UIView, hideView: Bool) {
-        v.isHidden = hideView
+        v.isHidden = false
         
-        if v.isHidden {
-            v.layer.opacity = 1
+        if hideView {
+            v.layer.opacity = 0
         }
     }
     
     
     func fade(viewToAnimate: UIView, aDuration: Double, hideView: Bool, aMode: UIView.AnimationOptions) {
         
-        if !hideView && viewToAnimate.isHidden {
-            viewToAnimate.layer.opacity = 0
+        if !hideView {
             viewToAnimate.isHidden = false
         }
         
-        // let startVal = viewToAnimate.layer.opacity
-        
-        UIView.transition(with: viewToAnimate,
-                          duration: aDuration,
-                          options: aMode,
-                          animations: { viewToAnimate.layer.opacity = Float(hideView ? 0 : 1)},
-                          completion: { _ in self.resetOpacity(v: viewToAnimate, hideView: hideView) }
+        UIView.transition(
+            with: viewToAnimate,
+            duration: aDuration,
+            options: .curveEaseInOut,
+            animations: { viewToAnimate.layer.opacity = Float(hideView ? 0 : 1) },
+            completion: nil
         )
-        
-
         
     }
     

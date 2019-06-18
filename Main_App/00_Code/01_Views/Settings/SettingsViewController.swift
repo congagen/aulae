@@ -21,8 +21,9 @@ class SettingsViewController: UITableViewController {
     
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
-    lazy var rlmCamera: Results<RLM_Camera> = { self.realm.objects(RLM_Camera.self) }()
+    lazy var rlmCamera: Results<RLM_CameraSettings> = { self.realm.objects(RLM_CameraSettings.self) }()
     
+    var arViewVC: ARViewer? = nil
     
     @IBOutlet var usernameBtn: UIButton!
 
@@ -54,11 +55,14 @@ class SettingsViewController: UITableViewController {
     @IBOutlet var feedUpdateSpeedDisplay: UITextField!
     @IBAction func feedUpdateIntervalStepperAction(_ sender: UIStepper) {
         saveSettings(propName: feeUpdateSpeedParamName, propValue: Double(sender.value))
+        super.viewWillAppear(true)
         updateUI()
     }
     
+    
     @IBAction func closeBtnAction(_ sender: UIBarButtonItem) {
-        self.navigationController?.dismiss(animated: true, completion: nil)
+        self.navigationController?.dismiss(
+            animated: true, completion: { super.viewDidAppear(true) })
         self.view.removeFromSuperview()
     }
     
@@ -133,12 +137,19 @@ class SettingsViewController: UITableViewController {
     }
     
     
-    
     let locationToggleParamName = "animationToggle"
     @IBOutlet var locationSharingSwitch: UISwitch!
     @IBAction func locationSharingSwitchAction(_ sender: UISwitch) {
         let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
         saveSettings(propName: locationToggleParamName, propValue: boolDouble)
+        updateUI()
+    }
+    
+    let cameraIsEnabledParamName   = "cameraIsEnabled"
+    @IBOutlet var cameraIsEnabledSwitch: UISwitch!
+    @IBAction func cameraIsEnabledSwitchAction(_ sender: UISwitch) {
+        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+        saveSettings(propName: cameraIsEnabledParamName, propValue: boolDouble)
         updateUI()
     }
     
@@ -185,6 +196,9 @@ class SettingsViewController: UITableViewController {
             do {
                 try realm.write {
                     switch propName {
+                        
+                    case cameraIsEnabledParamName:
+                        rlmCamera.first!.isEnabled              = Int(propValue) == 1
                         
                     case cameraExposureParamName:
                         rlmCamera.first!.exposureOffset         = propValue
@@ -244,14 +258,16 @@ class SettingsViewController: UITableViewController {
         scaleFactorDisplay.text          = String(Int(rlmSession.first!.scaleFactor))
         scaleFactorStepper.value         = rlmSession.first!.scaleFactor
         
-        allowAudioSwitch.isOn            = rlmSession.first!.muteAudio         != true
+        allowAudioSwitch.isOn            = rlmSession.first!.muteAudio != true
 
-        useDistanceSwitch.isOn           = rlmSession.first!.distanceScale    == true
-//        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate       == true
+        useDistanceSwitch.isOn           = rlmSession.first!.distanceScale == true
+//        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate == true
         
         darkModeSwitch.isOn              = rlmSystem.first?.uiMode == 1
         
         locationSharingSwitch.isOn       = rlmSession.first!.showPlaceholders == true
+        
+        cameraIsEnabledSwitch.isOn       = rlmCamera.first?.isEnabled == true
         
         camExposureStepper.value         = rlmCamera.first!.exposureOffset
         camExposureDisplay.text          = String( Double(round(1000 * camExposureStepper.value) / 1000))
@@ -271,28 +287,43 @@ class SettingsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        do {
+            try realm.write {
+                rlmSystem.first?.needsRefresh = false
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
         updateUI()
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
-        print("SETTINGSVIEW: viewDidAppear")
-
+        print("viewDidAppear: SettingsViewController")
+        do {
+            try realm.write {
+                rlmSystem.first?.needsRefresh = false
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
         tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: false)
 
         updateUI()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        print("SETTINGSVIEW: viewDidDisappear")
-        tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: false)
-
-        self.navigationController?.popViewController(animated: true)
+        print("viewDidDisappear: SettingsViewController")
+//        tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: false)
+//        self.navigationController?.popViewController(animated: true)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
-        print("WILLAPPEAR")
+        print("viewWillAppear: SettingsViewController")
         tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .top, animated: false)
         updateUI()
     }

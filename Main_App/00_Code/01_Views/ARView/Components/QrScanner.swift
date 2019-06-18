@@ -88,8 +88,9 @@ extension ARViewer {
                         showQRURLAlert(aMessage: metadataObject.stringValue!)
                     }
                     
-                    //loadingView.isHidden = true
+                    loadingView.isHidden = true
                     loadingView.layer.opacity = 1
+                    
                     qrCaptureSession?.stopRunning()
                     qrCapturePreviewLayer?.removeFromSuperlayer()
                     

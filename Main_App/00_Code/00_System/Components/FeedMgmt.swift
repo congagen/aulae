@@ -51,7 +51,7 @@ class FeedMgmt {
     
 
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
-        print("storeFeedObject")
+        //print("storeFeedObject")
         
         // Current = feedId + prevUTX
         

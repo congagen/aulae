@@ -9,8 +9,8 @@ class RLM_Feed: Object {
     @objc dynamic var id: String = ""
     @objc dynamic var topicKwd: String = ""
     
-    @objc dynamic var thumbImagePath: String = ""
-    @objc dynamic var thumbImageUrl: String = ""
+    @objc dynamic var thumbImagePath:  String = ""
+    @objc dynamic var thumbImageUrl:   String = ""
     @objc dynamic var customMarkerUrl: String = ""
     
     @objc dynamic var sourceUrl: String = ""

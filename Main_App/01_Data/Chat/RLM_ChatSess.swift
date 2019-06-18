@@ -15,7 +15,7 @@ import RealmSwift
 
 class RLM_ChatSess: Object {
     
-    @objc dynamic var username: String = "Username"
+    @objc dynamic var username: String = "Aulae"
     @objc dynamic var password: String = "aulae"
     
     @objc dynamic var sessionUUID: String = ""

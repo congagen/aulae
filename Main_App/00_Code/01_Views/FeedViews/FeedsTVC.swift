@@ -433,6 +433,7 @@ class FeedsTVC: UITableViewController {
     
     
     override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear: FeedsTVC")
         manualUpdate()
     }
     

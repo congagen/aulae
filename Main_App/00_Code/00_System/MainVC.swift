@@ -19,7 +19,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var rlmChatSession: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
 
-    lazy var rlmCamera: Results<RLM_Camera> = { self.realm.objects(RLM_Camera.self) }()
+    lazy var rlmCamera: Results<RLM_CameraSettings> = { self.realm.objects(RLM_CameraSettings.self) }()
 
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
@@ -38,6 +38,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     
     @objc func mainUpdate() {
         print("mainUpdate: MainVC")
+        UIOps().updateTabUIMode(tabCtrl: self)
+
         dbGc()
 
         if rlmSession.count > 0 {
@@ -73,6 +75,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
 
         do {
             try realm.write {
+                
                 for f in rlmFeeds {
                     if f.deleted {
                         realm.delete(f)
@@ -84,6 +87,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                         realm.delete(o)
                     }
                 }
+                
             }
         } catch {
             print("Error: \(error)")
@@ -107,6 +111,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("locationManager")
+        UIOps().updateTabUIMode(tabCtrl: self)
 
         do {
             try realm.write {
@@ -146,7 +151,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
         
         if rlmCamera.count < 1 {
-            let camSettings = RLM_Camera()
+            let camSettings = RLM_CameraSettings()
             do {
                 try realm.write {
                     self.realm.add(camSettings)
@@ -204,12 +209,14 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     }
     
     
-//    override func transition(from fromViewController: UIViewController, to toViewController: UIViewController, duration: TimeInterval, options: UIView.AnimationOptions = [], animations: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
+    override func transition(from fromViewController: UIViewController, to toViewController: UIViewController, duration: TimeInterval, options: UIView.AnimationOptions = [], animations: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
+//        print("MainVC: transition toViewController")
+//
 //        if let v: ARViewer = toViewController as? ARViewer {
 //            v.loadingView.isHidden = false
 //            v.manageLoadingScreen(interval: 2)
 //        }
-//    }
+    }
     
     
     override var prefersStatusBarHidden: Bool {
@@ -231,22 +238,26 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
-            }
+    }
     
     
     override func viewWillAppear(_ animated: Bool) {
+        print("viewWillAppear: MainVC")
         self.selectedIndex = 1
         UIOps().updateTabUIMode(tabCtrl: self)
     }
     
-    
     override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear: MainVC")
         UIOps().updateTabUIMode(tabCtrl: self)
+        super.viewDidAppear(animated)
     }
     
     
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        print("didUpdateFocus: MainVC")
         UIOps().updateTabUIMode(tabCtrl: self)
+        super.updateFocusIfNeeded()
     }
     
     

@@ -332,7 +332,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print("ChatView: viewDidAppear")
+        print("viewDidAppear: ChatView")
         chatTableView.reloadData()
     }
 

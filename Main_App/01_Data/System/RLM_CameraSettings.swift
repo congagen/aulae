@@ -1,9 +1,20 @@
+//
+//  RLM_CameraSettings.swift
+//  Aulae
+//
+//  Created by Tim Sandgren on 2019-06-17.
+//  Copyright © 2019 Abstraqata. All rights reserved.
+//
+
 import Foundation
 import RealmSwift
 
 
-class RLM_Camera: Object {
+class RLM_CameraSettings: Object {
     
+    @objc dynamic var isEnabled: Bool = true
+    @objc dynamic var color: String   = "#000000"
+
     @objc dynamic var wantsHdr: Bool = true
     @objc dynamic var wantsExposureAdaptation: Bool = true
     
@@ -13,7 +24,7 @@ class RLM_Camera: Object {
     @objc dynamic var apertureBladeCount: Int = 1
     @objc dynamic var focalBlurSampleCount: Int = 1
     @objc dynamic var colorGrading: Int = 1
-
+    
     @objc dynamic var contrast: Double = 0
     @objc dynamic var saturation: Double = 0
     @objc dynamic var exposureOffset: Double = 0
@@ -22,7 +33,7 @@ class RLM_Camera: Object {
     @objc dynamic var whitePoint: Double = 1
     @objc dynamic var minimumExposure: Double = 1
     @objc dynamic var maximumExposure: Double = 1
-
+    
     @objc dynamic var colorFringeIntensity: Double = 0.5
     @objc dynamic var colorFringeStrength: Double = 0.5
     @objc dynamic var vignettingIntensity: Double = 0.5

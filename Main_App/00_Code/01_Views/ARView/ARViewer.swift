@@ -15,13 +15,13 @@ import RealmSwift
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
-    lazy var rlmSystem:      Results<RLM_SysSettings>  = {self.realm.objects(RLM_SysSettings.self)}()
-    lazy var rlmSession:     Results<RLM_Session> = {self.realm.objects(RLM_Session.self)}()
-    lazy var rlmChatSession: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
+    lazy var rlmSystem:      Results<RLM_SysSettings>    = {self.realm.objects(RLM_SysSettings.self)}()
+    lazy var rlmSession:     Results<RLM_Session>        = {self.realm.objects(RLM_Session.self)}()
+    lazy var rlmChatSession: Results<RLM_ChatSess>       = {self.realm.objects(RLM_ChatSess.self) }()
 
-    lazy var rlmFeeds:       Results<RLM_Feed>    = {self.realm.objects(RLM_Feed.self)}()
-    lazy var rlmSourceItems: Results<RLM_Obj>     = {self.realm.objects(RLM_Obj.self)}()
-    lazy var rlmCamera:      Results<RLM_Camera>  = {self.realm.objects(RLM_Camera.self)}()
+    lazy var rlmFeeds:       Results<RLM_Feed>           = {self.realm.objects(RLM_Feed.self)}()
+    lazy var rlmSourceItems: Results<RLM_Obj>            = {self.realm.objects(RLM_Obj.self)}()
+    lazy var rlmCamera:      Results<RLM_CameraSettings> = {self.realm.objects(RLM_CameraSettings.self)}()
     
     var updateTimer = Timer()
     
@@ -50,6 +50,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     let chatView: UIStoryboard! = nil
     
     
+    @IBAction func showSettingsView(_ sender: UIBarButtonItem) {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController")
+        vc!.modalPresentationStyle = .overFullScreen
+        vc!.modalTransitionStyle = .coverVertical
+        
+        present(vc!, animated: true, completion: nil)
+    }
+    
     func showChatView() {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "ChatViewController")
         vc!.modalPresentationStyle = .overFullScreen
@@ -60,18 +68,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     @IBOutlet var loadingView: UIView!
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
-        //loadingView.isHidden = false
+        loadingView.isHidden = false
         loadingView.layer.opacity = 1
-
-//        UIOps().showProgressBar(
-//            navCtrl: self.navigationController!, progressBar: progressBar,
-//            view: self.view, timeoutPeriod: 1)
 
         FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
         initScene()
         refreshScene()
         
-        manageLoadingScreen(interval: 1)
+        manageLoadingScreen(interval: 2)
     }
     
     
@@ -110,9 +114,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
     }
     
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        
-    }
+//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+//        
+//    }
     
     private func updateCameraSettings() {
         print("updateCameraSettings")
@@ -120,11 +124,22 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         guard let camera = sceneView.pointOfView?.camera else {
             fatalError("Expected a valid `pointOfView` from the scene.")
         }
-        // Enable HDR camera settings for the most realistic appearance with environmental lighting and physically based materials.
-        camera.wantsHDR       = true
-        camera.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
-        camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
-        camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
+        
+        if rlmCamera.first!.isEnabled {
+            print("Enable Camera")
+            
+            camera.wantsHDR       = true
+            camera.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
+            camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
+            camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
+            
+            // sceneView.scene.background.contents = camera
+        } else {
+            print("Disable Camera")
+
+            sceneView.scene.background.contents = UIColor.black
+        }
+    
     }
     
     func objectsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
@@ -263,28 +278,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func positionDemoNodes(ctNode: ContentNode, objData: RLM_Obj) {
-        print("positionDemoNodes")
-        
-        do {
-            try realm.write {
-                objData.lat = rlmSession.first!.currentLat
-                objData.lng = rlmSession.first!.currentLng
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-        let ori = sceneView.pointOfView?.orientation
-        let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
-        ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-        
-        ctNode.position = SCNVector3(
-            ctNode.position.x, 0, ctNode.position.z
-        )
-    }
-    
-    
     func hideNodesWithId(nodeId:String) {
         print("hideNodesWithId")
         for n in mainScene.rootNode.childNodes {
@@ -301,7 +294,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func refreshScene() {
         print("RefreshScene")
-        //loadingView.isHidden = false
+        loadingView.isHidden = false
         loadingView.layer.opacity = 1
         
         rawDeviceGpsCCL          = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
@@ -364,14 +357,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } catch {
             print("Error: \(error)")
         }
-        manageLoadingScreen(interval: 1)
+        
+        if loadingView.layer.opacity > 0.1 {
+            manageLoadingScreen(interval: 1)
+        }
+        
     }
     
     
     func handleTap(touches: Set<UITouch>) {
         print("handleTap")
-        //loadingView.isHidden = true
-        loadingView.layer.opacity = 0
+//        loadingView.isHidden = true
+//        loadingView.layer.opacity = 0
         
         if isTrackingQR {
             //searchQRBtn.tintColor = self.view.window?.tintColor
@@ -415,11 +412,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             }
         }
-    }
-    
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        handleTap(touches: touches)
     }
     
     
@@ -489,84 +481,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         case .limited(_):
             message = "INITIALIZING"
         }
+        
         print(message)
         
-        // loadingView.isHidden = trackingState == 0
         // loadingViewLabel.text = message
-        // Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {_ in self.manageLoading(interval: 0.2) })
     }
-    
-    
-    func initScene() {
-        print("ARScene initScene")
-        //loadingView.isHidden  = false
-        loadingView.layer.opacity = 1
-        
-        mainScene = SCNScene(named: "art.scnassets/main.scn")!
-        sceneView.scene = mainScene
-        
-        sceneView.session.delegate = self
-        sceneView.delegate = self
-        sceneView.audioListener = mainScene.rootNode
-        
-        configuration.isAutoFocusEnabled = true
-        configuration.worldAlignment = .gravityAndHeading
-        configuration.isLightEstimationEnabled = true
-
-        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        
-        rawDeviceGpsCCL = CLLocation(
-            latitude: rlmSession.first!.currentLat,
-            longitude: rlmSession.first!.currentLng
-        )
-        
-        //if (rlmSession.first?.autoUpdate)! {
-        Timer.scheduledTimer(
-            withTimeInterval: rlmSession.first!.mapUpdateInterval,
-            repeats: false, block: {_ in self.mainTimerUpdate()}
-        )
-        //}
-        
-        updateCameraSettings()
-    }
-    
-    
-    @objc func mainTimerUpdate() {
-        print("ARViewer: mainTimerUpdate")
-        var ref = false
-        
-        // updateCameraSettings()
-        
-        if rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate {
-            print("rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate")
-            for fo in rlmSourceItems {
-                if (fo.active && !fo.deleted) {
-                    if mainScene.rootNode.childNodes.filter( {$0.name == fo.uuid} ).count == 0 {
-                        ref = true
-                        print("mainUpdate: needsUpdate")
-                    }
-                }
-            }
-        }
-        
-        if ref {
-            refreshScene()
-        }
-        
-        updateTimer.invalidate()
-
-        if !updateTimer.isValid {
-            updateTimer = Timer.scheduledTimer(
-                timeInterval: rlmSession.first!.feedUpdateInterval, target: self,
-                selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
-        }
-        
-        manageLoadingScreen(interval: 2)
-        
-    }
+  
     
     func manageLoadingScreen(interval: Double) {
         print("manageLoadingScreen")
+        self.loadingView.isHidden = false
         
         if rlmSystem.first!.needsRefresh {
             ViewAnimation().fade(
@@ -583,9 +507,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             
         } else {
-            
-            loadingView.layer.removeAllAnimations()
-            
             ViewAnimation().fade(
                 viewToAnimate: self.loadingView, aDuration: interval,
                 hideView: true, aMode: UIView.AnimationOptions.curveEaseIn
@@ -616,21 +537,35 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func sessionWasInterrupted(_ session: ARSession) {
         print("ArViewer: sessionWasInterrupted")
+
+        loadingView.isHidden = false
+        loadingView.layer.opacity = 1
     }
     
     
     func sessionInterruptionEnded(_ session: ARSession) {
         print("ArViewer: sessionInterruptionEnded")
+
+        loadingView.isHidden = false
+        loadingView.layer.opacity = 1
     }
     
     
-    override func viewWillDisappear(_ animated: Bool) {
-        print("viewWillDisappear")
-        super.viewWillDisappear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        print("viewWillAppear: Arview")
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+        
+        loadingView.isHidden = false
+        loadingView.layer.opacity = 1
     }
     
     
     override func viewDidDisappear(_ animated: Bool) {
+        print("viewDidDisappear: Arview")
+        loadingView.layer.removeAllAnimations()
+        loadingView.isHidden = false
+        loadingView.layer.opacity = 1
+
         do {
             try realm.write {
                 rlmSystem.first?.needsRefresh = true
@@ -638,35 +573,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } catch {
             print("Error: \(error)")
         }
-        
-        //loadingView.isHidden = false
-        loadingView.layer.removeAllAnimations()
-        loadingView.layer.opacity = 1
-
-    }
-    
-    
-    func debugChat() {
-        do {
-            try realm.write {
-                rlmChatSession.first?.sessionUUID = "debugsession"
-                rlmChatSession.first?.apiUrl    = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae-avr"
-                rlmChatSession.first?.agentName = "Chaty Bot"
-                rlmChatSession.first?.agentId   = "Chaty Bot"
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-        showChatView()
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
-        print("viewDidAppear")
-        // initUI()
+        print("viewDidAppear: ArView")
+        loadingView.isHidden = false
+        loadingView.layer.opacity = 1
         
         UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+
         
         do {
             try realm.write {
@@ -676,25 +592,22 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print("Error: \(error)")
         }
         
-        loadingView.layer.removeAllAnimations()
-        loadingView.layer.opacity = 1
-        initScene()
         refreshScene()
-
         manageLoadingScreen(interval: 1)
-
+        updateCameraSettings()
     }
-  
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewDidLoad")
+        print("viewDidLoad: ArView")
         
-        // UIOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo_B")
-        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
-
-        //loadingView.isHidden = false
+        loadingView.isHidden = false
         loadingView.layer.opacity = 1
+        
+        if (self.navigationController != nil) {
+            UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+        }
 
         initScene()
         refreshScene()
@@ -707,11 +620,111 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         view.addGestureRecognizer(pinchGR)
     }
     
+    
+    func initScene() {
+        print("ARScene initScene")
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+
+        updateCameraSettings()
+        
+        loadingView.isHidden      = false
+        loadingView.layer.opacity = 1
+        
+        mainScene       = SCNScene(named: "art.scnassets/main.scn")!
+        sceneView.scene = mainScene
+        
+        sceneView.session.delegate = self
+        sceneView.delegate         = self
+        sceneView.audioListener    = mainScene.rootNode
+        
+        configuration.isAutoFocusEnabled = true
+        configuration.worldAlignment = .gravityAndHeading
+        configuration.isLightEstimationEnabled = true
+        
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        
+        rawDeviceGpsCCL = CLLocation(
+            latitude:  rlmSession.first!.currentLat,
+            longitude: rlmSession.first!.currentLng
+        )
+        
+        Timer.scheduledTimer(
+            withTimeInterval: rlmSession.first!.mapUpdateInterval,
+            repeats: false, block: {_ in self.mainTimerUpdate()}
+        )
+    }
+    
+    
+    @objc func mainTimerUpdate() {
+        print("ARViewer: mainTimerUpdate")
+        var ref = false
+        
+        updateCameraSettings()
+        
+        if rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate {
+            print("rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate")
+            for fo in rlmSourceItems {
+                if (fo.active && !fo.deleted) {
+                    if mainScene.rootNode.childNodes.filter( {$0.name == fo.uuid} ).count == 0 {
+                        ref = true
+                        print("mainUpdate: needsUpdate")
+                    }
+                }
+            }
+        }
+        
+        if ref {
+            refreshScene()
+        }
+        
+        updateTimer.invalidate()
+        
+        if !updateTimer.isValid {
+            updateTimer = Timer.scheduledTimer(
+                timeInterval: rlmSession.first!.feedUpdateInterval, target: self,
+                selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
+        }
+        
+    }
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        handleTap(touches: touches)
+    }
+    
+    
     override var prefersStatusBarHidden: Bool {
         return false
     }
     
+    
+    func positionDemoNodes(ctNode: ContentNode, objData: RLM_Obj) {
+        print("positionDemoNodes")
+        
+        do {
+            try realm.write {
+                objData.lat = rlmSession.first!.currentLat
+                objData.lng = rlmSession.first!.currentLng
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        let ori = sceneView.pointOfView?.orientation
+        let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+        ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+        
+        ctNode.position = SCNVector3(
+            ctNode.position.x, 0, ctNode.position.z
+        )
+    }
+    
+    
 }
+
+
+// UIOps().showLogo(navCtrl: self.navigationController!, imageName: "Logo_B")
+
 
 
 //    @IBAction func toggleMapAction(_ sender: UIButton) {
@@ -734,3 +747,21 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 ////        vc!.modalTransitionStyle = .crossDissolve
 ////        present(vc!, animated: true, completion: nil)
 //    }
+
+
+
+
+//func debugChat() {
+//    do {
+//        try realm.write {
+//            rlmChatSession.first?.sessionUUID = "debugsession"
+//            rlmChatSession.first?.apiUrl      = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae-avr"
+//            rlmChatSession.first?.agentName   = "Chaty Bot"
+//            rlmChatSession.first?.agentId     = "Chaty Bot"
+//        }
+//    } catch {
+//        print("Error: \(error)")
+//    }
+//
+//    showChatView()
+//}
