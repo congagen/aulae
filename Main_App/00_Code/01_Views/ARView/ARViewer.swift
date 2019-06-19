@@ -127,8 +127,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         camera.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
         camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
         camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
-        camera.bloomIntensity = 0.5
-        camera.bloomThreshold = 0.8
+//        camera.bloomIntensity = 0.5
+//        camera.bloomThreshold = 0.8
     
         if rlmCamera.first!.isEnabled {
             // sceneView.scene.background.contents = UIColor.black
@@ -552,19 +552,23 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         UIOps().updateNavUiMode(navCtrl: self.navigationController!)
         UIOps().updateTabUIMode(tabCtrl: self.tabBarController!)
-        
-        if rlmSystem.first!.needsRefresh && view.isFocused {
-            do {
-                try realm.write {
-                    rlmSystem.first?.needsRefresh = false
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-            
-            refreshScene()
-            updateCameraSettings()
-        }
+
+//        if rlmSystem.first!.needsRefresh && self.isFirstResponder {
+//            loadingView.isHidden = false
+//            loadingView.layer.opacity = 1
+//
+//            do {
+//                try realm.write {
+//                    rlmSystem.first?.needsRefresh = false
+//                }
+//            } catch {
+//                print("Error: \(error)")
+//            }
+//
+//            refreshScene()
+//            manageLoadingScreen(interval: 1)
+//            updateCameraSettings()
+//        }
     }
     
     
@@ -572,9 +576,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("viewDidAppear: ArView")
         loadingView.isHidden = false
         loadingView.layer.opacity = 1
-
-        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
-
+        
         do {
             try realm.write {
                 rlmSystem.first?.needsRefresh = true
@@ -596,11 +598,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         loadingView.isHidden = false
         loadingView.layer.opacity = 1
         sceneCameraSource = sceneView.scene.background.contents
-        
-
-        if (self.navigationController != nil) {
-            UIOps().updateNavUiMode(navCtrl: self.navigationController!)
-        }
 
         initScene()
         
@@ -698,15 +695,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     func sessionInterruptionEnded(_ session: ARSession) {
         print("ArViewer: sessionInterruptionEnded")
     }
-    
-    
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        print("ArViewer: didUpdateFocus")
-        if rlmSystem.first!.needsRefresh {
-            initScene()
-        }
-    }
-    
     
     
     func session(_ session: ARSession, didFailWithError error: Error) {

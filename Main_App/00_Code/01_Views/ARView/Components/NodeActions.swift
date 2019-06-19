@@ -153,6 +153,8 @@ extension ARViewer {
                     rlmChatSession.first?.apiUrl    = selectedNodeChatUrl
                     rlmChatSession.first?.agentName = selNode.name ?? ""
                     rlmChatSession.first?.agentId   = selNode.title
+                    rlmChatSession.first?.agentInfo = selNode.info
+
                 }
             } catch {
                 print("Error: \(error)")

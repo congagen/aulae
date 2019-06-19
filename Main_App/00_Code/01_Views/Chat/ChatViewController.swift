@@ -91,10 +91,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
                 completion: { r in self.handleResponseText(result: r) }, apiHeaderValue: apiHeaderValue,
                 apiHeaderFeild: apiHeaderFeild, apiUrl: rlmChatSession.first!.apiUrl,
                 reqParams: [
-                    "init_message": init_session_msg,
+                    "username": rlmChatSession.first!.username,
+                    "agent_id": rlmChatSession.first!.agentId,
+                    
                     "sid":  (rlmSession.first?.sessionUUID)!,
                     "lat":  String(Int(rlmSession.first!.currentLat)),
                     "lng":  String(Int(rlmSession.first!.currentLng)),
+                    
                     "chat_msg": message
                 ]
             )
