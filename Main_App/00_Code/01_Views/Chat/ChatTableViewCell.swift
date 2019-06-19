@@ -17,8 +17,8 @@ class ChatTableViewCell: UITableViewCell {
     var leadingConstraint:  NSLayoutConstraint!
     var trailingConstraint: NSLayoutConstraint!
     
-    var outBubbleColor       = UIColor(displayP3Red: 0.6, green: 1, blue: 0.7, alpha: 0.8)
-    var incommingBubbleColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.8)
+    var outBubbleColor       = UIColor(displayP3Red: 0.5, green: 0.6, blue: 1.0, alpha: 0.7)
+    var incommingBubbleColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.7)
     
     var isIncomming: Bool! {
         didSet {

@@ -357,10 +357,6 @@ class FeedMgmt {
 //                    updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
 //                    updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
 //                }
-//
-//            } else {
-//                updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
-//                updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
 //            }
         } else {
             do {

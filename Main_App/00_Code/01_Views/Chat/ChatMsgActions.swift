@@ -96,10 +96,16 @@ extension ChatViewController {
         )
         
         if (cellText) != "" {
-            if let url = URL(string: cellText) {
-                alert.addAction(UIAlertAction(
-                    title: "Open in browser", style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (cellText)) } ))
+
+            if let url = NSURL(string: cellText) {
+                if UIApplication.shared.canOpenURL(url as URL) {
+                        alert.addAction(UIAlertAction(
+                            title: "Open in browser",
+                            style: UIAlertAction.Style.default,
+                            handler: { _ in self.openUrl(scheme: cellText) } ))
+                }
             }
+
 
             alert.addAction(UIAlertAction(
                 title: "Copy to clipboard", style: UIAlertAction.Style.default, handler: { _ in self.copyToClip(text: (cellText)) } ))
@@ -112,13 +118,16 @@ extension ChatViewController {
         alert.view.tintColor = UIColor.black
         alert.view.tintColorDidChange()
         
+        //self.present(alert, animated: true, completion: nil)
+        
+        
+        // ----------------------------------------------------------------------------------------------------------------
+        
+        self.view.window?.windowLevel = UIWindow.Level(rawValue: 10000001)
+        
         self.present(alert, animated: true, completion: nil)
         
     }
-    
-    
-
-
     
     
 }

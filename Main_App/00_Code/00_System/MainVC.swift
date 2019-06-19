@@ -31,14 +31,13 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
     let httpDl = HttpDownloader()
     
-    func randRange (lower: Int , upper: Int) -> Int {
+    func randRange (lower: Int, upper: Int) -> Int {
         return Int(arc4random_uniform(UInt32(upper - lower)))
     }
     
     
     @objc func mainUpdate() {
         print("mainUpdate: MainVC")
-        UIOps().updateTabUIMode(tabCtrl: self)
 
         dbGc()
 
@@ -61,7 +60,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
         do {
             try realm.write {
-                rlmSession.first!.showPlaceholders = (CLLocationManager.locationServicesEnabled() && rlmSession.first!.showPlaceholders)
+                rlmSession.first!.showPlaceholders = (
+                    CLLocationManager.locationServicesEnabled() && rlmSession.first!.showPlaceholders)
             }
         } catch {
             print("Error: \(error)")
@@ -111,8 +111,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("locationManager")
-        UIOps().updateTabUIMode(tabCtrl: self)
-
+        
         do {
             try realm.write {
                 rlmSession.first?.currentLat = (locations.last?.coordinate.latitude)!
@@ -208,25 +207,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
     }
     
-    
-    override func transition(from fromViewController: UIViewController, to toViewController: UIViewController, duration: TimeInterval, options: UIView.AnimationOptions = [], animations: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
-//        print("MainVC: transition toViewController")
-//
-//        if let v: ARViewer = toViewController as? ARViewer {
-//            v.loadingView.isHidden = false
-//            v.manageLoadingScreen(interval: 2)
-//        }
-    }
-    
-    
-    override var prefersStatusBarHidden: Bool {
-        return false
-    }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .default
-    }
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -238,6 +218,17 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
+    }
+    
+    
+    override func didChangeValue(forKey key: String) {
+        print("viewWillAppear: MainVC")
+        self.selectedIndex = 1
+        UIOps().updateTabUIMode(tabCtrl: self)
+    }
+    
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        UIOps().updateTabUIMode(tabCtrl: self)
     }
     
     
@@ -254,16 +245,20 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     }
     
     
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        print("didUpdateFocus: MainVC")
-        UIOps().updateTabUIMode(tabCtrl: self)
-        super.updateFocusIfNeeded()
-    }
-    
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
+    
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .default
+    }
+    
 
 
 }

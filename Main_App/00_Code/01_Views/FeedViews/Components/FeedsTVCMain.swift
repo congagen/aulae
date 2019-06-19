@@ -13,7 +13,10 @@ extension FeedsTVC {
     
     @objc func mainUpdate() {
         
-        tableView.reloadData()
+        if tableView.isEditing {
+            tableView.reloadData()
+        }
+        
         
         if updateTimer.timeInterval != updateInterval {
             updateTimer.invalidate()

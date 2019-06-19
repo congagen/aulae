@@ -53,8 +53,10 @@ class FeedsTVC: UITableViewController {
 
     @IBAction func addBtnAction(_ sender: UIBarButtonItem) {
         showAddSourceAlert()
+        
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
+  
     }
     
     
@@ -74,7 +76,7 @@ class FeedsTVC: UITableViewController {
         let section = indexPath.section
         let feed = rlmFeeds[section]
         
-        tableView.reloadData()
+        self.tableView.reloadData()
         self.tableView.reloadInputViews()
 
         do {
@@ -103,7 +105,7 @@ class FeedsTVC: UITableViewController {
             print("Error: \(error)")
         }
         
-        tableView.reloadData()
+        self.tableView.reloadData()
         self.tableView.reloadInputViews()
 
     }
@@ -220,7 +222,6 @@ class FeedsTVC: UITableViewController {
         } catch {
             print("Error: \(error)")
         }
-        
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
     }
@@ -417,7 +418,6 @@ class FeedsTVC: UITableViewController {
         
         self.tableView.reloadData()
         self.tableView.reloadInputViews()
-        
     }
     
     

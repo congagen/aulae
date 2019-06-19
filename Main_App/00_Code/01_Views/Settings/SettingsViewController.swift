@@ -23,8 +23,6 @@ class SettingsViewController: UITableViewController {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     lazy var rlmCamera: Results<RLM_CameraSettings> = { self.realm.objects(RLM_CameraSettings.self) }()
     
-    var arViewVC: ARViewer? = nil
-    
     @IBOutlet var usernameBtn: UIButton!
 
     let chatUsernameParamName = "chatUsername"
@@ -61,8 +59,8 @@ class SettingsViewController: UITableViewController {
     
     
     @IBAction func closeBtnAction(_ sender: UIBarButtonItem) {
-        self.navigationController?.dismiss(
-            animated: true, completion: { super.viewDidAppear(true) })
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+        self.navigationController?.dismiss( animated: true, completion: { super.viewDidAppear(true)} )
         self.view.removeFromSuperview()
     }
     
@@ -267,7 +265,7 @@ class SettingsViewController: UITableViewController {
         
         locationSharingSwitch.isOn       = rlmSession.first!.showPlaceholders == true
         
-        cameraIsEnabledSwitch.isOn       = rlmCamera.first?.isEnabled == true
+//        cameraIsEnabledSwitch.isOn       = rlmCamera.first?.isEnabled == true
         
         camExposureStepper.value         = rlmCamera.first!.exposureOffset
         camExposureDisplay.text          = String( Double(round(1000 * camExposureStepper.value) / 1000))
@@ -288,6 +286,9 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+        
         do {
             try realm.write {
                 rlmSystem.first?.needsRefresh = false
@@ -302,6 +303,10 @@ class SettingsViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: SettingsViewController")
+        
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+        
         do {
             try realm.write {
                 rlmSystem.first?.needsRefresh = false
@@ -314,6 +319,7 @@ class SettingsViewController: UITableViewController {
 
         updateUI()
     }
+    
     
     override func viewDidDisappear(_ animated: Bool) {
         print("viewDidDisappear: SettingsViewController")

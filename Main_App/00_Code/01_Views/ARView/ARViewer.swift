@@ -24,6 +24,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     lazy var rlmCamera:      Results<RLM_CameraSettings> = {self.realm.objects(RLM_CameraSettings.self)}()
     
     var updateTimer = Timer()
+    var sceneCameraSource: Any? = nil
     
     var isTrackingQR = false
     var qrUrl = ""
@@ -70,12 +71,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBAction func refreshBtnAction(_ sender: UIBarButtonItem) {
         loadingView.isHidden = false
         loadingView.layer.opacity = 1
-
         FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
-        initScene()
-        refreshScene()
-        
-        manageLoadingScreen(interval: 2)
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: { _ in  self.initScene() })
     }
     
     
@@ -95,17 +92,21 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         self.present(activityViewController, animated: true, completion: nil)
     }
     
+    
     @IBOutlet var searchQRBtn: UIButton!
     @IBAction func searchQrBtnAction(_ sender: UIBarButtonItem) {
         print("searchQrBtnAction")
     
-        if isTrackingQR && (qrCapturePreviewLayer != nil) && (qrCaptureSession != nil) {
-            qrCaptureSession?.stopRunning()
+        if isTrackingQR && (qrCapturePreviewLayer != nil) {
+            if qrCaptureSession != nil {
+                qrCaptureSession?.stopRunning()
+                qrCaptureSession = nil
+            }
+    
             qrCapturePreviewLayer?.removeFromSuperlayer()
             isTrackingQR = false
             
             qrCapturePreviewLayer = nil
-            qrCaptureSession = nil
         } else {
             qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
             qrCaptureSession = AVCaptureSession()
@@ -114,9 +115,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
     }
     
-//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-//        
-//    }
     
     private func updateCameraSettings() {
         print("updateCameraSettings")
@@ -125,31 +123,34 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             fatalError("Expected a valid `pointOfView` from the scene.")
         }
         
-        if rlmCamera.first!.isEnabled {
-            print("Enable Camera")
-            
-            camera.wantsHDR       = true
-            camera.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
-            camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
-            camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
-            
-            // sceneView.scene.background.contents = camera
-        } else {
-            print("Disable Camera")
-
-            sceneView.scene.background.contents = UIColor.black
-        }
+        camera.wantsHDR       = true
+        camera.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
+        camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
+        camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
+        camera.bloomIntensity = 0.5
+        camera.bloomThreshold = 0.8
     
+        if rlmCamera.first!.isEnabled {
+            // sceneView.scene.background.contents = UIColor.black
+        } else {
+            // sceneView.scene.background.contents = UIColor.black
+        }
+        
     }
+    
     
     func objectsInRange(position: CLLocation, useManualRange: Bool, manualRange: Double) -> [RLM_Obj] {
         print("objectsInRange")
         var objList: [RLM_Obj] = []
         
         if (useManualRange) {
-            objList = rlmSourceItems.filter({ (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double(manualRange)) })
+            objList = rlmSourceItems.filter(
+                { (CLLocation(
+                    latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double(manualRange)) })
         } else {
-            objList = rlmSourceItems.filter({ (CLLocation(latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double($0.radius))   })
+            objList = rlmSourceItems.filter(
+                { (CLLocation(
+                    latitude: $0.lat, longitude: $0.lng).distance(from: position) <= Double($0.radius))   })
         }
         
         return objList
@@ -199,7 +200,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
         
         if objData.world_position {
-            objectPos = getNodeWorldPosition(objectDistance: objectDistance, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
+            objectPos = getNodeWorldPosition(
+                objectDistance: objectDistance, baseOffset: 0.0,
+                contentObj: objData, scaleFactor: scaleFactor
+            )
         }
         
         if (rlmSession.first?.distanceScale)! && objData.world_scale {
@@ -216,12 +220,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.contentLink = objData.contentLink
         ctNode.directLink  = objData.directLink
         
-        //let contentLinkItemA = objData.contentLink.components(separatedBy: " ")[0]
-        
         if fPath != "" && objData.type.lowercased() != "text" {
-            // ***************************************************************
-            // TODO Add loading indicator and schedule retry if not present
-            // ***************************************************************
+//             ***************************************************************
+//             TODO Add loading indicator and schedule retry if not present
+//             ***************************************************************
+            
+//            if objData.filePath != "" && objData.type.lowercased() != "marker" && objData.type.lowercased() != "audio" {
+//                if objData.type.lowercased() == "loadingSpinner" { ctNode.addGif(fPath:   fPath, objectData: objData) }
+//            } else {
+//
+//            }
             
             if objData.type.lowercased() == "demo"   { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
             if objData.type.lowercased() == "obj"    { ctNode.addObj(fPath:   fPath, objectData: objData) }
@@ -316,7 +324,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             var inRange = true
             
             if o.radius != 0 {
-                let cLoc = CLLocation(latitude:  (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
+                let cLoc = CLLocation(
+                    latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
                 let d = cLoc.distance(from: CLLocation(latitude: o.lat, longitude: o.lng))
                 inRange = d < o.radius
             }
@@ -327,28 +336,33 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     if o.filePath != "" && o.type.lowercased() != "text" && o.type.lowercased() != "demo" {
                         print("UpdateScene: activeInRange: " + String(o.uuid))
 
-                        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                        let documentsUrl = FileManager.default.urls(
+                            for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                        
                         let fileName = (URL(string: o.filePath)?.lastPathComponent)!
                         let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                         
                         if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                             print("FileManager.default.fileExists")
-                            insertSourceObject(objData: o, source: objFeeds.first!, fPath: (destinationUrl?.path)!, scaleFactor: (rlmSession.first?.scaleFactor)! )
+                            insertSourceObject(objData: o, source: objFeeds.first!, fPath: (
+                                destinationUrl?.path)!, scaleFactor: (rlmSession.first?.scaleFactor)! )
                         }
                     } else {
                         if (o.type.lowercased() == "text") {
-                            insertSourceObject(objData: o, source: objFeeds.first!, fPath:"", scaleFactor: (rlmSession.first?.scaleFactor)! )
+                            insertSourceObject(
+                                objData: o, source: objFeeds.first!, fPath:"",
+                                scaleFactor: (rlmSession.first?.scaleFactor)! )
                         }
                         
                         if o.type == "demo" {
-                            insertSourceObject( objData: o, source: objFeeds.first!, fPath: o.filePath, scaleFactor: (rlmSession.first?.scaleFactor)! )
+                            insertSourceObject(
+                                objData: o, source: objFeeds.first!, fPath: o.filePath,
+                                scaleFactor: (rlmSession.first?.scaleFactor)! )
                         }
                     }
                 }
             }
         }
-        
-        updateCameraSettings()
         
         do {
             try realm.write {
@@ -358,17 +372,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print("Error: \(error)")
         }
         
-        if loadingView.layer.opacity > 0.1 {
-            manageLoadingScreen(interval: 1)
-        }
+        manageLoadingScreen(interval: 1)
         
     }
     
     
     func handleTap(touches: Set<UITouch>) {
         print("handleTap")
-//        loadingView.isHidden = true
-//        loadingView.layer.opacity = 0
+        loadingView.layer.opacity = 0
         
         if isTrackingQR {
             //searchQRBtn.tintColor = self.view.window?.tintColor
@@ -381,14 +392,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             qrCaptureSession = nil
         } else {
             let location: CGPoint = touches.first!.location(in: sceneView)
-            let hits = self.sceneView.hitTest(location, options: nil)
+            let hits = self.sceneView!.hitTest(location, options: [SCNHitTestOption.boundingBoxOnly: true])
             
             if touches.count < 2 {
                 if let tappedNode = hits.first?.node {
-                    //let matchingObjs = rlmSourceItems.filter( { $0.uuid == tappedNode.name } )
-                    print(tappedNode)
-                    print(tappedNode.name!)
-                    
                     let selno = sceneView.scene.rootNode.childNodes.filter({$0.name == tappedNode.name})
                     
                     if selno.count > 0 {
@@ -498,14 +505,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 hideView: false, aMode: UIView.AnimationOptions.curveEaseIn
             )
             
-            do {
-                try realm.write {
-                    rlmSystem.first?.needsRefresh = false
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-            
         } else {
             ViewAnimation().fade(
                 viewToAnimate: self.loadingView, aDuration: interval,
@@ -514,42 +513,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
         }
         
-        if !rlmSystem.first!.needsRefresh {
+        if rlmSystem.first!.needsRefresh {
             Timer.scheduledTimer(
                 withTimeInterval: TimeInterval(interval), repeats: false,
                 block: {_ in self.manageLoadingScreen(interval: interval + 0.1)
             })
         }
-        
     }
-    
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        print("didFailWithError")
-        print(error)
-        print(error.localizedDescription)
-        
-        if error is ARError {
-            print(error)
-        }
-    }
-    
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        print("ArViewer: sessionWasInterrupted")
 
-        loadingView.isHidden = false
-        loadingView.layer.opacity = 1
-    }
-    
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        print("ArViewer: sessionInterruptionEnded")
-
-        loadingView.isHidden = false
-        loadingView.layer.opacity = 1
-    }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear: Arview")
@@ -557,6 +528,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         loadingView.isHidden = false
         loadingView.layer.opacity = 1
+        
+        
     }
     
     
@@ -576,14 +549,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+        UIOps().updateTabUIMode(tabCtrl: self.tabBarController!)
+        
+        if rlmSystem.first!.needsRefresh && view.isFocused {
+            do {
+                try realm.write {
+                    rlmSystem.first?.needsRefresh = false
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+            
+            refreshScene()
+            updateCameraSettings()
+        }
+    }
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: ArView")
         loadingView.isHidden = false
         loadingView.layer.opacity = 1
-        
+
         UIOps().updateNavUiMode(navCtrl: self.navigationController!)
 
-        
         do {
             try realm.write {
                 rlmSystem.first?.needsRefresh = true
@@ -591,7 +582,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         } catch {
             print("Error: \(error)")
         }
-        
+
         refreshScene()
         manageLoadingScreen(interval: 1)
         updateCameraSettings()
@@ -604,14 +595,15 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         loadingView.isHidden = false
         loadingView.layer.opacity = 1
+        sceneCameraSource = sceneView.scene.background.contents
         
+
         if (self.navigationController != nil) {
             UIOps().updateNavUiMode(navCtrl: self.navigationController!)
         }
 
         initScene()
-        refreshScene()
-
+        
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
         )
@@ -623,20 +615,18 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     func initScene() {
         print("ARScene initScene")
-        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
-
-        updateCameraSettings()
-        
         loadingView.isHidden      = false
         loadingView.layer.opacity = 1
         
-        mainScene       = SCNScene(named: "art.scnassets/main.scn")!
-        sceneView.scene = mainScene
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+
+        updateCameraSettings()
+        mainScene = sceneView.scene // SCNScene(named: "art.scnassets/main.scn")!
         
         sceneView.session.delegate = self
         sceneView.delegate         = self
         sceneView.audioListener    = mainScene.rootNode
-        
+
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
@@ -652,6 +642,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             withTimeInterval: rlmSession.first!.mapUpdateInterval,
             repeats: false, block: {_ in self.mainTimerUpdate()}
         )
+        
+        refreshScene()
     }
     
     
@@ -698,6 +690,36 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    func sessionWasInterrupted(_ session: ARSession) {
+        print("ArViewer: sessionWasInterrupted")
+    }
+    
+    
+    func sessionInterruptionEnded(_ session: ARSession) {
+        print("ArViewer: sessionInterruptionEnded")
+    }
+    
+    
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        print("ArViewer: didUpdateFocus")
+        if rlmSystem.first!.needsRefresh {
+            initScene()
+        }
+    }
+    
+    
+    
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        print("didFailWithError")
+        print(error)
+        print(error.localizedDescription)
+        
+        if error is ARError {
+            print(error)
+        }
+    }
+    
+    
     func positionDemoNodes(ctNode: ContentNode, objData: RLM_Obj) {
         print("positionDemoNodes")
         
@@ -718,7 +740,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             ctNode.position.x, 0, ctNode.position.z
         )
     }
-    
     
 }
 

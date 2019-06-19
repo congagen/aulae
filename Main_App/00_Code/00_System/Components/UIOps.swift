@@ -20,6 +20,9 @@ class UIOps {
     lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
     lazy var rlmChatSession: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
     
+    let lightTintColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.9)
+    let darkTintColor = UIColor.darkText
+    
     
     func updateGlobalTint(window: UIWindow) {
         
@@ -33,32 +36,32 @@ class UIOps {
 
     
     func updateNavUiMode(navCtrl: UINavigationController){
-        print("Dark Mode Nav: " + String(rlmSystem.first?.uiMode == 1))
+        // print("Dark Mode Nav: " + String(rlmSystem.first?.uiMode == 1))
         
         if rlmSystem.first?.uiMode == 1 {
             navCtrl.navigationBar.barStyle      = .black
             navCtrl.navigationBar.isTranslucent = true
-            navCtrl.navigationBar.tintColor     = .white
+            navCtrl.navigationBar.tintColor     = lightTintColor
         } else {
             navCtrl.navigationBar.barStyle      = .default
             navCtrl.navigationBar.isTranslucent = true
-            navCtrl.navigationBar.tintColor     = .black
+            navCtrl.navigationBar.tintColor     = darkTintColor
         }
         
     }
     
 
     func updateTabUIMode(tabCtrl: UITabBarController){
-        print("Dark Mode Tab: " + String(rlmSystem.first?.uiMode == 1))
+        // print("Dark Mode Tab: " + String(rlmSystem.first?.uiMode == 1))
         
         if rlmSystem.first?.uiMode == 1 {
             tabCtrl.tabBar.isTranslucent = true
             tabCtrl.tabBar.barStyle      = .black
-            tabCtrl.tabBar.tintColor     = .white
+            tabCtrl.tabBar.tintColor     = lightTintColor
         } else {
             tabCtrl.tabBar.isTranslucent = true
             tabCtrl.tabBar.barStyle      = .default
-            tabCtrl.tabBar.tintColor     = .black
+            tabCtrl.tabBar.tintColor     = darkTintColor
         }
         
     }

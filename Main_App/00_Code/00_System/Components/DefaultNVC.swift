@@ -29,39 +29,25 @@ class DefaultNVC: UINavigationController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .default
     }
-
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        UIOps().updateNavUiMode(navCtrl: self)
-    }
     
-    override func transition(from fromViewController: UIViewController, to toViewController: UIViewController, duration: TimeInterval, options: UIView.AnimationOptions = [], animations: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
-        UIOps().updateNavUiMode(navCtrl: self)
-        super.viewDidAppear(true)
-    }
     
-    override func didMove(toParent parent: UIViewController?) {
-        UIOps().updateNavUiMode(navCtrl: self)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        UIOps().updateNavUiMode(navCtrl: self)
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        UIOps().updateNavUiMode(navCtrl: self)
-    }
-
     override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear: DefaultNVC")
+        
         UIOps().updateNavUiMode(navCtrl: self)
         super.viewDidAppear(animated)
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
-        UIOps().updateNavUiMode(navCtrl: self)
+        print("viewWillAppear: DefaultNVC")
         super.viewWillAppear(animated)
+
+        UIOps().updateNavUiMode(navCtrl: self)
     }
 
     override func viewDidLoad() {
+        print("viewDidLoad: DefaultNVC")
+
         super.viewDidLoad()
         UIOps().updateNavUiMode(navCtrl: self)
     }

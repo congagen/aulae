@@ -49,13 +49,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var navBar: UINavigationItem!
     
-    
-    @IBAction func closeMapBtnAction(_ sender: UIBarButtonItem) {
-        self.navigationController?.dismiss(animated: true, completion: nil)
-        self.view.removeFromSuperview()
-    }
-    
-
     func handleCancel(alertView: UIAlertAction!)
     {
         print(self.textField?.text! ?? "")
@@ -228,7 +221,9 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
             )
         }
         
-        updateObjectAnnotations()
+        if mapView.selectedAnnotations.count == 0 {
+            updateObjectAnnotations()
+        }
     }
     
     

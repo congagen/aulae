@@ -15,15 +15,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        UIApplication.shared.keyWindow?.tintColor = UIColor.black
+
         return true
     }
 
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        
         print(options.description)
         
         // let sendingAppID = options[.sourceApplication]
-        
+
         let topicString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
         var urlString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
         let msgString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")

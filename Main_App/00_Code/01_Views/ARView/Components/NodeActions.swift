@@ -35,6 +35,13 @@ extension ARViewer {
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         // activityViewController.excludedActivityTypes = [ UIActivityType.airDrop ]
         
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        cancelAction.setValue(UIColor.black, forKey: "titleTextColor")
+        
+        activityViewController.view.tintColor = UIColor.black
+        activityViewController.view.tintColorDidChange()
+        
+        
         self.present(activityViewController, animated: true, completion: nil)
         
     }
@@ -180,7 +187,10 @@ extension ARViewer {
         let hideAction = UIAlertAction(title: "Hide", style: UIAlertAction.Style.default, handler: { _ in self.muteSourceAction(feedID: selNode.feedId) } )
         alert.addAction(hideAction)
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel,  handler: nil ))
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        cancelAction.setValue(UIColor.black, forKey: "titleTextColor")
+        
+        alert.addAction(cancelAction)
         alert.view.tintColor = UIColor.black
         alert.view.tintColorDidChange()
 
