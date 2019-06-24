@@ -19,8 +19,11 @@ class ContentNode: SCNNode {
     var feedName:  String = ""
     var feedTopic: String = ""
     var feedUrl:   String = ""
+    
     var contentLink: String = ""
     var directLink:  Bool = false
+
+    var chatLink: String = ""
     
     var anchor: ARAnchor?
     var location: CLLocation!
@@ -307,6 +310,8 @@ class ContentNode: SCNNode {
         
         addChildNode(node)
     }
+    
+    
     
 }
 

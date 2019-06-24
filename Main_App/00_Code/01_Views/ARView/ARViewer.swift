@@ -15,8 +15,8 @@ import RealmSwift
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let realm = try! Realm()
-    lazy var rlmSystem:      Results<RLM_SysSettings>    = {self.realm.objects(RLM_SysSettings.self)}()
-    lazy var rlmSession:     Results<RLM_Session>        = {self.realm.objects(RLM_Session.self)}()
+    lazy var rlmSystem:      Results<RLM_SysSettings_117>    = {self.realm.objects(RLM_SysSettings_117.self)}()
+    lazy var rlmSession:     Results<RLM_Session_117>        = {self.realm.objects(RLM_Session_117.self)}()
     lazy var rlmChatSession: Results<RLM_ChatSess>       = {self.realm.objects(RLM_ChatSess.self) }()
 
     lazy var rlmFeeds:       Results<RLM_Feed>           = {self.realm.objects(RLM_Feed.self)}()
@@ -163,7 +163,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             let urlPath = URL(fileURLWithPath: fPath)
             let asrc = SCNAudioSource(url: urlPath)
             
-            if (rlmSession.first?.muteAudio)! {
+            if (rlmSystem.first?.muteAudio)! {
                 asrc!.volume = 0
             } else {
                 asrc!.volume = Float(1.0 / objectDistance)
@@ -190,9 +190,32 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func insertSourceObject(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
+    
+    func reloadNodeContent(contentType: String) {
+        if contentType == "" {}
+        
+        if contentType == "" {}
+        
+        if contentType == "" {}
+        
+        if contentType == "" {}
+        
+        if contentType == "" {}
+        
+        if contentType == "" {}
+        
+        if contentType == "" {}
+        
+    }
+    
+    
+    func addSourceNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(objData.uuid))
         print("Adding: " + objData.type.lowercased() + ": " + fPath)
+        
+        if !["", "marker", "text"].contains(objData.filePath) {
+            // if file != EXISTS -> schedule retry and abort load
+        }
 
         let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
@@ -206,7 +229,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             )
         }
         
-        if (rlmSession.first?.distanceScale)! && objData.world_scale {
+        if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
             let nSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
             objSize = SCNVector3(nSize, nSize, nSize)
         } else {
@@ -244,7 +267,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
             if objData.type.lowercased() == "audio" {
                 ctNode.removeAllAudioPlayers()
-                if !(rlmSession.first?.muteAudio)! {
+                if !(rlmSystem.first?.muteAudio)! {
                     ctNode.addSphere(radius: 0.1, and: UIColor(hexColor: objData.hex_color))
                     addAudio( contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x) )
                 }
@@ -307,7 +330,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         rawDeviceGpsCCL          = CLLocation(latitude: rlmSession.first!.currentLat, longitude: rlmSession.first!.currentLng)
         let curPos               = CLLocation(latitude: (rlmSession.first?.currentLat)!, longitude: (rlmSession.first?.currentLng)!)
-        let range                = (rlmSession.first?.searchRadius)!
+        let range                = (rlmSystem.first?.searchRadius)!
         let objsInRange          = objectsInRange(position: curPos, useManualRange: true, manualRange: range)
         let activeObjectsInRange = objsInRange.filter({$0.active && !$0.deleted})
         
@@ -344,20 +367,20 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         
                         if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
                             print("FileManager.default.fileExists")
-                            insertSourceObject(objData: o, source: objFeeds.first!, fPath: (
-                                destinationUrl?.path)!, scaleFactor: (rlmSession.first?.scaleFactor)! )
+                            addSourceNode(objData: o, source: objFeeds.first!, fPath: (
+                                destinationUrl?.path)!, scaleFactor: (rlmSystem.first?.scaleFactor)! )
                         }
                     } else {
                         if (o.type.lowercased() == "text") {
-                            insertSourceObject(
+                            addSourceNode(
                                 objData: o, source: objFeeds.first!, fPath:"",
-                                scaleFactor: (rlmSession.first?.scaleFactor)! )
+                                scaleFactor: (rlmSystem.first?.scaleFactor)! )
                         }
                         
                         if o.type == "demo" {
-                            insertSourceObject(
+                            addSourceNode(
                                 objData: o, source: objFeeds.first!, fPath: o.filePath,
-                                scaleFactor: (rlmSession.first?.scaleFactor)! )
+                                scaleFactor: (rlmSystem.first?.scaleFactor)! )
                         }
                     }
                 }
@@ -366,7 +389,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         do {
             try realm.write {
-                rlmSystem.first?.needsRefresh = false
+                rlmSession.first?.needsRefresh = false
             }
         } catch {
             print("Error: \(error)")
@@ -396,11 +419,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
             if touches.count < 2 {
                 if let tappedNode = hits.first?.node {
+                    
                     let selno = sceneView.scene.rootNode.childNodes.filter({$0.name == tappedNode.name})
                     
                     if selno.count > 0 {
                         if let ctno: ContentNode = (selno.first as? ContentNode) {
                             
+                            // if ctno.info != "" && ctno.contentLink != "" {
                             if (ctno.directLink) && ((ctno.contentLink) != "") {
                                 self.openUrl(scheme: (ctno.contentLink))
                             } else {
@@ -499,7 +524,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("manageLoadingScreen")
         self.loadingView.isHidden = false
         
-        if rlmSystem.first!.needsRefresh {
+        if rlmSession.first!.needsRefresh {
             ViewAnimation().fade(
                 viewToAnimate: self.loadingView, aDuration: interval,
                 hideView: false, aMode: UIView.AnimationOptions.curveEaseIn
@@ -513,7 +538,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
         }
         
-        if rlmSystem.first!.needsRefresh {
+        if rlmSession.first!.needsRefresh {
             Timer.scheduledTimer(
                 withTimeInterval: TimeInterval(interval), repeats: false,
                 block: {_ in self.manageLoadingScreen(interval: interval + 0.1)
@@ -541,7 +566,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         do {
             try realm.write {
-                rlmSystem.first?.needsRefresh = true
+                rlmSession.first?.needsRefresh = true
             }
         } catch {
             print("Error: \(error)")
@@ -579,7 +604,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         do {
             try realm.write {
-                rlmSystem.first?.needsRefresh = true
+                rlmSession.first?.needsRefresh = true
             }
         } catch {
             print("Error: \(error)")
@@ -636,7 +661,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         )
         
         Timer.scheduledTimer(
-            withTimeInterval: rlmSession.first!.mapUpdateInterval,
+            withTimeInterval: rlmSystem.first!.mapUpdateInterval,
             repeats: false, block: {_ in self.mainTimerUpdate()}
         )
         
@@ -650,7 +675,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         updateCameraSettings()
         
-        if rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate {
+        if rlmSession.first!.shouldRefreshView && rlmSystem.first!.autoUpdate {
             print("rlmSession.first!.shouldRefreshView && rlmSession.first!.autoUpdate")
             for fo in rlmSourceItems {
                 if (fo.active && !fo.deleted) {
@@ -670,7 +695,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if !updateTimer.isValid {
             updateTimer = Timer.scheduledTimer(
-                timeInterval: rlmSession.first!.feedUpdateInterval, target: self,
+                timeInterval: rlmSystem.first!.feedUpdateInterval, target: self,
                 selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
         }
         

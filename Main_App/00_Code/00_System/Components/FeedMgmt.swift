@@ -15,7 +15,9 @@ import RealmSwift
 class FeedMgmt {
     
     lazy var realm = try! Realm()
-    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmSession: Results<RLM_Session_117>    = { self.realm.objects(RLM_Session_117.self) }()
+    lazy var rlmSystem: Results<RLM_SysSettings_117> = { self.realm.objects(RLM_SysSettings_117.self) }()
+
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
@@ -350,20 +352,11 @@ class FeedMgmt {
         updateFeedData(feedDbItem: feedDbItem, feedSpec: feedData)
         updateFeedObjects(feedData: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
         
-        if feedData.keys.contains("version") {
-//            if let v: Int = feedData["version"] as? Int {
-//
-//                if v != feedDbItem.version || !checkVersion {
-//                    updateSourceData(feedDbItem: feedDbItem, feedSpec: feedData)
-//                    updateFeedObjects(feedSpec: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
-//                }
-//            }
-        } else {
+        if !feedData.keys.contains("version") {
             do {
                 try realm.write {
                     feedDbItem.errors += 10
                     feedDbItem.active  = false
-                    feedDbItem.name    = "Offline"
                 }
             } catch {
                 print("Error: \(error)")
@@ -401,7 +394,6 @@ class FeedMgmt {
     }
     
     
-    
     func manageFeedUpdate(originalFeedInfo: String, sType: String, fe: RLM_Feed, destinationUrl: URL) {
         if sType == "json" {
             if let URL = URL(string: fe.sourceUrl) {
@@ -415,7 +407,7 @@ class FeedMgmt {
         } else {
             print("Calling Feed API: " + fe.sourceUrl)
             
-            if !rlmSession.first!.showPlaceholders {
+            if !rlmSystem.first!.showPlaceholders {
                 NetworkTools().postReq(
                     completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
                     apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
@@ -444,7 +436,7 @@ class FeedMgmt {
             try realm.write {
                 fe.info = originalFeedInfo
                 fe.updatedUtx = Int( Date().timeIntervalSince1970 )
-                if fe.errors > rlmSession.first!.feedErrorThreshold && !fe.deleted {
+                if fe.errors > rlmSystem.first!.feedErrorThreshold && !fe.deleted {
                     fe.active = false
                 }
             }
@@ -461,7 +453,7 @@ class FeedMgmt {
         print("FeedObjectCount: "   + String(feedObjects.count))
         
         var needsViewRefresh = false
-        let updateInterval = Int((rlmSession.first?.feedUpdateInterval)!) + 1
+        let updateInterval = Int((rlmSystem.first?.feedUpdateInterval)!) + 1
         var shouldUpdate = true
 
         refreshObjects()

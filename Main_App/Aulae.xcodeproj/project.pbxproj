@@ -15,14 +15,14 @@
 		3177252B20B03AD6009FA8B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3177252920B03AD6009FA8B1 /* LaunchScreen.storyboard */; };
 		318FE8F220B0BB730050528B /* HttpDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FE8F120B0BB730050528B /* HttpDownloader.swift */; };
 		318FE8F520B0BDDD0050528B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 318FE8F420B0BDDD0050528B /* MapKit.framework */; };
-		319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA77C20B3FE0C00F99223 /* RLM_Session.swift */; };
+		319AA77D20B3FE0C00F99223 /* RLM_Session_117.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA77C20B3FE0C00F99223 /* RLM_Session_117.swift */; };
 		319AA77F20B418E800F99223 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA77E20B418E800F99223 /* MainVC.swift */; };
 		319AA78120B4356500F99223 /* MapAno.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319AA78020B4356500F99223 /* MapAno.swift */; };
 		319D3F2820D7965B007FEECA /* FeedMgmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D3F2720D7965B007FEECA /* FeedMgmt.swift */; };
 		31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869020B355A30038F4D5 /* FeedsTVC.swift */; };
 		31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869520B3FB040038F4D5 /* MapVC.swift */; };
 		31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D284BE20D3B079004451A6 /* RLM_Feed.swift */; };
-		FA1514D722B27B080012BEA4 /* RLM_SysSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D622B27B080012BEA4 /* RLM_SysSettings.swift */; };
+		FA1514D722B27B080012BEA4 /* RLM_SysSettings_117.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D622B27B080012BEA4 /* RLM_SysSettings_117.swift */; };
 		FA1514D922B289380012BEA4 /* DefaultNVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D822B289380012BEA4 /* DefaultNVC.swift */; };
 		FA1514DB22B2C4010012BEA4 /* ChatMsgActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514DA22B2C4010012BEA4 /* ChatMsgActions.swift */; };
 		FA1514E022B4EEF70012BEA4 /* RLM_ChatIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514DF22B4EEF70012BEA4 /* RLM_ChatIdentity.swift */; };
@@ -88,14 +88,14 @@
 		318FE8F120B0BB730050528B /* HttpDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpDownloader.swift; sourceTree = "<group>"; };
 		318FE8F420B0BDDD0050528B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		318FE8F820B0C3880050528B /* ArkitTest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ArkitTest.entitlements; sourceTree = "<group>"; };
-		319AA77C20B3FE0C00F99223 /* RLM_Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Session.swift; sourceTree = "<group>"; };
+		319AA77C20B3FE0C00F99223 /* RLM_Session_117.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Session_117.swift; sourceTree = "<group>"; };
 		319AA77E20B418E800F99223 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		319AA78020B4356500F99223 /* MapAno.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAno.swift; sourceTree = "<group>"; };
 		319D3F2720D7965B007FEECA /* FeedMgmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedMgmt.swift; sourceTree = "<group>"; };
 		31AB869020B355A30038F4D5 /* FeedsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsTVC.swift; sourceTree = "<group>"; };
 		31AB869520B3FB040038F4D5 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
 		31D284BE20D3B079004451A6 /* RLM_Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Feed.swift; sourceTree = "<group>"; };
-		FA1514D622B27B080012BEA4 /* RLM_SysSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_SysSettings.swift; sourceTree = "<group>"; };
+		FA1514D622B27B080012BEA4 /* RLM_SysSettings_117.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_SysSettings_117.swift; sourceTree = "<group>"; };
 		FA1514D822B289380012BEA4 /* DefaultNVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNVC.swift; sourceTree = "<group>"; };
 		FA1514DA22B2C4010012BEA4 /* ChatMsgActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMsgActions.swift; sourceTree = "<group>"; };
 		FA1514DF22B4EEF70012BEA4 /* RLM_ChatIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_ChatIdentity.swift; sourceTree = "<group>"; };
@@ -356,8 +356,8 @@
 		FAC030CB229C2F40009D1E28 /* System */ = {
 			isa = PBXGroup;
 			children = (
-				FA1514D622B27B080012BEA4 /* RLM_SysSettings.swift */,
-				319AA77C20B3FE0C00F99223 /* RLM_Session.swift */,
+				FA1514D622B27B080012BEA4 /* RLM_SysSettings_117.swift */,
+				319AA77C20B3FE0C00F99223 /* RLM_Session_117.swift */,
 				FAC0A65E22B82B1300C5BC13 /* RLM_CameraSettings.swift */,
 			);
 			path = System;
@@ -510,7 +510,7 @@
 				FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */,
 				FA789D212221629F009DC15F /* FeedSearchTVC.swift in Sources */,
 				31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */,
-				FA1514D722B27B080012BEA4 /* RLM_SysSettings.swift in Sources */,
+				FA1514D722B27B080012BEA4 /* RLM_SysSettings_117.swift in Sources */,
 				FA1514E322B4F0990012BEA4 /* RLM_ChatSess.swift in Sources */,
 				FA6E5ACD221F20D400A5DF17 /* SettingsViewController.swift in Sources */,
 				31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */,
@@ -518,7 +518,7 @@
 				3164AF4A20B47E79009EDA27 /* RLM_Obj.swift in Sources */,
 				FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */,
 				319AA78120B4356500F99223 /* MapAno.swift in Sources */,
-				319AA77D20B3FE0C00F99223 /* RLM_Session.swift in Sources */,
+				319AA77D20B3FE0C00F99223 /* RLM_Session_117.swift in Sources */,
 				FAB2AE7A22088315004D5819 /* TODO.swift in Sources */,
 				FA1934E422247D2B00457C6E /* FeedActions.swift in Sources */,
 				FAF4C9A2223474D500C2F371 /* QrScanner.swift in Sources */,

@@ -15,8 +15,8 @@ import Foundation
 class SettingsViewController: UITableViewController {
 
     let realm = try! Realm()
-    lazy var rlmSystem:  Results<RLM_SysSettings> = { self.realm.objects(RLM_SysSettings.self) }()
-    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmSystem:  Results<RLM_SysSettings_117> = { self.realm.objects(RLM_SysSettings_117.self) }()
+    lazy var rlmSession: Results<RLM_Session_117> = { self.realm.objects(RLM_Session_117.self) }()
     lazy var chatSessions: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
     
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
@@ -184,7 +184,7 @@ class SettingsViewController: UITableViewController {
         
         do {
             try realm.write {
-                rlmSystem.first?.needsRefresh = true
+                rlmSession.first?.needsRefresh = true
             }
         } catch {
             print("Error: \(error)")
@@ -208,28 +208,28 @@ class SettingsViewController: UITableViewController {
                         rlmCamera.first!.saturation             = propValue
 
                     case systemUpdateSpeedParamName:
-                        rlmSession.first!.sysUpdateInterval     = propValue
+                        rlmSystem.first!.sysUpdateInterval      = propValue
                         
                     case feeUpdateSpeedParamName:
-                        rlmSession.first!.feedUpdateInterval    = propValue
+                        rlmSystem.first!.feedUpdateInterval     = propValue
                         
                     case scaleFactorParamName:
-                        rlmSession.first!.scaleFactor           = propValue
+                        rlmSystem.first!.scaleFactor            = propValue
                       
                     case allowAudioParamName:
-                        rlmSession.first?.muteAudio             = Int(propValue) != 1
+                        rlmSystem.first?.muteAudio              = Int(propValue) != 1
                         
                     case darkModeParamName:
                         rlmSystem.first?.uiMode                 = Int(propValue)
                         
                     case useDistanceParamName:
-                        rlmSession.first!.distanceScale         = Int(propValue) == 1
+                        rlmSystem.first!.gpsScaling             = Int(propValue) == 1
                         
                     case autoUpdateParamName:
-                        rlmSession.first!.autoUpdate            = Int(propValue) == 1
+                        rlmSystem.first!.autoUpdate             = Int(propValue) == 1
                         
                     case locationToggleParamName:
-                        rlmSession.first!.showPlaceholders      = Int(propValue) == 1
+                        rlmSystem.first!.showPlaceholders       = Int(propValue) == 1
     
                     case chatUsernameParamName:
                         chatSessions.first?.username            = propString
@@ -247,23 +247,23 @@ class SettingsViewController: UITableViewController {
 
     func updateUI()  {
         
-        feedUpdateSpeedDisplay.text      = String(Int(rlmSession.first!.feedUpdateInterval))
-        feedUpdateSpeedStepper.value     = rlmSession.first!.feedUpdateInterval
+        feedUpdateSpeedDisplay.text      = String(Int(rlmSystem.first!.feedUpdateInterval))
+        feedUpdateSpeedStepper.value     = rlmSystem.first!.feedUpdateInterval
         
-        systemUpdateSpeedDisplay.text    = String(Int(rlmSession.first!.sysUpdateInterval))
-        systemUpdateSpeedStepper.value   = rlmSession.first!.sysUpdateInterval
+        systemUpdateSpeedDisplay.text    = String(Int(rlmSystem.first!.sysUpdateInterval))
+        systemUpdateSpeedStepper.value   = rlmSystem.first!.sysUpdateInterval
         
-        scaleFactorDisplay.text          = String(Int(rlmSession.first!.scaleFactor))
-        scaleFactorStepper.value         = rlmSession.first!.scaleFactor
+        scaleFactorDisplay.text          = String(Int(rlmSystem.first!.scaleFactor))
+        scaleFactorStepper.value         = rlmSystem.first!.scaleFactor
         
-        allowAudioSwitch.isOn            = rlmSession.first!.muteAudio != true
+        allowAudioSwitch.isOn            = rlmSystem.first!.muteAudio != true
 
-        useDistanceSwitch.isOn           = rlmSession.first!.distanceScale == true
+        useDistanceSwitch.isOn           = rlmSystem.first!.gpsScaling == true
 //        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate == true
         
         darkModeSwitch.isOn              = rlmSystem.first?.uiMode == 1
         
-        locationSharingSwitch.isOn       = rlmSession.first!.showPlaceholders == true
+        locationSharingSwitch.isOn       = rlmSystem.first!.showPlaceholders == true
         
 //        cameraIsEnabledSwitch.isOn       = rlmCamera.first?.isEnabled == true
         
@@ -291,7 +291,7 @@ class SettingsViewController: UITableViewController {
         
         do {
             try realm.write {
-                rlmSystem.first?.needsRefresh = false
+                rlmSession.first?.needsRefresh = false
             }
         } catch {
             print("Error: \(error)")
@@ -309,7 +309,7 @@ class SettingsViewController: UITableViewController {
         
         do {
             try realm.write {
-                rlmSystem.first?.needsRefresh = false
+                rlmSession.first?.needsRefresh = false
             }
         } catch {
             print("Error: \(error)")

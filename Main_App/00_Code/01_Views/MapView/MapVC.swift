@@ -23,9 +23,11 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     //let locationManager = CLLocationManager()
 
     lazy var realm = try! Realm()
-    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
-    lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
-    lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    lazy var rlmSession:  Results<RLM_Session_117> = { self.realm.objects(RLM_Session_117.self) }()
+    lazy var rlmSystem:   Results<RLM_SysSettings_117> = { self.realm.objects(RLM_SysSettings_117.self) }()
+
+    lazy var rlmFeeds:    Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
+    lazy var feedObjects: Results<RLM_Obj>  = { self.realm.objects(RLM_Obj.self) }()
 
     var mapInit = 0
     
@@ -97,10 +99,10 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
             longitude: mapView.userLocation.coordinate.longitude
         )
         
-        if (rlmSession.first?.searchRadius)! >= 110000 {
-            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (rlmSession.first?.searchRadius)! - 100000 ))
+        if (rlmSystem.first?.searchRadius)! >= 110000 {
+            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (rlmSystem.first?.searchRadius)! - 100000 ))
         } else {
-            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (rlmSession.first?.searchRadius)! ))
+            userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (rlmSystem.first?.searchRadius)! ))
         }
         
         mapView.addOverlay(userSearchRadiusIndicator)
@@ -113,7 +115,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         do {
             try realm.write {
-                rlmSession.first?.searchRadius = rDistance
+                rlmSystem.first?.searchRadius = rDistance
             }
         } catch {
             print("Error: \(error)")
@@ -144,7 +146,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
 
         let cLoc = CLLocationCoordinate2D( latitude: feObj.lat, longitude: feObj.lng )
         
-        if (rlmSession.first?.searchRadius)! >= 110000 {
+        if (rlmSystem.first?.searchRadius)! >= 110000 {
             userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (feObj.radius) - 100000 ))
         } else {
             userSearchRadiusIndicator = MKCircle(center: cLoc, radius: Double( (feObj.radius) ))
@@ -213,7 +215,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         if !updateTimer.isValid {
             updateTimer = Timer.scheduledTimer(
-                timeInterval: (rlmSession.first?.mapUpdateInterval)!,
+                timeInterval: (rlmSystem.first?.mapUpdateInterval)!,
                 target:   self,
                 selector: #selector(mainUpdate),
                 userInfo: nil,
@@ -350,7 +352,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         updateObjectAnnotations()
         updateMapSearchRadius()
-        updateSearchRadiusDB(rDistance: (rlmSession.first?.searchRadius)!)
+        updateSearchRadiusDB(rDistance: (rlmSystem.first?.searchRadius)!)
     }
 
 }

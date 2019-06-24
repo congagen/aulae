@@ -14,7 +14,8 @@ import Foundation
 class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
     
     let realm = try! Realm()
-    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmSystem: Results<RLM_SysSettings_117> = { self.realm.objects(RLM_SysSettings_117.self) }()
+    lazy var rlmSession: Results<RLM_Session_117> = { self.realm.objects(RLM_Session_117.self) }()
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
@@ -202,8 +203,8 @@ class FeedSearchTVC: UITableViewController, UISearchBarDelegate {
             ]
             
             NetworkTools().postReq(
-                completion: updateSearchResultsComp, apiHeaderValue: (rlmSession.first?.apiHeaderValue)!,
-                apiHeaderFeild: (rlmSession.first?.apiHeaderFeild)!, apiUrl: (rlmSession.first?.feedSearchApi)!,
+                completion: updateSearchResultsComp, apiHeaderValue: (rlmSystem.first?.topicSubApiHeaderV)!,
+                apiHeaderFeild: (rlmSystem.first?.topicSubApiHeaderF)!, apiUrl: (rlmSystem.first?.topicSubApiURL)!,
                 reqParams: payload
             )
         }

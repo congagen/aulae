@@ -10,14 +10,10 @@ import RealmSwift
 import Foundation
 
 
-class RLM_SysSettings: Object {
+class RLM_SysSettings_117: Object {
     
     @objc dynamic var sessionUUID: String        = ""
     @objc dynamic var feedErrorThreshold: Int    = 10
-    
-    @objc dynamic var isUpdatingFeeds: Bool      = false
-    @objc dynamic var isUpdatingObjects: Bool    = false
-    @objc dynamic var needsRefresh: Bool         = false
     
     @objc dynamic var muteAudio: Bool            = false
     @objc dynamic var uiMode: Int                = 0

@@ -15,8 +15,8 @@ import RealmSwift
 class MainVC: UITabBarController, CLLocationManagerDelegate {
 
     lazy var realm = try! Realm()
-    lazy var rlmSystem: Results<RLM_SysSettings> = { self.realm.objects(RLM_SysSettings.self) }()
-    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmSystem: Results<RLM_SysSettings_117> = { self.realm.objects(RLM_SysSettings_117.self) }()
+    lazy var rlmSession: Results<RLM_Session_117> = { self.realm.objects(RLM_Session_117.self) }()
     lazy var rlmChatSession: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
 
     lazy var rlmCamera: Results<RLM_CameraSettings> = { self.realm.objects(RLM_CameraSettings.self) }()
@@ -42,13 +42,13 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         dbGc()
 
         if rlmSession.count > 0 {
-            if mainUpdateTimer.timeInterval != rlmSession.first?.sysUpdateInterval {
+            if mainUpdateTimer.timeInterval != rlmSystem.first?.sysUpdateInterval {
                 mainUpdateTimer.invalidate()
             }
             
             if !mainUpdateTimer.isValid {
                 mainUpdateTimer = Timer.scheduledTimer(
-                    timeInterval: (rlmSession.first?.sysUpdateInterval)!,
+                    timeInterval: (rlmSystem.first?.sysUpdateInterval)!,
                     target: self, selector: #selector(mainUpdate),
                     userInfo: nil, repeats: true)
             }
@@ -60,8 +60,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
         do {
             try realm.write {
-                rlmSession.first!.showPlaceholders = (
-                    CLLocationManager.locationServicesEnabled() && rlmSession.first!.showPlaceholders)
+                rlmSystem.first!.showPlaceholders = (
+                    CLLocationManager.locationServicesEnabled() && rlmSystem.first!.showPlaceholders)
             }
         } catch {
             print("Error: \(error)")
@@ -138,7 +138,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         dbGc()
         
         if rlmSystem.count < 1 {
-            let rlmSys = RLM_SysSettings()
+            let rlmSys = RLM_SysSettings_117()
             do {
                 try realm.write {
                     self.realm.add(rlmSys)
@@ -174,7 +174,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
         if rlmSession.count < 1 {
             
-            let sess = RLM_Session()
+            let sess = RLM_Session_117()
             do {
                 try realm.write {
                     self.realm.add(sess)
@@ -186,7 +186,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             
             quickStartExamples()
             contentExamples()
-            
             resetErrCounts()
             mainUpdate()
             initLocation()

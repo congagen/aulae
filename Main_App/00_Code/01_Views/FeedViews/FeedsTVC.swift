@@ -16,8 +16,8 @@ class FeedsTVC: UITableViewController {
 
     let realm = try! Realm()
     
-    lazy var rlmSystem:     Results<RLM_SysSettings> = { self.realm.objects(RLM_SysSettings.self) }()
-    lazy var rlmSession: Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmSystem: Results<RLM_SysSettings_117> = { self.realm.objects(RLM_SysSettings_117.self) }()
+    lazy var rlmSession: Results<RLM_Session_117> = { self.realm.objects(RLM_Session_117.self) }()
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
 
@@ -99,7 +99,7 @@ class FeedsTVC: UITableViewController {
         
         do {
             try realm.write {
-                rlmSystem.first?.needsRefresh = true
+                rlmSession.first?.needsRefresh = true
             }
         } catch {
             print("Error: \(error)")
@@ -128,6 +128,10 @@ class FeedsTVC: UITableViewController {
             cell.detailTextLabel?.text = String(feed.sourceUrl)
         } else {
             cell.detailTextLabel?.text = feed.info
+        }
+        
+        if feed.errors > 5 {
+            cell.detailTextLabel?.text = "Offline?"
         }
 
         cell.restorationIdentifier = feed.id
@@ -198,7 +202,7 @@ class FeedsTVC: UITableViewController {
         
         do {
             try realm.write {
-                rlmSystem.first?.needsRefresh = true
+                rlmSession.first?.needsRefresh = true
             }
         } catch {
             print("Error: \(error)")
@@ -212,12 +216,12 @@ class FeedsTVC: UITableViewController {
     func handleEnterTopic(alertView: UIAlertAction!) {
         
         if newSourceAlertTextField?.text != nil {
-            feedAct.addNewSource(feedUrl: rlmSession.first!.defaultFeedUrl, feedApiKwd: (self.newSourceAlertTextField?.text)!, refreshExisting: true)
+            feedAct.addNewSource(feedUrl: rlmSystem.first!.defaultFeedUrl, feedApiKwd: (self.newSourceAlertTextField?.text)!, refreshExisting: true)
         }
         
         do {
             try realm.write {
-                rlmSystem.first?.needsRefresh = true
+                rlmSession.first?.needsRefresh = true
             }
         } catch {
             print("Error: \(error)")
@@ -243,7 +247,7 @@ class FeedsTVC: UITableViewController {
     
     func showTopicAlert(aMessage: String?){
         
-        if rlmSession.first!.showPlaceholders {
+        if rlmSystem.first!.showPlaceholders {
             newSourceAlertTextField?.text = ""
         } else {
             newSourceAlertTextField?.text = "You must enable GPS content in order to view topic content"

@@ -22,7 +22,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     lazy var realm = try! Realm()
     
-    lazy var rlmSession:     Results<RLM_Session> = { self.realm.objects(RLM_Session.self) }()
+    lazy var rlmSession:     Results<RLM_Session_117> = { self.realm.objects(RLM_Session_117.self) }()
     lazy var rlmFeeds:       Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects:    Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
@@ -83,7 +83,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
 
     
-    func callApi(message: String, init_session_msg: String = "") {
+    func callApi(message: String) {
         print("callApi")
         
         if rlmChatSession.first!.apiUrl != "" {
@@ -316,11 +316,10 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         let msgCount = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl}).count
         
         if rlmChatSession.first?.apiUrl != "" && msgCount == 0 {
-            callApi(message: "", init_session_msg: rlmSession.first!.sessionUUID)
+            callApi(message: "")
         }
         
         super.viewWillDisappear(false)
-//        self.navigationController?.isNavigationBarHidden = false
         
         if chatTableView != nil {
             chatTableView.reloadData()
@@ -330,9 +329,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("textFieldShouldReturn")
-        sendMessage()
+        
+        if chatInputField.text! != "" {
+            sendMessage()
+        }
+        
         return true
     }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: ChatView")
