@@ -24,12 +24,12 @@ class RLM_SysSettings_117: Object {
     @objc dynamic var searchRadius: Double       = 1000000000
     
     @objc dynamic var scaleFactor: Double        = 5
-    @objc dynamic var gpsScaling: Bool           = true
     @objc dynamic var gpsContent: Bool           = false
+    @objc dynamic var gpsScaling: Bool           = true
     
     @objc dynamic var locationSharing: Bool      = false
+    
     @objc dynamic var autoUpdate: Bool           = false
-    @objc dynamic var backgroundGps: Bool        = false
     @objc dynamic var showPlaceholders: Bool     = true
     
     @objc dynamic var topicSubApiURL: String     = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae"

@@ -306,7 +306,9 @@ class FeedMgmt {
             } catch {
                 print("Error: \(error)")
             }
+            print(feedSpec)
             print("Feed Validation Error: " + String(feedDbItem.sourceUrl))
+            
         }
     }
     
@@ -407,29 +409,17 @@ class FeedMgmt {
         } else {
             print("Calling Feed API: " + fe.sourceUrl)
             
-            if !rlmSystem.first!.showPlaceholders {
-                NetworkTools().postReq(
-                    completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
-                    apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
-                    reqParams: [
-                        "lat": "",
-                        "lng": "",
-                        "kwd": "",
-                        "sid": (rlmSession.first?.sessionUUID)!
-                    ]
-                )
-            } else {
-                NetworkTools().postReq(
-                    completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
-                    apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
-                    reqParams: [
-                        "lat": String(rlmSession.first!.currentLat),
-                        "lng": String(rlmSession.first!.currentLng),
-                        "kwd": String(fe.topicKwd),
-                        "sid": (rlmSession.first?.sessionUUID)!
-                    ]
-                )
-            }
+            NetworkTools().postReq(
+                completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
+                apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
+                reqParams: [
+                    "lat": rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLat) : "0",
+                    "lng": rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLng) : "0",
+                    "kwd": String(fe.topicKwd),
+                    "sid": (rlmSession.first?.sessionUUID)!
+                ]
+            )
+            
         }
         
         do {

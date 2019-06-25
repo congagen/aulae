@@ -247,10 +247,10 @@ class FeedsTVC: UITableViewController {
     
     func showTopicAlert(aMessage: String?){
         
-        if rlmSystem.first!.showPlaceholders {
+        if rlmSystem.first!.locationSharing {
             newSourceAlertTextField?.text = ""
         } else {
-            newSourceAlertTextField?.text = "You must enable GPS content in order to view topic content"
+            newSourceAlertTextField?.text = "Topic sources require location sharing which is currently disabled"
         }
         
         let alert = UIAlertController(
@@ -258,7 +258,6 @@ class FeedsTVC: UITableViewController {
         )
 
         alert.addTextField(configurationHandler: urlConfigurationTextField)
-        
         alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: handleEnterTopic))
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: handleCancel))
         
@@ -272,9 +271,9 @@ class FeedsTVC: UITableViewController {
             title: nil, message: nil, preferredStyle: UIAlertController.Style.alert
         )
         
-        alert.addAction(UIAlertAction(title: "Add URL", style: UIAlertAction.Style.default, handler: { _ in self.showURLAlert(aMessage: "") } ))
-        alert.addAction(UIAlertAction(title: "Add Topic",  style: UIAlertAction.Style.default, handler: { _ in self.showTopicAlert(aMessage: "") } ))
-        alert.addAction(UIAlertAction(title: "Cancel",     style: UIAlertAction.Style.cancel,  handler: handleCancel))
+        alert.addAction(UIAlertAction(title: "Add URL",   style: UIAlertAction.Style.default, handler: { _ in self.showURLAlert(aMessage: "") } ))
+        alert.addAction(UIAlertAction(title: "Add Topic", style: UIAlertAction.Style.default, handler: { _ in self.showTopicAlert(aMessage: "") } ))
+        alert.addAction(UIAlertAction(title: "Cancel",    style: UIAlertAction.Style.cancel,  handler: handleCancel))
         
         alert.view.tintColor = UIColor.black
         self.present(alert, animated: true, completion: nil)

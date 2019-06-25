@@ -20,9 +20,13 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     lazy var rlmChatSession: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
 
     lazy var rlmCamera: Results<RLM_CameraSettings> = { self.realm.objects(RLM_CameraSettings.self) }()
-
     lazy var rlmFeeds: Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
+    
+    let qsFeedId    = ""
+    let demoFeedIdA = ""
+    let demoFeedIdB = ""
+    let demoFeedIdC = ""
     
     let feedMgr = FeedMgmt()
     let locationManager = CLLocationManager()
@@ -58,14 +62,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             self.feedMgr.updateFeeds(checkTimeSinceUpdate: true)
         }
         
-        do {
-            try realm.write {
-                rlmSystem.first!.showPlaceholders = (
-                    CLLocationManager.locationServicesEnabled() && rlmSystem.first!.showPlaceholders)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
 
     }
     
@@ -174,11 +170,11 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
         if rlmSession.count < 1 {
             
-            let sess = RLM_Session_117()
+            let session = RLM_Session_117()
+            
             do {
                 try realm.write {
-                    self.realm.add(sess)
-                    rlmSession.first!.sessionUUID = UUID().uuidString
+                    self.realm.add(session)
                 }
             } catch {
                 print("Error: \(error)")
@@ -186,15 +182,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             
             quickStartExamples()
             contentExamples()
-            resetErrCounts()
-            mainUpdate()
-            initLocation()
-            
-        } else {
-            resetErrCounts()
-            mainUpdate()
-            initLocation()
         }
+        
         
         do {
             try realm.write {
@@ -204,6 +193,10 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             print("Error: \(error)")
         }
         
+        resetErrCounts()
+        mainUpdate()
+        initLocation()
+ 
     }
     
 

@@ -126,6 +126,7 @@ class SettingsViewController: UITableViewController {
         updateUI()
     }
     
+    
     let darkModeParamName = "darkModeState"
     @IBOutlet var darkModeSwitch: UISwitch!
     @IBAction func darkModeSwitchAction(_ sender: UISwitch) {
@@ -133,15 +134,25 @@ class SettingsViewController: UITableViewController {
         saveSettings(propName: darkModeParamName, propValue: boolDouble)
         updateUI()
     }
+
+    
+    let gpsContentParamName = "gpsContent"
+    @IBOutlet var gpsContentSwitch: UISwitch!
+    @IBAction func gpsContentSwitchAction(_ sender: UISwitch) {
+        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+        saveSettings(propName: gpsContentParamName, propValue: boolDouble)
+        updateUI()
+    }
     
     
-    let locationToggleParamName = "animationToggle"
+    let locationSharingParamName = "locationSharing"
     @IBOutlet var locationSharingSwitch: UISwitch!
     @IBAction func locationSharingSwitchAction(_ sender: UISwitch) {
         let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
-        saveSettings(propName: locationToggleParamName, propValue: boolDouble)
+        saveSettings(propName: locationSharingParamName, propValue: boolDouble)
         updateUI()
     }
+    
     
     let cameraIsEnabledParamName   = "cameraIsEnabled"
     @IBOutlet var cameraIsEnabledSwitch: UISwitch!
@@ -228,8 +239,9 @@ class SettingsViewController: UITableViewController {
                     case autoUpdateParamName:
                         rlmSystem.first!.autoUpdate             = Int(propValue) == 1
                         
-                    case locationToggleParamName:
-                        rlmSystem.first!.showPlaceholders       = Int(propValue) == 1
+                    case locationSharingParamName:
+                        rlmSystem.first!.locationSharing        = Int(propValue) == 1
+
     
                     case chatUsernameParamName:
                         chatSessions.first?.username            = propString
@@ -261,9 +273,7 @@ class SettingsViewController: UITableViewController {
         useDistanceSwitch.isOn           = rlmSystem.first!.gpsScaling == true
 //        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate == true
         
-        darkModeSwitch.isOn              = rlmSystem.first?.uiMode == 1
-        
-        locationSharingSwitch.isOn       = rlmSystem.first!.showPlaceholders == true
+        locationSharingSwitch.isOn       = rlmSystem.first!.locationSharing == true
         
 //        cameraIsEnabledSwitch.isOn       = rlmCamera.first?.isEnabled == true
         
@@ -275,6 +285,9 @@ class SettingsViewController: UITableViewController {
         
         camSaturationStepper.value       = rlmCamera.first!.saturation
         camSaturationDisplay.text        = String( Double(round(1000 * camSaturationStepper.value) / 1000))
+        
+        darkModeSwitch.isOn              = rlmSystem.first?.uiMode == 1
+
         
         for state: UIControl.State in [.normal, .highlighted, .disabled, .selected, .focused, .application, .reserved] {
             usernameBtn.setTitle(NSLocalizedString(chatSessions.first!.username, comment: ""), for: state)

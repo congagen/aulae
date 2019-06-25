@@ -178,43 +178,47 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func defualtLatLong(objData: RLM_Obj){
-        do {
-            try realm.write {
-                objData.lat = rlmSession.first!.currentLat
-                objData.lng = rlmSession.first!.currentLng
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-    }
+//    func defualtLatLong(objData: RLM_Obj){
+//        do {
+//            try realm.write {
+//                objData.lat = rlmSession.first!.currentLat
+//                objData.lng = rlmSession.first!.currentLng
+//            }
+//        } catch {
+//            print("Error: \(error)")
+//        }
+//    }
     
     
-    
-    func reloadNodeContent(contentType: String) {
-        if contentType == "" {}
-        
-        if contentType == "" {}
-        
-        if contentType == "" {}
-        
-        if contentType == "" {}
-        
-        if contentType == "" {}
-        
-        if contentType == "" {}
-        
-        if contentType == "" {}
-        
-    }
+//    func reloadNodeContent(contentType: String) {
+//
+//        if contentType == "" {}
+//
+//        if contentType == "" {}
+//
+//        if contentType == "" {}
+//
+//        if contentType == "" {}
+//
+//        if contentType == "" {}
+//
+//        if contentType == "" {}
+//
+//        if contentType == "" {}
+//        
+//    }
     
     
     func addSourceNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(objData.uuid))
         print("Adding: " + objData.type.lowercased() + ": " + fPath)
         
-        if !["", "marker", "text"].contains(objData.filePath) {
-            // if file != EXISTS -> schedule retry and abort load
+        if !["", "marker", "text"].contains(objData.type) && objData.filePath != "" {
+            // TODO: if file != EXISTS -> schedule retry and abort load
+        }
+        
+        if !rlmSystem.first!.locationSharing && objData.world_position {
+            // TODO: Disable worldposition?
         }
 
         let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)

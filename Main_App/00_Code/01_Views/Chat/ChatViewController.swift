@@ -23,6 +23,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     lazy var realm = try! Realm()
     
     lazy var rlmSession:     Results<RLM_Session_117> = { self.realm.objects(RLM_Session_117.self) }()
+    lazy var rlmSystem:     Results<RLM_SysSettings_117> = { self.realm.objects(RLM_SysSettings_117.self) }()
+
     lazy var rlmFeeds:       Results<RLM_Feed> = { self.realm.objects(RLM_Feed.self) }()
     lazy var feedObjects:    Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
@@ -86,6 +88,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     func callApi(message: String) {
         print("callApi")
         
+        var lat = 0
+        var lng = 0
+        
+        if rlmSystem.first!.locationSharing {
+            lat = Int(rlmSession.first!.currentLat)
+            lng = Int(rlmSession.first!.currentLng)
+        }
+        
         if rlmChatSession.first!.apiUrl != "" {
             NetworkTools().postReq(
                 completion: { r in self.handleResponseText(result: r) }, apiHeaderValue: apiHeaderValue,
@@ -95,8 +105,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
                     "agent_id": rlmChatSession.first!.agentId,
                     
                     "sid":  (rlmSession.first?.sessionUUID)!,
-                    "lat":  String(Int(rlmSession.first!.currentLat)),
-                    "lng":  String(Int(rlmSession.first!.currentLng)),
+                    "lat":  String(lat),
+                    "lng":  String(lng),
                     
                     "chat_msg": message
                 ]
