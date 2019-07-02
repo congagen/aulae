@@ -5,7 +5,7 @@ class RLM_Obj: Object {
     
     @objc dynamic var title:       String = ""
     @objc dynamic var name:        String = ""
-    @objc dynamic var version:     Int = 0
+    @objc dynamic var version:     Int    = 0
 
     @objc dynamic var feedId:      String = ""
     @objc dynamic var uuid:        String = ""
@@ -13,9 +13,9 @@ class RLM_Obj: Object {
     @objc dynamic var type:        String = ""
     @objc dynamic var info:        String = ""
     
-    @objc dynamic var demo:        Bool = false
-    @objc dynamic var active:      Bool = true
-    @objc dynamic var deleted:     Bool = false
+    @objc dynamic var demo:        Bool   = false
+    @objc dynamic var active:      Bool   = true
+    @objc dynamic var deleted:     Bool   = false
 
     @objc dynamic var contentUrl:  String = ""
     @objc dynamic var contentLink: String = ""
@@ -27,10 +27,10 @@ class RLM_Obj: Object {
     @objc dynamic var text:        String = ""
     @objc dynamic var font:        String = ""
     
-    @objc dynamic var instance:    Bool = false
+    @objc dynamic var instance:    Bool   = false
     
     @objc dynamic var hex_color:   String = "7259ff"
-    @objc dynamic var style:       Int = 0
+    @objc dynamic var style:       Int    = 0
     @objc dynamic var mode:        String = "free"
     
     @objc dynamic var rotate:      Double = 0

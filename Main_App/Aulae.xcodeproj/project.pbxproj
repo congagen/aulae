@@ -376,9 +376,9 @@
 		FAD6562522B69DBF00F1F56A /* Content */ = {
 			isa = PBXGroup;
 			children = (
-				3164AF4920B47E79009EDA27 /* RLM_Obj.swift */,
-				FAD6562322B69D4F00F1F56A /* RLM_SourceContent.swift */,
 				31D284BE20D3B079004451A6 /* RLM_Feed.swift */,
+				FAD6562322B69D4F00F1F56A /* RLM_SourceContent.swift */,
+				3164AF4920B47E79009EDA27 /* RLM_Obj.swift */,
 			);
 			path = Content;
 			sourceTree = "<group>";

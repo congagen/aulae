@@ -32,7 +32,7 @@ class FeedsTVC: UITableViewController {
     let activeColor    = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 1)
     let nonActiveColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.2)
     
-    var newSourceAlertTextField: UITextField? = nil
+    var alertTextField: UITextField? = nil
     var selected: RLM_Feed? = nil
     
     
@@ -68,7 +68,7 @@ class FeedsTVC: UITableViewController {
     
     func handleCancel(alertView: UIAlertAction!)
     {
-        print(self.newSourceAlertTextField?.text! ?? "")
+        print(self.alertTextField?.text! ?? "")
     }
     
     
@@ -188,16 +188,16 @@ class FeedsTVC: UITableViewController {
     func urlConfigurationTextField(textField: UITextField!)
     {
         if let _ = textField {
-            self.newSourceAlertTextField = textField!
+            self.alertTextField = textField!
             textField.text! = ""
         }
     }
     
     func handleEnterURL(alertView: UIAlertAction!) {
         
-        if newSourceAlertTextField?.text != nil {
+        if alertTextField?.text != nil {
             feedAct.addNewSource(
-                feedUrl: (self.newSourceAlertTextField?.text)!, feedApiKwd: "", refreshExisting: true)
+                feedUrl: (self.alertTextField?.text)!, feedApiKwd: "", refreshExisting: true)
         }
         
         do {
@@ -215,8 +215,8 @@ class FeedsTVC: UITableViewController {
     
     func handleEnterTopic(alertView: UIAlertAction!) {
         
-        if newSourceAlertTextField?.text != nil {
-            feedAct.addNewSource(feedUrl: rlmSystem.first!.defaultFeedUrl, feedApiKwd: (self.newSourceAlertTextField?.text)!, refreshExisting: true)
+        if alertTextField?.text != nil {
+            feedAct.addNewSource(feedUrl: rlmSystem.first!.defaultFeedUrl, feedApiKwd: (self.alertTextField?.text)!, refreshExisting: true)
         }
         
         do {
@@ -248,13 +248,13 @@ class FeedsTVC: UITableViewController {
     func showTopicAlert(aMessage: String?){
         
         if rlmSystem.first!.locationSharing {
-            newSourceAlertTextField?.text = ""
+            alertTextField?.text = ""
         } else {
-            newSourceAlertTextField?.text = "Topic sources require location sharing which is currently disabled"
+            alertTextField?.text = "Topic sources require location sharing which is currently disabled"
         }
         
         let alert = UIAlertController(
-            title: "Topic", message: newSourceAlertTextField?.text, preferredStyle: UIAlertController.Style.alert
+            title: "Topic", message: alertTextField?.text, preferredStyle: UIAlertController.Style.alert
         )
 
         alert.addTextField(configurationHandler: urlConfigurationTextField)
@@ -283,9 +283,9 @@ class FeedsTVC: UITableViewController {
     func renameConfigurationTextField(textField: UITextField!)
     {
         if let _ = textField {
-            self.newSourceAlertTextField = textField!
+            self.alertTextField = textField!
             if selected != nil {
-                self.newSourceAlertTextField?.text = selected?.name
+                self.alertTextField?.text = selected?.name
             }
         }
     }
@@ -320,8 +320,8 @@ class FeedsTVC: UITableViewController {
         
         do {
             try realm.write {
-                if newSourceAlertTextField?.text != nil {
-                    feed.customMarkerUrl = (self.newSourceAlertTextField?.text)!
+                if alertTextField?.text != nil {
+                    feed.customMarkerUrl = (self.alertTextField?.text)!
                 }
             }
         } catch {
@@ -330,14 +330,60 @@ class FeedsTVC: UITableViewController {
     }
     
     
-    func editMarketAction(topicSource: RLM_Feed) {
+    func storeMarkerIconFilePath(feedDBItem: RLM_Feed, markerImagePath: URL) {
+        print("storeThumb")
+        
+        do {
+            try realm.write {
+                feedDBItem.sb = markerImagePath.path
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    
+    func downloadMarkerIcon(feedDBItem: RLM_Feed, fileName: String) {
+        print("Download Marker Icon")
+        
+        do {
+            try realm.write {
+                if alertTextField?.text != nil {
+                    feedDBItem.sa = (self.alertTextField?.text)!
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        let markerIconUrl   = URL(string: feedDBItem.sa)
+        let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+        let fileName        = feedDBItem.id + String(feedDBItem.id) + "_" + (markerIconUrl?.lastPathComponent)!
+        let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
+
+        let httpDl = HttpDownloader()
+        let _ = httpDl.loadFileAsync(
+            prevFeedUid: "",
+            removeExisting: true, url: markerIconUrl!, destinationUrl: destinationUrl!,
+            completion: { DispatchQueue.main.async {
+                self.storeMarkerIconFilePath(feedDBItem: feedDBItem, markerImagePath: destinationUrl!) } }
+        )
+        
+    }
+    
+    
+    func editMarkerIcon(topicSource: RLM_Feed) {
         
         let alert = UIAlertController(
-            title: "Marker URL", message: nil, preferredStyle: UIAlertController.Style.alert
+            title: "Enter your custom image url (PNG / JPG)", message: "", preferredStyle: UIAlertController.Style.alert
         )
         
         alert.addTextField(configurationHandler: urlConfigurationTextField)
-        alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: { _ in self.handleEditMarketImage(feed: topicSource) } ))
+        alert.addAction(UIAlertAction(
+            title: "Ok",
+            style: UIAlertAction.Style.default,
+            handler: { _ in self.downloadMarkerIcon(feedDBItem: topicSource, fileName: topicSource.sourceUrl) }
+        ))
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,  handler: nil ))
         
         alert.view.tintColor = UIColor.black
@@ -371,21 +417,19 @@ class FeedsTVC: UITableViewController {
         }
         deleteAction.backgroundColor = UIColor.black
         
-        let editMarkerAction = UITableViewRowAction(style: .normal, title: "Marker") { (rowAction, indexPath) in
-            self.editMarketAction(topicSource: self.selected!)
+        let editMarkerAction = UITableViewRowAction(style: .normal, title: "Customize") { (rowAction, indexPath) in
+            self.editMarkerIcon(topicSource: self.selected!)
         }
         editMarkerAction.backgroundColor = UIColor.black
         
-//        if self.selected != nil {
-//            if (self.selected?.topicKwd.count)! > 2 {
-//                // return [shareAction, deleteAction, editMarkerAction]
-//                return [shareAction, deleteAction]
-//            } else {
-//                return [shareAction, deleteAction]
-//            }
+//        if selected?.topicKwd != "" {
+//            return [shareAction, deleteAction, editMarkerAction]
+//        } else {
+//            return [shareAction, deleteAction]
 //        }
         
         return [shareAction, deleteAction]
+        
     }
 
     

@@ -23,9 +23,9 @@ extension MainVC {
         if rlmFeeds.filter({ $0.sourceUrl == demoSrcA }).count == 0 {
             let apiDemoFeed = RLM_Feed()
             apiDemoFeed.sourceUrl = demoSrcA
-            apiDemoFeed.id   = "Demo Source A"
-            apiDemoFeed.name = "Demo Source A"
-            apiDemoFeed.info = "Demo Source A"
+            apiDemoFeed.id   = "Example Source A"
+            apiDemoFeed.name = "Example Source A"
+            apiDemoFeed.info = "Example Source A"
             apiDemoFeed.active = false
             
             do {
@@ -40,9 +40,9 @@ extension MainVC {
         if rlmFeeds.filter({ $0.sourceUrl == demoSrcB }).count == 0 {
             let typeDemoFeed = RLM_Feed()
             typeDemoFeed.sourceUrl = demoSrcB
-            typeDemoFeed.id   = "Demo Source B"
-            typeDemoFeed.name = "Demo Source B"
-            typeDemoFeed.info = "Demo Source B"
+            typeDemoFeed.id   = "Example Source B"
+            typeDemoFeed.name = "Example Source B"
+            typeDemoFeed.info = "Example Source B"
             typeDemoFeed.active = false
             
             do {
@@ -57,9 +57,9 @@ extension MainVC {
         if rlmFeeds.filter({ $0.sourceUrl == demoSrcC }).count == 0 {
             let asciiDemo = RLM_Feed()
             asciiDemo.sourceUrl = demoSrcC
-            asciiDemo.id   = "Demo Source C"
-            asciiDemo.name = "Demo Source C"
-            asciiDemo.info = "Demo Source C"
+            asciiDemo.id   = "Example Source C"
+            asciiDemo.name = "Example Source C"
+            asciiDemo.info = "Example Source C"
             asciiDemo.active = false
             
             do {

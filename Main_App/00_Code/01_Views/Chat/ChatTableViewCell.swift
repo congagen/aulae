@@ -17,12 +17,12 @@ class ChatTableViewCell: UITableViewCell {
     var leadingConstraint:  NSLayoutConstraint!
     var trailingConstraint: NSLayoutConstraint!
     
-    var outBubbleColor       = UIColor(displayP3Red: 0.5, green: 0.6, blue: 1.0, alpha: 0.7)
-    var incommingBubbleColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.7)
+    var outBubbleColor       = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.95)
+    var incommingBubbleColor = UIColor(displayP3Red: 0.2, green: 1, blue: 0.25, alpha: 0.95)
     
     var isIncomming: Bool! {
         didSet {
-            bubbleBackgroundView.backgroundColor = isIncomming ? outBubbleColor : incommingBubbleColor
+            bubbleBackgroundView.backgroundColor = isIncomming ? incommingBubbleColor : outBubbleColor
             leadingConstraint.isActive = !isIncomming
             trailingConstraint.isActive = isIncomming
         }

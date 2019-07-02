@@ -33,13 +33,13 @@ class FeedMgmt {
         print("refreshObjects")
         
         for o in feedObjects {
-            let objectFeeds = rlmFeeds.filter({ $0.id == o.feedId})
+            let objectSources = rlmFeeds.filter({$0.id == o.feedId})
             
             do {
                 try realm.write {
-                    if objectFeeds.count > 0 {
-                        o.deleted = (objectFeeds.first?.deleted)!
-                        o.active  = (objectFeeds.first?.active)!
+                    if objectSources.count > 0 {
+                        o.deleted = (objectSources.first?.deleted)!
+                        o.active  = (objectSources.first?.active)!
                     } else {
                         o.deleted = true
                         o.active  = false
@@ -156,6 +156,7 @@ class FeedMgmt {
         let currentFeedObjects = feedObjects.filter( {$0.feedId == feedId})
         
         for o in currentFeedObjects {
+            print(o.isInvalidated)
             do {
                 try realm.write {
                     o.uuid = prevFeedUid
@@ -181,14 +182,15 @@ class FeedMgmt {
                 let objData: [String : Any] = [
                     "name":              valueIfPresent(dict: itemSpec, key: "name",      placeHolderValue: String(feedObjects.count)),
                     "id":                valueIfPresent(dict: itemSpec, key: "id",        placeHolderValue: objUid),
+                    "version":           valueIfPresent(dict: itemSpec, key: "version",   placeHolderValue: 1),
+                    "info":              valueIfPresent(dict: itemSpec, key: "info",      placeHolderValue: ""),
+
                     "uuid":              objUid,
                     "feed_id":           feedId,
                     
                     "type":              itemContentType,
                     "url":               remoteContentUrl,
-                    
 
-                    "version":           valueIfPresent(dict: itemSpec, key: "version",   placeHolderValue: 1),
                     "billboard":         valueIfPresent(dict: itemSpec, key: "billboard", placeHolderValue: true),
 
                     "style":             valueIfPresent(dict: itemSpec, key: "style",     placeHolderValue: 1) as! Int,
@@ -199,7 +201,6 @@ class FeedMgmt {
                     "direct_link":       valueIfPresent(dict: itemSpec, key: "direct_link", placeHolderValue: false),
                     "chat_url":          valueIfPresent(dict: itemSpec, key: "chat_url",   placeHolderValue: ""),
 
-                    "info":              valueIfPresent(dict: itemSpec, key: "info",      placeHolderValue: ""),
                     "text":              valueIfPresent(dict: itemSpec, key: "text",      placeHolderValue: ""),
                     "font":              valueIfPresent(dict: itemSpec, key: "font",      placeHolderValue: ""),
                     "instance":          valueIfPresent(dict: itemSpec, key: "instance",  placeHolderValue: true),
@@ -396,38 +397,37 @@ class FeedMgmt {
     }
     
     
-    func manageFeedUpdate(originalFeedInfo: String, sType: String, fe: RLM_Feed, destinationUrl: URL) {
+    func manageSourceUpdate(originalFeedInfo: String, sType: String, feedData: RLM_Feed, customMarkerPath: String, destinationUrl: URL) {
         if sType == "json" {
-            if let URL = URL(string: fe.sourceUrl) {
-                print("Downloading Feed JSON: " + fe.sourceUrl)
+            if let URL = URL(string: feedData.sourceUrl) {
+                print("Downloading Feed JSON: " + feedData.sourceUrl)
                 let _ = httpDl.loadFileAsync(
                     prevFeedUid: "",
                     removeExisting: true, url: URL as URL, destinationUrl: destinationUrl,
-                    completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl, feedDbItem: fe) } }
+                    completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl, feedDbItem: feedData) } }
                 )
             }
         } else {
-            print("Calling Feed API: " + fe.sourceUrl)
+            print("Calling Feed API: " + feedData.sourceUrl)
             
             NetworkTools().postReq(
-                completion: { r in self.storeFeedApi(result: r, feedDbItem: fe) }, apiHeaderValue: apiHeaderValue,
-                apiHeaderFeild: apiHeaderFeild, apiUrl: fe.sourceUrl,
+                completion: { r in self.storeFeedApi(result: r, feedDbItem: feedData) }, apiHeaderValue: apiHeaderValue,
+                apiHeaderFeild: apiHeaderFeild, apiUrl: feedData.sourceUrl,
                 reqParams: [
                     "lat": rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLat) : "0",
                     "lng": rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLng) : "0",
-                    "kwd": String(fe.topicKwd),
+                    "kwd": String(feedData.topicKwd),
                     "sid": (rlmSession.first?.sessionUUID)!
                 ]
             )
-            
         }
         
         do {
             try realm.write {
-                fe.info = originalFeedInfo
-                fe.updatedUtx = Int( Date().timeIntervalSince1970 )
-                if fe.errors > rlmSystem.first!.feedErrorThreshold && !fe.deleted {
-                    fe.active = false
+                feedData.info = originalFeedInfo
+                feedData.updatedUtx = Int( Date().timeIntervalSince1970 )
+                if feedData.errors > rlmSystem.first!.feedErrorThreshold && !feedData.deleted {
+                    feedData.active = false
                 }
             }
         } catch {
@@ -452,9 +452,9 @@ class FeedMgmt {
             // let feedName = fe.name
             let feedInfo = fe.info
 
-            print("Updating Feed: " + fe.name)
-            print("Feed ID:       " + String(fe.id))
-            print("Feed URL:      " + fe.sourceUrl)
+            print("Updating Feed: "  + fe.name)
+            print("Feed ID:       "  + String(fe.id))
+            print("Feed URL:      "  + fe.sourceUrl)
             
             do {
                 try realm.write {
@@ -479,7 +479,8 @@ class FeedMgmt {
             if fe.active && !fe.deleted && shouldUpdate && fe.sourceUrl != "" {
                 let feedUrl      = URL(string: fe.sourceUrl)
                 let feedExt      = feedUrl?.pathExtension.lowercased()
-                
+                let customMarkerImageUrl = fe.sa
+
                 let fileName       = fe.id + ".json"
                 let documentsUrl   = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                 let destinationUrl = documentsUrl.appendingPathComponent(fileName)
@@ -502,7 +503,10 @@ class FeedMgmt {
                 
                 print("sType: " + sType)
                 
-                manageFeedUpdate(originalFeedInfo: feedInfo, sType: sType, fe: fe, destinationUrl: destinationUrl!)
+                manageSourceUpdate(
+                    originalFeedInfo: feedInfo, sType: sType, feedData: fe,
+                    customMarkerPath: customMarkerImageUrl, destinationUrl: destinationUrl!
+                )
                 
                 needsViewRefresh = true
             }

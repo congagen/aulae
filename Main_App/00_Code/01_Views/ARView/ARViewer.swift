@@ -210,106 +210,128 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func addSourceNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
-        print("AddContentToScene: " + String(objData.uuid))
-        print("Adding: " + objData.type.lowercased() + ": " + fPath)
+        var isOK = true
         
-        if !["", "marker", "text"].contains(objData.type) && objData.filePath != "" {
-            // TODO: if file != EXISTS -> schedule retry and abort load
+        if !objData.isInvalidated && !source.isInvalidated {
+            print("AddContentToScene: " + String(objData.uuid))
+            print("Adding: " + objData.type.lowercased() + ": " + fPath)
+        } else {
+            isOK = false // Find and update object?
         }
         
         if !rlmSystem.first!.locationSharing && objData.world_position {
-            // TODO: Disable worldposition?
-        }
-
-        let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
-        let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-        var objectPos         = SCNVector3(objData.x_pos, objData.y_pos, objData.z_pos)
-        var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
-        
-        if objData.world_position {
-            objectPos = getNodeWorldPosition(
-                objectDistance: objectDistance, baseOffset: 0.0,
-                contentObj: objData, scaleFactor: scaleFactor
-            )
+            isOK = false  // isOK false if xyz == 0?
         }
         
-        if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
-            let nSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
-            objSize = SCNVector3(nSize, nSize, nSize)
-        } else {
-            if (objData.type == "text" || objData.type == "audio" || objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
-        }
-        
-        let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, info: objData.info, location: rawObjectGpsCCL)
-        ctNode.feedUrl     = source.sourceUrl
-        ctNode.feedName    = source.name
-        ctNode.feedTopic   = source.topicKwd
-        ctNode.contentLink = objData.contentLink
-        ctNode.directLink  = objData.directLink
-        
-        if fPath != "" && objData.type.lowercased() != "text" {
-//             ***************************************************************
-//             TODO Add loading indicator and schedule retry if not present
-//             ***************************************************************
-            
-//            if objData.filePath != "" && objData.type.lowercased() != "marker" && objData.type.lowercased() != "audio" {
-//                if objData.type.lowercased() == "loadingSpinner" { ctNode.addGif(fPath:   fPath, objectData: objData) }
-//            } else {
-//
+//        if isOK {
+//            if !["", "marker", "text"].contains(objData.type) && objData.filePath != "" {
+//                // TODO: if file != EXISTS -> schedule retry and abort load
+//                if !FileManager.default.fileExists(atPath: URL(fileURLWithPath: objData.filePath).path) {
+//                    isOK = false
+//                    Timer.scheduledTimer(
+//                        withTimeInterval: 1, repeats: false, block: {
+//                            _ in  self.addSourceNode(objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor)
+//                        }
+//                    )
+//                }
 //            }
+//        }
+        
+        if isOK {
+            let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
+            let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+            var objectPos         = SCNVector3(objData.x_pos, objData.y_pos, objData.z_pos)
+            var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
             
-            if objData.type.lowercased() == "demo"   { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
-            if objData.type.lowercased() == "obj"    { ctNode.addObj(fPath:   fPath, objectData: objData) }
-            if objData.type.lowercased() == "usdz"   { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
-            if objData.type.lowercased() == "image"  { ctNode.addImage(fPath: fPath, objectData: objData) }
-            if objData.type.lowercased() == "gif"    { ctNode.addGif(fPath:   fPath, objectData: objData) }
-            
-            if objData.type.lowercased() == "marker" {
-                let mR = 0.05 + CGFloat( (((objectDistance) + 1)) / ( (objectDistance) + 1) )
-                ctNode.addSphere(radius: mR, and: UIColor(hexColor: objData.hex_color))
+            if objData.world_position {
+                objectPos = getNodeWorldPosition(
+                    objectDistance: objectDistance, baseOffset: 0.0,
+                    contentObj: objData, scaleFactor: scaleFactor
+                )
             }
             
-            if objData.type.lowercased() == "audio" {
-                ctNode.removeAllAudioPlayers()
-                if !(rlmSystem.first?.muteAudio)! {
-                    ctNode.addSphere(radius: 0.1, and: UIColor(hexColor: objData.hex_color))
-                    addAudio( contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x) )
+            if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
+                let nSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+                objSize = SCNVector3(nSize, nSize, nSize)
+            } else {
+                if (objData.type == "text" || objData.type == "audio" || objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
+            }
+            
+            let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, info: objData.info, location: rawObjectGpsCCL)
+            ctNode.feedUrl     = source.sourceUrl
+            ctNode.feedName    = source.name
+            ctNode.feedTopic   = source.topicKwd
+            ctNode.contentLink = objData.contentLink
+            ctNode.directLink  = objData.directLink
+            
+            if !["", "marker", "text"].contains(objData.type.lowercased()) {
+                
+                if FileManager.default.fileExists(atPath: URL(fileURLWithPath: fPath).path) {
+                    if objData.type.lowercased() == "demo"   { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
+                    if objData.type.lowercased() == "obj"    { ctNode.addObj(fPath:   fPath, objectData: objData) }
+                    if objData.type.lowercased() == "usdz"   { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
+                    if objData.type.lowercased() == "image"  { ctNode.addImage(fPath: fPath, objectData: objData) }
+                    if objData.type.lowercased() == "gif"    { ctNode.addGif(fPath:   fPath, objectData: objData) }
+                    
+                    if objData.type.lowercased() == "audio" {
+                        ctNode.removeAllAudioPlayers()
+                        if !(rlmSystem.first?.muteAudio)! {
+                            ctNode.addSphere(radius: 0.03, and: UIColor(hexColor: objData.hex_color))
+                            addAudio(
+                                contentObj: objData, objectDistance: objectDistance,
+                                audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x) )
+                        }
+                    }
+                } else {
+                    ctNode.addSphere(radius: 0.5, and: UIColor(hexColor: "ffffff"))
+                    objSize = SCNVector3(0.05, 0.05, 0.05)
+                }
+            
+            } else {
+                
+                if objData.type.lowercased() == "marker" {
+                    let mR = 0.05 + CGFloat( (objectDistance + 1) / (objectDistance + 1) )
+                    let cusomMarketImagePath = source.sb
+                    
+                    if FileManager.default.fileExists(atPath: URL(fileURLWithPath: cusomMarketImagePath).path) && cusomMarketImagePath != "" {
+                        ctNode.addImage(fPath: cusomMarketImagePath, objectData: objData)
+                    } else {
+                        ctNode.addSphere(radius: 1, and: UIColor(hexColor: objData.hex_color))
+                    }
+                }
+                
+                if objData.type.lowercased() == "text" {
+                    ctNode.addText(
+                        objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
+                        fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
                 }
             }
             
-        } else {
-            if objData.type.lowercased() == "text" {
-                ctNode.addText(
-                    objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
-                    fontSize: 1, color: UIColor(hexColor: objData.hex_color) )
+            if objData.billboard {
+                let constraint      = SCNBillboardConstraint()
+                constraint.freeAxes = [.Y]
+                ctNode.constraints  = [constraint]
+            }
+        
+            ctNode.name        = String(objData.uuid)
+            ctNode.position    = SCNVector3(objectPos.x, objectPos.y, objectPos.z)
+            ctNode.scale       = objSize
+            
+            if objData.demo {
+                positionDemoNodes(ctNode: ctNode, objData: objData)
+                ctNode.scale    = SCNVector3(1, 1, 1)
             } else {
-                ctNode.addSphere(radius: 0.01, and: UIColor.blue)
+                if !objData.world_position && objData.localOrient {
+                    let ori = sceneView.pointOfView?.orientation
+                    let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+                    ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+                }
             }
-        }
         
-        if objData.billboard {
-            let constraint      = SCNBillboardConstraint()
-            constraint.freeAxes = [.Y]
-            ctNode.constraints  = [constraint]
+            ctNode.tagComponents(nodeTag: String(objData.uuid))
+            sceneView.scene.rootNode.addChildNode(ctNode)
+            
         }
-    
-        ctNode.name        = String(objData.uuid)
-        ctNode.position    = SCNVector3(objectPos.x, objectPos.y, objectPos.z)
-        ctNode.scale       = objSize
-        
-        if objData.demo {
-            positionDemoNodes(ctNode: ctNode, objData: objData)
-            ctNode.scale    = SCNVector3(1, 1, 1)
-        } else {
-            if !objData.world_position && objData.localOrient {
-                let ori = sceneView.pointOfView?.orientation
-                let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
-                ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-            }
-        }
-    
-        ctNode.tagComponents(nodeTag: String(objData.uuid))
-        sceneView.scene.rootNode.addChildNode(ctNode)
     }
     
     
@@ -369,11 +391,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         let fileName = (URL(string: o.filePath)?.lastPathComponent)!
                         let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                         
-                        if (FileManager.default.fileExists(atPath: (destinationUrl?.path)! )) {
-                            print("FileManager.default.fileExists")
-                            addSourceNode(objData: o, source: objFeeds.first!, fPath: (
-                                destinationUrl?.path)!, scaleFactor: (rlmSystem.first?.scaleFactor)! )
-                        }
+                        addSourceNode(objData: o, source: objFeeds.first!, fPath: (
+                            destinationUrl?.path)!, scaleFactor: (rlmSystem.first?.scaleFactor)!
+                        )
+        
                     } else {
                         if (o.type.lowercased() == "text") {
                             addSourceNode(

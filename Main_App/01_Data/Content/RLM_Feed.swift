@@ -14,6 +14,7 @@ class RLM_Feed: Object {
     @objc dynamic var customMarkerUrl: String = ""
     
     @objc dynamic var sourceUrl: String = ""
+    
     @objc dynamic var apiKey: String = ""
     @objc dynamic var apiKeyValue: String = ""
     
@@ -34,15 +35,15 @@ class RLM_Feed: Object {
     @objc dynamic var lng: Double = 0
     
     @objc dynamic var da: Double = 0
-    @objc dynamic var ba: Bool = false
-    @objc dynamic var sa: String = ""
-    
     @objc dynamic var db: Double = 0
-    @objc dynamic var bb: Bool = false
-    @objc dynamic var sb: String = ""
-    
     @objc dynamic var dc: Double = 0
+    
+    @objc dynamic var ba: Bool = false
+    @objc dynamic var bb: Bool = false
     @objc dynamic var bc: Bool = false
+    
+    @objc dynamic var sa: String = ""
+    @objc dynamic var sb: String = ""
     @objc dynamic var sc: String = ""
     
     @objc dynamic var radius: Double = 1000000000

@@ -1,15 +1,24 @@
 
 // URGENT:
 
-//      Fix Demo Bugs
-//      RLM_Session: showPlaceholders -> LocationSharing
+//      Marker Default -> Image
+
+//      Loding Spinner + Retry Schedule if [Data is missing || Still in transit]
+//      Custom Icon for topic sources
+//      ObjId: SourceURL + ObjUrl + ObjId  (Handle ObjID count > 1?)
+//      Version / UTX Bugs
+//      Version / UTX Docs
+
+//      Feed Radius?
+//      XYZ billboard?
+
+//      Source API -> Source List ( Max number? )
 
 //      Instance Mgmt
 //      Make un-selectable Non-Blocking
-//      Floor/Wall Mode
+//      Floor / Wall Mode
 //      SCN / Particle Systems?
 
-//      Loding Spinner + Retry Schedule if [Data is missing || Still in transit]
 //      API Param isInteractive -> Selectable,?
 
 //      Launchscreen Logo
