@@ -23,11 +23,6 @@ class DbOps {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     
-    func migrate() {
-        
-    }
-    
-    
     func dbGc(reset: Bool) {
         
         do {

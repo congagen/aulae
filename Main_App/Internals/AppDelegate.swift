@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Realm
+import RealmSwift
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,9 +17,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     
+    func migrateRealm(){
+        let realmConfUrl = Realm.Configuration.defaultConfiguration.fileURL!
+        var currentVersion: UInt64 = 0
+        
+        do {
+            currentVersion = try schemaVersionAtURL(realmConfUrl)
+            let config = Realm.Configuration(schemaVersion: currentVersion + 1)
+            Realm.Configuration.defaultConfiguration = config
+            
+            // let r = try Realm(configuration: config)
+        } catch {
+            print(error)
+        }
+    }
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        UIApplication.shared.keyWindow?.tintColor = UIColor.black
 
+        do {
+            try Realm().objects(RLM_Feed.self)
+            try Realm().objects(RLM_Session_117.self)
+            try Realm().objects(RLM_SysSettings_117.self)
+        } catch {
+            print("can't access realm, migration needed")
+            migrateRealm()
+        }
+ 
+        
+        UIApplication.shared.keyWindow?.tintColor = UIColor.black
         return true
     }
 
@@ -27,9 +56,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // let sendingAppID = options[.sourceApplication]
 
-        let topicString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
-        var urlString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
-        let msgString = url.absoluteString.lowercased().replacingOccurrences(of:"aulaeapp://", with: "")
+        let topicString = url.absoluteString.lowercased().replacingOccurrences(of: "aulaeapp://", with: "")
+        var urlString = url.absoluteString.lowercased().replacingOccurrences(of:   "aulaeapp://", with: "")
+        let msgString = url.absoluteString.lowercased().replacingOccurrences(of:   "aulaeapp://", with: "")
 
         
         if urlString.lowercased().contains("https") {

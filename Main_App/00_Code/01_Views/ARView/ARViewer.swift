@@ -14,7 +14,7 @@ import RealmSwift
 
 class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
-    let realm = try! Realm()
+    lazy var realm = try! Realm()
     lazy var rlmSystem:      Results<RLM_SysSettings_117>    = {self.realm.objects(RLM_SysSettings_117.self)}()
     lazy var rlmSession:     Results<RLM_Session_117>        = {self.realm.objects(RLM_Session_117.self)}()
     lazy var rlmChatSession: Results<RLM_ChatSess>       = {self.realm.objects(RLM_ChatSess.self) }()
@@ -223,6 +223,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             isOK = false  // isOK false if xyz == 0?
         }
         
+        if !rlmSystem.first!.onlyGpsContent {
+            
+        }
+        
+//         TODO Handle missing / In transit:
 //        if isOK {
 //            if !["", "marker", "text"].contains(objData.type) && objData.filePath != "" {
 //                // TODO: if file != EXISTS -> schedule retry and abort load
@@ -251,7 +256,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             
             if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
-                let nSize = CGFloat(( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+                let nSize = CGFloat(
+                    ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
                 objSize = SCNVector3(nSize, nSize, nSize)
             } else {
                 if (objData.type == "text" || objData.type == "audio" || objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
@@ -290,7 +296,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             } else {
                 
                 if objData.type.lowercased() == "marker" {
-                    let mR = 0.05 + CGFloat( (objectDistance + 1) / (objectDistance + 1) )
+                    // let mR = 0.05 + CGFloat( (objectDistance + 1) / (objectDistance + 1) )
                     let cusomMarketImagePath = source.sb
                     
                     if FileManager.default.fileExists(atPath: URL(fileURLWithPath: cusomMarketImagePath).path) && cusomMarketImagePath != "" {

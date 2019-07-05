@@ -1,6 +1,9 @@
 
 // URGENT:
 
+//      If !Topic Feed -> FeedID = FeedURL
+//      Handle Only Local..
+//      Enable Direct Links
 //      Marker Default -> Image
 
 //      Loding Spinner + Retry Schedule if [Data is missing || Still in transit]

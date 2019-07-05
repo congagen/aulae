@@ -14,7 +14,7 @@ import Foundation
 
 class SettingsViewController: UITableViewController {
 
-    let realm = try! Realm()
+    lazy var realm = try! Realm()
     lazy var rlmSystem:  Results<RLM_SysSettings_117> = { self.realm.objects(RLM_SysSettings_117.self) }()
     lazy var rlmSession: Results<RLM_Session_117> = { self.realm.objects(RLM_Session_117.self) }()
     lazy var chatSessions: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
@@ -126,6 +126,14 @@ class SettingsViewController: UITableViewController {
         updateUI()
     }
     
+    let onlyLocalContentParamName   = "onlyLocalContent"
+//    @IBOutlet var onlyLocalContentSwitch: UISwitch!
+//    @IBAction func onlyLocalContentSwitchAction(_ sender: UISwitch) {
+//        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+//        saveSettings(propName: onlyLocalContentParamName, propValue: boolDouble)
+//        updateUI()
+//    }
+    
     
     let darkModeParamName = "darkModeState"
     @IBOutlet var darkModeSwitch: UISwitch!
@@ -190,7 +198,6 @@ class SettingsViewController: UITableViewController {
     }
     
     
-    
     func saveSettings(propName: String, propValue: Double, propString: String = "") {
         
         do {
@@ -230,6 +237,9 @@ class SettingsViewController: UITableViewController {
                     case allowAudioParamName:
                         rlmSystem.first?.muteAudio              = Int(propValue) != 1
                         
+                    case onlyLocalContentParamName:
+                        rlmSystem.first?.onlyGpsContent         = Int(propValue) == 1
+                        
                     case darkModeParamName:
                         rlmSystem.first?.uiMode                 = Int(propValue)
                         
@@ -241,7 +251,7 @@ class SettingsViewController: UITableViewController {
                         
                     case locationSharingParamName:
                         rlmSystem.first!.locationSharing        = Int(propValue) == 1
-
+                        
     
                     case chatUsernameParamName:
                         chatSessions.first?.username            = propString
@@ -258,7 +268,9 @@ class SettingsViewController: UITableViewController {
     
 
     func updateUI()  {
-        
+        //        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate == true
+        //        cameraIsEnabledSwitch.isOn       = rlmCamera.first?.isEnabled == true
+
         feedUpdateSpeedDisplay.text      = String(Int(rlmSystem.first!.feedUpdateInterval))
         feedUpdateSpeedStepper.value     = rlmSystem.first!.feedUpdateInterval
         
@@ -268,14 +280,11 @@ class SettingsViewController: UITableViewController {
         scaleFactorDisplay.text          = String(Int(rlmSystem.first!.scaleFactor))
         scaleFactorStepper.value         = rlmSystem.first!.scaleFactor
         
+//        onlyLocalContentSwitch.isOn      = rlmSystem.first!.onlyGpsContent
         allowAudioSwitch.isOn            = rlmSystem.first!.muteAudio != true
 
         useDistanceSwitch.isOn           = rlmSystem.first!.gpsScaling == true
-//        autoUpdateSwitch.isOn            = rlmSession.first!.autoUpdate == true
-        
         locationSharingSwitch.isOn       = rlmSystem.first!.locationSharing == true
-        
-//        cameraIsEnabledSwitch.isOn       = rlmCamera.first?.isEnabled == true
         
         camExposureStepper.value         = rlmCamera.first!.exposureOffset
         camExposureDisplay.text          = String( Double(round(1000 * camExposureStepper.value) / 1000))

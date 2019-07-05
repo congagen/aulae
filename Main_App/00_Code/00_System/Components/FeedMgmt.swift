@@ -210,11 +210,11 @@ class FeedMgmt {
 
                     "scale":             valueIfPresent(dict: itemSpec, key: "scale",     placeHolderValue: 1.0),
                     "world_scale":       valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: true),
-                    "world_position":    valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
                     "local_orientation": valueIfPresent(dict: itemSpec, key: "local_orientation", placeHolderValue: false),
 
-                    "lat":               valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: rlmSession.first?.currentLat ?? 80.0),
-                    "lng":               valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: rlmSession.first?.currentLng ?? 10.0),
+                    "world_position":    valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
+                    "lat":               valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: rlmSession.first!.currentLat + 0.1),
+                    "lng":               valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: rlmSession.first!.currentLng + 0.1),
                     "alt":               valueIfPresent(dict: itemSpec, key: "alt",       placeHolderValue: 0.0),
                     
                     "x_pos":             valueIfPresent(dict: itemSpec, key: "x_pos",     placeHolderValue: 0.0),

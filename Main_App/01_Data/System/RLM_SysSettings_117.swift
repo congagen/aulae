@@ -17,7 +17,7 @@ class RLM_SysSettings_117: Object {
     
     @objc dynamic var muteAudio: Bool            = false
     @objc dynamic var uiMode: Int                = 0
-    
+        
     @objc dynamic var mapUpdateInterval: Double  = 5.0
     @objc dynamic var feedUpdateInterval: Double = 10.0
     @objc dynamic var sysUpdateInterval: Double  = 10.0
@@ -25,9 +25,10 @@ class RLM_SysSettings_117: Object {
     
     @objc dynamic var scaleFactor: Double        = 5
     @objc dynamic var gpsContent: Bool           = false
+    @objc dynamic var onlyGpsContent: Bool       = false
     @objc dynamic var gpsScaling: Bool           = true
     
-    @objc dynamic var locationSharing: Bool      = false
+    @objc dynamic var locationSharing: Bool      = true
     
     @objc dynamic var autoUpdate: Bool           = false
     @objc dynamic var showPlaceholders: Bool     = true

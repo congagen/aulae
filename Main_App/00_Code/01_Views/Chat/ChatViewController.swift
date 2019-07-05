@@ -88,14 +88,6 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     func callApi(message: String) {
         print("callApi")
         
-        var lat = 0
-        var lng = 0
-        
-        if rlmSystem.first!.locationSharing {
-            lat = Int(rlmSession.first!.currentLat)
-            lng = Int(rlmSession.first!.currentLng)
-        }
-        
         if rlmChatSession.first!.apiUrl != "" {
             NetworkTools().postReq(
                 completion: { r in self.handleResponseText(result: r) }, apiHeaderValue: apiHeaderValue,
@@ -105,8 +97,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
                     "agent_id": rlmChatSession.first!.agentId,
                     
                     "sid":  (rlmSession.first?.sessionUUID)!,
-                    "lat":  String(lat),
-                    "lng":  String(lng),
+                    "lat":  rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLat) : "0",
+                    "lng":  rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLng) : "0",
+                    "alt":  rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentAlt) : "0",
                     
                     "chat_msg": message
                 ]
