@@ -1,6 +1,7 @@
 import RealmSwift
 import Foundation
 
+
 class RLM_Obj: Object {
     
     @objc dynamic var title:       String = ""
@@ -18,6 +19,8 @@ class RLM_Obj: Object {
     @objc dynamic var deleted:     Bool   = false
 
     @objc dynamic var contentUrl:  String = ""
+    @objc dynamic var chattUrl:    String = ""
+
     @objc dynamic var contentLink: String = ""
     @objc dynamic var directLink:  Bool   = false
     

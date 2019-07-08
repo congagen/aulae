@@ -139,18 +139,11 @@ extension ARViewer {
     func showSeletedNodeActions(selNode: ContentNode) {
         print("showSeletedNodeActions")
         
-        selectedNodeChatUrl = ""
-        let contentLinkItems = selNode.contentLink.components(separatedBy: " ")
-        let contentLinkItemA = contentLinkItems[0]
-    
-        if contentLinkItems.count >= 2 {
-            if contentLinkItems[1] != "" {
-                selectedNodeChatUrl = contentLinkItems[1]
-            }
+        if selNode.chatURL != "" {
             
             do {
                 try realm.write {
-                    rlmChatSession.first?.apiUrl    = selectedNodeChatUrl
+                    rlmChatSession.first?.apiUrl    = selNode.chatURL
                     rlmChatSession.first?.agentName = selNode.name ?? ""
                     rlmChatSession.first?.agentId   = selNode.title
                     rlmChatSession.first?.agentInfo = selNode.info
@@ -168,7 +161,8 @@ extension ARViewer {
         )
         
         if (selNode.info) != "" {
-            alert.addAction(UIAlertAction(title: "Show Info",  style: UIAlertAction.Style.default, handler: { _ in self.showNodeInfo(selNode: selNode) } ))
+            alert.addAction(
+                UIAlertAction(title: "Show Info", style: UIAlertAction.Style.default, handler: { _ in self.showNodeInfo(selNode: selNode) } ))
         }
         
         if (rlmChatSession.first?.apiUrl) != "" && !(rlmChatSession.first?.apiUrl == nil) {
@@ -177,8 +171,8 @@ extension ARViewer {
             } ))
         }
 
-        if (contentLinkItemA) != "" {
-            alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (contentLinkItemA)) } ))
+        if (selNode.contentURL) != "" {
+            alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (selNode.contentURL)) } ))
         }
         
         if selNode.feedUrl != "" && selNode.feedTopic == "" {

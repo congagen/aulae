@@ -23,7 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         do {
             currentVersion = try schemaVersionAtURL(realmConfUrl)
-            let config = Realm.Configuration(schemaVersion: currentVersion + 1)
+            
+            let config = Realm.Configuration(
+                schemaVersion: currentVersion + 1
+            )
+            
             Realm.Configuration.defaultConfiguration = config
             
             // let r = try Realm(configuration: config)
@@ -37,6 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         do {
             try Realm().objects(RLM_Feed.self)
+            try Realm().objects(RLM_Obj.self)
             try Realm().objects(RLM_Session_117.self)
             try Realm().objects(RLM_SysSettings_117.self)
         } catch {

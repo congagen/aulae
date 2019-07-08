@@ -20,10 +20,9 @@ class ContentNode: SCNNode {
     var feedTopic: String = ""
     var feedUrl:   String = ""
     
-    var contentLink: String = ""
-    var directLink:  Bool = false
-
-    var chatLink: String = ""
+    var contentURL: String = ""
+    var directURL:  Bool = false
+    var chatURL: String = ""
     
     var anchor: ARAnchor?
     var location: CLLocation!

@@ -176,38 +176,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             mainScene.rootNode.addAudioPlayer(SCNAudioPlayer(source: asrc!))
         }
     }
-    
-    
-//    func defualtLatLong(objData: RLM_Obj){
-//        do {
-//            try realm.write {
-//                objData.lat = rlmSession.first!.currentLat
-//                objData.lng = rlmSession.first!.currentLng
-//            }
-//        } catch {
-//            print("Error: \(error)")
-//        }
-//    }
-    
-    
-//    func reloadNodeContent(contentType: String) {
-//
-//        if contentType == "" {}
-//
-//        if contentType == "" {}
-//
-//        if contentType == "" {}
-//
-//        if contentType == "" {}
-//
-//        if contentType == "" {}
-//
-//        if contentType == "" {}
-//
-//        if contentType == "" {}
-//        
-//    }
-    
+
     
     func addSourceNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
         var isOK = true
@@ -216,31 +185,33 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print("AddContentToScene: " + String(objData.uuid))
             print("Adding: " + objData.type.lowercased() + ": " + fPath)
         } else {
-            isOK = false // Find and update object?
+            isOK = false
         }
         
         if !rlmSystem.first!.locationSharing && objData.world_position {
-            isOK = false  // isOK false if xyz == 0?
+            isOK = false
         }
         
-        if !rlmSystem.first!.onlyGpsContent {
-            
+//        TODO Handle missing / In transit:
+        if isOK {
+            if !["", "marker", "text", "demo"].contains(objData.type) && fPath != "" {
+                // TODO: if file != EXISTS -> schedule retry and abort load
+                if !FileManager.default.fileExists(atPath: URL(fileURLWithPath: fPath).path) {
+                    print("Missing Content Data, Scheduling Retry...")
+                    
+                    Timer.scheduledTimer(
+                        withTimeInterval: 1, repeats: false, block: {
+                            _ in DispatchQueue.main.async {
+                                self.addSourceNode(
+                                    objData: objData, source: source,
+                                    fPath: fPath, scaleFactor: scaleFactor)
+                            }
+                        }
+                    )
+                    isOK = false
+                }
+            }
         }
-        
-//         TODO Handle missing / In transit:
-//        if isOK {
-//            if !["", "marker", "text"].contains(objData.type) && objData.filePath != "" {
-//                // TODO: if file != EXISTS -> schedule retry and abort load
-//                if !FileManager.default.fileExists(atPath: URL(fileURLWithPath: objData.filePath).path) {
-//                    isOK = false
-//                    Timer.scheduledTimer(
-//                        withTimeInterval: 1, repeats: false, block: {
-//                            _ in  self.addSourceNode(objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor)
-//                        }
-//                    )
-//                }
-//            }
-//        }
         
         if isOK {
             let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
@@ -267,8 +238,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             ctNode.feedUrl     = source.sourceUrl
             ctNode.feedName    = source.name
             ctNode.feedTopic   = source.topicKwd
-            ctNode.contentLink = objData.contentLink
-            ctNode.directLink  = objData.directLink
+            
+            ctNode.chatURL    = source.chatURL
+            ctNode.contentURL = objData.contentLink
+            ctNode.directURL  = objData.directLink
             
             if !["", "marker", "text"].contains(objData.type.lowercased()) {
                 
@@ -457,8 +430,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         if let ctno: ContentNode = (selno.first as? ContentNode) {
                             
                             // if ctno.info != "" && ctno.contentLink != "" {
-                            if (ctno.directLink) && ((ctno.contentLink) != "") {
-                                self.openUrl(scheme: (ctno.contentLink))
+                            if (ctno.directURL) && ((ctno.contentURL) != "") {
+                                self.openUrl(scheme: (ctno.contentURL))
                             } else {
                                 showSeletedNodeActions(selNode: ctno)
                             }
@@ -584,8 +557,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         loadingView.isHidden = false
         loadingView.layer.opacity = 1
-        
-        
     }
     
     
@@ -727,9 +698,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         if !updateTimer.isValid {
             updateTimer = Timer.scheduledTimer(
                 timeInterval: rlmSystem.first!.feedUpdateInterval, target: self,
-                selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true)
+                selector: #selector(mainTimerUpdate), userInfo: nil, repeats: true
+            )
         }
-        
     }
     
     

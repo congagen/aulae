@@ -76,7 +76,8 @@ class FeedMgmt {
                 rlmObj.filePath    = objFilePath.absoluteString
             
                 rlmObj.contentUrl  = objInfo["url"] as! String
-                rlmObj.contentLink = (objInfo["content_link"] as! String) + " " + (objInfo["chat_url"] as! String)
+                rlmObj.contentLink = (objInfo["content_link"] as! String)
+                rlmObj.chattUrl    = objInfo["chat_url"] as! String
                 rlmObj.directLink  = objInfo["direct_link"] as! Bool 
 
                 rlmObj.text        = objInfo["text"] as! String
@@ -477,8 +478,8 @@ class FeedMgmt {
             print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.sourceUrl))
             
             if fe.active && !fe.deleted && shouldUpdate && fe.sourceUrl != "" {
-                let feedUrl      = URL(string: fe.sourceUrl)
-                let feedExt      = feedUrl?.pathExtension.lowercased()
+                let sourceUrl      = URL(string: fe.sourceUrl)
+                let feedExt      = sourceUrl?.pathExtension.lowercased()
                 let customMarkerImageUrl = fe.sa
 
                 let fileName       = fe.id + ".json"

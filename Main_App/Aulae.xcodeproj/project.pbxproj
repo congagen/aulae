@@ -46,7 +46,6 @@
 		FA88CBFD222DBBD90078E48A /* NodeActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88CBFC222DBBD90078E48A /* NodeActions.swift */; };
 		FA8B0C5C229D6B64000093D7 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B0C5B229D6B64000093D7 /* ChatViewController.swift */; };
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
-		FA983DE522CF37DE00589CF0 /* RLM_Feed_117.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA983DE422CF37DE00589CF0 /* RLM_Feed_117.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
 		FAB68C78224CB37700126867 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C76224CB37600126867 /* Realm.framework */; };
@@ -55,7 +54,6 @@
 		FAB68C7B224CB37700126867 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FABB482D22BA4B42004FF9F9 /* Guide.png in Resources */ = {isa = PBXBuildFile; fileRef = FABB482C22BA4B42004FF9F9 /* Guide.png */; };
 		FAC0A65F22B82B1300C5BC13 /* RLM_CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC0A65E22B82B1300C5BC13 /* RLM_CameraSettings.swift */; };
-		FAD6562422B69D4F00F1F56A /* RLM_SourceContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD6562322B69D4F00F1F56A /* RLM_SourceContent.swift */; };
 		FAD6562722B6A6AE00F1F56A /* DbOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD6562622B6A6AE00F1F56A /* DbOps.swift */; };
 		FAE439632237B5C900F828EF /* UIOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE439622237B5C900F828EF /* UIOps.swift */; };
 		FAF37EB9221D65610065B18A /* NodeAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF37EB8221D65610065B18A /* NodeAppearance.swift */; };
@@ -121,14 +119,12 @@
 		FA88CBFC222DBBD90078E48A /* NodeActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeActions.swift; sourceTree = "<group>"; };
 		FA8B0C5B229D6B64000093D7 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
-		FA983DE422CF37DE00589CF0 /* RLM_Feed_117.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Feed_117.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		FAB68C76224CB37600126867 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		FAB68C77224CB37600126867 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		FABB482C22BA4B42004FF9F9 /* Guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Guide.png; sourceTree = "<group>"; };
 		FAC0A65E22B82B1300C5BC13 /* RLM_CameraSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_CameraSettings.swift; sourceTree = "<group>"; };
-		FAD6562322B69D4F00F1F56A /* RLM_SourceContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_SourceContent.swift; sourceTree = "<group>"; };
 		FAD6562622B6A6AE00F1F56A /* DbOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbOps.swift; sourceTree = "<group>"; };
 		FAE439622237B5C900F828EF /* UIOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOps.swift; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* NodeAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAppearance.swift; sourceTree = "<group>"; };
@@ -378,10 +374,8 @@
 		FAD6562522B69DBF00F1F56A /* Content */ = {
 			isa = PBXGroup;
 			children = (
-				31D284BE20D3B079004451A6 /* RLM_Feed.swift */,
-				FA983DE422CF37DE00589CF0 /* RLM_Feed_117.swift */,
-				FAD6562322B69D4F00F1F56A /* RLM_SourceContent.swift */,
 				3164AF4920B47E79009EDA27 /* RLM_Obj.swift */,
+				31D284BE20D3B079004451A6 /* RLM_Feed.swift */,
 			);
 			path = Content;
 			sourceTree = "<group>";
@@ -527,7 +521,6 @@
 				FAF4C9A2223474D500C2F371 /* QrScanner.swift in Sources */,
 				FA8B0C5C229D6B64000093D7 /* ChatViewController.swift in Sources */,
 				316B86B620D900940076E63D /* FeedsTVCMain.swift in Sources */,
-				FAD6562422B69D4F00F1F56A /* RLM_SourceContent.swift in Sources */,
 				31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */,
 				FA663147221DBD4B000FEF60 /* ContentNode.swift in Sources */,
 				FA69BE8922A8FBDB009B1FD7 /* ChatTableViewCell.swift in Sources */,
@@ -542,7 +535,6 @@
 				FAE439632237B5C900F828EF /* UIOps.swift in Sources */,
 				319D3F2820D7965B007FEECA /* FeedMgmt.swift in Sources */,
 				FA6BA7D12232E5E600DB3F2A /* Demos.swift in Sources */,
-				FA983DE522CF37DE00589CF0 /* RLM_Feed_117.swift in Sources */,
 				318FE8F220B0BB730050528B /* HttpDownloader.swift in Sources */,
 				FA69BE8D22A93BE3009B1FD7 /* RLM_ChatMessage.swift in Sources */,
 			);

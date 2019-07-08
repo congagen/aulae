@@ -54,7 +54,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 mainUpdateTimer = Timer.scheduledTimer(
                     timeInterval: (rlmSystem.first?.sysUpdateInterval)!,
                     target: self, selector: #selector(mainUpdate),
-                    userInfo: nil, repeats: true)
+                    userInfo: nil, repeats: true
+                )
             }
         }
         
