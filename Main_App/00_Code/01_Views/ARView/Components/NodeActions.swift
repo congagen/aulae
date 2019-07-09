@@ -119,7 +119,18 @@ extension ARViewer {
     }
     
     
-    func openChatWindow(sessionId: String, apiUrl: String) {
+    func openChatWindow(sessionId: String, apiUrl: String, selNode: ContentNode) {
+        
+        do {
+            try realm.write {
+                rlmChatSession.first?.apiUrl    = selNode.chatURL
+                rlmChatSession.first?.agentName = selNode.name ?? ""
+                rlmChatSession.first?.agentId   = selNode.title
+                rlmChatSession.first?.agentInfo = selNode.info
+            }
+        } catch {
+            print("Error: \(error)")
+        }
 
         if selectedNode != nil {
             do {
@@ -139,20 +150,6 @@ extension ARViewer {
     func showSeletedNodeActions(selNode: ContentNode) {
         print("showSeletedNodeActions")
         
-        if selNode.chatURL != "" {
-            
-            do {
-                try realm.write {
-                    rlmChatSession.first?.apiUrl    = selNode.chatURL
-                    rlmChatSession.first?.agentName = selNode.name ?? ""
-                    rlmChatSession.first?.agentId   = selNode.title
-                    rlmChatSession.first?.agentInfo = selNode.info
-
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-        }
         
         let alert =  UIAlertController(
             title:   selNode.feedName,
@@ -165,10 +162,12 @@ extension ARViewer {
                 UIAlertAction(title: "Show Info", style: UIAlertAction.Style.default, handler: { _ in self.showNodeInfo(selNode: selNode) } ))
         }
         
-        if (rlmChatSession.first?.apiUrl) != "" && !(rlmChatSession.first?.apiUrl == nil) {
+        if selNode.chatURL != "" {
             alert.addAction(UIAlertAction(title: "Open Chat",  style: UIAlertAction.Style.default, handler: {
-                _ in self.openChatWindow(sessionId: self.rlmChatSession.first!.apiUrl, apiUrl: self.rlmChatSession.first!.apiUrl)
+                _ in self.openChatWindow(sessionId: self.rlmChatSession.first!.apiUrl, apiUrl: self.rlmChatSession.first!.apiUrl, selNode: selNode)
             } ))
+        } else {
+            print(selNode.chatURL)
         }
 
         if (selNode.contentURL) != "" {

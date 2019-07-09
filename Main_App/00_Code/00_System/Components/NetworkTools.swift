@@ -19,7 +19,6 @@ extension String {
 
 class NetworkTools {
     
-    
     func postReq(completion: @escaping (_ resp: Dictionary<String, AnyObject>) -> (), apiHeaderValue: String, apiHeaderFeild: String, apiUrl: String, reqParams: Dictionary<String, String>) {
         print("postReq")
 

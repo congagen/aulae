@@ -49,8 +49,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             migrateRealm()
         }
  
-        
         UIApplication.shared.keyWindow?.tintColor = UIColor.black
+
         return true
     }
 

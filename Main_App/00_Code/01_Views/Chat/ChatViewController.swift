@@ -241,6 +241,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
         if msgForIdx.count > 0 {
             cell.messageLabel.text = msgForIdx.first?.msgText
+            //Incomming bubblecolor from object: cell.incommingBubbleColor = UIColor(hexColor: <#T##String#>)
             cell.isIncomming       = msgForIdx.first?.isIncomming
         } else {
             print("ERROR: cellForRowAt: " + String(reverseIdx))
@@ -339,6 +340,15 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         return true
     }
+    
+    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let sessionMsgs = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl})
+//        let reverseIdx  = sessionMsgs.count - (indexPath.item + 1) + 1
+//        let msgForIdx: String = sessionMsgs.filter({$0.indexPos == reverseIdx}).first!.msgText
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatTableViewCell
+//        showActionMenu(cellText: cell.messageLabel.text!)
+//    }
     
     
     override func viewDidAppear(_ animated: Bool) {

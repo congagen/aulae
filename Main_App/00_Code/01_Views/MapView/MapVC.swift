@@ -198,7 +198,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
                             mapView.addAnnotation(ano)
                         }
                     }
-                    
                 }
             }
         }
@@ -271,6 +270,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        print("")
+        
         if getAnoObj(view: view) != nil {
             selected = getAnoObj(view: view)!
             print(selected!)
@@ -284,6 +285,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
             print(selected!)
         }
     }
+
     
     
     func initMapView() {

@@ -161,6 +161,8 @@ class ContentNode: SCNNode {
     
     
     func addText(objectData: RLM_Obj, objText: String, extrusion: CGFloat, fontSize: CGFloat, color: UIColor) {
+        print("Adding Text")
+
         var nText = "?"
         
         if objText != "" {
@@ -258,6 +260,8 @@ class ContentNode: SCNNode {
     
     
     func addDemoContent(fPath: String, objectData: RLM_Obj) {
+        print("Adding Demo Content")
+
         let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
         
         if let img = UIImage(named: fPath) {
@@ -275,6 +279,8 @@ class ContentNode: SCNNode {
 
     
     func addImage(fPath: String, objectData: RLM_Obj) {
+        print("Adding Image")
+
         self.geometry?.materials.first?.diffuse.contents = UIColor.clear
 
         let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
@@ -292,6 +298,8 @@ class ContentNode: SCNNode {
     
     
     func addGif(fPath: String, objectData: RLM_Obj) {
+        print("Adding Gif")
+
         let gifPlane = SCNPlane(width: CGFloat(objectData.scale), height: CGFloat(objectData.scale))
        
         let layer = CALayer()

@@ -188,23 +188,22 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             isOK = false
         }
         
-        if !rlmSystem.first!.locationSharing && objData.world_position {
-            isOK = false
-        }
+//        if !rlmSystem.first!.locationSharing && objData.world_position {
+//            isOK = false
+//        }
         
-//        TODO Handle missing / In transit:
+//      Check if the corresponding node data is present and schedule retry if it's not
         if isOK {
             if !["", "marker", "text", "demo"].contains(objData.type) && fPath != "" {
-                // TODO: if file != EXISTS -> schedule retry and abort load
                 if !FileManager.default.fileExists(atPath: URL(fileURLWithPath: fPath).path) {
-                    print("Missing Content Data, Scheduling Retry...")
+                    print("Missing ContentNode Data, Scheduling Retry...")
                     
                     Timer.scheduledTimer(
                         withTimeInterval: 1, repeats: false, block: {
                             _ in DispatchQueue.main.async {
                                 self.addSourceNode(
-                                    objData: objData, source: source,
-                                    fPath: fPath, scaleFactor: scaleFactor)
+                                    objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
+                                )
                             }
                         }
                     )
@@ -221,30 +220,26 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             
             if objData.world_position {
                 objectPos = getNodeWorldPosition(
-                    objectDistance: objectDistance, baseOffset: 0.0,
-                    contentObj: objData, scaleFactor: scaleFactor
+                    objectDistance: objectDistance, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor
                 )
             }
             
             if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
-                let nSize = CGFloat(
-                    ( CGFloat(100 / (CGFloat(objectDistance) + 100) ) * CGFloat(objectDistance) ) / CGFloat(objectDistance) ) + CGFloat(0.1 / scaleFactor)
+                let nSize = CGFloat((CGFloat(100 / (CGFloat(objectDistance) + 100)) * CGFloat(objectDistance)) / CGFloat(objectDistance)) + CGFloat(0.1 / scaleFactor)
                 objSize = SCNVector3(nSize, nSize, nSize)
             } else {
                 if (objData.type == "text" || objData.type == "audio" || objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
             }
             
             let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, info: objData.info, location: rawObjectGpsCCL)
-            ctNode.feedUrl     = source.sourceUrl
-            ctNode.feedName    = source.name
-            ctNode.feedTopic   = source.topicKwd
-            
-            ctNode.chatURL    = source.chatURL
+            ctNode.feedUrl    = source.sourceUrl
+            ctNode.feedName   = source.name
+            ctNode.feedTopic  = source.topicKwd
+            ctNode.chatURL    = objData.chatUrl
             ctNode.contentURL = objData.contentLink
             ctNode.directURL  = objData.directLink
             
             if !["", "marker", "text"].contains(objData.type.lowercased()) {
-                
                 if FileManager.default.fileExists(atPath: URL(fileURLWithPath: fPath).path) {
                     if objData.type.lowercased() == "demo"   { ctNode.addDemoContent( fPath: fPath, objectData: objData) }
                     if objData.type.lowercased() == "obj"    { ctNode.addObj(fPath:   fPath, objectData: objData) }

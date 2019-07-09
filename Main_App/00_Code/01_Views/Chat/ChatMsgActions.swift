@@ -88,6 +88,7 @@ extension ChatViewController {
     
     func showActionMenu(cellText: String) {
         print("showSeletedNodeActions")
+        
 
         let alert =  UIAlertController(
             title:   cellText,
@@ -96,17 +97,26 @@ extension ChatViewController {
         )
         
         if (cellText) != "" {
-
-            if let url = NSURL(string: cellText) {
-                if UIApplication.shared.canOpenURL(url as URL) {
+            // TODO if prefix == www add https
+            let words = cellText.split(separator: " ")
+            
+            for w in words {
+                var curW = w
+                
+                if w.hasPrefix("www") {
+                    curW = "https://" + w
+                }
+                
+                if let url = NSURL(string: String(curW)) {
+                    if UIApplication.shared.canOpenURL(url as URL) {
                         alert.addAction(UIAlertAction(
                             title: "Open in browser",
                             style: UIAlertAction.Style.default,
-                            handler: { _ in self.openUrl(scheme: cellText) } ))
+                            handler: { _ in self.openUrl(scheme: String(curW)) } ))
+                    }
                 }
             }
-
-
+            
             alert.addAction(UIAlertAction(
                 title: "Copy to clipboard", style: UIAlertAction.Style.default, handler: { _ in self.copyToClip(text: (cellText)) } ))
         
@@ -123,8 +133,7 @@ extension ChatViewController {
         
         // ----------------------------------------------------------------------------------------------------------------
         
-        self.view.window?.windowLevel = UIWindow.Level(rawValue: 10000001)
-        
+        //self.view.window?.windowLevel = UIWindow.Level(rawValue: 10000001)
         self.present(alert, animated: true, completion: nil)
         
     }

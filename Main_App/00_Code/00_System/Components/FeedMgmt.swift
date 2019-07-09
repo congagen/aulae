@@ -77,7 +77,7 @@ class FeedMgmt {
             
                 rlmObj.contentUrl  = objInfo["url"] as! String
                 rlmObj.contentLink = (objInfo["content_link"] as! String)
-                rlmObj.chattUrl    = objInfo["chat_url"] as! String
+                rlmObj.chatUrl     = objInfo["chat_url"] as! String
                 rlmObj.directLink  = objInfo["direct_link"] as! Bool 
 
                 rlmObj.text        = objInfo["text"] as! String
@@ -141,6 +141,7 @@ class FeedMgmt {
         } else {
             return placeHolderValue
         }
+        
     }
     
     
@@ -180,6 +181,8 @@ class FeedMgmt {
                     remoteContentUrl = feedDbItem.customMarkerUrl
                 }
                 
+                print(itemSpec)
+                
                 let objData: [String : Any] = [
                     "name":              valueIfPresent(dict: itemSpec, key: "name",      placeHolderValue: String(feedObjects.count)),
                     "id":                valueIfPresent(dict: itemSpec, key: "id",        placeHolderValue: objUid),
@@ -200,7 +203,7 @@ class FeedMgmt {
 
                     "content_link":      valueIfPresent(dict: itemSpec, key: "content_link", placeHolderValue: ""),
                     "direct_link":       valueIfPresent(dict: itemSpec, key: "direct_link", placeHolderValue: false),
-                    "chat_url":          valueIfPresent(dict: itemSpec, key: "chat_url",   placeHolderValue: ""),
+                    "chat_url":          valueIfPresent(dict: itemSpec, key: "chat_url",  placeHolderValue: ""),
 
                     "text":              valueIfPresent(dict: itemSpec, key: "text",      placeHolderValue: ""),
                     "font":              valueIfPresent(dict: itemSpec, key: "font",      placeHolderValue: ""),
@@ -214,8 +217,8 @@ class FeedMgmt {
                     "local_orientation": valueIfPresent(dict: itemSpec, key: "local_orientation", placeHolderValue: false),
 
                     "world_position":    valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
-                    "lat":               valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: rlmSession.first!.currentLat + 0.1),
-                    "lng":               valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: rlmSession.first!.currentLng + 0.1),
+                    "lat":               valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: rlmSession.first!.currentLat),
+                    "lng":               valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: rlmSession.first!.currentLng),
                     "alt":               valueIfPresent(dict: itemSpec, key: "alt",       placeHolderValue: 0.0),
                     
                     "x_pos":             valueIfPresent(dict: itemSpec, key: "x_pos",     placeHolderValue: 0.0),
@@ -415,8 +418,8 @@ class FeedMgmt {
                 completion: { r in self.storeFeedApi(result: r, feedDbItem: feedData) }, apiHeaderValue: apiHeaderValue,
                 apiHeaderFeild: apiHeaderFeild, apiUrl: feedData.sourceUrl,
                 reqParams: [
-                    "lat": rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLat) : "0",
-                    "lng": rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLng) : "0",
+                    "lat": rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLat) : "",
+                    "lng": rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLng) : "",
                     "kwd": String(feedData.topicKwd),
                     "sid": (rlmSession.first?.sessionUUID)!
                 ]

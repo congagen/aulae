@@ -298,6 +298,8 @@ class FeedsTVC: UITableViewController {
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         // activityViewController.excludedActivityTypes = [ UIActivityType.airDrop ]
         
+        activityViewController.view.tintColor = UIColor.black
+        
         self.present(activityViewController, animated: true, completion: nil)
     }
     
