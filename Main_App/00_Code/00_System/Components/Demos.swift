@@ -26,7 +26,7 @@ extension MainVC {
             apiDemoFeed.id   = "Example Source A"
             apiDemoFeed.name = "Example Source A"
             apiDemoFeed.info = "Example Source A"
-            apiDemoFeed.active = false
+            apiDemoFeed.active = true
             
             do {
                 try realm.write {
@@ -43,7 +43,7 @@ extension MainVC {
             typeDemoFeed.id   = "Example Source B"
             typeDemoFeed.name = "Example Source B"
             typeDemoFeed.info = "Example Source B"
-            typeDemoFeed.active = false
+            typeDemoFeed.active = true
             
             do {
                 try realm.write {
@@ -60,7 +60,7 @@ extension MainVC {
             asciiDemo.id   = "Example Source C"
             asciiDemo.name = "Example Source C"
             asciiDemo.info = "Example Source C"
-            asciiDemo.active = false
+            asciiDemo.active = true
             
             do {
                 try realm.write {
@@ -81,8 +81,8 @@ extension MainVC {
         demoFeed.name = "Getting Started"
         demoFeed.info = "Interface guide"
     
-        let itemCount = 6
-        let distance: Double = 0.5
+        let itemCount = 4
+        let distance: Double = 1
         
         if rlmFeeds.filter({ $0.id == demoFeed.id && $0.info == demoFeed.info }).count == 0 {
             do {
@@ -114,8 +114,20 @@ extension MainVC {
                             o.x_pos      = 0
                             o.z_pos      = distance
                         }
+                        
+                        if i == 3 {
+                            o.filePath   = "Guide.png"
+                            o.x_pos      = -distance
+                            o.z_pos      = 0
+                        }
+                        
+                        if i == 4 {
+                            o.filePath   = "Guide.png"
+                            o.x_pos      = distance
+                            o.z_pos      = 0
+                        }
                     
-
+                        o.active = false
                         self.realm.add(o)
                     }
                     

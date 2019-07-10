@@ -181,7 +181,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 print("Error: \(error)")
             }
             
-            quickStartExamples()
+            // quickStartExamples()
             contentExamples()
         }
         

@@ -453,7 +453,6 @@ class FeedMgmt {
         refreshObjects()
 
         for fe in rlmFeeds {
-            // let feedName = fe.name
             let feedInfo = fe.info
 
             print("Updating Feed: "  + fe.name)
@@ -469,17 +468,17 @@ class FeedMgmt {
             } catch {
                 print("Error: \(error)")
             }
-            
+        
             if checkTimeSinceUpdate {
                 let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
                 print("Time Since Update: " + String(timeSinceUpdate))
                 shouldUpdate = Int(timeSinceUpdate) > updateInterval
             }
-            
+        
             // TODO: If not auto update && All feeds objects present -> Skip Update?
-            
+        
             print(String(fe.id) + " "   + String(fe.active) + " " + String(fe.lat) + " " + String(fe.lng) + " " + String(fe.sourceUrl))
-            
+        
             if fe.active && !fe.deleted && shouldUpdate && fe.sourceUrl != "" {
                 let sourceUrl      = URL(string: fe.sourceUrl)
                 let feedExt      = sourceUrl?.pathExtension.lowercased()
@@ -514,6 +513,8 @@ class FeedMgmt {
                 
                 needsViewRefresh = true
             }
+            
+            
         }
         
         do {
