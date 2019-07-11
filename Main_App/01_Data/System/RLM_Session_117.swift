@@ -1,6 +1,7 @@
 import RealmSwift
 import Foundation
 
+
 class RLM_Session_117: Object {
 
     @objc dynamic var sessionUUID: String        = ""

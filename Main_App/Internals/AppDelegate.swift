@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             try Realm().objects(RLM_Session_117.self)
             try Realm().objects(RLM_SysSettings_117.self)
         } catch {
-            print("can't access realm, migration needed")
+            print("Can't access realm, migration needed")
             migrateRealm()
         }
  
@@ -62,9 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // let sendingAppID = options[.sourceApplication]
 
         let topicString = url.absoluteString.lowercased().replacingOccurrences(of: "aulaeapp://", with: "")
-        var urlString = url.absoluteString.lowercased().replacingOccurrences(of:   "aulaeapp://", with: "")
-        let msgString = url.absoluteString.lowercased().replacingOccurrences(of:   "aulaeapp://", with: "")
-
+        var urlString   = url.absoluteString.lowercased().replacingOccurrences(of: "aulaeapp://", with: "")
+        let msgString   = url.absoluteString.lowercased().replacingOccurrences(of: "aulaeapp://", with: "")
         
         if urlString.lowercased().contains("https") {
             print("OK")

@@ -52,7 +52,7 @@
 		FAB68C79224CB37700126867 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C76224CB37600126867 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FAB68C7A224CB37700126867 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; };
 		FAB68C7B224CB37700126867 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FAB9799822D5D1E6004520B2 /* Guide.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB9799722D5D1E6004520B2 /* Guide.png */; };
+		FAB9799E22D60D0D004520B2 /* Guide.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB9799D22D60D0D004520B2 /* Guide.png */; };
 		FAC0A65F22B82B1300C5BC13 /* RLM_CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC0A65E22B82B1300C5BC13 /* RLM_CameraSettings.swift */; };
 		FAD6562722B6A6AE00F1F56A /* DbOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD6562622B6A6AE00F1F56A /* DbOps.swift */; };
 		FAE439632237B5C900F828EF /* UIOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE439622237B5C900F828EF /* UIOps.swift */; };
@@ -123,7 +123,8 @@
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		FAB68C76224CB37600126867 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		FAB68C77224CB37600126867 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
-		FAB9799722D5D1E6004520B2 /* Guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Guide.png; sourceTree = "<group>"; };
+		FAB9799D22D60D0D004520B2 /* Guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Guide.png; sourceTree = "<group>"; };
+		FAB9799F22D70DB3004520B2 /* LogoCube.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = LogoCube.usdz; sourceTree = "<group>"; };
 		FAC0A65E22B82B1300C5BC13 /* RLM_CameraSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_CameraSettings.swift; sourceTree = "<group>"; };
 		FAD6562622B6A6AE00F1F56A /* DbOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbOps.swift; sourceTree = "<group>"; };
 		FAE439622237B5C900F828EF /* UIOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOps.swift; sourceTree = "<group>"; };
@@ -232,6 +233,8 @@
 		318FE90420B1697D0050528B /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				FA4ABB9E223C2EC8006525AA /* Images */,
+				FAB9799F22D70DB3004520B2 /* LogoCube.usdz */,
 				FA441DD92255347D002A5C71 /* Assets.xcassets */,
 				3177252020B03AD4009FA8B1 /* art.scnassets */,
 			);
@@ -241,7 +244,6 @@
 		318FE90520B169C00050528B /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				FA4ABB9E223C2EC8006525AA /* Images */,
 				3177252420B03AD4009FA8B1 /* Main.storyboard */,
 				3177252920B03AD6009FA8B1 /* LaunchScreen.storyboard */,
 			);
@@ -311,14 +313,15 @@
 		FA4ABB9E223C2EC8006525AA /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				FAB9799722D5D1E6004520B2 /* Guide.png */,
+				FAB9799D22D60D0D004520B2 /* Guide.png */,
 				FA32DA8E22AEFE400068EA96 /* Logo_B.png */,
 				FA32DA8822AE8D300068EA96 /* bg_1.png */,
 				FA7981A022AF9118002411C7 /* bg_2.png */,
 				FA441E092259482E002A5C71 /* Launchscreen_Logo.png */,
 				FA441E082259482E002A5C71 /* Logo.png */,
 			);
-			path = Images;
+			name = Images;
+			path = ../UI/Images;
 			sourceTree = "<group>";
 		};
 		FA6E5ACA221F1D4200A5DF17 /* Settings */ = {
@@ -463,7 +466,7 @@
 			files = (
 				FA441DDA2255347D002A5C71 /* Assets.xcassets in Resources */,
 				FA441E0B2259482E002A5C71 /* Launchscreen_Logo.png in Resources */,
-				FAB9799822D5D1E6004520B2 /* Guide.png in Resources */,
+				FAB9799E22D60D0D004520B2 /* Guide.png in Resources */,
 				3177252120B03AD4009FA8B1 /* art.scnassets in Resources */,
 				FA32DA8F22AEFE400068EA96 /* Logo_B.png in Resources */,
 				FA441E0A2259482E002A5C71 /* Logo.png in Resources */,

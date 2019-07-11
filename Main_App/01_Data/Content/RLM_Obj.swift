@@ -19,7 +19,7 @@ class RLM_Obj: Object {
     @objc dynamic var deleted:     Bool   = false
 
     @objc dynamic var contentUrl:  String = ""
-    @objc dynamic var chatUrl:    String = ""
+    @objc dynamic var chatUrl:     String = ""
 
     @objc dynamic var contentLink: String = ""
     @objc dynamic var directLink:  Bool   = false

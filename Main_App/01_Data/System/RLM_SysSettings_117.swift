@@ -33,7 +33,7 @@ class RLM_SysSettings_117: Object {
     @objc dynamic var autoUpdate: Bool           = false
     @objc dynamic var showPlaceholders: Bool     = true
     
-    @objc dynamic var topicSubApiURL: String     = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae"
+    @objc dynamic var topicSubApiURL:     String = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae"
     @objc dynamic var topicSubApiHeaderF: String = "x-api-key"
     @objc dynamic var topicSubApiHeaderV: String = "VYtA9KZdQ26y4isktSKba59ME8h4WOCuajYwblvn"
     

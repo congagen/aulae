@@ -12,8 +12,6 @@ import RealmSwift
 
 
 extension MainVC {
-    
-    
     func contentExamples() {
         
         let demoSrcA = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae"

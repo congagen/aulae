@@ -176,6 +176,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             mainScene.rootNode.addAudioPlayer(SCNAudioPlayer(source: asrc!))
         }
     }
+    
+    
+    func resetCameraToDefaultPosition() {
+        sceneView.pointOfView?.position = SCNVector3(x: 5, y: 0, z: 5)
+        sceneView.pointOfView?.orientation = SCNVector4(x: 0, y: 1, z: 0, w: .pi/4)
+    }
 
     
     func addSourceNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
@@ -201,9 +207,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     Timer.scheduledTimer(
                         withTimeInterval: 1, repeats: false, block: {
                             _ in DispatchQueue.main.async {
-                                self.addSourceNode(
-                                    objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
-                                )
+                                
+                                if !objData.isInvalidated {
+                                    self.addSourceNode(
+                                        objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
+                                    )
+                                }
                             }
                         }
                     )
@@ -269,8 +278,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     ctNode.addDemoContent( fPath: fPath, objectData: objData)
                 }
                 
-                if objData.type.lowercased() == "marker" {
-                    // let mR = 0.05 + CGFloat( (objectDistance + 1) / (objectDistance + 1) )
+                if objData.type.lowercased() == "marker" { // let mR = 0.05 + CGFloat( (objectDistance + 1) / (objectDistance + 1) )
                     let cusomMarketImagePath = source.sb
                     
                     if FileManager.default.fileExists(atPath: URL(fileURLWithPath: cusomMarketImagePath).path) && cusomMarketImagePath != "" {
@@ -303,15 +311,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 ctNode.scale   = SCNVector3(1, 1, 1)
             } else {
                 if !objData.world_position && objData.localOrient {
-                    let ori = sceneView.pointOfView?.orientation
-                    let qRotation = SCNQuaternion(ori!.x, ori!.y, ori!.z, ori!.w)
+                    // TODO: Remove? let ori = sceneView.pointOfView?.orientation
+                    let qRotation = SCNQuaternion(0,0,0,0)
                     ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
                 }
             }
         
             ctNode.tagComponents(nodeTag: String(objData.uuid))
             sceneView.scene.rootNode.addChildNode(ctNode)
-            
         }
     }
     
@@ -615,7 +622,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
 
         refreshScene()
-        manageLoadingScreen(interval: 1)
+        manageLoadingScreen(interval: 1.5)
         updateCameraSettings()
     }
     
@@ -629,7 +636,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         sceneCameraSource = sceneView.scene.background.contents
 
         FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
-
         initScene()
         
         let pinchGR = UIPinchGestureRecognizer(

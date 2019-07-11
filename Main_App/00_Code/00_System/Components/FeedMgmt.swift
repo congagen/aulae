@@ -513,8 +513,6 @@ class FeedMgmt {
                 
                 needsViewRefresh = true
             }
-            
-            
         }
         
         do {
