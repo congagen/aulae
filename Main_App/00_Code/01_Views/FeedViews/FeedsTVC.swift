@@ -131,7 +131,7 @@ class FeedsTVC: UITableViewController {
         }
         
         if feed.errors > 5 {
-            cell.detailTextLabel?.text = "Offline?"
+            cell.detailTextLabel?.text = "Offline"
         }
 
         cell.restorationIdentifier = feed.id

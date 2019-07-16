@@ -28,7 +28,11 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     let demoFeedIdB = ""
     let demoFeedIdC = ""
     
+    var libMgr: FeedsTVC? = nil
     let feedMgr = FeedMgmt()
+    
+    @IBOutlet var mainTabBar: UITabBar!
+    
     let locationManager = CLLocationManager()
     var mainUpdateTimer = Timer()
     var activeDownloads: [String: String] = [:]
@@ -42,6 +46,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     
     @objc func mainUpdate() {
         print("mainUpdate: MainVC")
+        self.libMgr?.manualUpdate()
 
         dbGc()
 
@@ -61,9 +66,10 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
         DispatchQueue.main.async {
             self.feedMgr.updateFeeds(checkTimeSinceUpdate: true)
+            // TODO Update FeedTVC
+            self.libMgr?.manualUpdate()
         }
-        
-
+    
     }
     
     
@@ -181,7 +187,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 print("Error: \(error)")
             }
             
-            // quickStartExamples()
+            quickStartExamples()
             contentExamples()
         }
         
@@ -211,6 +217,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 viewControllers.forEach { $0.view.updateConstraints() }
             }
         }
+        updateSubviews()
     }
     
     
@@ -228,6 +235,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear: MainVC")
         self.selectedIndex = 1
+        
         UIOps().updateTabUIMode(tabCtrl: self)
     }
     
@@ -235,6 +243,20 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         print("viewDidAppear: MainVC")
         UIOps().updateTabUIMode(tabCtrl: self)
         super.viewDidAppear(animated)
+    }
+    
+    
+    func updateSubviews() {
+        //var libView: FeedsTVC? = nil
+        // tabBar: UITabBarController
+        
+        if let subView: UINavigationController = self.viewControllers!.last as? UINavigationController {
+            if let subViewVC: FeedsTVC = subView.viewControllers.first! as? FeedsTVC {
+                libMgr = subViewVC
+                feedMgr.libMgmtVC = libMgr
+            }
+        }
+        
     }
     
     
@@ -251,7 +273,6 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .default
     }
-    
 
 
 }

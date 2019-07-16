@@ -73,8 +73,15 @@ extension ChatViewController {
                 )
             }
         }
-        
+
         let alert = UIAlertController(title: "Title", message: "", preferredStyle: .alert)
+        
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        
         alert.setValue(attributedString, forKey: "attributedMessage")
         
         return attributedString
@@ -134,6 +141,12 @@ extension ChatViewController {
         // ----------------------------------------------------------------------------------------------------------------
         
         //self.view.window?.windowLevel = UIWindow.Level(rawValue: 10000001)
+        
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+        }
+        
         self.present(alert, animated: true, completion: nil)
         
     }

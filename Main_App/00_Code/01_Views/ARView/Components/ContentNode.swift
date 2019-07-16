@@ -134,7 +134,7 @@ class ContentNode: SCNNode {
     }
     
     
-    func addSphere(radius: CGFloat, and color: UIColor) {
+    func addSphere(radius: CGFloat, color: UIColor) {
         let sphereNode = createSphereNode(with: radius, color: color)
         addChildNode(sphereNode)
     }
@@ -201,7 +201,7 @@ class ContentNode: SCNNode {
                 let node: SCNNode = try objScene.scene().rootNode.clone()
                 let objMtl = SCNMaterial()
                 objMtl.isDoubleSided = true
-                node.geometry?.firstMaterial?.diffuse.contents = UIColor(hexColor: objectData.hex_color)
+                node.geometry?.firstMaterial?.diffuse.contents = UIColor.green
 
                 objMtl.lightingModel = .constant
                 node.geometry?.materials = [objMtl]
@@ -325,7 +325,38 @@ class ContentNode: SCNNode {
     }
     
     
+    func setProp(source: RLM_Feed, objData: RLM_Obj) {
+        feedUrl    = source.sourceUrl
+        feedName   = source.name
+        feedTopic  = source.topicKwd
+        chatURL    = objData.chatUrl
+        contentURL = objData.contentLink
+        directURL  = objData.directLink
+    }
+    
+    
+    func addContent(cType: String, radius: Double, color: UIColor, fPath: String, objData: RLM_Obj) {
+    
+        if cType.lowercased() == "sphere" {
+            addSphere(radius: 1, color: color)
+        }
+        
+        if cType.lowercased() == "image" {
+            addImage(fPath: fPath, objectData: objData)
+        }
+        
+        if cType.lowercased() == "gif" {
+            addGif(fPath: fPath, objectData: objData)
+        }
+        
+        if cType.lowercased() == "usdz" {
+            addUSDZ(fPath: fPath, objectData: objData)
+        }
+        
+        if cType.lowercased() == "obj" {
+            addObj(fPath: fPath, objectData: objData)
+        }
+    
+    }
     
 }
-
-

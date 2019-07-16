@@ -15,7 +15,7 @@ extension MainVC {
     func contentExamples() {
         
         let demoSrcA = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae"
-        let demoSrcB = "https://s3.amazonaws.com/aulae-examples/sources/images/aulae_demo.json"
+        let demoSrcB = "https://aulae-examples.s3.amazonaws.com/sources/usdz/aulae_demo_3d.json"
         let demoSrcC = "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/main/aulae-avr"
         
         if rlmFeeds.filter({ $0.sourceUrl == demoSrcA }).count == 0 {
@@ -24,7 +24,7 @@ extension MainVC {
             apiDemoFeed.id   = "Example Source A"
             apiDemoFeed.name = "Example Source A"
             apiDemoFeed.info = "Example Source A"
-            apiDemoFeed.active = true
+            apiDemoFeed.active = false
             
             do {
                 try realm.write {
@@ -41,7 +41,7 @@ extension MainVC {
             typeDemoFeed.id   = "Example Source B"
             typeDemoFeed.name = "Example Source B"
             typeDemoFeed.info = "Example Source B"
-            typeDemoFeed.active = true
+            typeDemoFeed.active = false
             
             do {
                 try realm.write {
@@ -58,7 +58,7 @@ extension MainVC {
             asciiDemo.id   = "Example Source C"
             asciiDemo.name = "Example Source C"
             asciiDemo.info = "Example Source C"
-            asciiDemo.active = true
+            asciiDemo.active = false
             
             do {
                 try realm.write {
@@ -80,7 +80,7 @@ extension MainVC {
         demoFeed.info = "Interface guide"
     
         let itemCount = 4
-        let distance: Double = 1
+        let distance: Double = 1.1
         
         if rlmFeeds.filter({ $0.id == demoFeed.id && $0.info == demoFeed.info }).count == 0 {
             do {

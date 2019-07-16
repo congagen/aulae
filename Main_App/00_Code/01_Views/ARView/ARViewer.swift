@@ -26,6 +26,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var updateTimer = Timer()
     var sceneCameraSource: Any? = nil
     
+    var isInit: Bool = false
+    
     var isTrackingQR = false
     var qrUrl = ""
     var qrCapturePreviewLayer: AVCaptureVideoPreviewLayer? = nil
@@ -72,6 +74,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         loadingView.isHidden = false
         loadingView.layer.opacity = 1
         FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
+        // TODO Update FeedTVC
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false, block: { _ in  self.initScene() })
     }
     
@@ -184,43 +187,59 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
 
     
-    func addSourceNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
-        var isOK = true
-        
-        if !objData.isInvalidated && !source.isInvalidated {
-            print("AddContentToScene: " + String(objData.uuid))
-            print("Adding: " + objData.type.lowercased() + ": " + fPath)
-        } else {
-            isOK = false
-        }
-        
-//        if !rlmSystem.first!.locationSharing && objData.world_position {
-//            isOK = false
-//        }
-        
-//      Check if the corresponding node data is present and schedule retry if it's not
-        if isOK {
-            if !["", "marker", "text", "demo"].contains(objData.type) && fPath != "" {
-                if !FileManager.default.fileExists(atPath: URL(fileURLWithPath: fPath).path) {
-                    print("Missing ContentNode Data, Scheduling Retry...")
-                    
-                    Timer.scheduledTimer(
-                        withTimeInterval: 1, repeats: false, block: {
-                            _ in DispatchQueue.main.async {
-                                
-                                if !objData.isInvalidated {
-                                    self.addSourceNode(
-                                        objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
-                                    )
-                                }
-                            }
-                        }
-                    )
-                    isOK = false
-                }
+    func report_memory() -> UInt64 {
+        var taskInfo = mach_task_basic_info()
+        var count = mach_msg_type_number_t(MemoryLayout<mach_task_basic_info>.size) / 4
+        let kerr: kern_return_t = withUnsafeMutablePointer(to: &taskInfo) {
+            $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
+                task_info(mach_task_self_, task_flavor_t(MACH_TASK_BASIC_INFO), $0, &count)
             }
         }
         
+        if kerr == KERN_SUCCESS {
+            print("Memory used in bytes: \(taskInfo.resident_size)")
+            return taskInfo.resident_size
+        } else {
+            print("Error with task_info(): " + (String(cString: mach_error_string(kerr), encoding: String.Encoding.ascii) ?? "unknown error"))
+            return 0
+        }
+    }
+    
+    
+    func checkNodeData(fPath: String, source: RLM_Feed, objData: RLM_Obj, scaleFactor: Double) -> Bool {
+        var isOk = true
+        
+        if !["", "marker", "text", "demo"].contains(objData.type) && fPath != "" {
+            if !FileManager.default.fileExists(atPath: URL(fileURLWithPath: fPath).path) {
+                print("Missing ContentNode Data, Scheduling Retry...")
+                
+                Timer.scheduledTimer(
+                    withTimeInterval: 1, repeats: false, block: {
+                        _ in DispatchQueue.main.async {
+                            if !objData.isInvalidated {
+                                self.addSourceNode(
+                                    objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
+                                )
+                            }
+                        }
+                    }
+                )
+                isOk = false
+            }
+        }
+        return isOk
+    }
+    
+    
+    func addSourceNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
+        print("AddContentToScene: " + String(objData.uuid))
+        print("Adding: " + objData.type.lowercased() + ": " + fPath)
+
+        var isOK = !objData.isInvalidated && !source.isInvalidated
+        
+        if isOK {
+            isOK = checkNodeData(fPath: fPath, source: source, objData: objData, scaleFactor: scaleFactor)
+        }
         
         if isOK || objData.type.lowercased() == "demo" {
             let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
@@ -229,9 +248,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
             
             if objData.world_position {
-                objectPos = getNodeWorldPosition(
-                    objectDistance: objectDistance, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor
-                )
+                objectPos = getNodeWorldPosition(objectDistance: objectDistance, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
             }
             
             if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
@@ -242,58 +259,30 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             }
             
             let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, info: objData.info, location: rawObjectGpsCCL)
-            ctNode.feedUrl    = source.sourceUrl
-            ctNode.feedName   = source.name
-            ctNode.feedTopic  = source.topicKwd
-            ctNode.chatURL    = objData.chatUrl
-            ctNode.contentURL = objData.contentLink
-            ctNode.directURL  = objData.directLink
+            ctNode.setProp(source: source, objData: objData)
             
-            if !["", "marker", "text", "demo"].contains(objData.type.lowercased()) {
-                
-                if FileManager.default.fileExists(atPath: URL(fileURLWithPath: fPath).path) {
-                    if objData.type.lowercased() == "obj"   { ctNode.addObj(fPath:   fPath, objectData: objData) }
-                    if objData.type.lowercased() == "usdz"  { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
-                    if objData.type.lowercased() == "image" { ctNode.addImage(fPath: fPath, objectData: objData) }
-                    if objData.type.lowercased() == "gif"   { ctNode.addGif(fPath:   fPath, objectData: objData) }
-                    
-                    if objData.type.lowercased() == "audio" {
-                        ctNode.removeAllAudioPlayers()
-                        if !(rlmSystem.first?.muteAudio)! {
-                            ctNode.addSphere(radius: 0.03, and: UIColor(hexColor: objData.hex_color))
-                            addAudio(
-                                contentObj: objData, objectDistance: objectDistance,
-                                audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x)
-                            )
-                        }
-                    }
-                } else {
-                    ctNode.addSphere(radius: 0.5, and: UIColor(hexColor: "ffffff"))
-                    objSize = SCNVector3(0.05, 0.05, 0.05)
-                }
-            
-            } else {
-                
-                if objData.type.lowercased() == "demo"  {
+            switch objData.type.lowercased() {
+                case "image":
+                    ctNode.addImage(fPath: fPath, objectData: objData)
+                case "gif":
+                    ctNode.addGif(fPath:   fPath, objectData: objData)
+                case "obj":
+                    if Int(1000000000 * 0.5) > report_memory() { ctNode.addObj(fPath:   fPath, objectData: objData) }
+                case "usdz":
+                    if Int(1000000000 * 0.5) > report_memory() { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
+                case "text":
+                    ctNode.addText(objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01), fontSize: 1, color: UIColor(hexColor: objData.hex_color))
+                case "marker":
+                    ctNode.addSphere(radius: 1, color: UIColor(hexColor: objData.hex_color))
+                case "demo":
                     ctNode.addDemoContent( fPath: fPath, objectData: objData)
-                }
-                
-                if objData.type.lowercased() == "marker" { // let mR = 0.05 + CGFloat( (objectDistance + 1) / (objectDistance + 1) )
-                    let cusomMarketImagePath = source.sb
-                    
-                    if FileManager.default.fileExists(atPath: URL(fileURLWithPath: cusomMarketImagePath).path) && cusomMarketImagePath != "" {
-                        ctNode.addImage(fPath: cusomMarketImagePath, objectData: objData)
-                    } else {
-                        ctNode.addSphere(radius: 1, and: UIColor(hexColor: objData.hex_color))
+                case "audio":
+                    if !(rlmSystem.first?.muteAudio)! {
+                        ctNode.addSphere(radius: CGFloat(1.0), color: UIColor(hexColor: objData.hex_color))
+                        addAudio(contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x))
                     }
-                }
-                
-                if objData.type.lowercased() == "text" {
-                    ctNode.addText(
-                        objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01),
-                        fontSize: 1, color: UIColor(hexColor: objData.hex_color)
-                    )
-                }
+                default:
+                    print("ok")
             }
             
             if objData.billboard {
@@ -312,7 +301,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             } else {
                 if !objData.world_position && objData.localOrient {
                     // TODO: Remove? let ori = sceneView.pointOfView?.orientation
-                    let qRotation = SCNQuaternion(0,0,0,0)
+                    let qRotation = SCNQuaternion(0, 0, 0, 0)
                     ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
                 }
             }
@@ -373,16 +362,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     if o.filePath != "" && o.type.lowercased() != "text" && o.type.lowercased() != "demo" {
                         print("UpdateScene: activeInRange: " + String(o.uuid))
 
-                        let documentsUrl = FileManager.default.urls(
-                            for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                        let documentsUrl = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask).first! as NSURL
                         
                         let fileName = (URL(string: o.filePath)?.lastPathComponent)!
                         let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                         
-                        addSourceNode(objData: o, source: objFeeds.first!, fPath: (
-                            destinationUrl?.path)!, scaleFactor: (rlmSystem.first?.scaleFactor)!
+//                        DispatchQueue.main.async {
+                        self.addSourceNode(objData: o, source: objFeeds.first!, fPath: (
+                            destinationUrl?.path)!, scaleFactor: (self.rlmSystem.first?.scaleFactor)!
                         )
-        
+//                        }
+                        
                     } else {
                         if (o.type.lowercased() == "text") {
                             addSourceNode(
@@ -408,7 +398,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print("Error: \(error)")
         }
         
-        manageLoadingScreen(interval: 1)
+        manageLoadingScreen(interval: 2)
         
     }
     
@@ -621,29 +611,37 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             print("Error: \(error)")
         }
 
-        refreshScene()
-        manageLoadingScreen(interval: 1.5)
-        updateCameraSettings()
+        if isInit {
+            updateCameraSettings()
+            refreshScene()
+        } else {
+            FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
+            Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: {_ in  self.initScene() })
+            manageLoadingScreen(interval: 5)
+            updateCameraSettings()
+            isInit = true
+        }
+        
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad: ArView")
-        
-        loadingView.isHidden = false
-        loadingView.layer.opacity = 1
-        sceneCameraSource = sceneView.scene.background.contents
-
-        FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
-        initScene()
-        
+                
         let pinchGR = UIPinchGestureRecognizer(
             target: self, action: #selector(ARViewer.handlePinch(_:))
         )
         
         pinchGR.delegate = self
         view.addGestureRecognizer(pinchGR)
+        
+//        for n in mainScene.rootNode.childNodes {
+//            if let no: ContentNode = n as? ContentNode {
+//                showSeletedNodeActions(selNode: no)
+//            }
+//        }
+
     }
     
     

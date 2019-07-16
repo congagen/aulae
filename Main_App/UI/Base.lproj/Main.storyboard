@@ -171,7 +171,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.046557326360236455" green="0.02441025886984189" blue="0.13669851036269431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="cay-QI-3xu" firstAttribute="top" secondItem="C7X-lF-NUs" secondAttribute="top" id="0nY-iY-v5X"/>
                             <constraint firstAttribute="bottom" secondItem="fEs-rS-yaY" secondAttribute="bottom" id="4gj-ru-9v9"/>
@@ -928,7 +928,7 @@
         <!--Aulae-->
         <scene sceneID="1XM-Tk-eYm">
             <objects>
-                <tableViewController extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="Z9j-U6-ciR" customClass="FeedSearchTVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="Z9j-U6-ciR" customClass="FeedSearchTVC" customModule="Aulae" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="v8V-41-IIa">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1005,6 +1005,7 @@
                         </userDefinedRuntimeAttributes>
                     </tabBar>
                     <connections>
+                        <outlet property="mainTabBar" destination="4T4-ar-U71" id="ONp-wQ-B0P"/>
                         <segue destination="OUb-j7-FRs" kind="relationship" relationship="viewControllers" id="IF6-EF-XJx"/>
                         <segue destination="0rd-Dl-ekc" kind="relationship" relationship="viewControllers" id="2hM-eD-a6W"/>
                         <segue destination="yYe-rU-Gja" kind="relationship" relationship="viewControllers" id="cJq-a7-SvM"/>
@@ -1435,7 +1436,7 @@
         <!--Lib-->
         <scene sceneID="O55-tf-JR6">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yYe-rU-Gja" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController restorationIdentifier="lib" automaticallyAdjustsScrollViewInsets="NO" id="yYe-rU-Gja" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Lib" image="TabBarIcon_02" selectedImage="TabBarIcon_02" id="DlA-0C-lKa"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>

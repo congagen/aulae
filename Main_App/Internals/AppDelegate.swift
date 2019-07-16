@@ -99,6 +99,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         alertController.addAction(cancelAction)
         alertController.view.tintColor = UIColor.black
         
+        let aView = UIApplication.shared.keyWindow?.rootViewController?.view
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = aView
+            popoverController.sourceRect = CGRect(x: aView!.bounds.midX, y: aView!.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        
         window?.rootViewController?.present(alertController, animated: true, completion: nil )
         
         return true
