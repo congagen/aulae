@@ -35,6 +35,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     var rawDeviceGpsCCL: CLLocation = CLLocation(latitude: 0, longitude: 0)
 
+    var memoryWarning = false
+    
     var trackingState = 3
     var configuration = AROrientationTrackingConfiguration()
     
@@ -52,11 +54,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     let settingsView: UIStoryboard! = nil
     let chatView: UIStoryboard! = nil
     
+    @IBOutlet var startScreenLogo: UIView!
+    
     
     @IBAction func showSettingsView(_ sender: UIBarButtonItem) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController")
         vc!.modalPresentationStyle = .overFullScreen
-        vc!.modalTransitionStyle = .coverVertical
+        vc!.modalTransitionStyle = .crossDissolve
         
         present(vc!, animated: true, completion: nil)
     }
@@ -213,17 +217,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             if !FileManager.default.fileExists(atPath: URL(fileURLWithPath: fPath).path) {
                 print("Missing ContentNode Data, Scheduling Retry...")
                 
-                Timer.scheduledTimer(
-                    withTimeInterval: 1, repeats: false, block: {
-                        _ in DispatchQueue.main.async {
-                            if !objData.isInvalidated {
-                                self.addSourceNode(
-                                    objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
-                                )
-                            }
-                        }
-                    }
-                )
                 isOk = false
             }
         }
@@ -231,83 +224,112 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    func styledContentNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) -> ContentNode {
+
+        let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
+        let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
+        var objectPos         = SCNVector3(objData.x_pos, objData.y_pos, objData.z_pos)
+        var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
+        
+        if objData.world_position {
+            objectPos = getNodeWorldPosition(objectDistance: objectDistance, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
+        }
+        
+        if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
+            let nSize = CGFloat((CGFloat(100 / (CGFloat(objectDistance) + 100)) * CGFloat(objectDistance)) / CGFloat(objectDistance)) + CGFloat(0.1 / scaleFactor)
+            objSize = SCNVector3(nSize, nSize, nSize)
+        } else {
+            if (objData.type == "text" || objData.type == "audio" || objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
+        }
+        
+        let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, info: objData.info, location: rawObjectGpsCCL)
+        ctNode.setProp(source: source, objData: objData)
+        
+        switch objData.type.lowercased() {
+        case "image":
+            ctNode.addImage(fPath: fPath, objectData: objData)
+        case "gif":
+            ctNode.addGif(fPath: fPath, objectData: objData)
+        case "obj":
+            if memoryWarning {
+                if Int(1000000000 * 0.5) > report_memory() { ctNode.addObj(fPath:   fPath, objectData: objData) }
+            } else {
+                ctNode.addObj(fPath: fPath, objectData: objData)
+            }
+        case "usdz":
+            if memoryWarning {
+                if Int(1000000000 * 0.5) > report_memory() { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
+            } else {
+                ctNode.addObj(fPath: fPath, objectData: objData)
+            }
+        case "text":
+            ctNode.addText(objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01), fontSize: 1, color: UIColor(hexColor: objData.hex_color))
+        case "marker":
+            ctNode.addSphere(radius: 1, color: UIColor(hexColor: objData.hex_color))
+        case "demo":
+            ctNode.addDemoContent( fPath: fPath, objectData: objData)
+        case "audio":
+            if !(rlmSystem.first?.muteAudio)! {
+                ctNode.addSphere(radius: CGFloat(1.0), color: UIColor(hexColor: objData.hex_color))
+                addAudio(contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x))
+            }
+        default:
+            print("ok")
+        }
+        
+        if objData.billboard {
+            let constraint      = SCNBillboardConstraint()
+            constraint.freeAxes = [.Y]
+            ctNode.constraints  = [constraint]
+        }
+        
+        ctNode.name        = String(objData.uuid)
+        ctNode.position    = SCNVector3(objectPos.x, objectPos.y, objectPos.z)
+        ctNode.scale       = objSize
+        
+        if objData.demo {
+            //positionDemoNodes(ctNode: ctNode, objData: objData)
+            ctNode.scale   = SCNVector3(1, 1, 1)
+        } else {
+            if !objData.world_position && objData.localOrient {
+                // TODO: Remove? let ori = sceneView.pointOfView?.orientation
+                let qRotation = SCNQuaternion(0, 0, 0, 0)
+                ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
+            }
+        }
+        
+        ctNode.tagComponents(nodeTag: String(objData.uuid))
+        
+        return ctNode
+    }
+    
+    
+    
     func addSourceNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(objData.uuid))
         print("Adding: " + objData.type.lowercased() + ": " + fPath)
 
-        var isOK = !objData.isInvalidated && !source.isInvalidated
+        var isIntact = !objData.isInvalidated && !source.isInvalidated
         
-        if isOK {
-            isOK = checkNodeData(fPath: fPath, source: source, objData: objData, scaleFactor: scaleFactor)
+        if isIntact {
+            isIntact = checkNodeData(fPath: fPath, source: source, objData: objData, scaleFactor: scaleFactor)
         }
         
-        if isOK || objData.type.lowercased() == "demo" {
-            let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
-            let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
-            var objectPos         = SCNVector3(objData.x_pos, objData.y_pos, objData.z_pos)
-            var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
-            
-            if objData.world_position {
-                objectPos = getNodeWorldPosition(objectDistance: objectDistance, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
-            }
-            
-            if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
-                let nSize = CGFloat((CGFloat(100 / (CGFloat(objectDistance) + 100)) * CGFloat(objectDistance)) / CGFloat(objectDistance)) + CGFloat(0.1 / scaleFactor)
-                objSize = SCNVector3(nSize, nSize, nSize)
-            } else {
-                if (objData.type == "text" || objData.type == "audio" || objData.type == "marker") { objSize = SCNVector3(0.05, 0.05, 0.05) }
-            }
-            
-            let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, info: objData.info, location: rawObjectGpsCCL)
-            ctNode.setProp(source: source, objData: objData)
-            
-            switch objData.type.lowercased() {
-                case "image":
-                    ctNode.addImage(fPath: fPath, objectData: objData)
-                case "gif":
-                    ctNode.addGif(fPath:   fPath, objectData: objData)
-                case "obj":
-                    if Int(1000000000 * 0.5) > report_memory() { ctNode.addObj(fPath:   fPath, objectData: objData) }
-                case "usdz":
-                    if Int(1000000000 * 0.5) > report_memory() { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
-                case "text":
-                    ctNode.addText(objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01), fontSize: 1, color: UIColor(hexColor: objData.hex_color))
-                case "marker":
-                    ctNode.addSphere(radius: 1, color: UIColor(hexColor: objData.hex_color))
-                case "demo":
-                    ctNode.addDemoContent( fPath: fPath, objectData: objData)
-                case "audio":
-                    if !(rlmSystem.first?.muteAudio)! {
-                        ctNode.addSphere(radius: CGFloat(1.0), color: UIColor(hexColor: objData.hex_color))
-                        addAudio(contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x))
-                    }
-                default:
-                    print("ok")
-            }
-            
-            if objData.billboard {
-                let constraint      = SCNBillboardConstraint()
-                constraint.freeAxes = [.Y]
-                ctNode.constraints  = [constraint]
-            }
-        
-            ctNode.name        = String(objData.uuid)
-            ctNode.position    = SCNVector3(objectPos.x, objectPos.y, objectPos.z)
-            ctNode.scale       = objSize
-            
-            if objData.demo {
-                //positionDemoNodes(ctNode: ctNode, objData: objData)
-                ctNode.scale   = SCNVector3(1, 1, 1)
-            } else {
-                if !objData.world_position && objData.localOrient {
-                    // TODO: Remove? let ori = sceneView.pointOfView?.orientation
-                    let qRotation = SCNQuaternion(0, 0, 0, 0)
-                    ctNode.rotate(by: qRotation, aroundTarget: (sceneView!.pointOfView?.position)!)
-                }
-            }
-        
-            ctNode.tagComponents(nodeTag: String(objData.uuid))
+        if isIntact || objData.type.lowercased() == "demo" {
+            let ctNode = styledContentNode(objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor)
             sceneView.scene.rootNode.addChildNode(ctNode)
+        } else {
+            Timer.scheduledTimer(
+                withTimeInterval: 1, repeats: false, block: {
+                    _ in DispatchQueue.main.async {
+                        if !objData.isInvalidated {
+                            self.addSourceNode(
+                                objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
+                            )
+                        }
+                    }
+                }
+            )
         }
     }
     
@@ -406,6 +428,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     func handleTap(touches: Set<UITouch>) {
         print("handleTap")
         loadingView.layer.opacity = 0
+        startScreenLogo.isHidden = true
         
         if isTrackingQR {
             //searchQRBtn.tintColor = self.view.window?.tintColor
@@ -546,6 +569,13 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 withTimeInterval: TimeInterval(interval), repeats: false,
                 block: {_ in self.manageLoadingScreen(interval: interval + 0.1)
             })
+        }
+        
+        if !startScreenLogo.isHidden {
+            ViewAnimation().fade(
+                viewToAnimate: self.startScreenLogo, aDuration: interval * 1.05,
+                hideView: true, aMode: UIView.AnimationOptions.curveEaseIn
+            )
         }
     }
 
@@ -740,6 +770,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         if error is ARError {
             print(error)
         }
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        memoryWarning = true
     }
     
     

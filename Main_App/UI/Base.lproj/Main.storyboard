@@ -106,7 +106,25 @@
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" sceneName="main.scn" jitteringEnabled="YES" wantsMultisampling="YES" autoenablesDefaultLighting="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fEs-rS-yaY">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </arscnView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sih-nI-sFF" userLabel="LoadingBg">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="nDB-VG-IBT">
+                                        <rect key="frame" x="107" y="348" width="200" height="200"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="200" id="EDv-ey-KJ5"/>
+                                            <constraint firstAttribute="width" constant="200" id="ThA-vB-ip3"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.54488090280000001" green="0.62019355809999999" blue="0.93857270079999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="nDB-VG-IBT" firstAttribute="centerY" secondItem="Sih-nI-sFF" secondAttribute="centerY" id="HDc-Wo-pfz"/>
+                                    <constraint firstItem="nDB-VG-IBT" firstAttribute="centerX" secondItem="Sih-nI-sFF" secondAttribute="centerX" id="auw-q9-1Mn"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cVh-GF-OBP" userLabel="LoadingView">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
@@ -138,53 +156,21 @@
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="wqU-0A-u2Q"/>
                             </view>
-                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cay-QI-3xu" userLabel="WelcomeScreen">
-                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <subviews>
-                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GTq-0x-tGO">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="eWy-F2-xUb">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Guide.png" translatesAutoresizingMaskIntoConstraints="NO" id="ONZ-Hp-mPH">
-                                                    <rect key="frame" x="0.0" y="48" width="414" height="629"/>
-                                                </imageView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="ONZ-Hp-mPH" firstAttribute="centerY" secondItem="eWy-F2-xUb" secondAttribute="centerY" id="VKm-Md-u5W"/>
-                                                <constraint firstAttribute="trailing" secondItem="ONZ-Hp-mPH" secondAttribute="trailing" id="fDY-P9-V3V"/>
-                                                <constraint firstAttribute="bottom" secondItem="ONZ-Hp-mPH" secondAttribute="bottom" constant="48" id="kpM-9X-s86"/>
-                                                <constraint firstItem="ONZ-Hp-mPH" firstAttribute="leading" secondItem="eWy-F2-xUb" secondAttribute="leading" id="vuJ-C1-ZM2"/>
-                                                <constraint firstItem="ONZ-Hp-mPH" firstAttribute="centerX" secondItem="eWy-F2-xUb" secondAttribute="centerX" id="z3g-cU-81O"/>
-                                            </constraints>
-                                        </view>
-                                        <blurEffect style="light"/>
-                                    </visualEffectView>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="GTq-0x-tGO" firstAttribute="top" secondItem="cay-QI-3xu" secondAttribute="top" id="0O5-dp-5aQ"/>
-                                    <constraint firstItem="GTq-0x-tGO" firstAttribute="height" secondItem="cay-QI-3xu" secondAttribute="height" id="TqZ-66-0bH"/>
-                                    <constraint firstItem="GTq-0x-tGO" firstAttribute="leading" secondItem="cay-QI-3xu" secondAttribute="leading" id="fB2-yD-95K"/>
-                                    <constraint firstItem="GTq-0x-tGO" firstAttribute="width" secondItem="cay-QI-3xu" secondAttribute="width" id="tg0-Vt-MCK"/>
-                                </constraints>
-                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.046557326360236455" green="0.02441025886984189" blue="0.13669851036269431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="cay-QI-3xu" firstAttribute="top" secondItem="C7X-lF-NUs" secondAttribute="top" id="0nY-iY-v5X"/>
                             <constraint firstAttribute="bottom" secondItem="fEs-rS-yaY" secondAttribute="bottom" id="4gj-ru-9v9"/>
-                            <constraint firstItem="cay-QI-3xu" firstAttribute="height" secondItem="C7X-lF-NUs" secondAttribute="height" id="5En-uG-WCi"/>
+                            <constraint firstItem="Sih-nI-sFF" firstAttribute="width" secondItem="1yb-qm-Ox7" secondAttribute="width" id="56c-PM-EFi"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="top" secondItem="cVh-GF-OBP" secondAttribute="top" id="AWa-oO-W1w"/>
                             <constraint firstAttribute="trailing" secondItem="fEs-rS-yaY" secondAttribute="trailing" id="KPF-Y4-Pls"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="leading" secondItem="1yb-qm-Ox7" secondAttribute="leading" id="Occ-Lv-cWf"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="top" secondItem="1yb-qm-Ox7" secondAttribute="top" id="QDn-kH-Fja"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="bottom" secondItem="cVh-GF-OBP" secondAttribute="bottom" id="Tpu-Bt-zcU"/>
-                            <constraint firstItem="cay-QI-3xu" firstAttribute="width" secondItem="C7X-lF-NUs" secondAttribute="width" id="beK-WX-uP6"/>
-                            <constraint firstItem="cay-QI-3xu" firstAttribute="leading" secondItem="fEs-rS-yaY" secondAttribute="leading" id="iTm-Mh-dkU"/>
+                            <constraint firstItem="Sih-nI-sFF" firstAttribute="leading" secondItem="fEs-rS-yaY" secondAttribute="leading" id="cS6-Dr-BBf"/>
+                            <constraint firstItem="Sih-nI-sFF" firstAttribute="top" secondItem="fEs-rS-yaY" secondAttribute="top" id="i77-LE-VHz"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="leading" secondItem="cVh-GF-OBP" secondAttribute="leading" id="kRE-mb-hjq"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="trailing" secondItem="cVh-GF-OBP" secondAttribute="trailing" id="pud-wO-1d9"/>
+                            <constraint firstItem="Sih-nI-sFF" firstAttribute="height" secondItem="1yb-qm-Ox7" secondAttribute="height" id="qYH-uO-IJL"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C7X-lF-NUs"/>
                     </view>
@@ -217,6 +203,7 @@
                     <connections>
                         <outlet property="loadingView" destination="cVh-GF-OBP" id="Mig-i4-6yC"/>
                         <outlet property="sceneView" destination="fEs-rS-yaY" id="cxZ-S7-Spe"/>
+                        <outlet property="startScreenLogo" destination="Sih-nI-sFF" id="9iM-LL-fG9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0yF-0m-H2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1456,7 +1443,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Guide.png" width="2000" height="2000"/>
+        <image name="Logo" width="500" height="500"/>
         <image name="Logo.png" width="500" height="500"/>
         <image name="QR" width="22" height="22"/>
         <image name="Spacer" width="20" height="20"/>

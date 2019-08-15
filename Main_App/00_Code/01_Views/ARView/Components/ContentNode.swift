@@ -28,7 +28,7 @@ class ContentNode: SCNNode {
     var location: CLLocation!
     
     
-    init(id: String, title: String, feedId:String, info:String, location: CLLocation) {
+    init(id: String, title: String, feedId: String, info: String, location: CLLocation) {
         self.id = id
         self.title = title
         self.info  = info
@@ -293,6 +293,22 @@ class ContentNode: SCNNode {
             node.geometry?.materials.first?.isDoubleSided = true
         }
         
+        addChildNode(node)
+    }
+    
+    
+    func addParticle(particleNode: SCNNode, type: String, gravity: Bool){
+        let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
+        
+        let particleSystem = SCNParticleSystem(named: "FloatingParticleSystem", inDirectory: nil)
+        particleSystem?.birthRate = 100
+        particleSystem?.acceleration = SCNVector3(0, 1, 0)
+        particleSystem?.emitterShape = node.geometry
+        particleSystem?.isAffectedByGravity = gravity
+        particleSystem?.birthLocation = .surface
+        particleSystem?.particleDiesOnCollision = true
+        
+        node.addParticleSystem(particleSystem!)
         addChildNode(node)
     }
     

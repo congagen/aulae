@@ -1,9 +1,10 @@
 
 // URGENT:
 
+//      Fix QR Code Lag / Target Area
+//      Change Settings Animation 
 
-//      
-
+//      Particle Objects
 //      Rename Demo Sources
 
 //      Cam Rotation Bug?
