@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 
-
 class RLM_ChatIdentity: Object {
     
     @objc dynamic var usernameAulae: String = ""

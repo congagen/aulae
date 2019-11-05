@@ -22,6 +22,7 @@
 		31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869020B355A30038F4D5 /* FeedsTVC.swift */; };
 		31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869520B3FB040038F4D5 /* MapVC.swift */; };
 		31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D284BE20D3B079004451A6 /* RLM_Feed.swift */; };
+		E44807058F878A122D9E5EB5 /* Pods_Aulae.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0A4B178E0EA95DAE775C79 /* Pods_Aulae.framework */; };
 		FA1514D722B27B080012BEA4 /* RLM_SysSettings_117.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D622B27B080012BEA4 /* RLM_SysSettings_117.swift */; };
 		FA1514D922B289380012BEA4 /* DefaultNVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D822B289380012BEA4 /* DefaultNVC.swift */; };
 		FA1514DB22B2C4010012BEA4 /* ChatMsgActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514DA22B2C4010012BEA4 /* ChatMsgActions.swift */; };
@@ -50,10 +51,6 @@
 		FA8B386A2211D9CD0099A7A3 /* ARViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8B38692211D9CD0099A7A3 /* ARViewer.swift */; };
 		FA9E933F222183AC00346073 /* NetworkTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9E933E222183AC00346073 /* NetworkTools.swift */; };
 		FAB2AE7A22088315004D5819 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2AE7922088315004D5819 /* TODO.swift */; };
-		FAB68C78224CB37700126867 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C76224CB37600126867 /* Realm.framework */; };
-		FAB68C79224CB37700126867 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C76224CB37600126867 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FAB68C7A224CB37700126867 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; };
-		FAB68C7B224CB37700126867 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB68C77224CB37600126867 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FAB9799E22D60D0D004520B2 /* Guide.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB9799D22D60D0D004520B2 /* Guide.png */; };
 		FAC0A65F22B82B1300C5BC13 /* RLM_CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC0A65E22B82B1300C5BC13 /* RLM_CameraSettings.swift */; };
 		FAD6562722B6A6AE00F1F56A /* DbOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD6562622B6A6AE00F1F56A /* DbOps.swift */; };
@@ -63,14 +60,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		FADD4685224B6D190096DF5A /* Embed Frameworks */ = {
+		FAF0D0372371A7C200E0875E /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FAB68C7B224CB37700126867 /* RealmSwift.framework in Embed Frameworks */,
-				FAB68C79224CB37700126867 /* Realm.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,6 +91,8 @@
 		31AB869020B355A30038F4D5 /* FeedsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsTVC.swift; sourceTree = "<group>"; };
 		31AB869520B3FB040038F4D5 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
 		31D284BE20D3B079004451A6 /* RLM_Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Feed.swift; sourceTree = "<group>"; };
+		C66F8FA608BC767CD21F1B4E /* Pods-Aulae.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aulae.release.xcconfig"; path = "Target Support Files/Pods-Aulae/Pods-Aulae.release.xcconfig"; sourceTree = "<group>"; };
+		EA0A4B178E0EA95DAE775C79 /* Pods_Aulae.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Aulae.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA1514D622B27B080012BEA4 /* RLM_SysSettings_117.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_SysSettings_117.swift; sourceTree = "<group>"; };
 		FA1514D822B289380012BEA4 /* DefaultNVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNVC.swift; sourceTree = "<group>"; };
 		FA1514DA22B2C4010012BEA4 /* ChatMsgActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMsgActions.swift; sourceTree = "<group>"; };
@@ -125,15 +122,14 @@
 		FA8B38692211D9CD0099A7A3 /* ARViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewer.swift; sourceTree = "<group>"; };
 		FA9E933E222183AC00346073 /* NetworkTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTools.swift; sourceTree = "<group>"; };
 		FAB2AE7922088315004D5819 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
-		FAB68C76224CB37600126867 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
-		FAB68C77224CB37600126867 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		FAB9799D22D60D0D004520B2 /* Guide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Guide.png; sourceTree = "<group>"; };
-		FAB9799F22D70DB3004520B2 /* LogoCube.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = LogoCube.usdz; sourceTree = "<group>"; };
+		FAB9799F22D70DB3004520B2 /* LogoCube.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = LogoCube.usdz; sourceTree = "<group>"; };
 		FAC0A65E22B82B1300C5BC13 /* RLM_CameraSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_CameraSettings.swift; sourceTree = "<group>"; };
 		FAD6562622B6A6AE00F1F56A /* DbOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbOps.swift; sourceTree = "<group>"; };
 		FAE439622237B5C900F828EF /* UIOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOps.swift; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* NodeAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAppearance.swift; sourceTree = "<group>"; };
 		FAF4C9A1223474D500C2F371 /* QrScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrScanner.swift; sourceTree = "<group>"; };
+		FF593F95438552C5DDE487C5 /* Pods-Aulae.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aulae.debug.xcconfig"; path = "Target Support Files/Pods-Aulae/Pods-Aulae.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,9 +137,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAB68C78224CB37700126867 /* Realm.framework in Frameworks */,
 				318FE8F520B0BDDD0050528B /* MapKit.framework in Frameworks */,
-				FAB68C7A224CB37700126867 /* RealmSwift.framework in Frameworks */,
+				E44807058F878A122D9E5EB5 /* Pods_Aulae.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +179,7 @@
 				318FE90320B1696E0050528B /* Internals */,
 				3177251C20B03AD4009FA8B1 /* Products */,
 				318FE8F320B0BDDD0050528B /* Frameworks */,
+				468C1681482247295EA48EBC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -216,9 +212,8 @@
 		318FE8F320B0BDDD0050528B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FAB68C76224CB37600126867 /* Realm.framework */,
-				FAB68C77224CB37600126867 /* RealmSwift.framework */,
 				318FE8F420B0BDDD0050528B /* MapKit.framework */,
+				EA0A4B178E0EA95DAE775C79 /* Pods_Aulae.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -304,6 +299,16 @@
 				FAC030CA229C2F2D009D1E28 /* Chat */,
 			);
 			path = 01_Data;
+			sourceTree = "<group>";
+		};
+		468C1681482247295EA48EBC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FF593F95438552C5DDE487C5 /* Pods-Aulae.debug.xcconfig */,
+				C66F8FA608BC767CD21F1B4E /* Pods-Aulae.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		FA1934E5222567D100457C6E /* Components */ = {
@@ -396,11 +401,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3177252F20B03AD6009FA8B1 /* Build configuration list for PBXNativeTarget "Aulae" */;
 			buildPhases = (
+				19162E019B335F97C9CD3A3D /* [CP] Check Pods Manifest.lock */,
 				3177251720B03AD4009FA8B1 /* Sources */,
 				3177251920B03AD4009FA8B1 /* Resources */,
 				3177251820B03AD4009FA8B1 /* Frameworks */,
-				FADD4685224B6D190096DF5A /* Embed Frameworks */,
 				FA6BA7CD22315EE700DB3F2A /* ShellScript */,
+				FAF0D0372371A7C200E0875E /* Embed Frameworks */,
+				9EE9DBA3F21538497F406383 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -488,6 +495,45 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		19162E019B335F97C9CD3A3D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Aulae-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9EE9DBA3F21538497F406383 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Aulae/Pods-Aulae-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Aulae/Pods-Aulae-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Aulae/Pods-Aulae-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		FA6BA7CD22315EE700DB3F2A /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -691,6 +737,7 @@
 		};
 		3177253020B03AD6009FA8B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FF593F95438552C5DDE487C5 /* Pods-Aulae.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Internals/Aulae.entitlements;
@@ -701,6 +748,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Internals/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -714,6 +762,7 @@
 		};
 		3177253120B03AD6009FA8B1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C66F8FA608BC767CD21F1B4E /* Pods-Aulae.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Internals/Aulae.entitlements;
@@ -724,6 +773,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Internals/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

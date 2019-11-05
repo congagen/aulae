@@ -48,8 +48,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Can't access realm, migration needed")
             migrateRealm()
         }
+        
+        let keyWindow = UIApplication.shared.connectedScenes
+            .filter({$0.activationState == .foregroundActive})
+            .map({$0 as? UIWindowScene})
+            .compactMap({$0})
+            .first?.windows
+            .filter({$0.isKeyWindow}).first
  
-        UIApplication.shared.keyWindow?.tintColor = UIColor.black
+        keyWindow?.tintColor = UIColor.black
 
         return true
     }
@@ -99,7 +106,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         alertController.addAction(cancelAction)
         alertController.view.tintColor = UIColor.black
         
-        let aView = UIApplication.shared.keyWindow?.rootViewController?.view
+        let keyWindow = UIApplication.shared.connectedScenes
+            .filter({$0.activationState == .foregroundActive})
+            .map({$0 as? UIWindowScene})
+            .compactMap({$0})
+            .first?.windows
+            .filter({$0.isKeyWindow}).first
+        
+        let aView = keyWindow?.rootViewController?.view
         
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = aView
