@@ -12,6 +12,7 @@ import CoreLocation
 import Realm
 import RealmSwift
 
+
 class MainVC: UITabBarController, CLLocationManagerDelegate {
 
     lazy var realm = try! Realm()
@@ -70,6 +71,32 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             self.libMgr?.manualUpdate()
         }
     
+    }
+    
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        print("traitCollectionDidChange")
+        
+        do {
+            try realm.write {
+                if traitCollection.userInterfaceStyle == .dark && !(traitCollection.userInterfaceStyle == .unspecified) {
+                    rlmSystem.first?.uiMode = 1
+                } else {
+                    rlmSystem.first?.uiMode = 2
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        UIOps().updateTabUIMode(tabCtrl: self)
+        
+        if (self.navigationController != nil) {
+            UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+        }
+        
     }
     
     
@@ -139,6 +166,18 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
     
     func initSession() {
         dbGc()
+        
+        do {
+            try realm.write {
+                if self.traitCollection.userInterfaceStyle == .dark {
+                    rlmSystem.first?.uiMode = 1
+                } else {
+                    rlmSystem.first?.uiMode = 2
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
         
         if rlmSystem.count < 1 {
             let rlmSys = RLM_SysSettings_117()

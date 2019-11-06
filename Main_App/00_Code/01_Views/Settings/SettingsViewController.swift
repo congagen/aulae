@@ -135,13 +135,13 @@ class SettingsViewController: UITableViewController {
 //    }
     
     
-    let darkModeParamName = "darkModeState"
-    @IBOutlet var darkModeSwitch: UISwitch!
-    @IBAction func darkModeSwitchAction(_ sender: UISwitch) {
-        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
-        saveSettings(propName: darkModeParamName, propValue: boolDouble)
-        updateUI()
-    }
+//    let darkModeParamName = "darkModeState"
+//    @IBOutlet var darkModeSwitch: UISwitch!
+//    @IBAction func darkModeSwitchAction(_ sender: UISwitch) {
+//        let boolDouble = Double(NSNumber(value: sender.isOn).intValue)
+//        saveSettings(propName: darkModeParamName, propValue: boolDouble)
+//        updateUI()
+//    }
 
     
     let gpsContentParamName = "gpsContent"
@@ -240,8 +240,8 @@ class SettingsViewController: UITableViewController {
                     case onlyLocalContentParamName:
                         rlmSystem.first?.onlyGpsContent         = Int(propValue) == 1
                         
-                    case darkModeParamName:
-                        rlmSystem.first?.uiMode                 = Int(propValue)
+//                    case darkModeParamName:
+//                        rlmSystem.first?.uiMode                 = Int(propValue)
                         
                     case useDistanceParamName:
                         rlmSystem.first!.gpsScaling             = Int(propValue) == 1
@@ -295,9 +295,8 @@ class SettingsViewController: UITableViewController {
         camSaturationStepper.value       = rlmCamera.first!.saturation
         camSaturationDisplay.text        = String( Double(round(1000 * camSaturationStepper.value) / 1000))
         
-        darkModeSwitch.isOn              = rlmSystem.first?.uiMode == 1
+//        darkModeSwitch.isOn              = rlmSystem.first?.uiMode == 1
 
-        
         for state: UIControl.State in [.normal, .highlighted, .disabled, .selected, .focused, .application, .reserved] {
             usernameBtn.setTitle(NSLocalizedString(chatSessions.first!.username, comment: ""), for: state)
         }

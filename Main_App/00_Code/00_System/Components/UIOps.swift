@@ -25,13 +25,13 @@ class UIOps {
     
     
     func updateGlobalTint(window: UIWindow) {
-        
+
         if rlmSystem.first?.uiMode == 1 {
             window.tintColor = UIColor.white
         } else {
             window.tintColor = UIColor.black
         }
-        
+  
     }
 
     
@@ -53,6 +53,7 @@ class UIOps {
 
     func updateTabUIMode(tabCtrl: UITabBarController){
         // print("Dark Mode Tab: " + String(rlmSystem.first?.uiMode == 1))
+        
         
         if rlmSystem.first?.uiMode == 1 {
             tabCtrl.tabBar.isTranslucent = true
