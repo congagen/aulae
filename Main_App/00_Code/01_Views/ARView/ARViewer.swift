@@ -425,12 +425,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
+    
     func handleTap(touches: Set<UITouch>) {
         print("handleTap")
         loadingView.layer.opacity = 0
         startScreenLogo.isHidden = true
         
         if isTrackingQR {
+            // TODO: Fix Stretch problem
             //searchQRBtn.tintColor = self.view.window?.tintColor
             qrCaptureSession?.stopRunning()
             qrCapturePreviewLayer?.isHidden = true

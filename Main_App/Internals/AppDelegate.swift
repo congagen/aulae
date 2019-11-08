@@ -11,6 +11,8 @@ import Realm
 import RealmSwift
 
 
+// TODO:
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
