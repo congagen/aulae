@@ -107,6 +107,10 @@ extension ARViewer {
     
     
     func captureQRCode() {
+        print("captureQRCode")
+        print(view.bounds)
+        print(sceneView.bounds)
+        
         isTrackingQR = true
 
         // TODO: Add if Image?
@@ -127,8 +131,8 @@ extension ARViewer {
         }
         
         let output = AVCaptureMetadataOutput()
-        output.setMetadataObjectsDelegate((self as AVCaptureMetadataOutputObjectsDelegate),
-                                          queue: DispatchQueue.main)
+        output.setMetadataObjectsDelegate((self as AVCaptureMetadataOutputObjectsDelegate), queue: DispatchQueue.main)
+        
         qrCaptureSession?.addOutput(output)
         output.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
         
@@ -136,7 +140,7 @@ extension ARViewer {
         let bounds = self.view.layer.bounds
         qrCapturePreviewLayer!.videoGravity = AVLayerVideoGravity.resizeAspectFill
         qrCapturePreviewLayer!.bounds = bounds
-                
+
         qrCapturePreviewLayer!.position = CGPoint(x: bounds.midX, y: bounds.midY)
         self.view.layer.addSublayer(qrCapturePreviewLayer!)
         

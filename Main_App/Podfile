@@ -1,0 +1,4 @@
+target 'Aulae' do
+  use_frameworks!
+  pod 'RealmSwift'
+end

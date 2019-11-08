@@ -184,6 +184,7 @@
                             <barButtonItem title="QR Scan Button" image="QR" style="plain" id="zJn-jr-Es6">
                                 <connections>
                                     <action selector="searchQrBtnAction:" destination="cNO-cb-Srl" id="4te-ct-1TA"/>
+                                    <segue destination="DVs-rL-fGx" kind="show" id="OpP-Se-rBc"/>
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
@@ -936,6 +937,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tNu-ip-EAX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1107" y="2389"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="nRw-Yc-ASa">
+            <objects>
+                <viewController id="DVs-rL-fGx" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ye6-oq-UHH">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="8NM-C6-tPp"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="MSv-Gq-cuo"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hh7-ra-LUM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-323" y="2389"/>
         </scene>
         <!--MainVC-->
         <scene sceneID="Wui-Ci-rQu">

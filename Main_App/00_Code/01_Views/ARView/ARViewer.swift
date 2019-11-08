@@ -103,6 +103,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     @IBOutlet var searchQRBtn: UIButton!
     @IBAction func searchQrBtnAction(_ sender: UIBarButtonItem) {
         print("searchQrBtnAction")
+        print(view.bounds)
+        print(sceneView.bounds)
     
         if isTrackingQR && (qrCapturePreviewLayer != nil) {
             if qrCaptureSession != nil {
@@ -425,7 +427,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    
     func handleTap(touches: Set<UITouch>) {
         print("handleTap")
         loadingView.layer.opacity = 0
@@ -433,14 +434,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if isTrackingQR {
             // TODO: Fix Stretch problem
-            //searchQRBtn.tintColor = self.view.window?.tintColor
+            
             qrCaptureSession?.stopRunning()
             qrCapturePreviewLayer?.isHidden = true
             qrCapturePreviewLayer?.removeFromSuperlayer()
             isTrackingQR = false
-            
+        
             qrCapturePreviewLayer = nil
             qrCaptureSession = nil
+            
+            view.reloadInputViews()
+            sceneView.reloadInputViews()
         } else {
             let location: CGPoint = touches.first!.location(in: sceneView)
             let hits = self.sceneView!.hitTest(location, options: [SCNHitTestOption.boundingBoxOnly: true])
@@ -465,7 +469,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                             print("Error")
                         }
                     }
-                    
                 } else {
                     print("selectedNode = nil")
                     selectedNode = nil
