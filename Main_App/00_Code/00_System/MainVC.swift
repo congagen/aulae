@@ -81,10 +81,10 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
         do {
             try realm.write {
-                if traitCollection.userInterfaceStyle == .dark && !(traitCollection.userInterfaceStyle == .unspecified) {
-                    rlmSystem.first?.uiMode = 1
-                } else {
+                if traitCollection.userInterfaceStyle == .light {
                     rlmSystem.first?.uiMode = 2
+                } else {
+                    rlmSystem.first?.uiMode = 1
                 }
             }
         } catch {
@@ -169,10 +169,10 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
         do {
             try realm.write {
-                if self.traitCollection.userInterfaceStyle == .dark {
-                    rlmSystem.first?.uiMode = 1
-                } else {
+                if self.traitCollection.userInterfaceStyle == .light {
                     rlmSystem.first?.uiMode = 2
+                } else {
+                    rlmSystem.first?.uiMode = 1
                 }
             }
         } catch {
@@ -226,7 +226,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
                 print("Error: \(error)")
             }
             
-            quickStartExamples()
+            //quickStartExamples()
             contentExamples()
         }
         
@@ -277,6 +277,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         
         UIOps().updateTabUIMode(tabCtrl: self)
     }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear: MainVC")

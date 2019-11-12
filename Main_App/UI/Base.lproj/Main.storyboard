@@ -715,7 +715,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aqq-r3-8tt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1887" y="1683"/>
+            <point key="canvasLocation" x="1978" y="1683"/>
         </scene>
         <!--Test-->
         <scene sceneID="sQS-aF-0VM">
@@ -937,21 +937,27 @@
             </objects>
             <point key="canvasLocation" x="-1107" y="2389"/>
         </scene>
-        <!--ScannerVC-->
+        <!--Scnning..-->
         <scene sceneID="nRw-Yc-ASa">
             <objects>
-                <viewController id="DVs-rL-fGx" customClass="QRScannerVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="crossDissolve" id="DVs-rL-fGx" customClass="QRScannerVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ye6-oq-UHH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="8NM-C6-tPp"/>
                     </view>
-                    <navigationItem key="navigationItem" id="MSv-Gq-cuo"/>
+                    <navigationItem key="navigationItem" title="Scnning.." id="MSv-Gq-cuo">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="Ati-PS-aCJ">
+                            <connections>
+                                <action selector="closeBtnAction:" destination="DVs-rL-fGx" id="Obz-N8-uj2"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hh7-ra-LUM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1183" y="1683"/>
+            <point key="canvasLocation" x="1216" y="1681"/>
         </scene>
         <!--MainVC-->
         <scene sceneID="Wui-Ci-rQu">
@@ -997,7 +1003,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rgl-Yv-hks" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1887" y="975"/>
+            <point key="canvasLocation" x="1978" y="976"/>
         </scene>
         <!--DefaultNVC-->
         <scene sceneID="UsZ-WG-Zje">
@@ -1306,7 +1312,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FyC-rj-obd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2774" y="1683"/>
+            <point key="canvasLocation" x="2774" y="1681"/>
         </scene>
         <!--MainVC-->
         <scene sceneID="hQm-nB-7UG">
@@ -1420,22 +1426,22 @@
             <point key="canvasLocation" x="470" y="976"/>
         </scene>
         <!--DefaultNVC-->
-        <scene sceneID="HlN-h8-Tys">
+        <scene sceneID="nu0-xX-ReK">
             <objects>
-                <navigationController restorationIdentifier="QrScanner" storyboardIdentifier="QrViewController" automaticallyAdjustsScrollViewInsets="NO" id="T0E-iu-twU" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="QrViewController" automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="rED-8X-lbB" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xWJ-Mo-3KK">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hbh-Zz-4E5">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="DVs-rL-fGx" kind="relationship" relationship="rootViewController" id="0nW-pH-iOO"/>
+                        <segue destination="DVs-rL-fGx" kind="relationship" relationship="rootViewController" id="dUI-pI-FEM"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CoE-mb-FzW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xTc-jY-F3d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1183" y="975"/>
+            <point key="canvasLocation" x="1216" y="976"/>
         </scene>
     </scenes>
     <resources>

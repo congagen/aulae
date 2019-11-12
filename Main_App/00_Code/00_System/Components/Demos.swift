@@ -41,7 +41,7 @@ extension MainVC {
             typeDemoFeed.id   = "Example Source B"
             typeDemoFeed.name = "Example Source B"
             typeDemoFeed.info = "Example Source B"
-            typeDemoFeed.active = false
+            typeDemoFeed.active = true
             
             do {
                 try realm.write {

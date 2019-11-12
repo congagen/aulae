@@ -12,7 +12,7 @@ import Realm
 import RealmSwift
 
 
-class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, AVCaptureMetadataOutputObjectsDelegate {
+class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate {
     
     lazy var realm = try! Realm()
     lazy var rlmSystem:      Results<RLM_SysSettings_117>    = {self.realm.objects(RLM_SysSettings_117.self)}()
@@ -28,10 +28,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     var isInit: Bool = false
     
-    var isTrackingQR = false
-    var qrUrl = ""
-    var qrCapturePreviewLayer: AVCaptureVideoPreviewLayer? = nil
-    var qrCaptureSession: AVCaptureSession? = nil
+//    var isTrackingQR = false
+//    var qrUrl = ""
+//    var qrCapturePreviewLayer: AVCaptureVideoPreviewLayer? = nil
+//    var qrCaptureSession: AVCaptureSession? = nil
     
     var rawDeviceGpsCCL: CLLocation = CLLocation(latitude: 0, longitude: 0)
 
@@ -105,40 +105,39 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("searchQrBtnAction")
         print(view.bounds)
         print(sceneView.bounds)
+
+        //ViewAnimation().fade(viewToAnimate: loadingView, aDuration: 1, hideView: false, aMode: .curveEaseIn)
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "QrViewController")
     
-        if isTrackingQR && (qrCapturePreviewLayer != nil) {
-            if qrCaptureSession != nil {
-                qrCaptureSession?.stopRunning()
-                qrCaptureSession = nil
-            }
-    
-            qrCapturePreviewLayer?.removeFromSuperlayer()
-            isTrackingQR = false
-            
-            qrCapturePreviewLayer = nil
-        } else {
-            qrCapturePreviewLayer = AVCaptureVideoPreviewLayer()
-            qrCaptureSession = AVCaptureSession()
-            ViewAnimation().fade(viewToAnimate: loadingView, aDuration: 1, hideView: false, aMode: .curveEaseIn)
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {_ in  self.captureQRCode() })
-        }
+        vc!.definesPresentationContext = true
+
+        vc!.modalPresentationStyle = .overFullScreen
+        vc!.modalTransitionStyle = .crossDissolve
+        present(vc!, animated: false, completion: self.reloadInputViews)
     }
     
     
     private func updateCameraSettings() {
         print("updateCameraSettings")
         
-        guard let camera = sceneView.pointOfView?.camera else {
-            fatalError("Expected a valid `pointOfView` from the scene.")
-        }
+//        guard let camera = sceneView.pointOfView?.camera else {
+//            fatalError("Expected a valid `pointOfView` from the scene.")
+//        }
         
-        camera.wantsHDR       = true
-        camera.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
-        camera.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
-        camera.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
-//        camera.bloomIntensity = 0.5
-//        camera.bloomThreshold = 0.8
-    
+        sceneView.pointOfView?.camera!.wantsHDR       = true
+        sceneView.pointOfView?.camera!.exposureOffset = CGFloat(rlmCamera.first!.exposureOffset)
+        sceneView.pointOfView?.camera!.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
+        sceneView.pointOfView?.camera!.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
+        
+        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
+        let videoInput: AVCaptureDeviceInput
+
+        do {
+            videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+        } catch {
+            return
+        }
+            
         if rlmCamera.first!.isEnabled {
             // sceneView.scene.background.contents = UIColor.black
         } else {
@@ -432,19 +431,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         loadingView.layer.opacity = 0
         startScreenLogo.isHidden = true
         
-        if isTrackingQR {
-            // TODO: Fix Stretch problem
-            
-            qrCaptureSession?.stopRunning()
-            qrCapturePreviewLayer?.isHidden = true
-            qrCapturePreviewLayer?.removeFromSuperlayer()
-            isTrackingQR = false
-        
-            qrCapturePreviewLayer = nil
-            qrCaptureSession = nil
-            
-            view.reloadInputViews()
-            sceneView.reloadInputViews()
+        if 1 == 3 {
+//            TODO: Fix Stretch problem
+//            isTrackingQR = false
+//            view.reloadInputViews()
+//            sceneView.reloadInputViews()
         } else {
             let location: CGPoint = touches.first!.location(in: sceneView)
             let hits = self.sceneView!.hitTest(location, options: [SCNHitTestOption.boundingBoxOnly: true])
@@ -518,8 +509,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         trackingState = 2
         
         switch camera.trackingState {
+            
         case .notAvailable:
             message = "LOCALIZING"
+            updateCameraSettings()
             trackingState = 2
             
         case .normal:
@@ -647,9 +640,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
 
         if isInit {
+            print("isInit == true")
             updateCameraSettings()
-            refreshScene()
+            initScene()
+            //refreshScene()
         } else {
+            print("isInit == false")
             FeedMgmt().updateFeeds(checkTimeSinceUpdate: false)
             Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: {_ in  self.initScene() })
             manageLoadingScreen(interval: 5)
