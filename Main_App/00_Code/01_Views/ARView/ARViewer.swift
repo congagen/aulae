@@ -129,14 +129,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         sceneView.pointOfView?.camera!.contrast       = 1 + CGFloat(rlmCamera.first!.contrast)
         sceneView.pointOfView?.camera!.saturation     = 1 + CGFloat(rlmCamera.first!.saturation)
         
-        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
-        let videoInput: AVCaptureDeviceInput
-
-        do {
-            videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
-        } catch {
-            return
-        }
+        // guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
+        //let videoInput: AVCaptureDeviceInput
             
         if rlmCamera.first!.isEnabled {
             // sceneView.scene.background.contents = UIColor.black

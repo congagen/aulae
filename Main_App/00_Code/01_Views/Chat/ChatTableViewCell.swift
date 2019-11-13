@@ -17,8 +17,8 @@ class ChatTableViewCell: UITableViewCell {
     var leadingConstraint:  NSLayoutConstraint!
     var trailingConstraint: NSLayoutConstraint!
     
-    var outBubbleColor       = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 0.7)
-    var incommingBubbleColor = UIColor(displayP3Red: 0.2, green: 1.0, blue: 0.7, alpha: 0.7)
+    var outBubbleColor       = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 0.25)
+    var incommingBubbleColor = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 0.25)
     
     var isIncomming: Bool! {
         didSet {
@@ -40,6 +40,7 @@ class ChatTableViewCell: UITableViewCell {
         addSubview(messageLabel)
         messageLabel.backgroundColor = .clear
         messageLabel.text = "Message"
+        messageLabel.textColor = UIColor.gray
         messageLabel.numberOfLines = 0
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
     

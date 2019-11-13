@@ -393,46 +393,90 @@ class FeedsTVC: UITableViewController {
     }
     
     
-    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let section = indexPath.section
         
         if rlmFeeds[section].id != "" {
             selected = rlmFeeds[section]
         }
         
-        let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (rowAction, indexPath) in
+        //let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (rowAction, indexPath) in
+        let shareAction = UIContextualAction(style: .normal, title: "Share", handler: {_,_,_ in
             if self.selected?.topicKwd != "" {
                 self.shareURLAction(url: "Topic: " + self.selected!.topicKwd)
             } else {
                 self.shareURLAction(url: (self.selected?.sourceUrl)!)
             }
-        }
-        shareAction.backgroundColor = UIColor.black
+        })
         
-        let visitSourceLink = UITableViewRowAction(style: .normal, title: "Edit") { (rowAction, indexPath) in
-             self.openUrl(scheme: (self.selected?.sourceUrl)!)
-        }
+        shareAction.backgroundColor = UIColor.black
+
+        // let visitSourceLink = UITableViewRowAction(style: .normal, title: "Edit") { (rowAction, indexPath) in
+        let visitSourceLink = UIContextualAction(style: .normal, title: "Edit", handler: {_,_,_ in
+            self.openUrl(scheme: (self.selected?.sourceUrl)!)
+        })
         visitSourceLink.backgroundColor = UIColor.black
         
-        let deleteAction = UITableViewRowAction(style: .normal, title: "Delete") { (rowAction, indexPath) in
+        // let deleteAction = UITableViewRowAction(style: .normal, title: "Delete") { (rowAction, indexPath) in
+        let deleteAction = UIContextualAction(style: .normal, title: "Delete", handler: {_,_,_ in
             self.removeFeed(indexP: indexPath)
-        }
+        })
         deleteAction.backgroundColor = UIColor.black
         
-        let editMarkerAction = UITableViewRowAction(style: .normal, title: "Customize") { (rowAction, indexPath) in
+        // let editMarkerAction = UITableViewRowAction(style: .normal, title: "Customize") { (rowAction, indexPath) in
+        let editMarkerAction = UIContextualAction(style: .normal, title: "Customize", handler: {_,_,_ in
             self.editMarkerIcon(topicSource: self.selected!)
-        }
+        })
         editMarkerAction.backgroundColor = UIColor.black
         
-//        if selected?.topicKwd != "" {
-//            return [shareAction, deleteAction, editMarkerAction]
-//        } else {
-//            return [shareAction, deleteAction]
-//        }
         
-        return [shareAction, deleteAction]
-        
+        return UISwipeActionsConfiguration(actions: [shareAction, deleteAction])
+
     }
+    
+    
+    
+//    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+//        let section = indexPath.section
+//
+//        if rlmFeeds[section].id != "" {
+//            selected = rlmFeeds[section]
+//        }
+//
+//        let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (rowAction, indexPath) in
+//            if self.selected?.topicKwd != "" {
+//                self.shareURLAction(url: "Topic: " + self.selected!.topicKwd)
+//            } else {
+//                self.shareURLAction(url: (self.selected?.sourceUrl)!)
+//            }
+//        }
+//        shareAction.backgroundColor = UIColor.black
+//
+//        let visitSourceLink = UITableViewRowAction(style: .normal, title: "Edit") { (rowAction, indexPath) in
+//             self.openUrl(scheme: (self.selected?.sourceUrl)!)
+//        }
+//        visitSourceLink.backgroundColor = UIColor.black
+//
+//        let deleteAction = UITableViewRowAction(style: .normal, title: "Delete") { (rowAction, indexPath) in
+//            self.removeFeed(indexP: indexPath)
+//        }
+//        deleteAction.backgroundColor = UIColor.black
+//
+//        let editMarkerAction = UITableViewRowAction(style: .normal, title: "Customize") { (rowAction, indexPath) in
+//            self.editMarkerIcon(topicSource: self.selected!)
+//        }
+//        editMarkerAction.backgroundColor = UIColor.black
+//
+////        if selected?.topicKwd != "" {
+////            return [shareAction, deleteAction, editMarkerAction]
+////        } else {
+////            return [shareAction, deleteAction]
+////        }
+//
+//        return [shareAction, deleteAction]
+//
+//    }
 
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

@@ -161,7 +161,6 @@
                             <constraint firstItem="cVh-GF-OBP" firstAttribute="trailing" secondItem="fEs-rS-yaY" secondAttribute="trailing" id="HVj-4U-dHw"/>
                             <constraint firstItem="cVh-GF-OBP" firstAttribute="bottom" secondItem="fEs-rS-yaY" secondAttribute="bottom" id="JEa-Hi-qE1"/>
                             <constraint firstItem="cVh-GF-OBP" firstAttribute="top" secondItem="fEs-rS-yaY" secondAttribute="top" id="L8C-ZI-GdG"/>
-                            <constraint firstItem="Sih-nI-sFF" firstAttribute="top" secondItem="1yb-qm-Ox7" secondAttribute="topMargin" constant="-88" id="MHc-g6-V7w"/>
                             <constraint firstItem="Sih-nI-sFF" firstAttribute="top" secondItem="fEs-rS-yaY" secondAttribute="top" id="MqY-8y-BN0"/>
                             <constraint firstItem="fEs-rS-yaY" firstAttribute="width" secondItem="C7X-lF-NUs" secondAttribute="width" id="OeM-8E-UM9"/>
                             <constraint firstItem="Sih-nI-sFF" firstAttribute="bottom" secondItem="fEs-rS-yaY" secondAttribute="bottom" id="ZDp-6C-0a0"/>
@@ -188,12 +187,12 @@
                             </barButtonItem>
                         </leftBarButtonItems>
                         <rightBarButtonItems>
-                            <barButtonItem style="plain" systemItem="refresh" id="0vE-dQ-BcC">
+                            <barButtonItem style="done" systemItem="refresh" id="0vE-dQ-BcC">
                                 <connections>
                                     <action selector="refreshBtnAction:" destination="cNO-cb-Srl" id="j8z-k6-o8L"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem style="plain" systemItem="camera" id="etU-3N-bVO">
+                            <barButtonItem style="done" systemItem="camera" id="etU-3N-bVO">
                                 <connections>
                                     <action selector="sharePhotoBtn:" destination="cNO-cb-Srl" id="1w8-3W-Y2v"/>
                                 </connections>
@@ -1048,7 +1047,7 @@
                                         <blurEffect style="light"/>
                                     </visualEffectView>
                                     <activityIndicatorView opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="1Lk-U7-Xwa">
-                                        <rect key="frame" x="189.66666666666666" y="436" width="35" height="34"/>
+                                        <rect key="frame" x="189.66666666666663" y="436" width="35" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="35" id="GXZ-bv-sNM"/>
                                             <constraint firstAttribute="height" constant="34" id="VsC-Nd-ZpZ"/>

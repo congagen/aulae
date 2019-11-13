@@ -410,7 +410,6 @@
 				3177251720B03AD4009FA8B1 /* Sources */,
 				3177251920B03AD4009FA8B1 /* Resources */,
 				3177251820B03AD4009FA8B1 /* Frameworks */,
-				FA6BA7CD22315EE700DB3F2A /* ShellScript */,
 				FAF0D0372371A7C200E0875E /* Embed Frameworks */,
 				9EE9DBA3F21538497F406383 /* [CP] Embed Pods Frameworks */,
 			);
@@ -539,23 +538,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Aulae/Pods-Aulae-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		FA6BA7CD22315EE700DB3F2A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -760,7 +742,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.72.1;
+				MARKETING_VERSION = 1.725.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -786,7 +768,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.72.1;
+				MARKETING_VERSION = 1.725.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

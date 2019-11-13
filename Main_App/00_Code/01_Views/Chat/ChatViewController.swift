@@ -167,6 +167,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         }
         
         chatInputField.text = ""
+        chatInputField.textColor = UIColor.black
         chatTableView.reloadData()
         chatTableView.reloadInputViews()
     }
@@ -241,11 +242,13 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
         if msgForIdx.count > 0 {
             cell.messageLabel.text = msgForIdx.first?.msgText
+            cell.messageLabel.textColor = UIColor.black
             //Incomming bubblecolor from object: cell.incommingBubbleColor = UIColor(hexColor: <#T##String#>)
             cell.isIncomming       = msgForIdx.first?.isIncomming
         } else {
             print("ERROR: cellForRowAt: " + String(reverseIdx))
             cell.messageLabel.text = "Hmm..."
+            cell.messageLabel.textColor = UIColor.black
             cell.isIncomming       = false
         }
     
@@ -258,9 +261,9 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         print(cellText)
         
     }
-    
 
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let sessionMsgs = rlmChatMsgs.filter({$0.apiId == self.rlmChatSession.first?.apiUrl})
         let reverseIdx  = sessionMsgs.count - (indexPath.item + 1) + 1
         let msgForIdx   = sessionMsgs.filter({$0.indexPos == reverseIdx})
@@ -269,16 +272,16 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
         if msgForIdx.count > 0 {
             
-            let actionSheet = UITableViewRowAction(style: .normal, title: "...") { (rowAction, indexPath) in
+            let actionSheet = UIContextualAction(style: .normal, title: "...", handler: {_,_,_  in
                 self.showActionMenu(cellText: msgForIdx.first!.msgText)
-            }
+            })
             actionSheet.backgroundColor = UIColor(white: 1, alpha: 0.001)
 
-            return [actionSheet]
+            return UISwipeActionsConfiguration(actions: [actionSheet])
         } else {
-            return []
+            return UISwipeActionsConfiguration(actions: [])
         }
-        
+    
     }
     
     
