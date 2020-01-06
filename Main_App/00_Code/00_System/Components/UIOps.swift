@@ -23,7 +23,6 @@ class UIOps {
     let lightTintColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.9)
     let darkTintColor = UIColor.darkText
     
-    
     func updateGlobalTint(window: UIWindow) {
 
         if rlmSystem.first?.uiMode == 1 {

@@ -38,9 +38,14 @@ extension ARViewer {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         cancelAction.setValue(UIColor.black, forKey: "titleTextColor")
         
-        activityViewController.view.tintColor = UIColor.black
-        activityViewController.view.tintColorDidChange()
+        if traitCollection.userInterfaceStyle == .light {
+            activityViewController.view.tintColor = UIColor.black
+        } else {
+            activityViewController.view.tintColor = UIColor.white
+        }
         
+        //activityViewController.view.tintColor = UIColor.white
+        activityViewController.view.tintColorDidChange()
         
         self.present(activityViewController, animated: true, completion: nil)
         
@@ -190,10 +195,18 @@ extension ARViewer {
         alert.addAction(hideAction)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        cancelAction.setValue(UIColor.black, forKey: "titleTextColor")
         
         alert.addAction(cancelAction)
-        alert.view.tintColor = UIColor.black
+        
+        if traitCollection.userInterfaceStyle == .light {
+            alert.view.tintColor = UIColor.black
+            cancelAction.setValue(UIColor.black, forKey: "titleTextColor")
+        } else {
+           alert.view.tintColor = UIColor.white
+            cancelAction.setValue(UIColor.white, forKey: "titleTextColor")
+        }
+        
+        //alert.view.tintColor = UIColor.black
         alert.view.tintColorDidChange()
         
         if let popoverController = alert.popoverPresentationController {

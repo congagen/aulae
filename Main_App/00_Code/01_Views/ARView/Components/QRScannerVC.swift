@@ -83,7 +83,11 @@ class QRScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         alert.addAction(UIAlertAction(title: "Add to Lib", style: UIAlertAction.Style.default, handler: handleEnterURL))
         alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: {_ in self.openQRUrl(scheme: self.qrUrl)} ))
         
-        alert.view.tintColor = UIColor.black
+        if traitCollection.userInterfaceStyle == .light {
+            alert.view.tintColor = UIColor.black
+        } else {
+            alert.view.tintColor = UIColor.white
+        }
         
         self.present(alert, animated: true, completion: nil)
     }

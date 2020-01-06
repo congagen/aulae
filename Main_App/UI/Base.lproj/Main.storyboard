@@ -936,7 +936,7 @@
             </objects>
             <point key="canvasLocation" x="-1107" y="2389"/>
         </scene>
-        <!--Scnning..-->
+        <!--Scanning..-->
         <scene sceneID="nRw-Yc-ASa">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="crossDissolve" id="DVs-rL-fGx" customClass="QRScannerVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
@@ -946,7 +946,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="8NM-C6-tPp"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Scnning.." id="MSv-Gq-cuo">
+                    <navigationItem key="navigationItem" title="Scanning.." id="MSv-Gq-cuo">
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="Ati-PS-aCJ">
                             <connections>
                                 <action selector="closeBtnAction:" destination="DVs-rL-fGx" id="Obz-N8-uj2"/>
@@ -1047,7 +1047,7 @@
                                         <blurEffect style="light"/>
                                     </visualEffectView>
                                     <activityIndicatorView opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="1Lk-U7-Xwa">
-                                        <rect key="frame" x="189.66666666666663" y="436" width="35" height="34"/>
+                                        <rect key="frame" x="189.66666666666666" y="436" width="35" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="35" id="GXZ-bv-sNM"/>
                                             <constraint firstAttribute="height" constant="34" id="VsC-Nd-ZpZ"/>

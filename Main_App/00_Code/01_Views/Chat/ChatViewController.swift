@@ -201,6 +201,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         customTextField.placeholder = NSLocalizedString("Message", comment: "")
         customTextField.autocorrectionType = .default
         customTextField.returnKeyType = .send
+        customTextField.tintColor = .darkGray
     }
     
     

@@ -247,13 +247,17 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             ctNode.addGif(fPath: fPath, objectData: objData)
         case "obj":
             if memoryWarning {
-                if Int(1000000000 * 0.5) > report_memory() { ctNode.addObj(fPath:   fPath, objectData: objData) }
+                if Int(1000000000 * 0.5) > report_memory() {
+                    ctNode.addObj(fPath: fPath, objectData: objData)
+                }
             } else {
                 ctNode.addObj(fPath: fPath, objectData: objData)
             }
         case "usdz":
             if memoryWarning {
-                if Int(1000000000 * 0.5) > report_memory() { ctNode.addUSDZ(fPath:  fPath, objectData: objData) }
+                if Int(1000000000 * 0.5) > report_memory() {
+                    ctNode.addUSDZ(fPath:  fPath, objectData: objData)
+                }
             } else {
                 ctNode.addObj(fPath: fPath, objectData: objData)
             }

@@ -74,7 +74,12 @@ class SettingsViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "Ok",     style: UIAlertAction.Style.default, handler: saveNewUsername))
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,  handler: nil))
         
-        alert.view.tintColor = UIColor.black
+        if traitCollection.userInterfaceStyle == .light {
+            alert.view.tintColor = UIColor.black
+        } else {
+            alert.view.tintColor = UIColor.white
+        }
+        
         self.present(alert, animated: true, completion: nil)
     }
     

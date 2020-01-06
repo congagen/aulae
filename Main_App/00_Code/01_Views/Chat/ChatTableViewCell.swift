@@ -40,7 +40,7 @@ class ChatTableViewCell: UITableViewCell {
         addSubview(messageLabel)
         messageLabel.backgroundColor = .clear
         messageLabel.text = "Message"
-        messageLabel.textColor = UIColor.gray
+        messageLabel.textColor = UIColor.darkGray
         messageLabel.numberOfLines = 0
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
     
