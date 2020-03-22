@@ -292,7 +292,6 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         print("initMapView")
         mapView.delegate = self
         mapView.showsUserLocation = true
-        mapView.showsPointsOfInterest = true
         mapView.showsCompass = true
         mapView.showsScale = true
         mapView.showsBuildings = true
