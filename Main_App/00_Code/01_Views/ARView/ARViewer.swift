@@ -38,6 +38,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var memoryWarning = false
     
     var trackingState = 3
+    //var configuration = ARWorldTrackingConfiguration()
     var configuration = AROrientationTrackingConfiguration()
     
     var mainVC: MainVC? = nil
@@ -420,7 +421,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         manageLoadingScreen(interval: 2)
-        
     }
     
     
@@ -439,23 +439,21 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             let hits = self.sceneView!.hitTest(location, options: [SCNHitTestOption.boundingBoxOnly: true])
             
             if touches.count < 2 {
+                print(touches.count)
                 if let tappedNode = hits.first?.node {
                     
                     let selno = sceneView.scene.rootNode.childNodes.filter({$0.name == tappedNode.name})
                     
                     if selno.count > 0 {
                         if let ctno: ContentNode = (selno.first as? ContentNode) {
-                            
+
                             // if ctno.info != "" && ctno.contentLink != "" {
-                            if (ctno.directURL) && ((ctno.contentURL) != "") {
-                                self.openUrl(scheme: (ctno.contentURL))
-                            } else {
-                                showSeletedNodeActions(selNode: ctno)
-                            }
-                            
-                        } else {
-                            print(tappedNode.name!)
-                            print("Error")
+//                            if (ctno.directURL) && ((ctno.contentURL) != "") {
+//                                self.openUrl(scheme: (ctno.contentURL))
+//                            } else {
+//                                showSeletedNodeActions(selNode: ctno)
+//                            }
+
                         }
                     }
                 } else {
@@ -464,6 +462,20 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             }
         }
+        
+        do {
+            try realm.write {
+                if traitCollection.userInterfaceStyle == .light {
+                    rlmSystem.first?.uiMode = 2
+                } else {
+                    rlmSystem.first?.uiMode = 1
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+        UIOps().updateTabUIMode(tabCtrl: self.tabBarController!)
     }
     
     
@@ -500,6 +512,34 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
     }
     
+
+    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        print("handleLongPress")
+        loadingView.layer.opacity = 0
+        startScreenLogo.isHidden = true
+        
+        let location: CGPoint = gestureRecognizer.location(in: sceneView)
+        let hits = self.sceneView!.hitTest(location, options: [SCNHitTestOption.boundingBoxOnly: true])
+
+        if let tappedNode = hits.first?.node {
+            let selno = sceneView.scene.rootNode.childNodes.filter({$0.name == tappedNode.name})
+            
+            if selno.count > 0 {
+                if let ctno: ContentNode = (selno.first as? ContentNode) {
+
+                    // if ctno.info != "" && ctno.contentLink != "" {
+                    if (ctno.directURL) && ((ctno.contentURL) != "") {
+                        self.openUrl(scheme: (ctno.contentURL))
+                    } else {
+                        showSeletedNodeActions(selNode: ctno)
+                    }
+
+                }
+            }
+        }
+        
+    }
+    
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         
@@ -509,36 +549,35 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         switch camera.trackingState {
             
         case .notAvailable:
-            message = "LOCALIZING"
+            message = "state: notAvailable (updateCameraSettings)"
             updateCameraSettings()
             trackingState = 2
             
         case .normal:
-            message = "UPDATING"
+            message = "state: normal"
             trackingState = 0
             
         case .limited(.excessiveMotion):
-            message = "LOCALIZING"
+            message = "state: excessiveMotion"
             trackingState = 0
             
         case .limited(.insufficientFeatures):
-            message = "UPDATING"
+            message = "state: insufficientFeatures"
             trackingState = 1
             
         case .limited(.initializing):
             trackingState = 1
-            message = "INITIALIZING"
+            message = "state: initializing"
 
         case .limited(.relocalizing):
             trackingState = 2
-            message = "LOCALIZING"
+            message = "state: relocalizing"
         case .limited(_):
+            message = "state: relocalizing"
             message = "INITIALIZING"
         }
         
         print(message)
-        
-        // loadingViewLabel.text = message
     }
   
     
@@ -573,6 +612,20 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 hideView: true, aMode: UIView.AnimationOptions.curveEaseIn
             )
         }
+        
+        do {
+            try realm.write {
+                if traitCollection.userInterfaceStyle == .light {
+                    rlmSystem.first?.uiMode = 2
+                } else {
+                    rlmSystem.first?.uiMode = 1
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        UIOps().updateNavUiMode(navCtrl: self.navigationController!)
+        UIOps().updateTabUIMode(tabCtrl: self.tabBarController!)
     }
 
     
@@ -662,6 +715,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             target: self, action: #selector(ARViewer.handlePinch(_:))
         )
         
+        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(MapVC.handleLongPress(_:)))
+        lpgr.minimumPressDuration = 0.5
+        lpgr.delaysTouchesBegan = true
+        lpgr.delegate = self
+        self.view.addGestureRecognizer(lpgr)
+        
         pinchGR.delegate = self
         view.addGestureRecognizer(pinchGR)
         
@@ -688,6 +747,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         sceneView.delegate         = self
         sceneView.audioListener    = mainScene.rootNode
 
+        //configuration.sceneReconstruction = .meshWithClassification
+        //configuration.planeDetection = .vertical
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true

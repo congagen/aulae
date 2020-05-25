@@ -16,7 +16,8 @@ extension UIColor {
     convenience init(hexColor: String) {
         let scannHex = Scanner(string: hexColor)
         var rgbValue: UInt64 = 0
-        scannHex.scanLocation = 0
+        //scannHex.scanLocation = 0
+        
         scannHex.scanHexInt64(&rgbValue)
         
         let r = (rgbValue & 0xff0000) >> 16

@@ -124,8 +124,17 @@ extension ARViewer {
             preferredStyle: UIAlertController.Style.alert
         )
         
-        alert.addAction(UIAlertAction(title: "Done",  style: UIAlertAction.Style.default, handler: nil ))
-        alert.view.tintColor = UIColor.black
+        let act = UIAlertAction(title: "Done",  style: UIAlertAction.Style.default, handler: nil )
+        
+        if traitCollection.userInterfaceStyle == .light {
+            alert.view.tintColor = UIColor.black
+            act.setValue(UIColor.black, forKey: "titleTextColor")
+        } else {
+            alert.view.tintColor = UIColor.white
+            act.setValue(UIColor.white, forKey: "titleTextColor")
+        }
+        
+        alert.addAction(act)
         self.present(alert, animated: true, completion: nil)
 
     }
@@ -161,7 +170,6 @@ extension ARViewer {
     
     func showSeletedNodeActions(selNode: ContentNode) {
         print("showSeletedNodeActions")
-        
         
         let alert =  UIAlertController(
             title:   selNode.feedName,
@@ -202,7 +210,7 @@ extension ARViewer {
             alert.view.tintColor = UIColor.black
             cancelAction.setValue(UIColor.black, forKey: "titleTextColor")
         } else {
-           alert.view.tintColor = UIColor.white
+            alert.view.tintColor = UIColor.white
             cancelAction.setValue(UIColor.white, forKey: "titleTextColor")
         }
         

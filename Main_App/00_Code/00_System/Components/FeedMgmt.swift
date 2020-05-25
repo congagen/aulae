@@ -55,20 +55,24 @@ class FeedMgmt {
     
 
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
-        //print("storeFeedObject")
-        
-        // Current = feedId + prevUTX
-        
-        let current = feedObjects.filter( {$0.feedId == feedId && ($0.uuid == objInfo["uuid"] as! String)} )
+        print("storeFeedObject")
+        // TODO: FIX?
+                
+        let currentFeedObjs = feedObjects.filter( {$0.feedId == feedId && ($0.uuid == objInfo["uuid"] as! String)} )
         let rlmObj = RLM_Obj()
+        
+        for c in currentFeedObjs{
+            do {
+                try realm.write {
+                    realm.delete(c)
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
         
         do {
             try realm.write {
-                
-                for c in current{
-                    realm.delete(c)
-                }
-                
                 rlmObj.feedId      = feedId
                 rlmObj.uuid        = objInfo["uuid"] as! String
                 rlmObj.instance    = objInfo["instance"] as! Bool
@@ -136,11 +140,22 @@ class FeedMgmt {
     }
     
     
-    func valueIfPresent(dict: Dictionary<String, AnyObject>, key: String, placeHolderValue: Any) -> Any {
+    func valueIfPresent(valDict: Dictionary<String, AnyObject>, dctKey: String, placeHolderValue: Any) -> Any {
+        print("-> valueIfPresent!")
+        print(dctKey)
+        print(placeHolderValue)
         
-        if dict.keys.contains(key) {
-            return dict[key]!
+        if valDict.keys.contains(dctKey) {
+            print(valDict[dctKey]!)
+            
+            if valDict[dctKey]! != nil {
+                return valDict[dctKey]!
+            } else {
+                return placeHolderValue
+            }
+            
         } else {
+            print("Missing")
             return placeHolderValue
         }
         
@@ -177,7 +192,7 @@ class FeedMgmt {
                 
                 let objUid = UUID().uuidString
                 let itemContentType = itemSpec["type"] as! String
-                var remoteContentUrl = valueIfPresent(dict: itemSpec, key: "url", placeHolderValue: "")
+                var remoteContentUrl = valueIfPresent(valDict: itemSpec, dctKey: "url", placeHolderValue: "")
                 
                 if feedDbItem.customMarkerUrl != "" && itemContentType == "marker" {
                     remoteContentUrl = feedDbItem.customMarkerUrl
@@ -186,10 +201,10 @@ class FeedMgmt {
                 print(itemSpec)
                 
                 let objData: [String : Any] = [
-                    "name":              valueIfPresent(dict: itemSpec, key: "name",      placeHolderValue: String(feedObjects.count)),
-                    "id":                valueIfPresent(dict: itemSpec, key: "id",        placeHolderValue: objUid),
-                    "version":           valueIfPresent(dict: itemSpec, key: "version",   placeHolderValue: 1),
-                    "info":              valueIfPresent(dict: itemSpec, key: "info",      placeHolderValue: ""),
+                    "name":              valueIfPresent(valDict: itemSpec, dctKey: "name",      placeHolderValue: String(feedObjects.count)),
+                    "id":                valueIfPresent(valDict: itemSpec, dctKey: "id",        placeHolderValue: objUid),
+                    "version":           valueIfPresent(valDict: itemSpec, dctKey: "version",   placeHolderValue: 1),
+                    "info":              valueIfPresent(valDict: itemSpec, dctKey: "info",      placeHolderValue: ""),
 
                     "uuid":              objUid,
                     "feed_id":           feedId,
@@ -197,37 +212,37 @@ class FeedMgmt {
                     "type":              itemContentType,
                     "url":               remoteContentUrl,
 
-                    "billboard":         valueIfPresent(dict: itemSpec, key: "billboard", placeHolderValue: true),
+                    "billboard":         valueIfPresent(valDict: itemSpec, dctKey: "billboard", placeHolderValue: true),
 
-                    "style":             valueIfPresent(dict: itemSpec, key: "style",     placeHolderValue: 1) as! Int,
-                    "mode":              valueIfPresent(dict: itemSpec, key: "mode",      placeHolderValue: "free"),
-                    "hex_color":         valueIfPresent(dict: itemSpec, key: "hex_color", placeHolderValue: "7122e8"),
+                    "style":             valueIfPresent(valDict: itemSpec, dctKey: "style",     placeHolderValue: 1) as! Int,
+                    "mode":              valueIfPresent(valDict: itemSpec, dctKey: "mode",      placeHolderValue: "free"),
+                    "hex_color":         valueIfPresent(valDict: itemSpec, dctKey: "hex_color", placeHolderValue: "7122e8"),
 
-                    "content_link":      valueIfPresent(dict: itemSpec, key: "content_link", placeHolderValue: ""),
-                    "direct_link":       valueIfPresent(dict: itemSpec, key: "direct_link", placeHolderValue: false),
-                    "chat_url":          valueIfPresent(dict: itemSpec, key: "chat_url",  placeHolderValue: ""),
+                    "content_link":      valueIfPresent(valDict: itemSpec, dctKey: "content_link", placeHolderValue: ""),
+                    "direct_link":       valueIfPresent(valDict: itemSpec, dctKey: "direct_link", placeHolderValue: false),
+                    "chat_url":          valueIfPresent(valDict: itemSpec, dctKey: "chat_url",  placeHolderValue: ""),
 
-                    "text":              valueIfPresent(dict: itemSpec, key: "text",      placeHolderValue: ""),
-                    "font":              valueIfPresent(dict: itemSpec, key: "font",      placeHolderValue: ""),
-                    "instance":          valueIfPresent(dict: itemSpec, key: "instance",  placeHolderValue: true),
+                    "text":              valueIfPresent(valDict: itemSpec, dctKey: "text",      placeHolderValue: ""),
+                    "font":              valueIfPresent(valDict: itemSpec, dctKey: "font",      placeHolderValue: ""),
+                    "instance":          valueIfPresent(valDict: itemSpec, dctKey: "instance",  placeHolderValue: true),
 
-                    "rotate":            valueIfPresent(dict: itemSpec, key: "rotate",    placeHolderValue: 0.0),
-                    "hoover":            valueIfPresent(dict: itemSpec, key: "hoover",    placeHolderValue: 0.0),
+                    "rotate":            valueIfPresent(valDict: itemSpec, dctKey: "rotate",    placeHolderValue: 0.0),
+                    "hoover":            valueIfPresent(valDict: itemSpec, dctKey: "hoover",    placeHolderValue: 0.0),
 
-                    "scale":             valueIfPresent(dict: itemSpec, key: "scale",     placeHolderValue: 1.0),
-                    "world_scale":       valueIfPresent(dict: itemSpec, key: "world_scale", placeHolderValue: true),
-                    "local_orientation": valueIfPresent(dict: itemSpec, key: "local_orientation", placeHolderValue: false),
+                    "scale":             valueIfPresent(valDict: itemSpec, dctKey: "scale",     placeHolderValue: 1.0),
+                    "world_scale":       valueIfPresent(valDict: itemSpec, dctKey: "world_scale", placeHolderValue: true),
+                    "local_orientation": valueIfPresent(valDict: itemSpec, dctKey: "local_orientation", placeHolderValue: false),
 
-                    "world_position":    valueIfPresent(dict: itemSpec, key: "world_position", placeHolderValue: true),
-                    "lat":               valueIfPresent(dict: itemSpec, key: "lat",       placeHolderValue: rlmSession.first!.currentLat),
-                    "lng":               valueIfPresent(dict: itemSpec, key: "lng",       placeHolderValue: rlmSession.first!.currentLng),
-                    "alt":               valueIfPresent(dict: itemSpec, key: "alt",       placeHolderValue: 0.0),
+                    "world_position":    valueIfPresent(valDict: itemSpec, dctKey: "world_position", placeHolderValue: true),
+                    "lat":               valueIfPresent(valDict: itemSpec, dctKey: "lat",       placeHolderValue: rlmSession.first!.currentLat),
+                    "lng":               valueIfPresent(valDict: itemSpec, dctKey: "lng",       placeHolderValue: rlmSession.first!.currentLng),
+                    "alt":               valueIfPresent(valDict: itemSpec, dctKey: "alt",       placeHolderValue: 0.0),
                     
-                    "x_pos":             valueIfPresent(dict: itemSpec, key: "x_pos",     placeHolderValue: 0.0),
-                    "y_pos":             valueIfPresent(dict: itemSpec, key: "y_pos",     placeHolderValue: 0.0),
-                    "z_pos":             valueIfPresent(dict: itemSpec, key: "z_pos",     placeHolderValue: 0.0),
+                    "x_pos":             valueIfPresent(valDict: itemSpec, dctKey: "x_pos",     placeHolderValue: 0.0),
+                    "y_pos":             valueIfPresent(valDict: itemSpec, dctKey: "y_pos",     placeHolderValue: 0.0),
+                    "z_pos":             valueIfPresent(valDict: itemSpec, dctKey: "z_pos",     placeHolderValue: 0.0),
 
-                    "radius":            valueIfPresent(dict: itemSpec, key: "radius",    placeHolderValue: 0.0)
+                    "radius":            valueIfPresent(valDict: itemSpec, dctKey: "radius",    placeHolderValue: 0.0)
                 ]
                     
                 let isInstance: Bool = objData["instance"]! as! Bool
@@ -285,8 +300,8 @@ class FeedMgmt {
             let sVersion: Int     = feedSpec["version"] as! Int
             let sUpdated_utx: Int = feedSpec["updated_utx"] as! Int
             
-            let sInfo: String = valueIfPresent(dict: feedSpec, key: "info", placeHolderValue: "") as! String
-            let thumbUrl: String = valueIfPresent(dict: feedSpec, key: "thumb_url", placeHolderValue: "") as! String
+            let sInfo: String = valueIfPresent(valDict: feedSpec, dctKey: "info", placeHolderValue: "") as! String
+            let thumbUrl: String = valueIfPresent(valDict: feedSpec, dctKey: "thumb_url", placeHolderValue: "") as! String
             
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(feedDbItem.updatedUtx)))
             print(timeSinceUpdate)

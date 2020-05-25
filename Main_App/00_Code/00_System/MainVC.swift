@@ -162,7 +162,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         locationManager.requestWhenInUseAuthorization()
         locationManager.allowsBackgroundLocationUpdates = false
     }
-    
+
     
     func initSession() {
         dbGc()
@@ -178,7 +178,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         } catch {
             print("Error: \(error)")
         }
-        
+                
         if rlmSystem.count < 1 {
             let rlmSys = RLM_SysSettings_117()
             do {
@@ -242,7 +242,8 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
         resetErrCounts()
         mainUpdate()
         initLocation()
- 
+        UIOps().updateTabUIMode(tabCtrl: self)
+
     }
     
 
@@ -257,6 +258,7 @@ class MainVC: UITabBarController, CLLocationManagerDelegate {
             }
         }
         updateSubviews()
+        UIOps().updateTabUIMode(tabCtrl: self)
     }
     
     
