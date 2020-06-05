@@ -38,8 +38,8 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     var memoryWarning = false
     
     var trackingState = 3
-    //var configuration = ARWorldTrackingConfiguration()
-    var configuration = AROrientationTrackingConfiguration()
+    var configuration = ARWorldTrackingConfiguration()
+    //var configuration = AROrientationTrackingConfiguration()
     
     var mainVC: MainVC? = nil
     var mainScene = SCNScene()
@@ -316,7 +316,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         }
         
         if isIntact || objData.type.lowercased() == "demo" {
-            let ctNode = styledContentNode(objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor)
+            let ctNode = styledContentNode(
+                objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
+            )
             sceneView.scene.rootNode.addChildNode(ctNode)
         } else {
             Timer.scheduledTimer(
@@ -331,6 +333,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                 }
             )
         }
+        
     }
     
     
@@ -445,16 +448,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     let selno = sceneView.scene.rootNode.childNodes.filter({$0.name == tappedNode.name})
                     
                     if selno.count > 0 {
-                        if let ctno: ContentNode = (selno.first as? ContentNode) {
-
-                            // if ctno.info != "" && ctno.contentLink != "" {
+//                        if let ctno: ContentNode = (selno.first as? ContentNode) {
+//                             if ctno.info != "" && ctno.contentLink != "" {
 //                            if (ctno.directURL) && ((ctno.contentURL) != "") {
 //                                self.openUrl(scheme: (ctno.contentURL))
 //                            } else {
 //                                showSeletedNodeActions(selNode: ctno)
 //                            }
-
-                        }
+//                        }
                     }
                 } else {
                     print("selectedNode = nil")
@@ -749,11 +750,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 
         //configuration.sceneReconstruction = .meshWithClassification
         //configuration.planeDetection = .vertical
+        
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
+        //configuration.planeDetection = [.horizontal, .vertical]
         
-        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        sceneView.session.run(
+            configuration, options: [.resetSceneReconstruction, .resetTracking, .removeExistingAnchors])
         
         rawDeviceGpsCCL = CLLocation(
             latitude:  rlmSession.first!.currentLat,

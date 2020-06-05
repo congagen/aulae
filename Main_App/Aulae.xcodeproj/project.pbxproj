@@ -77,7 +77,7 @@
 /* Begin PBXFileReference section */
 		3164AF4920B47E79009EDA27 /* RLM_Obj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Obj.swift; sourceTree = "<group>"; };
 		316B86B520D900940076E63D /* FeedsTVCMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsTVCMain.swift; sourceTree = "<group>"; };
-		3177251B20B03AD4009FA8B1 /* AULAE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AULAE.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3177251B20B03AD4009FA8B1 /* Aulae.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aulae.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3177251E20B03AD4009FA8B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3177252020B03AD4009FA8B1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		3177252520B03AD4009FA8B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -191,7 +191,7 @@
 		3177251C20B03AD4009FA8B1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3177251B20B03AD4009FA8B1 /* AULAE.app */,
+				3177251B20B03AD4009FA8B1 /* Aulae.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -419,7 +419,7 @@
 			);
 			name = Aulae;
 			productName = ArkitTest;
-			productReference = 3177251B20B03AD4009FA8B1 /* AULAE.app */;
+			productReference = 3177251B20B03AD4009FA8B1 /* Aulae.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -743,9 +743,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.728.1993;
+				MARKETING_VERSION = 1.728.1996;
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
-				PRODUCT_NAME = AULAE;
+				PRODUCT_NAME = Aulae;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -770,9 +770,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.728.1993;
+				MARKETING_VERSION = 1.728.1996;
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
-				PRODUCT_NAME = AULAE;
+				PRODUCT_NAME = Aulae;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

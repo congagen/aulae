@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3177251A20B03AD4009FA8B1"
-               BuildableName = "AULAE.app"
+               BuildableName = "Aulae.app"
                BlueprintName = "Aulae"
                ReferencedContainer = "container:Aulae.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3177251A20B03AD4009FA8B1"
-            BuildableName = "AULAE.app"
+            BuildableName = "Aulae.app"
             BlueprintName = "Aulae"
             ReferencedContainer = "container:Aulae.xcodeproj">
          </BuildableReference>
@@ -56,7 +56,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3177251A20B03AD4009FA8B1"
-            BuildableName = "AULAE.app"
+            BuildableName = "Aulae.app"
             BlueprintName = "Aulae"
             ReferencedContainer = "container:Aulae.xcodeproj">
          </BuildableReference>
@@ -73,7 +73,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3177251A20B03AD4009FA8B1"
-            BuildableName = "AULAE.app"
+            BuildableName = "Aulae.app"
             BlueprintName = "Aulae"
             ReferencedContainer = "container:Aulae.xcodeproj">
          </BuildableReference>

@@ -74,7 +74,11 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         let current = mapView!.userLocation.location
         let d = current?.distance(from: currentTouchLocation)
         
-        if d != nil { updateSearchRadiusDB(rDistance: d!) }
+        // TODO: -> .changed?
+        if gestureRecognizer.state == .began {
+            if d != nil { updateSearchRadiusDB(rDistance: d!) }
+        }
+        
 
     }
     
@@ -82,8 +86,8 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circleRenderer = MKCircleRenderer(circle: overlay as! MKCircle)
         circleRenderer.fillColor   = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.00)
-        circleRenderer.strokeColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.5)
-        circleRenderer.lineWidth = 1
+        circleRenderer.strokeColor = UIColor(red: 0.0, green: 1.0, blue: 0.3, alpha: 1.0)
+        circleRenderer.lineWidth = 4
         
         return circleRenderer
     }

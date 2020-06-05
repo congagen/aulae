@@ -56,7 +56,6 @@ class FeedMgmt {
 
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) {
         print("storeFeedObject")
-        // TODO: FIX?
                 
         let currentFeedObjs = feedObjects.filter( {$0.feedId == feedId && ($0.uuid == objInfo["uuid"] as! String)} )
         let rlmObj = RLM_Obj()
@@ -148,7 +147,7 @@ class FeedMgmt {
         if valDict.keys.contains(dctKey) {
             print(valDict[dctKey]!)
             
-            if valDict[dctKey]! != nil {
+            if valDict[dctKey] != nil {
                 return valDict[dctKey]!
             } else {
                 return placeHolderValue
@@ -539,14 +538,7 @@ class FeedMgmt {
         } catch {
             print("Error: \(error)")
         }
-        
-        // TODO: Update FeedTVC
-        
-
-        
     }
     
-    
-
     
 }

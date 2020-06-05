@@ -40,12 +40,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
+        
+        // TODO: Undo?
         do {
-            try Realm().objects(RLM_Feed.self)
-            try Realm().objects(RLM_Obj.self)
-            try Realm().objects(RLM_Session_117.self)
-            try Realm().objects(RLM_SysSettings_117.self)
+            _ = try Realm().objects(RLM_Feed.self)
+            _ = try Realm().objects(RLM_Obj.self)
+            _ = try Realm().objects(RLM_Session_117.self)
+            _ = try Realm().objects(RLM_SysSettings_117.self)
         } catch {
             print("Can't access realm, migration needed")
             migrateRealm()
