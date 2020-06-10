@@ -47,6 +47,7 @@ class QRScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         UIOps().updateNavUiMode(navCtrl: self.navigationController!)
         self.navigationController?.dismiss( animated: true, completion: { super.viewDidAppear(true)} )
         self.view.removeFromSuperview()
+        
     }
     
     

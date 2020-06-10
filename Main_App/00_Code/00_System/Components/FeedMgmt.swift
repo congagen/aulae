@@ -83,7 +83,7 @@ class FeedMgmt {
                 rlmObj.contentUrl  = objInfo["url"] as! String
                 rlmObj.contentLink = (objInfo["content_link"] as! String)
                 rlmObj.chatUrl     = objInfo["chat_url"] as! String
-                rlmObj.directLink  = objInfo["direct_link"] as! Bool 
+                rlmObj.directLink  = objInfo["direct_link"] as! Bool
 
                 rlmObj.text        = objInfo["text"] as! String
                 rlmObj.font        = objInfo["font"] as! String
@@ -195,9 +195,8 @@ class FeedMgmt {
                 
                 if feedDbItem.customMarkerUrl != "" && itemContentType == "marker" {
                     remoteContentUrl = feedDbItem.customMarkerUrl
+                    print("!! feedDbItem.customMarkerUrl !!")
                 }
-                
-                print(itemSpec)
                 
                 let objData: [String : Any] = [
                     "name":              valueIfPresent(valDict: itemSpec, dctKey: "name",      placeHolderValue: String(feedObjects.count)),
@@ -253,14 +252,27 @@ class FeedMgmt {
 
                     storeFeedObject(objInfo: objData, objFilePath: destinationUrl!, feedId: feedId)
                     
-                    // If version != version -> delete
-                    if let cUrl = URL(string: remoteContentUrl as! String) {
-                        let _ = httpDl.loadFileAsync(
-                            prevFeedUid: prevFeedUid,
-                            removeExisting: deleteExisting && !isInstance, url: cUrl as URL,
-                            destinationUrl: destinationUrl!, completion: {}
-                        )
+                    // TODO: Implement Cache?
+//                    if let cUrl = URL(string: remoteContentUrl as! String) {
+//                        let _ = httpDl.loadFileAsync(
+//                            prevFeedUid: prevFeedUid,
+//                            removeExisting: deleteExisting && !isInstance, url: cUrl as URL,
+//                            destinationUrl: destinationUrl!, completion: {}
+//                        )
+//                    }
+                    
+                    if !FileManager.default.fileExists(atPath: destinationUrl!.path) || deleteExisting {
+                        if let cUrl = URL(string: remoteContentUrl as! String) {
+                            let _ = httpDl.loadFileAsync(
+                                prevFeedUid: prevFeedUid,
+                                removeExisting: deleteExisting, url: cUrl as URL,
+                                destinationUrl: destinationUrl!, completion: {}
+                            )
+                        }
                     }
+                    
+           
+                    
                 } else {
                     storeFeedObject(objInfo: objData, objFilePath: URL(fileURLWithPath: ""), feedId: feedId)
                     removeOld(oldId: prevFeedUid)
@@ -368,23 +380,27 @@ class FeedMgmt {
     func storeFeed(feedData: Dictionary<String, AnyObject>, feedDbItem: RLM_Feed, checkVersion: Bool) {
         print("storeFeed")
         
-        if feedDbItem.thumbImageUrl != "" {
-            downloadThumb(feedDBItem: feedDbItem, fileName: "thumb_" + feedDbItem.id)
-        }
-        
-        updateFeedData(feedDbItem: feedDbItem, feedSpec: feedData)
-        updateFeedObjects(feedData: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
-        
-        if !feedData.keys.contains("version") {
-            do {
-                try realm.write {
-                    feedDbItem.errors += 10
-                    feedDbItem.active  = false
+        // TODO: !! Stresstest !!
+        if (feedData["version"] as! Int) != feedDbItem.version {
+            if feedDbItem.thumbImageUrl != "" {
+                downloadThumb(feedDBItem: feedDbItem, fileName: "thumb_" + feedDbItem.id)
+            }
+            
+            updateFeedData(feedDbItem: feedDbItem, feedSpec: feedData)
+            updateFeedObjects(feedData: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+            
+            if !feedData.keys.contains("version") {
+                do {
+                    try realm.write {
+                        feedDbItem.errors += 10
+                        feedDbItem.active  = false
+                    }
+                } catch {
+                    print("Error: \(error)")
                 }
-            } catch {
-                print("Error: \(error)")
             }
         }
+        // TODO: !! Stresstest !!
         
     }
     

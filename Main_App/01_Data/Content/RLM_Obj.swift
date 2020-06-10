@@ -17,21 +17,24 @@ class RLM_Obj: Object {
     @objc dynamic var demo:        Bool   = false
     @objc dynamic var active:      Bool   = true
     @objc dynamic var deleted:     Bool   = false
+    
+    @objc dynamic var customMarkerUrl: String = ""
+    @objc dynamic var customMarkerPath: String = ""
 
     @objc dynamic var contentUrl:  String = ""
     @objc dynamic var chatUrl:     String = ""
-
+    
     @objc dynamic var contentLink: String = ""
     @objc dynamic var directLink:  Bool   = false
     
     @objc dynamic var fileName:    String = ""
     @objc dynamic var filePath:    String = ""
     
-    @objc dynamic var text:        String = ""
     @objc dynamic var font:        String = ""
+    @objc dynamic var text:        String = ""
     
     @objc dynamic var instance:    Bool   = false
-    
+        
     @objc dynamic var hex_color:   String = "7259ff"
     @objc dynamic var style:       Int    = 0
     @objc dynamic var mode:        String = "free"

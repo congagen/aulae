@@ -37,11 +37,17 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     var selected: RLM_Obj? = nil
     var textField: UITextField? = nil
     
+    @IBOutlet weak var resetBtn: UIBarButtonItem!
+    @IBAction func resetBtnAction(_ sender: UIBarButtonItem) {
+        updateSearchRadiusDB(rDistance: 99999999)
+    }
+    
+    
     @IBOutlet var reloadBtn: UIBarButtonItem!
     @IBAction func reloadBtnAction(_ sender: UIBarButtonItem) {
         print("reloadBtnAction")
 
-        UIOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 1)
+        UIOps().showProgressBar(navCtrl: self.navigationController!, progressBar: progressBar, view: self.view, timeoutPeriod: 3)
         
         initMapView()
         mainUpdate()
@@ -76,18 +82,25 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         // TODO: -> .changed?
         if gestureRecognizer.state == .began {
+            print("Distance: " + String(d!))
             if d != nil { updateSearchRadiusDB(rDistance: d!) }
         }
-        
-
+    
     }
     
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circleRenderer = MKCircleRenderer(circle: overlay as! MKCircle)
-        circleRenderer.fillColor   = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.00)
-        circleRenderer.strokeColor = UIColor(red: 0.0, green: 1.0, blue: 0.3, alpha: 1.0)
-        circleRenderer.lineWidth = 4
+
+        if (rlmSystem.first!.searchRadius > 99999988.0) {
+            circleRenderer.strokeColor = UIColor.clear
+            circleRenderer.strokeColor = UIColor.clear
+            circleRenderer.lineWidth = 0
+        } else {
+            circleRenderer.fillColor   = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.00)
+            circleRenderer.strokeColor = UIColor(red: 0.0, green: 1.0, blue: 0.3, alpha: 1.0)
+            circleRenderer.lineWidth = 4
+        }
         
         return circleRenderer
     }

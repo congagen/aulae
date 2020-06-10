@@ -52,11 +52,13 @@ class HttpDownloader {
         let urlSession = URLSession(configuration: sessionConfig)
         let request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
 
-        if removeExisting && FileManager.default.fileExists(atPath: destinationUrl.path) {
-            do {
-                try FileManager.default.removeItem(atPath: destinationUrl.path )
-            } catch let error {
-                print("\(error)")
+        if FileManager.default.fileExists(atPath: destinationUrl.path) {
+            if removeExisting {
+                do {
+                    try FileManager.default.removeItem(atPath: destinationUrl.path )
+                } catch let error {
+                    print("\(error)")
+                }
             }
         }
         

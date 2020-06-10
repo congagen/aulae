@@ -17,11 +17,11 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     lazy var realm = try! Realm()
     lazy var rlmSystem:      Results<RLM_SysSettings_117>    = {self.realm.objects(RLM_SysSettings_117.self)}()
     lazy var rlmSession:     Results<RLM_Session_117>        = {self.realm.objects(RLM_Session_117.self)}()
-    lazy var rlmChatSession: Results<RLM_ChatSess>       = {self.realm.objects(RLM_ChatSess.self) }()
+    lazy var rlmChatSession: Results<RLM_ChatSess>           = {self.realm.objects(RLM_ChatSess.self) }()
 
-    lazy var rlmFeeds:       Results<RLM_Feed>           = {self.realm.objects(RLM_Feed.self)}()
-    lazy var rlmSourceItems: Results<RLM_Obj>            = {self.realm.objects(RLM_Obj.self)}()
-    lazy var rlmCamera:      Results<RLM_CameraSettings> = {self.realm.objects(RLM_CameraSettings.self)}()
+    lazy var rlmFeeds:       Results<RLM_Feed>               = {self.realm.objects(RLM_Feed.self)}()
+    lazy var rlmSourceItems: Results<RLM_Obj>                = {self.realm.objects(RLM_Obj.self)}()
+    lazy var rlmCamera:      Results<RLM_CameraSettings>     = {self.realm.objects(RLM_CameraSettings.self)}()
     
     var updateTimer = Timer()
     var sceneCameraSource: Any? = nil
@@ -112,9 +112,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
         vc!.definesPresentationContext = true
 
-        vc!.modalPresentationStyle = .overFullScreen
+        vc!.modalPresentationStyle = .fullScreen
         vc!.modalTransitionStyle = .crossDissolve
-        present(vc!, animated: false, completion: self.reloadInputViews)
+        present(vc!, animated: false, completion: nil)
     }
     
     
@@ -227,8 +227,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         var objectPos         = SCNVector3(objData.x_pos, objData.y_pos, objData.z_pos)
         var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
         
+        
         if objData.world_position {
-            objectPos = getNodeWorldPosition(objectDistance: objectDistance, baseOffset: 0.0, contentObj: objData, scaleFactor: scaleFactor)
+            objectPos = getNodeWorldPosition(
+                objectDistance: objectDistance, baseOffset: 0.0,
+                contentObj: objData, scaleFactor: scaleFactor
+            )
         }
         
         if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
@@ -289,7 +293,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         
         if objData.demo {
             //positionDemoNodes(ctNode: ctNode, objData: objData)
-            ctNode.scale   = SCNVector3(1, 1, 1)
+            ctNode.scale = SCNVector3(1, 1, 1)
         } else {
             if !objData.world_position && objData.localOrient {
                 // TODO: Remove? let ori = sceneView.pointOfView?.orientation
@@ -322,7 +326,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             sceneView.scene.rootNode.addChildNode(ctNode)
         } else {
             Timer.scheduledTimer(
-                withTimeInterval: 1, repeats: false, block: {
+                withTimeInterval: 2, repeats: false, block: {
                     _ in DispatchQueue.main.async {
                         if !objData.isInvalidated {
                             self.addSourceNode(
@@ -749,7 +753,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         sceneView.audioListener    = mainScene.rootNode
 
         //configuration.sceneReconstruction = .meshWithClassification
-        //configuration.planeDetection = .vertical
+        configuration.planeDetection = [.vertical, .horizontal]
         
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading

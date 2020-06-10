@@ -46,21 +46,21 @@ class ChatTableViewCell: UITableViewCell {
     
         
         let const = [
-            messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 32),
-            messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -32),
+            messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
             messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 250),
         
-            bubbleBackgroundView.topAnchor.constraint(equalTo: messageLabel.topAnchor, constant: -16),
-            bubbleBackgroundView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: -16),
-            bubbleBackgroundView.bottomAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 16),
-            bubbleBackgroundView.trailingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 16)
+            bubbleBackgroundView.topAnchor.constraint(equalTo: messageLabel.topAnchor, constant: -8),
+            bubbleBackgroundView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: -8),
+            bubbleBackgroundView.bottomAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 8),
+            bubbleBackgroundView.trailingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 8)
         ]
     
 //        messageLabel.transform = CGAffineTransform(scaleX: 1, y: -1)
         NSLayoutConstraint.activate(const)
         
-        leadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32)
-        trailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32)
+        leadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+        trailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
     }
     
     required init?(coder aDecoder: NSCoder) {

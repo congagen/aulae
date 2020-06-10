@@ -10,7 +10,7 @@
         <!--Lib-->
         <scene sceneID="x9n-Rz-mVX">
             <objects>
-                <tableViewController title="Lib" modalTransitionStyle="crossDissolve" id="4ZI-rx-Clo" customClass="FeedsTVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Lib" modalTransitionStyle="crossDissolve" id="4ZI-rx-Clo" customClass="FeedsTVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Co9-JA-gGn">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -96,7 +96,7 @@
         <!--Aulae-->
         <scene sceneID="9h0-ey-GEW">
             <objects>
-                <viewController storyboardIdentifier="ArViewController" title="View" automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="crossDissolve" id="cNO-cb-Srl" userLabel="Aulae" customClass="ARViewer" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ArViewController" title="View" automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="crossDissolve" id="cNO-cb-Srl" userLabel="Aulae" customClass="ARViewer" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1yb-qm-Ox7">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -217,7 +217,7 @@
         <!--Map-->
         <scene sceneID="CcG-m6-yJt">
             <objects>
-                <viewController title="Map" modalTransitionStyle="crossDissolve" useStoryboardIdentifierAsRestorationIdentifier="YES" id="shz-14-nLG" customClass="MapVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Map" modalTransitionStyle="crossDissolve" useStoryboardIdentifierAsRestorationIdentifier="YES" id="shz-14-nLG" customClass="MapVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="raj-ma-XdT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -237,7 +237,11 @@
                         <viewLayoutGuide key="safeArea" id="XOD-w0-wDW"/>
                     </view>
                     <navigationItem key="navigationItem" title="Map" id="jef-En-32s">
-                        <barButtonItem key="leftBarButtonItem" title="Item" image="Spacer" id="rtL-JH-yNs"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="rtL-JH-yNs">
+                            <connections>
+                                <action selector="resetBtnAction:" destination="shz-14-nLG" id="TuI-xg-b7c"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="refresh" id="lp5-fg-UQE">
                                 <connections>
@@ -250,6 +254,7 @@
                     <connections>
                         <outlet property="mapView" destination="zU5-ko-yXY" id="CUy-QG-oKU"/>
                         <outlet property="reloadBtn" destination="lp5-fg-UQE" id="t3g-PX-ERx"/>
+                        <outlet property="resetBtn" destination="rtL-JH-yNs" id="8Ma-g4-k0E"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jQb-Zr-Rmt" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -260,7 +265,7 @@
         <!--Settings-->
         <scene sceneID="Fts-l3-fo1">
             <objects>
-                <tableViewController title="Settings" extendedLayoutIncludesOpaqueBars="YES" modalPresentationStyle="currentContext" id="CjR-vc-y1M" customClass="SettingsViewController" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Settings" extendedLayoutIncludesOpaqueBars="YES" modalPresentationStyle="currentContext" id="CjR-vc-y1M" customClass="SettingsViewController" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" bouncesZoom="NO" dataMode="static" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="3ps-j2-dEu">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -724,7 +729,7 @@
         <!--Test-->
         <scene sceneID="sQS-aF-0VM">
             <objects>
-                <viewController title="Test" id="J0L-Ic-Tgp" customClass="ChatViewController" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Test" id="J0L-Ic-Tgp" customClass="ChatViewController" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ymb-DI-wbC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -944,7 +949,7 @@
         <!--Scanning..-->
         <scene sceneID="nRw-Yc-ASa">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="crossDissolve" id="DVs-rL-fGx" customClass="QRScannerVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="crossDissolve" id="DVs-rL-fGx" customClass="QRScannerVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ye6-oq-UHH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -966,7 +971,7 @@
         <!--MainVC-->
         <scene sceneID="Wui-Ci-rQu">
             <objects>
-                <tabBarController storyboardIdentifier="MainViewController" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="jBl-tO-DwV" customClass="MainVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="MainViewController" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="jBl-tO-DwV" customClass="MainVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" selectionIndicatorImage="Spacer" itemPositioning="centered" id="4T4-ar-U71">
@@ -993,7 +998,7 @@
         <!--DefaultNVC-->
         <scene sceneID="LDD-JB-6lr">
             <objects>
-                <navigationController storyboardIdentifier="SettingsViewController" automaticallyAdjustsScrollViewInsets="NO" id="0U2-3G-bcM" customClass="DefaultNVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="SettingsViewController" automaticallyAdjustsScrollViewInsets="NO" id="0U2-3G-bcM" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="apg-mv-huH">
@@ -1012,7 +1017,7 @@
         <!--DefaultNVC-->
         <scene sceneID="UsZ-WG-Zje">
             <objects>
-                <navigationController storyboardIdentifier="ChatViewController" automaticallyAdjustsScrollViewInsets="NO" id="U16-1Z-sjA" customClass="DefaultNVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ChatViewController" automaticallyAdjustsScrollViewInsets="NO" id="U16-1Z-sjA" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
@@ -1032,7 +1037,7 @@
         <!--Aulae-->
         <scene sceneID="Kfm-im-F8f">
             <objects>
-                <viewController title="View" extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="lke-i9-yaQ" userLabel="Aulae" customClass="ARViewer" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="View" extendedLayoutIncludesOpaqueBars="YES" modalTransitionStyle="crossDissolve" id="lke-i9-yaQ" userLabel="Aulae" customClass="ARViewer" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xYs-JU-bWb">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1321,7 +1326,7 @@
         <!--MainVC-->
         <scene sceneID="hQm-nB-7UG">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="zWc-Op-lGz" customClass="MainVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="zWc-Op-lGz" customClass="MainVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" hidden="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" selectionIndicatorImage="Spacer" id="xVb-wM-ZnX">
@@ -1342,7 +1347,7 @@
         <!--View-->
         <scene sceneID="Tol-g3-hQA">
             <objects>
-                <navigationController title="View" navigationBarHidden="YES" id="aec-nf-2yg" customClass="UiNavCtrl" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController title="View" navigationBarHidden="YES" id="aec-nf-2yg" customClass="UiNavCtrl" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBarItem key="tabBarItem" title="View" image="TabBarIcon_01" selectedImage="TabBarIcon_01" id="Zji-DC-1NL"/>
                     <toolbarItems/>
@@ -1366,7 +1371,7 @@
         <!--Map-->
         <scene sceneID="HFQ-8h-iaI">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="OUb-j7-FRs" customClass="DefaultNVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="OUb-j7-FRs" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Map" image="TabBarIcon_00" selectedImage="TabBarIcon_00" id="bXc-LB-YgQ"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -1387,7 +1392,7 @@
         <!--View-->
         <scene sceneID="TAe-Y0-jfi">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0rd-Dl-ekc" customClass="DefaultNVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0rd-Dl-ekc" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="View" image="TabBarIcon_01" selectedImage="TabBarIcon_01" id="aWu-gN-PgQ"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -1411,7 +1416,7 @@
         <!--Lib-->
         <scene sceneID="O55-tf-JR6">
             <objects>
-                <navigationController restorationIdentifier="lib" automaticallyAdjustsScrollViewInsets="NO" id="yYe-rU-Gja" customClass="DefaultNVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController restorationIdentifier="lib" automaticallyAdjustsScrollViewInsets="NO" id="yYe-rU-Gja" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Lib" image="TabBarIcon_02" selectedImage="TabBarIcon_02" id="DlA-0C-lKa"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -1432,7 +1437,7 @@
         <!--DefaultNVC-->
         <scene sceneID="nu0-xX-ReK">
             <objects>
-                <navigationController storyboardIdentifier="QrViewController" automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="rED-8X-lbB" customClass="DefaultNVC" customModule="AULAE" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="QrViewController" automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="rED-8X-lbB" customClass="DefaultNVC" customModule="Aulae" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hbh-Zz-4E5">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
