@@ -50,6 +50,10 @@ class FeedActions {
                 try realm.write {
                     newFeed.sourceUrl  = feedUrl
                     newFeed.id   = UUID().uuidString
+                    
+                    // TODO: Ensure initial version missmatch?
+                    // newFeed.version = UUID().hashValue
+                    
                     if newFeed.id.lowercased() != "quickstart" {
                         newFeed.name = "Updating..."
                     }

@@ -297,18 +297,25 @@ class ContentNode: SCNNode {
     }
     
     
-    func addParticle(particleNode: SCNNode, type: String, gravity: Bool){
-        let node = SCNNode(geometry: SCNPlane(width: 1, height: 1))
+    func addParticle(particleNode: SCNNode, type: String, gravity: Bool) {
+        let node = createSphereNode(with: 0.1, color: UIColor.red)
         
         let particleSystem = SCNParticleSystem(named: "FloatingParticleSystem", inDirectory: nil)
-        particleSystem?.birthRate = 100
+        particleSystem?.birthRate = 10
+        particleSystem?.particleSize = 0.1
         particleSystem?.acceleration = SCNVector3(0, 1, 0)
-        particleSystem?.emitterShape = node.geometry
+//        particleSystem?.emitterShape = .
+        particleSystem?.particleColor = UIColor.blue
         particleSystem?.isAffectedByGravity = gravity
         particleSystem?.birthLocation = .surface
-        particleSystem?.particleDiesOnCollision = true
+        particleSystem?.particleDiesOnCollision = false
         
-        node.addParticleSystem(particleSystem!)
+        if (particleSystem != nil) {
+            node.addParticleSystem(particleSystem!)
+        } else {
+            print("AH??")
+        }
+        
         addChildNode(node)
     }
     

@@ -747,7 +747,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.728.1997;
+				MARKETING_VERSION = 1.728.19992;
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
 				PRODUCT_NAME = Aulae;
 				SWIFT_VERSION = 5.0;
@@ -774,7 +774,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.728.1997;
+				MARKETING_VERSION = 1.728.19992;
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
 				PRODUCT_NAME = Aulae;
 				SWIFT_VERSION = 5.0;

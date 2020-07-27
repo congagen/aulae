@@ -34,7 +34,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
 //    var qrCaptureSession: AVCaptureSession? = nil
     
     var rawDeviceGpsCCL: CLLocation = CLLocation(latitude: 0, longitude: 0)
-
     var memoryWarning = false
     
     var trackingState = 3
@@ -221,12 +220,10 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     
     func styledContentNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) -> ContentNode {
-
         let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         var objectPos         = SCNVector3(objData.x_pos, objData.y_pos, objData.z_pos)
         var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
-        
         
         if objData.world_position {
             objectPos = getNodeWorldPosition(
@@ -246,6 +243,9 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         ctNode.setProp(source: source, objData: objData)
         
         switch objData.type.lowercased() {
+        case "particle_test":
+            let no = ctNode.createSphereNode(with: 1, color: UIColor.green)
+            ctNode.addParticle(particleNode: no, type: "", gravity: true)
         case "image":
             ctNode.addImage(fPath: fPath, objectData: objData)
         case "gif":
@@ -308,7 +308,6 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    
     func addSourceNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) {
         print("AddContentToScene: " + String(objData.uuid))
         print("Adding: " + objData.type.lowercased() + ": " + fPath)
@@ -330,14 +329,14 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     _ in DispatchQueue.main.async {
                         if !objData.isInvalidated {
                             self.addSourceNode(
-                                objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
+                                objData: objData, source: source,
+                                fPath: fPath, scaleFactor: scaleFactor
                             )
                         }
                     }
                 }
             )
         }
-        
     }
     
     
@@ -843,6 +842,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     
     override func didReceiveMemoryWarning() {
         memoryWarning = true
+        // TODO: Alert? / Indicator
     }
     
     

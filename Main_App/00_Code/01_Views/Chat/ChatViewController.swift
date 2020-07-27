@@ -88,6 +88,14 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     func callApi(message: String) {
         print("callApi")
         
+        var scalingIsEnabled: String = "no"
+        
+        if rlmSystem.first!.gpsScaling {
+            scalingIsEnabled = "yes"
+        } else {
+            scalingIsEnabled = "no"
+        }
+        
         if rlmChatSession.first!.apiUrl != "" {
             NetworkTools().postReq(
                 completion: { r in self.handleResponseText(result: r) }, apiHeaderValue: apiHeaderValue,
@@ -95,6 +103,8 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
                 reqParams: [
                     "username": rlmChatSession.first!.username,
                     "agent_id": rlmChatSession.first!.agentId,
+                    
+                    "gps_scaling_ison": scalingIsEnabled,
                     
                     "sid":  (rlmSession.first?.sessionUUID)!,
                     "lat":  rlmSystem.first!.locationSharing ? String(rlmSession.first!.currentLat) : "0",

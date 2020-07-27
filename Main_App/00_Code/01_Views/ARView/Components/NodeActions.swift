@@ -191,7 +191,7 @@ extension ARViewer {
         }
 
         if (selNode.contentURL) != "" {
-            alert.addAction(UIAlertAction(title: "Open Link",  style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (selNode.contentURL)) } ))
+            alert.addAction(UIAlertAction(title: "Open Link", style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (selNode.contentURL)) } ))
         }
         
         if selNode.feedUrl != "" && selNode.feedTopic == "" {
