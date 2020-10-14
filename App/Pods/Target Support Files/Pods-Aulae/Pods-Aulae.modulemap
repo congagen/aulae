@@ -1,6 +1,0 @@
-framework module Pods_Aulae {
-  umbrella header "Pods-Aulae-umbrella.h"
-
-  export *
-  module * { export * }
-}
