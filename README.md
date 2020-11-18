@@ -5,13 +5,13 @@ AULAE name is a iOS app that enables browserlike consumption of positional AR co
 Website: https://abstraqata.com/aulae
 
 
-#### Developing
+### Developing
 * Install CocoaPods
 * Run ```pod install``` in the root directory
 * Open Aulae.xcworkspace
 
 
-## Usage
+### Usage
 
 - Viewport (View):
 Tap and holdon objects to interact or pinch to adjust scale
