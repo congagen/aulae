@@ -13,11 +13,11 @@ Website: https://abstraqata.com/aulae
 
 ## Usage
 
-Viewport (View):
+- Viewport (View):
 Tap and holdon objects to interact or pinch to adjust scale
 
-Map:
+- Map:
 Tap objects for info or tap and hold to adjust your view range (objects outside the specified range will not appear in the viewport)
 
-Library (Lib):
+- Library (Lib):
 Tap the plus button to add urls or topics, swipe left to delete or share
