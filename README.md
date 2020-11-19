@@ -4,7 +4,6 @@ AULAE name is a iOS app that enables browserlike consumption of positional AR co
 
 AppStore: https://apps.apple.com/us/app/aulae/id1358482195#?platform=iphone
 
-.
 
 ### Developing
 - #### App
