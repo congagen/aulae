@@ -4,17 +4,17 @@ AULAE name is a iOS app that enables browserlike consumption of positional AR co
 
 AppStore: https://apps.apple.com/us/app/aulae/id1358482195#?platform=iphone
 
----
+.
 
 ### Developing
-#### App
-- Install CocoaPods
-- Run ```pod install``` in the root directory
-- Open Aulae.xcworkspace
+- #### App
+  - Install CocoaPods
+  - Run ```pod install``` in the root directory
+  - Open Aulae.xcworkspace
 
-#### Content
-- Spec: https://github.com/congagen/aulae/blob/master/CONTENT.md
-- Examples: https://github.com/congagen/aulae/tree/master/Examples
+- #### Content
+  - Spec: https://github.com/congagen/aulae/blob/master/CONTENT.md
+  - Examples: https://github.com/congagen/aulae/tree/master/Examples
 
 ### Usage
 
