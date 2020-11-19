@@ -1,0 +1,34 @@
+{
+    "search_results": {
+        
+        "DemoFeed_1": {
+            "url": "https://s3.amazonaws.com/abstra-dev/1.json",
+            "thmb_img": ""
+        },
+        
+        "DemoFeed_2": {
+            "url": "https://s3.amazonaws.com/abstra-dev/2.json"
+        },
+        
+        "DemoFeed_3": {
+            "url": "https://s3.amazonaws.com/abstra-dev/3.json"
+        },
+        
+        "DemoFeed_4": {
+            "url": "https://s3.amazonaws.com/abstra-dev/4.json"
+        },
+        
+        "DemoFeed_5": {
+            "url": "https://s3.amazonaws.com/abstra-dev/5.json"
+        },
+        
+        "Food": {
+            "url": "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/food"
+        },
+        
+        "Parks": {
+            "url": "https://2hni7twyhl.execute-api.us-east-1.amazonaws.com/dev/parks"
+        }
+    }
+
+}

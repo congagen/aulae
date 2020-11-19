@@ -1,0 +1,152 @@
+{
+    "id":          "API Demo",
+    "name":        "API Demo",
+    "info":        "abcdefgh",
+    "version":     3243243424,
+    "updated_utx": 143456781,
+
+
+    "content": {
+
+
+        "N": {
+            "name":     "N",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+
+            "version":  12345,
+            "info":     "Object info bla",
+
+            "lat":      71,
+            "lng":     	19,
+
+            "scale":    1,
+
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/gifs/earthanimated.gif"
+        },
+
+
+
+        "NE": {
+            "name":     "NE",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+
+            "version":  12345,
+            "info":     "Object info bla",
+
+            "lat":      67,
+            "lng":      40,
+
+            "scale":    1,
+
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/gifs/peacedove.gif"
+        },
+
+
+        "E": {
+            "name":     "E",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+
+            "version":  12345,
+            "info":     "Object info bla",
+
+            "lat":      56,
+            "lng":      42,
+
+            "scale":    1,
+
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/gifs/1540.gif"
+        },
+
+        "SE": {
+            "name":     "SE",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+
+            "version":  12345,
+            "info":     "Object info bla",
+
+            "lat":      46,
+            "lng":      29,
+
+            "scale":    1,
+
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/gifs/dollarspindownd.gif"
+        },
+
+        "S": {
+            "name":     "S",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+
+            "version":  12345,
+            "info":     "Object info bla",
+
+            "lat":      32,
+            "lng":      17,
+
+            "scale":    1,
+
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/gifs/sun.gif"
+        },
+
+        "SW": {
+            "name":     "SW",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+
+            "version":  12345,
+            "info":     "Object info bla",
+
+            "lat":      47,
+            "lng":      1.4,
+
+            "scale":    1,
+
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/gifs/smiling.gif"
+        },
+
+        "W": {
+            "name":     "W",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+
+            "version":  12345,
+            "info":     "Object info bla",
+
+            "lat":      59,
+            "lng":     -10,
+
+            "scale":    1,
+
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/gifs/pegasusbig.gif"
+        },
+
+        "NW": {
+            "name":     "NW",
+            "id":       "12345",
+            "type":     "gif",
+            "style":     0,
+
+            "version":  12345,
+            "info":     "Object info bla",
+
+            "lat":      67,
+            "lng":      -2.5,
+
+            "scale":    1,
+
+            "url":      "https://s3.amazonaws.com/abstra-dev/Content/gifs/dolphin.gif"
+        }
+
+    }
+}
