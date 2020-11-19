@@ -13,7 +13,7 @@ AppStore: https://apps.apple.com/us/app/aulae/id1358482195#?platform=iphone
 
 - #### Content
   - Spec: https://github.com/congagen/aulae/blob/master/Content/Docs/Sources.md
-  - Spec: https://github.com/congagen/aulae/blob/master/Content/Docs/Chat.md
+  - Chat: https://github.com/congagen/aulae/blob/master/Content/Docs/Chat.md
   - Examples: https://github.com/congagen/aulae/tree/master/Content/Examples
 
 ### Usage
