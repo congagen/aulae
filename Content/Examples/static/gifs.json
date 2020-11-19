@@ -1,0 +1,85 @@
+{
+    "id":          "1",
+    "name":        "Source Example",
+    "info":        "",
+    "version":     1,
+    "updated_utx": 1,
+
+    "content": {
+
+        "Gif 1": {
+            "name":     "1",
+            "type":     "gif",
+            "url":      "https://s3.amazonaws.com/aulae-examples/sources/gifs/01.gif",
+
+            "content_link": "https://github.com/congagen/aulae",
+
+            "world_position": false,
+            "world_scale": false,
+	        "billboard": true,
+
+            "x_pos":     0,
+            "y_pos":     0,
+            "z_pos":     -0.5,
+
+            "scale":    1.0
+        },
+
+        "Gif 2": {
+            "name":     "2",
+
+            "type":     "gif",
+            "url":      "https://s3.amazonaws.com/aulae-examples/sources/gifs/02.gif",
+
+            "content_link": "https://github.com/congagen/aulae",
+
+            "world_position": false,
+            "world_scale": false,
+            "billboard": true,
+
+            "x_pos":     0,
+            "y_pos":     0,
+            "z_pos":     0.5,
+
+            "scale":    1.0
+        },
+
+        "Gif 3": {
+            "name":     "3",
+            "type":     "gif",
+            "url":      "https://s3.amazonaws.com/aulae-examples/sources/gifs/01.gif",
+
+            "content_link": "https://github.com/congagen/aulae",
+
+            "world_position": false,
+            "world_scale": false,
+	        "billboard": true,
+
+            "x_pos":     -0.5,
+            "y_pos":     0,
+            "z_pos":     0,
+
+            "scale":    1.0
+        },
+
+        "Gif 4": {
+            "name":     "4",
+            "type":     "gif",
+            "url":      "https://s3.amazonaws.com/aulae-examples/sources/gifs/02.gif",
+
+            "content_link": "https://www.abstraqata.com",
+
+            "world_position": false,
+            "world_scale": false,
+	        "billboard": true,
+
+            "x_pos":     0.5,
+            "y_pos":     0,
+            "z_pos":     0,
+
+            "scale":    1.0
+        }
+
+
+    }
+}

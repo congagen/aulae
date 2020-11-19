@@ -3,7 +3,7 @@
 //  Aulae
 //
 //  Created by Tim Sandgren on 2019-06-13.
-//  Copyright © 2019 Abstraqata. All rights reserved.
+//  Copyright © 2019 Tim Sandgren. All rights reserved.
 //
 
 import Foundation
@@ -139,16 +139,11 @@ extension ChatViewController {
            alert.view.tintColor = UIColor.white
         }
         
-        //alert.view.tintColor = UIColor.black
         alert.view.tintColorDidChange()
-        
-        //self.present(alert, animated: true, completion: nil)
-        
+                
         
         // ----------------------------------------------------------------------------------------------------------------
-        
-        //self.view.window?.windowLevel = UIWindow.Level(rawValue: 10000001)
-        
+                
         if let popoverController = alert.popoverPresentationController {
             popoverController.sourceView = self.view
             popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)

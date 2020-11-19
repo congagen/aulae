@@ -3,7 +3,7 @@
 //  Aulae
 //
 //  Created by Tim Sandgren on 2019-06-13.
-//  Copyright © 2019 Abstraqata. All rights reserved.
+//  Copyright © 2019 Tim Sandgren. All rights reserved.
 //
 
 import RealmSwift

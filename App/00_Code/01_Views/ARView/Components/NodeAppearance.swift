@@ -2,7 +2,7 @@
 //  aulae
 //
 //  Created by Tim Sandgren on 2019-02-20.
-//  Copyright © 2019 Abstraqata. All rights reserved.
+//  Copyright © 2019 Tim Sandgren. All rights reserved.
 //
 
 import Foundation

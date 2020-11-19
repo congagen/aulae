@@ -3,7 +3,7 @@
 //  Aulae
 //
 //  Created by Tim Sandgren on 2019-03-08.
-//  Copyright © 2019 Abstraqata. All rights reserved.
+//  Copyright © 2019 Tim Sandgren. All rights reserved.
 //
 
 import Foundation
@@ -99,7 +99,7 @@ extension MainVC {
                         o.world_position = false
                         o.world_scale    = false
                         o.active         = true
-                        o.contentLink    = "https://www.abstraqata.com/aulae"
+                        o.contentLink    = "https://github.com/congagen/aulae"
                         
                         if i == 1 {
                             o.filePath   = "Guide.png"

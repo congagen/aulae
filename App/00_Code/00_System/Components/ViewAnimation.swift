@@ -3,7 +3,7 @@
 //  Aulae
 //
 //  Created by Tim Sandgren on 2019-05-01.
-//  Copyright © 2019 Abstraqata. All rights reserved.
+//  Copyright © 2019 Tim Sandgren. All rights reserved.
 //
 
 import UIKit

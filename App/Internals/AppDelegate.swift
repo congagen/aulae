@@ -3,7 +3,7 @@
 //  ArkitTest
 //
 //  Created by Tim Sandgren on 2018-05-19.
-//  Copyright © 2018 Abstraqata. All rights reserved.
+//  Copyright © 2018 Tim Sandgren. All rights reserved.
 //
 
 import UIKit

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>        <!-- <script src="http://threejs.org/build/three.min.js"></script> -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+        <title></title>
+
+        <style>
+            #form {
+                width: 40%;
+            }
+        </style>
+
+    </head>
+
+    <!-- <body style="background-image: url(champagne3.gif); background-color: black"> -->
+
+    <body style="background-color: rgba(255,255,255,1)">
+        <center>
+        <form id="form">
+            <br><br>
+            <h2>SOURCE GEN</h2>
+            <br><br>
+
+            <label for="source_name" class="label">Soruce Name: </label>
+            <input id="source_name" class="form-control" name="source_name" value="AULAE">
+            <br>
+
+            <label for="source_id" class="label">Soruce Id: </label>
+            <input id="source_id" class="form-control" name="source_id" value="-">
+            <br>
+
+            <label for="source_description" class="label">Soruce Description: </label>
+            <input id="source_description" class="form-control" name="source_description" value="-">
+
+            <br><br><br>
+
+            <label for="item_url_input" class="label">Content Url: </label>
+            <input id="item_url" class="form-control" name="item_url_input" value="">
+            <br>
+            <label for="item_type" class="label">Format: </label>
+            <select class="form-control" id="item_type" name="item_type">
+                <option value="text">Text</option>
+                <option value="image">PNG</option>
+                <option value="image">JPG</option>
+                <option value="gif">GIF</option>
+                <option value="usdz">USDZ</option>
+                <option value="audio">Mp3</option>
+            </select>
+
+            <br><br><br>
+            <label for="item_name_input" class="label">Item Name: </label>
+            <input id="item_name" class="form-control" name="item_name_input" value="Untitled" type="text">
+            <br>
+            <label for="item_info_input" class="label">Item Description: </label>
+            <input id="item_info" class="form-control" name="item_info_input" value="-" type="text">
+            <br>
+            <label for="item_link_url_input" class="label">Item Link Url: </label>
+            <input id="item_link_url" class="form-control" name="item_link_url_input" value="https://www.abstraqata.com/aulae" type="text">
+            <br><br><br>
+            <label for="item_text_input" class="label">Item Text: </label>
+            <input id="item_text" class="form-control" name="item_text_input" value="(＾▽＾)" type="text">
+            <br>
+            <label for="item_text_color_input" class="label">Text Color (HEX): </label>
+            <input id="item_text_color" class="form-control" name="item_text_color_input" value="4c00ff" type="text">
+            <br><br>
+            <br>
+            <label for="item_scale_input" class="label">Item Scale: </label>
+            <input id="item_scale" class="form-control" name="item_scale_input" type="number" value=1.0>
+            <br><br><br>
+
+            <label for="billboard_input" class="label">Billboard: </label>
+            <input type="checkbox" id="billboard" name="billboard_input" checked>
+            <br>
+
+            <label for="world_scale_input" class="label">World Scale: </label>
+            <input type="checkbox" id="world_scale" name="world_scale_input" checked>
+            <br>
+
+            <label for="worldPosition_input" class="label">World Position: </label>
+            <input type="checkbox" id="world_position" name="worldPosition_input">
+            <br><br><br>
+
+            <label for="Latitude_input" class="label">Latitude: </label>
+            <input id="latitude" class="form-control" name="Latitude_input" value=0 type="number">
+
+            <br>
+
+            <label for="Longitude_input" class="label">Longitude: </label>
+            <input id="longitude" class="form-control" name="Longitude_input" value=0 type="number">
+
+            <br><br><br>
+
+            <label for="xPos_input" class="label">X Position: </label>
+            <input id="x_pos" class="form-control" name="xPos_input" value=0 type="number">
+
+            <br>
+            <label for="yPos_input" class="label">Y Position: </label>
+            <input id="y_pos" class="form-control" name="yPos_input" value=0 type="number">
+
+            <br>
+            <label for="zPos_input" class="label">Z Position: </label>
+            <input id="z_pos" class="form-control" name="zPos_input" value=0 type="number">
+            <br>
+
+            <label for="circle_input" class="label">Encircle: </label>
+            <input type="checkbox" id="circle" name="circle_input" checked>
+
+            <br><br><br>
+            <button id="genBtn" type="button" name="button">Generate</button>
+            <br><br><br>
+
+        </form>
+        </center>
+
+        <script src="main.js"></script>
+    </body>
+</html>

@@ -26,7 +26,7 @@
 			<key>CFBundleURLIconFile</key>
 			<string>Logo</string>
 			<key>CFBundleURLName</key>
-			<string>com.abstraqata.aulae</string>
+			<string>com.Tim Sandgren.aulae</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>AulaeApp</string>
