@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Iphone-Notification-20x2.png",
+      "filename" : "Ipad_Notifications-20x2-1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
@@ -25,7 +25,7 @@
       "size" : "29x29"
     },
     {
-      "filename" : "Iphone_Spotlight-40x2.png",
+      "filename" : "Icon-Small-40@2x-1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
@@ -37,13 +37,13 @@
       "size" : "40x40"
     },
     {
-      "filename" : "Iphone_App_iOS_7-10_60x2.png",
+      "filename" : "Icon-60@2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "Iphone_App_iOS_7-10_60x3.png",
+      "filename" : "Icon-60@3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"

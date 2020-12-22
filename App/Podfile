@@ -1,3 +1,5 @@
+platform :ios, '14.0'
+
 target 'Aulae' do
   use_frameworks!
   pod 'RealmSwift'
