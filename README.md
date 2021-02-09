@@ -19,7 +19,7 @@ AppStore: https://apps.apple.com/us/app/aulae/id1358482195#?platform=iphone
 ### Usage
 
 - Viewport (View):
-Tap and holdon objects to interact or pinch to adjust scale
+Tap and hold on objects to interact or pinch to adjust scale
 - Map:
 Tap objects for info or tap and hold to adjust your view range (objects outside the specified range will not appear in the viewport)
 - Library (Lib):
