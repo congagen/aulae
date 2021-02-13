@@ -25,4 +25,6 @@ Tap objects for info or tap and hold to adjust your view range (objects outside 
 - Library (Lib):
 Tap the plus button to add urls or topics, swipe left to delete or share
 
+
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P53MNN0)
