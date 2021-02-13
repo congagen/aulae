@@ -24,3 +24,5 @@ Tap and hold on objects to interact or pinch to adjust scale
 Tap objects for info or tap and hold to adjust your view range (objects outside the specified range will not appear in the viewport)
 - Library (Lib):
 Tap the plus button to add urls or topics, swipe left to delete or share
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P53MNN0)
