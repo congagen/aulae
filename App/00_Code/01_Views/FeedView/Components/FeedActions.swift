@@ -30,8 +30,6 @@ class FeedActions {
         }
     }
     
-  
-    
     
     func addNewSource(feedUrl: String, feedApiKwd: String, refreshExisting: Bool) {
         print("addFeed")
@@ -48,17 +46,14 @@ class FeedActions {
         if rlmFeeds.filter({ !$0.deleted }).filter({$0.sourceUrl == feedUrl && $0.topicKwd == feedApiKwd}).count == 0 {
             do {
                 try realm.write {
-                    newFeed.sourceUrl  = feedUrl
-                    newFeed.id   = UUID().uuidString
-                    
-                    // TODO: Ensure initial version missmatch?
-                    // newFeed.version = UUID().hashValue
+                    newFeed.sourceUrl = feedUrl
+                    newFeed.id = UUID().uuidString
                     
                     if newFeed.id.lowercased() != "quickstart" {
-                        newFeed.name = "Updating..."
+                        newFeed.name = "Updating..." // IF Topic -> Name = Topic
                     }
-                    newFeed.topicKwd = feedApiKwd
                     
+                    newFeed.topicKwd = feedApiKwd                    
                     self.realm.add(newFeed)
                 }
             } catch {

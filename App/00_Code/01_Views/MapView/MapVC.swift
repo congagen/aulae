@@ -260,7 +260,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
             pinView?.annotation = annotation
         }
         
-        pinView?.image              = UIImage(named: "pin_ds")
+        pinView?.image              = UIImage(named: "pin_image_ds")
         pinView?.canShowCallout     = true
 
 //        if let o: MapAno = annotation as? MapAno {

@@ -24,15 +24,17 @@ class FeedsTVC: UITableViewController {
     var updateTimer = Timer()
     let updateInterval: Double = 10
     
-    let placeholderFeedThumbImage = "Logo.png"
+    let placeholderFeedThumbImage = "FeedLogo2.png"
     
     let feedMgr = FeedMgmt()
     
     let rowHeightRatio = 0.08
-    let activeColor    = UIColor(displayP3Red: 0.5, green: 1, blue: 0.5, alpha: 1)
-    let nonActiveColor = UIColor(displayP3Red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
+    let activeColor    = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 1)
+    let nonActiveColor = UIColor(displayP3Red: 0.35, green: 0.35, blue: 0.35, alpha: 1)
     
     var alertTextField: UITextField? = nil
+    var alertTextFieldB: UITextField? = nil
+    
     var selected: RLM_Feed? = nil
     
     
@@ -110,6 +112,31 @@ class FeedsTVC: UITableViewController {
 
     }
     
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        var footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 0))
+        footerView.backgroundColor = .clear
+
+        if section == (tableView.numberOfSections - 1) {
+            footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 50))
+        }
+        
+        return footerView
+
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        
+        if section == (tableView.numberOfSections - 1) {
+            return 50
+        } else {
+            return 0
+        }
+        
+    }
+    
+    
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
@@ -144,8 +171,7 @@ class FeedsTVC: UITableViewController {
             print("Thumb Image Path: " + feed.thumbImagePath)
             
             if let img = UIImage(contentsOfFile: feed.thumbImagePath) {
-                print("Image OK")
-                cell.imageView?.image = img
+                cell.imageView?.image = img                
             } else {
                 print("Thumb Image Load Error")
             }
@@ -154,13 +180,15 @@ class FeedsTVC: UITableViewController {
         //cell.imageView!.layer.cornerRadius = 10
         cell.imageView!.backgroundColor = UIColor.clear
         cell.imageView!.layer.borderWidth = 6
-        cell.imageView!.layer.borderColor = UIColor.black.cgColor
+        cell.imageView!.layer.borderColor = UIColor.clear.cgColor
         cell.imageView!.reloadInputViews()
         
         if !feed.active {
+            cell.imageView?.alpha = 0.35
             cell.textLabel?.textColor = nonActiveColor
             cell.detailTextLabel?.textColor = nonActiveColor
         } else {
+            cell.imageView?.alpha = 1
             cell.textLabel?.textColor = activeColor
             cell.detailTextLabel?.textColor = activeColor
         }
@@ -192,6 +220,16 @@ class FeedsTVC: UITableViewController {
             textField.text! = ""
         }
     }
+    
+    func urlConfigurationTextFieldNumPad(textField: UITextField!)
+    {
+        if let _ = textField {
+            textField.keyboardType = .numberPad
+            self.alertTextFieldB = textField!
+            textField.text! = ""
+        }
+    }
+    
     
     func handleEnterURL(alertView: UIAlertAction!) {
         
@@ -246,7 +284,7 @@ class FeedsTVC: UITableViewController {
             alert.view.tintColor = UIColor.white
         }
         
-        self.present(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: {self.tableView.isEditing = false})
     }
     
     
@@ -272,7 +310,7 @@ class FeedsTVC: UITableViewController {
             alert.view.tintColor = UIColor.white
         }
         
-        self.present(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: {self.tableView.isEditing = false})
     }
     
     
@@ -291,7 +329,7 @@ class FeedsTVC: UITableViewController {
             alert.view.tintColor = UIColor.white
         }
         
-        self.present(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: {self.tableView.isEditing = false})
     }
     
     
@@ -315,7 +353,7 @@ class FeedsTVC: UITableViewController {
         
         activityViewController.view.tintColor = UIColor.black
         
-        self.present(activityViewController, animated: true, completion: nil)
+        self.present(activityViewController, animated: true, completion: {self.tableView.isEditing = false})
     }
     
     
@@ -347,12 +385,15 @@ class FeedsTVC: UITableViewController {
     }
     
     
-    func storeMarkerIconFilePath(feedDBItem: RLM_Feed, markerImagePath: URL) {
+    func storeMarkerIconFilePath(feedDBItem: RLM_Feed, markerImagePath: URL, markerImageURL: String) {
         print("storeThumb")
         
         do {
             try realm.write {
-                feedDBItem.sb = markerImagePath.path
+                feedDBItem.customMarkerUrl = markerImageURL
+                feedDBItem.customMarkerPath = markerImagePath.path
+                //feedDBItem.thumbImageUrl = markerImageURL
+                //feedDBItem.thumbImagePath = markerImagePath.path
             }
         } catch {
             print("Error: \(error)")
@@ -360,31 +401,55 @@ class FeedsTVC: UITableViewController {
     }
     
     
-    func downloadMarkerIcon(feedDBItem: RLM_Feed, fileName: String) {
-        print("Download Marker Icon")
-        
-        do {
-            try realm.write {
-                if alertTextField?.text != nil {
-                    feedDBItem.sa = (self.alertTextField?.text)!
-                }
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-        let markerIconUrl   = URL(string: feedDBItem.sa)
-        let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-        let fileName        = feedDBItem.id + String(feedDBItem.id) + "_" + (markerIconUrl?.lastPathComponent)!
-        let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
+    func downloadCustomMarkerIcon(feedDBItem: RLM_Feed, markerURL: String) {
+        print("Downloading Custom Marker Icon...")
+        let allowedFormats = ["jpg", "png", "gif", "usdz", "mp3"]
+        let urlExt = (markerURL as NSString).pathExtension
 
-        let httpDl = HttpDownloader()
-        let _ = httpDl.loadFileAsync(
-            prevFeedUid: "",
-            removeExisting: true, url: markerIconUrl!, destinationUrl: destinationUrl!,
-            completion: { DispatchQueue.main.async {
-                self.storeMarkerIconFilePath(feedDBItem: feedDBItem, markerImagePath: destinationUrl!) } }
-        )
+        if (allowedFormats.contains(urlExt.lowercased())) {
+            do {
+                try realm.write {
+                    feedDBItem.sa = markerURL
+                    feedDBItem.customMarkerUrl = markerURL
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+            
+            let markerIconUrl   = URL(string: feedDBItem.customMarkerUrl)
+            print("Setting new topic source Icon Url: " + markerURL)
+            
+            if (markerIconUrl != nil) {
+                
+                let markerIconUrl   = URL(string: feedDBItem.customMarkerUrl)
+                let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+                let fileName        = feedDBItem.id + String(feedDBItem.id) + "_" + (markerIconUrl?.lastPathComponent)!
+                let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
+
+                let httpDl = HttpDownloader()
+                let _ = httpDl.loadFileAsync(
+                    preserveFields: ["a":"b"],
+                    removeExisting: true, url: markerIconUrl!, destinationUrl: destinationUrl!,
+                    completion: { DispatchQueue.main.async {
+                        self.storeMarkerIconFilePath(feedDBItem: feedDBItem, markerImagePath: destinationUrl!, markerImageURL: markerURL)
+                        }
+                    }
+                )
+            } else {
+                print("Error setting custom topic source icon #A")
+            }
+        } else {
+            print("Error setting custom topic source icon #B")
+            
+//            do {
+//                try realm.write {
+//                    feedDBItem.customMarkerUrl = ""
+//                }
+//            } catch {
+//                print("Error: \(error)")
+//            }
+            
+        }
         
     }
     
@@ -392,15 +457,28 @@ class FeedsTVC: UITableViewController {
     func editMarkerIcon(topicSource: RLM_Feed) {
         
         let alert = UIAlertController(
-            title: "Enter your custom image url (PNG / JPG)", message: "", preferredStyle: UIAlertController.Style.alert
+            title: "Custom marker URL (PNG / JPG / GIF)", message: "", preferredStyle: UIAlertController.Style.alert
         )
         
+//        alert.addTextField(configurationHandler: nil)
+//        alert.textFields?.first?.backgroundColor = UIColor.clear
+//        alert.textFields?.first?.text = "Topic:"
+//        alert.textFields?.first?.allowsEditingTextAttributes = false
+//        alert.textFields?.first?.textAlignment = .center
+//        alert.textFields?.first?.isSelected = false
+//        alert.textFields?.first?.isUserInteractionEnabled = false
+        
         alert.addTextField(configurationHandler: urlConfigurationTextField)
+        alert.textFields?.last?.isSelected = true
+        alert.textFields?.last?.select(self)
+        alert.textFields?.last?.text = topicSource.customMarkerUrl
+
         alert.addAction(UIAlertAction(
             title: "Ok",
             style: UIAlertAction.Style.default,
-            handler: { _ in self.downloadMarkerIcon(feedDBItem: topicSource, fileName: topicSource.sourceUrl) }
+            handler: { _ in self.downloadCustomMarkerIcon(feedDBItem: topicSource, markerURL: (self.alertTextField?.text)!) }
         ))
+        
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,  handler: nil ))
         
         if traitCollection.userInterfaceStyle == .light {
@@ -409,9 +487,49 @@ class FeedsTVC: UITableViewController {
             alert.view.tintColor = UIColor.white
         }
         
-        self.present(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: {self.tableView.isEditing = false})
     }
     
+    
+    func setMarkerSpreadRandom(feedDBItem: RLM_Feed, spreadAmount: Double) {
+        
+        do {
+            try realm.write {
+                if spreadAmount > 10 {
+                    feedDBItem.da = 10
+                } else {
+                    feedDBItem.da = spreadAmount
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    
+    func editTopicMarkerPositionSpread(topicSource: RLM_Feed) {
+        let alert = UIAlertController(
+            title: "Randomize vertical position (0-10)", message: "", preferredStyle: UIAlertController.Style.alert
+        )
+        alert.addTextField(configurationHandler: urlConfigurationTextFieldNumPad)
+        
+        alert.addAction(UIAlertAction(
+            title: "Ok",
+            style: UIAlertAction.Style.default,
+            handler: { _ in self.setMarkerSpreadRandom(feedDBItem: topicSource, spreadAmount: Double(self.alertTextFieldB?.text ?? "0")!) }
+        ))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,  handler: nil ))
+
+        if traitCollection.userInterfaceStyle == .light {
+            alert.view.tintColor = UIColor.black
+        } else {
+            alert.view.tintColor = UIColor.white
+        }
+        
+        self.present(alert, animated: true, completion: {self.tableView.isEditing = false})
+
+    }
     
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -445,13 +563,21 @@ class FeedsTVC: UITableViewController {
         deleteAction.backgroundColor = UIColor.black
         
         // let editMarkerAction = UITableViewRowAction(style: .normal, title: "Customize") { (rowAction, indexPath) in
-        let editMarkerAction = UIContextualAction(style: .normal, title: "Customize", handler: {_,_,_ in
+        let setCustomMarkerAction = UIContextualAction(style: .normal, title: "Marker", handler: {_,_,_ in
             self.editMarkerIcon(topicSource: self.selected!)
         })
-        editMarkerAction.backgroundColor = UIColor.black
+        setCustomMarkerAction.backgroundColor = UIColor.black
         
+        let editMarkerDisplayAction = UIContextualAction(style: .normal, title: "Spread", handler: {_,_,_ in
+            self.editTopicMarkerPositionSpread(topicSource: self.selected!)
+        })
+        editMarkerDisplayAction.backgroundColor = UIColor.black
         
-        return UISwipeActionsConfiguration(actions: [shareAction, deleteAction])
+        if self.selected?.topicKwd != "" {
+            return UISwipeActionsConfiguration(actions: [shareAction, deleteAction, setCustomMarkerAction, editMarkerDisplayAction])
+        } else {
+            return UISwipeActionsConfiguration(actions: [shareAction, deleteAction])
+        }
 
     }
     

@@ -64,9 +64,21 @@ class FeedMgmt {
     func storeFeedObject(objInfo: [String : Any], objFilePath: URL, feedId: String) throws {
         print("storeFeedObject")
                 
-        let currentFeedObjs = feedObjects.filter( {$0.feedId == feedId && ($0.uuid == objInfo["uuid"] as! String)} )
-        let rlmObj = RLM_Obj()
+        //TODO: Store and append custom marker filepath
         
+        let objFeed = rlmFeeds.filter({$0.id == feedId})
+        
+        // Store Custom Markers
+        var prvCmarkerUrl = ""
+        var prvCmarkerPth = ""
+        
+        if objFeed.count > 0 {
+            if objFeed.first?.customMarkerUrl  != "" {prvCmarkerUrl = objFeed.first!.customMarkerUrl}
+            if objFeed.first?.customMarkerPath != "" {prvCmarkerPth = objFeed.first!.customMarkerPath}
+        }
+        
+        let currentFeedObjs = feedObjects.filter( {$0.feedId == feedId && ($0.uuid == objInfo["uuid"] as! String)} )
+                
         for c in currentFeedObjs{
             do {
                 try realm.write {
@@ -77,20 +89,31 @@ class FeedMgmt {
             }
         }
         
+        let rlmObj = RLM_Obj()
+    
+        
         do {
             try realm.write {
-                rlmObj.feedId      = feedId
-                rlmObj.uuid        = objInfo["uuid"] as! String
-                rlmObj.instance    = objInfo["instance"] as! Bool
+                rlmObj.feedId       = feedId
+                rlmObj.uuid         = objInfo["uuid"] as! String
+                rlmObj.instance     = objInfo["instance"] as! Bool
 
-                rlmObj.name        = objInfo["name"] as! String
-                rlmObj.info        = objInfo["info"] as! String
-                rlmObj.filePath    = objFilePath.absoluteString
+                rlmObj.name         = objInfo["name"] as! String
+                rlmObj.info         = objInfo["info"] as! String
+                
+                if prvCmarkerPth != "" {
+                    rlmObj.filePath = prvCmarkerPth
+                } else {
+                    rlmObj.filePath = objFilePath.absoluteString
+                }
             
                 rlmObj.contentUrl  = objInfo["url"] as! String
                 rlmObj.contentLink = (objInfo["content_link"] as! String)
                 rlmObj.chatUrl     = objInfo["chat_url"] as! String
                 rlmObj.directLink  = objInfo["direct_link"] as! Bool
+                
+                rlmObj.customMarkerUrl = prvCmarkerUrl
+                rlmObj.customMarkerPath = prvCmarkerPth
 
                 rlmObj.text        = objInfo["text"] as! String
                 rlmObj.font        = objInfo["font"] as! String
@@ -204,7 +227,7 @@ class FeedMgmt {
                 let itemContentType = itemSpec["type"] as! String
                 var remoteContentUrl = valueIfPresent(valDict: itemSpec, dctKey: "url", placeHolderValue: "")
                 
-                if feedDbItem.customMarkerUrl != "" && itemContentType == "marker" {
+                if feedDbItem.customMarkerUrl != "" {
                     remoteContentUrl = feedDbItem.customMarkerUrl
                     print("!! feedDbItem.customMarkerUrl !!")
                 }
@@ -256,7 +279,12 @@ class FeedMgmt {
                     
                 //let isInstance: Bool = objData["instance"]! as! Bool
                 
+                // Download content if present
                 if itemContentType != "text" && itemSpec.keys.contains("url") {
+                    print("OK!!==!!")
+                    print(itemContentType)
+                    print(feedDbItem.customMarkerPath)
+                    
                     let documentsUrl    = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
                     let fileName        = feedDbItem.id + String(feedDbItem.version) + (URL(string: remoteContentUrl as! String)?.lastPathComponent)!
                     let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
@@ -281,20 +309,10 @@ class FeedMgmt {
                     
                     // -----------------------------------------------------------------------------------------------
                     
-                    
-//                    TODO: Implement Cache?
-//                    if let cUrl = URL(string: remoteContentUrl as! String) {
-//                        let _ = httpDl.loadFileAsync(
-//                            prevFeedUid: prevFeedUid,
-//                            removeExisting: deleteExisting && !isInstance, url: cUrl as URL,
-//                            destinationUrl: destinationUrl!, completion: {}
-//                        )
-//                    }
-                    
                     if !FileManager.default.fileExists(atPath: destinationUrl!.path) || deleteExisting {
                         if let cUrl = URL(string: remoteContentUrl as! String) {
                             let _ = httpDl.loadFileAsync(
-                                prevFeedUid: prevFeedUid,
+                                preserveFields: [:],
                                 removeExisting: deleteExisting, url: cUrl as URL,
                                 destinationUrl: destinationUrl!, completion: {}
                             )
@@ -354,7 +372,7 @@ class FeedMgmt {
             let sUpdated_utx: Int = feedSpec["updated_utx"] as! Int
             
             let sInfo: String = valueIfPresent(valDict: feedSpec, dctKey: "info", placeHolderValue: "") as! String
-            let thumbUrl: String = valueIfPresent(valDict: feedSpec, dctKey: "thumb_url", placeHolderValue: "") as! String
+            let thumbUrl: String = valueIfPresent(valDict: feedSpec, dctKey: "thumb_url", placeHolderValue: feedDbItem.customMarkerUrl) as! String
             
             let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(feedDbItem.updatedUtx)))
             print(timeSinceUpdate)
@@ -369,6 +387,9 @@ class FeedMgmt {
                     feedDbItem.version       = sVersion
                     feedDbItem.updatedUtx    = sUpdated_utx
                     feedDbItem.thumbImageUrl = thumbUrl
+                    
+                    feedDbItem.customMarkerUrl = ""
+                    feedDbItem.customMarkerPath = ""
                 }
             } catch {
                 print("Error: \(error)")
@@ -412,9 +433,13 @@ class FeedMgmt {
         let destinationUrl  = documentsUrl.appendingPathComponent(fileName)
         
         let _ = httpDl.loadFileAsync(
-            prevFeedUid: "",
+            preserveFields: [:],
             removeExisting: true, url: thImgUrl!, destinationUrl: destinationUrl!,
-            completion: { DispatchQueue.main.async { self.storeThumb(feedDBItem: feedDBItem, thumbImageFilePath: destinationUrl!) } }
+            completion: {
+                DispatchQueue.main.async {
+                    self.storeThumb(feedDBItem: feedDBItem, thumbImageFilePath: destinationUrl!)
+                }
+            }
         )
     }
     
@@ -461,25 +486,29 @@ class FeedMgmt {
         
         if validateFeedFields(feedData: feedData) == true {
             // TODO: !! Stresstest !!
-            if (feedData["version"] as! Int) != feedDbItem.version {
-                if feedDbItem.thumbImageUrl != "" {
-                    downloadThumb(feedDBItem: feedDbItem, fileName: "thumb_" + feedDbItem.id)
-                }
+            // BUG? (Found nil -> "version")
+            if feedData["version"] != nil {
+                if (feedData["version"] as! Int) != feedDbItem.version {
+                    if feedDbItem.thumbImageUrl != "" {
+                        downloadThumb(feedDBItem: feedDbItem, fileName: "thumb_" + feedDbItem.id)
+                    }
 
-                updateFeedData(feedDbItem: feedDbItem, feedSpec: feedData)
-                updateFeedObjects(feedData: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
+                    updateFeedData(feedDbItem: feedDbItem, feedSpec: feedData)
+                    updateFeedObjects(feedData: feedData, feedId: feedDbItem.id, feedDbItem: feedDbItem)
 
-                if !feedData.keys.contains("version") {
-                    do {
-                        try realm.write {
-                            feedDbItem.errors += 10
-                            feedDbItem.active  = false
+                    if !feedData.keys.contains("version") {
+                        do {
+                            try realm.write {
+                                feedDbItem.errors += 10
+                                feedDbItem.active  = false
+                            }
+                        } catch {
+                            print("Error: \(error)")
                         }
-                    } catch {
-                        print("Error: \(error)")
                     }
                 }
             }
+            
         } else {
             // TODO: Deactivate Feed
             do {
@@ -555,12 +584,12 @@ class FeedMgmt {
     }
     
     
-    func manageSourceUpdate(originalFeedInfo: String, sType: String, feedData: RLM_Feed, customMarkerPath: String, destinationUrl: URL) {
+    func manageSourceUpdate(originalFeedInfo: String, sType: String, feedData: RLM_Feed, destinationUrl: URL) {
         if sType == "json" {
             if let URL = URL(string: feedData.sourceUrl) {
                 print("Downloading Feed JSON: " + feedData.sourceUrl)
                 let _ = httpDl.loadFileAsync(
-                    prevFeedUid: "",
+                    preserveFields: ["customMarkerUrl": feedData.customMarkerUrl, "customMarkerPath": feedData.customMarkerPath],
                     removeExisting: true, url: URL as URL, destinationUrl: destinationUrl,
                     completion: { DispatchQueue.main.async { self.storeFeedJson(fileUrl: destinationUrl, feedDbItem: feedData) } }
                 )
@@ -608,20 +637,17 @@ class FeedMgmt {
 
         for fe in rlmFeeds {
             let feedInfo = fe.info
+            
+//            var customMarkerPath = fe.customMarkerPath
+//            var customMarkerUrl = fe.customMarkerUrl
+//            
+//            if customMarkerPath != "" {
+//                
+//            }
 
             print("Updating Feed: "  + fe.name)
             print("Feed ID:       "  + String(fe.id))
             print("Feed URL:      "  + fe.sourceUrl)
-            
-            do {
-                try realm.write {
-                    if fe.id.lowercased() != "quickstart" {
-                        fe.info = "Updating..."
-                    }
-                }
-            } catch {
-                print("Error: \(error)")
-            }
         
             if checkTimeSinceUpdate {
                 let timeSinceUpdate = abs(NSDate().timeIntervalSince1970.distance(to: Double(fe.updatedUtx)))
@@ -635,8 +661,7 @@ class FeedMgmt {
         
             if fe.active && !fe.deleted && shouldUpdate && fe.sourceUrl != "" {
                 let sourceUrl      = URL(string: fe.sourceUrl)
-                let feedExt      = sourceUrl?.pathExtension.lowercased()
-                let customMarkerImageUrl = fe.sa
+                let feedExt        = sourceUrl?.pathExtension.lowercased()
 
                 let fileName       = fe.id + ".json"
                 let documentsUrl   = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
@@ -657,13 +682,8 @@ class FeedMgmt {
                         sType = "json"
                     }
                 }
-                
-                print("sType: " + sType)
-                
-                manageSourceUpdate(
-                    originalFeedInfo: feedInfo, sType: sType, feedData: fe,
-                    customMarkerPath: customMarkerImageUrl, destinationUrl: destinationUrl!
-                )
+                                
+                manageSourceUpdate(originalFeedInfo: feedInfo, sType: sType, feedData: fe, destinationUrl: destinationUrl!)
                 
                 needsViewRefresh = true
             }

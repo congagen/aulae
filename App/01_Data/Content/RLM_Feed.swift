@@ -50,7 +50,7 @@ class RLM_Feed: Object {
     @objc dynamic var sb: String = ""
     @objc dynamic var sc: String = ""
     
-    @objc dynamic var radius: Double = 1000000000
+    @objc dynamic var radius: Double = 10000000000
 }
 
 

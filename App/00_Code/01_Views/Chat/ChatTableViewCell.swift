@@ -17,8 +17,8 @@ class ChatTableViewCell: UITableViewCell {
     var leadingConstraint:  NSLayoutConstraint!
     var trailingConstraint: NSLayoutConstraint!
     
-    var outBubbleColor       = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
-    var incommingBubbleColor = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
+    var outBubbleColor       = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 0.9)
+    var incommingBubbleColor = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 0.9)
     
     var isIncomming: Bool! {
         didSet {
@@ -51,15 +51,15 @@ class ChatTableViewCell: UITableViewCell {
             messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 250),
         
             bubbleBackgroundView.topAnchor.constraint(equalTo: messageLabel.topAnchor, constant: -8),
-            bubbleBackgroundView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: -8),
+            bubbleBackgroundView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: -16),
             bubbleBackgroundView.bottomAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 8),
-            bubbleBackgroundView.trailingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 8)
+            bubbleBackgroundView.trailingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 16)
         ]
     
         NSLayoutConstraint.activate(const)
         
-        leadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
-        trailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+        leadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24)
+        trailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24)
     }
     
     required init?(coder aDecoder: NSCoder) {

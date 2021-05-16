@@ -75,17 +75,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Disable all feeds
             print("crashedLastTime = true")
 
-//            do {
-//                try realm.write {
-//                    for f in rlmFeeds {
-//                        f.active = false
-//                    }
-//
-//                    errorLog.first?.crashed = false
-//                }
-//            } catch {
-//                print("Error: \(error)")
-//            }
+            do {
+                try realm.write {
+                    for f in rlmFeeds {
+                        f.active = false
+                    }
+
+                    errorLog.first?.crashed = false
+                }
+            } catch {
+                print("Error: \(error)")
+            }
             
             crashedLastTime = false
         }
@@ -110,7 +110,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             .filter({$0.isKeyWindow}).first
 
         keyWindow?.tintColor = UIColor.black
-
+        
+        do {
+            try realm.write {
+                errorLog.first?.crashed = true
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+                
         return true
     }
 
@@ -199,7 +207,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        crashedLastTime = false
         
         do {
             try realm.write {

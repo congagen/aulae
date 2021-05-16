@@ -194,6 +194,10 @@ extension ARViewer {
             alert.addAction(UIAlertAction(title: "Open Link", style: UIAlertAction.Style.default, handler: { _ in self.openUrl(scheme: (selNode.contentURL)) } ))
         }
         
+//        if selNode.feedTopic != "" {
+//            alert.addAction(UIAlertAction(title: "Change Marker", style: UIAlertAction.Style.default, handler: { _ in self.changeMarker() } ))
+//        }
+        
         if selNode.feedUrl != "" && selNode.feedTopic == "" {
             alert.addAction(
                 UIAlertAction(title: "Share Source", style: UIAlertAction.Style.default, handler: {_ in self.shareURLAction(url: (selNode.feedUrl)) }))

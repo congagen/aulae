@@ -23,28 +23,28 @@ class DbOps {
     lazy var feedObjects: Results<RLM_Obj> = { self.realm.objects(RLM_Obj.self) }()
     
     
-    func dbGc(reset: Bool) {
-        
-        do {
-            try realm.write {
-                
-                for f in rlmFeeds {
-                    if f.deleted || reset {
-                        realm.delete(f)
-                    }
-                }
-                
-                for o in feedObjects {
-                    if o.deleted || reset {
-                        realm.delete(o)
-                    }
-                }
-                
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-    }
+//    func dbGc(reset: Bool) {
+//        
+//        do {
+//            try realm.write {
+//                
+//                for f in rlmFeeds {
+//                    if f.deleted || reset {
+//                        realm.delete(f)
+//                    }
+//                }
+//                
+//                for o in feedObjects {
+//                    if o.deleted || reset {
+//                        realm.delete(o)
+//                    }
+//                }
+//                
+//            }
+//        } catch {
+//            print("Error: \(error)")
+//        }
+//    }
     
     
 }

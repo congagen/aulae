@@ -30,24 +30,24 @@ class HttpDownloader {
     }
     
     
-    func sourecObjectGC(id: String) {
-        let objs = feedObjects.filter({$0.uuid == id})
-        
-        for o in objs {
-            do {
-                try realm.write {
-                    o.deleted = true
-                    realm.delete(o)
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-        }
-        
-    }
+//    func sourecObjectGC(id: String) {
+//        let objs = feedObjects.filter({$0.uuid == id})
+//        
+//        for o in objs {
+//            do {
+//                try realm.write {
+//                    o.deleted = true
+//                    realm.delete(o)
+//                }
+//            } catch {
+//                print("Error: \(error)")
+//            }
+//        }
+//        
+//    }
     
     
-    func loadFileAsync(prevFeedUid: String, removeExisting: Bool, url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
+    func loadFileAsync(preserveFields: Dictionary<String, String>, removeExisting: Bool, url: URL, destinationUrl: URL, completion: @escaping () -> ()) {
         let sessionConfig = URLSessionConfiguration.default
         let urlSession = URLSession(configuration: sessionConfig)
         let request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
@@ -80,46 +80,34 @@ class HttpDownloader {
                     print(writeError)
                 }
                 
-                if prevFeedUid != "" {
-//                    for o in self.feedObjects.filter( {$0.uuid == prevFeedUid} ) {
-//                        do {
-//                            try self.realm.write {
-//                                o.deleted = true
-//                                self.realm.delete(o)
-//                            }
-//                        } catch {
-//                            print("Error: \(error)")
-//                        }
-//                    }
-                }
-                
             } else {
                 print(error!)
                 print(url.absoluteString)
             }
         }
+        
         task.resume()
         
     }
 
     
-    func loadFileSync(url: NSURL, completion:(_ path:String, _ error:NSError?) -> Void) {
-        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
-        let destinationUrl = documentsUrl.appendingPathComponent(url.lastPathComponent!)
-        if FileManager().fileExists(atPath: destinationUrl!.path) {
-            completion(destinationUrl!.path, nil)
-        } else if let dataFromURL = NSData(contentsOf: url as URL){
-            if dataFromURL.write(to: destinationUrl!, atomically: true) {
-                completion(destinationUrl!.path, nil)
-            } else {
-                let error = NSError(domain:"Error saving file", code:1001, userInfo: nil)
-                completion(destinationUrl!.path, error)
-            }
-        } else {
-            let error = NSError(domain:"Error downloading file", code:1002, userInfo: nil)
-            completion(destinationUrl!.path, error)
-        }
-    }
+//    func loadFileSync(url: NSURL, completion:(_ path:String, _ error:NSError?) -> Void) {
+//        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as NSURL
+//        let destinationUrl = documentsUrl.appendingPathComponent(url.lastPathComponent!)
+//        if FileManager().fileExists(atPath: destinationUrl!.path) {
+//            completion(destinationUrl!.path, nil)
+//        } else if let dataFromURL = NSData(contentsOf: url as URL){
+//            if dataFromURL.write(to: destinationUrl!, atomically: true) {
+//                completion(destinationUrl!.path, nil)
+//            } else {
+//                let error = NSError(domain:"Error saving file", code:1001, userInfo: nil)
+//                completion(destinationUrl!.path, error)
+//            }
+//        } else {
+//            let error = NSError(domain:"Error downloading file", code:1002, userInfo: nil)
+//            completion(destinationUrl!.path, error)
+//        }
+//    }
     
     
 }

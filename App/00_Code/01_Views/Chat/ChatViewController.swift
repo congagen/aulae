@@ -30,7 +30,7 @@ class ChatViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     lazy var rlmChatSession: Results<RLM_ChatSess> = { self.realm.objects(RLM_ChatSess.self) }()
     lazy var rlmChatMsgs:    Results<RLM_ChatMessage> = { self.realm.objects(RLM_ChatMessage.self) }()
-
+    
     fileprivate let cellId = "cell"
     
     var curAgentName = ""

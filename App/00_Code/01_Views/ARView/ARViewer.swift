@@ -205,31 +205,78 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
     }
     
     
-    func checkNodeData(fPath: String, source: RLM_Feed, objData: RLM_Obj, scaleFactor: Double) -> Bool {
+    func checkNodeData(fPath: String, objData: RLM_Obj) -> Bool {
         var isOk = true
         
-        if !["", "marker", "text", "demo"].contains(objData.type) && fPath != "" {
+        if !(["", "text", "demo"].contains(objData.type)) && fPath != "" {
             if !FileManager.default.fileExists(atPath: URL(fileURLWithPath: fPath).path) {
                 print("Missing ContentNode Data, Scheduling Retry...")
-                
+            
                 isOk = false
             }
         }
+                
         return isOk
     }
     
     
-    func styledContentNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double) -> ContentNode {
+    func prepCustomTopicMarker(markerFilePath: String, objData: RLM_Obj, source: RLM_Feed) {
+        print("prepCustomTopicMarker")
+        
+        let urlExt = (source.customMarkerUrl as NSString).pathExtension.lowercased()
+        
+        do {
+            try realm.write {
+                if FileManager.default.fileExists(atPath: URL(fileURLWithPath: source.customMarkerPath).path) {
+                    print("prepCustomTopicMarker: Custom Marker File Exists")
+                    
+                    if (["gif"].contains(urlExt)){
+                        objData.type = "gif"
+                    }
+                    if (["png", "jpg"].contains(urlExt)){
+                        objData.type = "image"
+                    }
+                    if (["usdz"].contains(urlExt)){
+                        objData.type = "usdz"
+                    }
+                    if (["mp3"].contains(urlExt)){
+                        objData.type = "audio"
+                    }
+                    objData.customMarkerUrl = source.customMarkerUrl
+                    objData.contentUrl = source.customMarkerUrl
+                    objData.customMarkerPath = source.customMarkerPath
+                } else {
+                    print("CUSTOM MARKER ERR!")
+                    print(source.customMarkerPath)
+                    objData.type = "marker"
+                }
+                
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    
+    func styledContentNode(objData: RLM_Obj, source: RLM_Feed, fPath: String, scaleFactor: Double, validData: Bool) -> ContentNode {
         let rawObjectGpsCCL   = CLLocation(latitude: objData.lat, longitude: objData.lng)
         let objectDistance    = rawDeviceGpsCCL.distance(from: rawObjectGpsCCL)
         var objectPos         = SCNVector3(objData.x_pos, objData.y_pos, objData.z_pos)
         var objSize           = SCNVector3(objData.scale, objData.scale, objData.scale)
+        var nodeDatePath      = fPath
         
         if objData.world_position {
             objectPos = getNodeWorldPosition(
                 objectDistance: objectDistance, baseOffset: 0.0,
                 contentObj: objData, scaleFactor: scaleFactor
             )
+        }
+                        
+        if source.customMarkerPath != "" {
+            print("objData.customMarkerUrl != OK")
+            
+            prepCustomTopicMarker(markerFilePath: source.customMarkerPath, objData: objData, source: source)
+            nodeDatePath = source.customMarkerPath
         }
         
         if (rlmSystem.first?.gpsScaling)! && objData.world_scale {
@@ -242,43 +289,35 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         let ctNode = ContentNode(id: objData.uuid, title: objData.name, feedId: objData.feedId, info: objData.info, location: rawObjectGpsCCL)
         ctNode.setProp(source: source, objData: objData)
         
-        switch objData.type.lowercased() {
-        case "particle_test":
-            let no = ctNode.createSphereNode(with: 1, color: UIColor.green)
-            ctNode.addParticle(particleNode: no, type: "", gravity: true)
-        case "image":
-            ctNode.addImage(fPath: fPath, objectData: objData)
-        case "gif":
-            ctNode.addGif(fPath: fPath, objectData: objData)
-        case "obj":
-            if memoryWarning {
-                if Int(1000000000 * 0.5) > report_memory() {
-                    ctNode.addObj(fPath: fPath, objectData: objData)
+        if !validData && objData.type.lowercased() != "marker" {
+            ctNode.addSphere(radius: 0.1, color: UIColor(hexColor: "cccccc"))
+        } else {
+            switch objData.type.lowercased() {
+            case "particle":
+                ctNode.addParticle(type: "", gravity: true)
+            case "image":
+                ctNode.addImage(fPath: nodeDatePath, objectData: objData)
+            case "gif":
+                ctNode.addGif(fPath: nodeDatePath, objectData: objData)
+            case "obj":
+                ctNode.addObj(fPath: nodeDatePath, objectData: objData)
+            case "usdz":
+                ctNode.addUSDZ(fPath: nodeDatePath, objectData: objData)
+            case "text":
+                ctNode.addText(objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01), fontSize: 1, color: UIColor(hexColor: objData.hex_color))
+            case "marker":
+                ctNode.addSphere(radius: 1, color: UIColor(hexColor: objData.hex_color))
+            case "demo":
+                ctNode.addDemoContent( fPath: nodeDatePath, objectData: objData)
+            case "audio":
+                if !(rlmSystem.first?.muteAudio)! {
+                    ctNode.addSphere(radius: CGFloat(1.0), color: UIColor(hexColor: objData.hex_color))
+                    addAudio(contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x))
                 }
-            } else {
-                ctNode.addObj(fPath: fPath, objectData: objData)
+            default:
+                print("ok")
             }
-        case "usdz":
-            if memoryWarning {
-                if Int(1000000000 * 0.5) > report_memory() {
-                    ctNode.addUSDZ(fPath:  fPath, objectData: objData)
-                }
-            } else {
-                ctNode.addObj(fPath: fPath, objectData: objData)
-            }
-        case "text":
-            ctNode.addText(objectData: objData, objText: objData.text, extrusion: CGFloat(objData.scale * 0.01), fontSize: 1, color: UIColor(hexColor: objData.hex_color))
-        case "marker":
-            ctNode.addSphere(radius: 1, color: UIColor(hexColor: objData.hex_color))
-        case "demo":
-            ctNode.addDemoContent( fPath: fPath, objectData: objData)
-        case "audio":
-            if !(rlmSystem.first?.muteAudio)! {
-                ctNode.addSphere(radius: CGFloat(1.0), color: UIColor(hexColor: objData.hex_color))
-                addAudio(contentObj: objData, objectDistance: objectDistance, audioRangeRadius: audioRangeRadius, fPath: fPath, nodeSize: CGFloat(objSize.x))
-            }
-        default:
-            print("ok")
+            
         }
         
         if objData.billboard {
@@ -286,9 +325,16 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
             constraint.freeAxes = [.Y]
             ctNode.constraints  = [constraint]
         }
-        
+                
         ctNode.name        = String(objData.uuid)
-        ctNode.position    = SCNVector3(objectPos.x, objectPos.y, objectPos.z)
+        
+        // Handle y position random if set
+        if source.da > 0.00001 {
+            ctNode.position    = SCNVector3(objectPos.x, Float(Double.random(in: -source.da..<source.da)), objectPos.z)
+        } else {
+            ctNode.position    = SCNVector3(objectPos.x, objectPos.y, objectPos.z)
+        }
+        
         ctNode.scale       = objSize
         
         if objData.demo {
@@ -312,31 +358,77 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         print("AddContentToScene: " + String(objData.uuid))
         print("Adding: " + objData.type.lowercased() + ": " + fPath)
 
-        var isIntact = !objData.isInvalidated && !source.isInvalidated
+        var isIntact = true
         
-        if isIntact {
-            isIntact = checkNodeData(fPath: fPath, source: source, objData: objData, scaleFactor: scaleFactor)
-        }
         
-        if isIntact || objData.type.lowercased() == "demo" {
-            let ctNode = styledContentNode(
-                objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor
-            )
-            sceneView.scene.rootNode.addChildNode(ctNode)
+        if objData.type == "marker" {
+            if isIntact {
+                isIntact = checkNodeData(fPath: source.customMarkerPath, objData: objData)
+            }
         } else {
-            Timer.scheduledTimer(
-                withTimeInterval: 2, repeats: false, block: {
-                    _ in DispatchQueue.main.async {
-                        if !objData.isInvalidated {
-                            self.addSourceNode(
-                                objData: objData, source: source,
-                                fPath: fPath, scaleFactor: scaleFactor
-                            )
-                        }
-                    }
-                }
-            )
+            if isIntact {
+                isIntact = checkNodeData(fPath: fPath, objData: objData)
+            }
         }
+        
+        
+        if !objData.isInvalidated && !source.isInvalidated {
+            if !memoryWarning {
+                if Int(1000000000 * 0.5) > report_memory() {
+                    let ctNode = styledContentNode(
+                        objData: objData, source: source, fPath: fPath, scaleFactor: scaleFactor, validData: isIntact
+                    )
+                    sceneView.scene.rootNode.addChildNode(ctNode)
+                } else {
+                    showMemoryAlert()
+                }
+            } else {
+                showMemoryAlert()
+                memoryWarning = false
+            }
+            
+        }
+        
+        
+        func showMemoryAlert(){
+            let alert =  UIAlertController(
+                title: "Source Error",
+                message: "\n" + "Memory limit exceeded, try disabling some sources",
+                preferredStyle: UIAlertController.Style.alert
+            )
+            
+            let act = UIAlertAction(title: "Done",  style: UIAlertAction.Style.default, handler: nil )
+            
+            if traitCollection.userInterfaceStyle == .light {
+                alert.view.tintColor = UIColor.black
+                act.setValue(UIColor.black, forKey: "titleTextColor")
+            } else {
+                alert.view.tintColor = UIColor.white
+                act.setValue(UIColor.white, forKey: "titleTextColor")
+            }
+            
+            alert.addAction(act)
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        
+        
+//        if isIntact {
+//
+//        } else {
+//            Timer.scheduledTimer(
+//                withTimeInterval: 2, repeats: false, block: {
+//                    _ in DispatchQueue.main.async {
+//                        if !objData.isInvalidated {
+//                            self.addSourceNode(
+//                                objData: objData, source: source,
+//                                fPath: fPath, scaleFactor: scaleFactor
+//                            )
+//                        }
+//                    }
+//                }
+//            )
+//        }
     }
     
     
@@ -396,6 +488,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                         let destinationUrl = documentsUrl.appendingPathComponent(fileName)
                         
 //                        DispatchQueue.main.async {
+                        
                         self.addSourceNode(objData: o, source: objFeeds.first!, fPath: (
                             destinationUrl?.path)!, scaleFactor: (self.rlmSystem.first?.scaleFactor)!
                         )
@@ -404,7 +497,7 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
                     } else {
                         if (o.type.lowercased() == "text") {
                             addSourceNode(
-                                objData: o, source: objFeeds.first!, fPath:"",
+                                objData: o, source: objFeeds.first!, fPath: "",
                                 scaleFactor: (rlmSystem.first?.scaleFactor)! )
                         }
                         
@@ -757,10 +850,12 @@ class ARViewer: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UIGestur
         configuration.isAutoFocusEnabled = true
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
-        //configuration.planeDetection = [.horizontal, .vertical]
         
+        configuration.automaticImageScaleEstimationEnabled = true
+//        configuration.sceneReconstruction = .meshWithClassification
+                
         sceneView.session.run(
-            configuration, options: [.resetSceneReconstruction, .resetTracking, .removeExistingAnchors])
+            configuration, options: [.stopTrackedRaycasts, .resetSceneReconstruction, .resetTracking, .removeExistingAnchors])
         
         rawDeviceGpsCCL = CLLocation(
             latitude:  rlmSession.first!.currentLat,

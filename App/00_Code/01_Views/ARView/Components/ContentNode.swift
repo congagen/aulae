@@ -297,25 +297,26 @@ class ContentNode: SCNNode {
     }
     
     
-    func addParticle(particleNode: SCNNode, type: String, gravity: Bool) {
+    func addParticle(type: String, gravity: Bool) {
         let node = createSphereNode(with: 0.1, color: UIColor.red)
         
         let particleSystem = SCNParticleSystem(named: "FloatingParticleSystem", inDirectory: nil)
-        particleSystem?.birthRate = 10
-        particleSystem?.particleSize = 0.1
+        particleSystem?.birthRate = 100
+        particleSystem?.particleSize = 5
         particleSystem?.acceleration = SCNVector3(0, 1, 0)
-//        particleSystem?.emitterShape = .
+        particleSystem?.emitterShape = node.geometry
         particleSystem?.particleColor = UIColor.blue
         particleSystem?.isAffectedByGravity = gravity
-        particleSystem?.birthLocation = .surface
+        particleSystem?.birthLocation = .volume
         particleSystem?.particleDiesOnCollision = false
+        particleSystem?.reset()
         
         if (particleSystem != nil) {
             node.addParticleSystem(particleSystem!)
         } else {
-            print("AH??")
+            print("particle system node error")
         }
-        
+
         addChildNode(node)
     }
     
@@ -328,23 +329,25 @@ class ContentNode: SCNNode {
         let layer = CALayer()
         layer.bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
         
-        let animation: CAKeyframeAnimation = createGIFAnimation(
-            url: URL(fileURLWithPath: fPath), fDuration: 0.05 )!
-        
-        layer.add(animation, forKey: "contents")
-        layer.anchorPoint = CGPoint(x:0.0, y:1.0)
-        
-        let gifMaterial = SCNMaterial()
-        gifMaterial.isDoubleSided = true
-        gifMaterial.diffuse.contents = layer
-        gifMaterial.lightingModel = .constant
-        
-        gifPlane.materials = [gifMaterial]
-        
-        let node = SCNNode(geometry: gifPlane)
-        node.name = objectData.name
-        
-        addChildNode(node)
+        // TODO (FOUND NIL?!):
+        if FileManager.default.fileExists(atPath: fPath) {
+            let animation: CAKeyframeAnimation = createGIFAnimation(url: URL(fileURLWithPath: fPath), fDuration: 0.05 )!
+            layer.add(animation, forKey: "contents")
+            layer.anchorPoint = CGPoint(x:0.0, y:1.0)
+            
+            let gifMaterial = SCNMaterial()
+            gifMaterial.isDoubleSided = true
+            gifMaterial.diffuse.contents = layer
+            gifMaterial.lightingModel = .constant
+            
+            gifPlane.materials = [gifMaterial]
+            
+            let node = SCNNode(geometry: gifPlane)
+            node.name = objectData.name
+            
+            addChildNode(node)
+        }        
+
     }
     
     
