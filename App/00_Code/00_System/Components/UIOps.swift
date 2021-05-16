@@ -51,8 +51,7 @@ class UIOps {
     
 
     func updateTabUIMode(tabCtrl: UITabBarController){
-        // print("Dark Mode Tab: " + String(rlmSystem.first?.uiMode == 1))
-        
+        // print("Dark Mode Tab: " + String(rlmSystem.first?.uiMode == 1))        
         
         if rlmSystem.first?.uiMode == 1 {
             tabCtrl.tabBar.isTranslucent = true
