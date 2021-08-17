@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,8 +22,9 @@
 		31AB869120B355A30038F4D5 /* FeedsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869020B355A30038F4D5 /* FeedsTVC.swift */; };
 		31AB869620B3FB040038F4D5 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB869520B3FB040038F4D5 /* MapVC.swift */; };
 		31D284BF20D3B079004451A6 /* RLM_Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D284BE20D3B079004451A6 /* RLM_Feed.swift */; };
+		6402A10626CA66B4002FBCAC /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6402A10526CA66B4002FBCAC /* RealmSwift */; };
+		6402A10826CA66B4002FBCAC /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 6402A10726CA66B4002FBCAC /* Realm */; };
 		64F003F8264EF7EA004D9575 /* FloatingParticleSystem.sks in Resources */ = {isa = PBXBuildFile; fileRef = 64F003F7264EF7EA004D9575 /* FloatingParticleSystem.sks */; };
-		E44807058F878A122D9E5EB5 /* Pods_Aulae.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0A4B178E0EA95DAE775C79 /* Pods_Aulae.framework */; };
 		FA1514D722B27B080012BEA4 /* RLM_SysSettings_117.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D622B27B080012BEA4 /* RLM_SysSettings_117.swift */; };
 		FA1514D922B289380012BEA4 /* DefaultNVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514D822B289380012BEA4 /* DefaultNVC.swift */; };
 		FA1514DB22B2C4010012BEA4 /* ChatMsgActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1514DA22B2C4010012BEA4 /* ChatMsgActions.swift */; };
@@ -87,8 +88,6 @@
 		31AB869520B3FB040038F4D5 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
 		31D284BE20D3B079004451A6 /* RLM_Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_Feed.swift; sourceTree = "<group>"; };
 		64F003F7264EF7EA004D9575 /* FloatingParticleSystem.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = FloatingParticleSystem.sks; sourceTree = "<group>"; };
-		C66F8FA608BC767CD21F1B4E /* Pods-Aulae.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aulae.release.xcconfig"; path = "Target Support Files/Pods-Aulae/Pods-Aulae.release.xcconfig"; sourceTree = "<group>"; };
-		EA0A4B178E0EA95DAE775C79 /* Pods_Aulae.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Aulae.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA1514D622B27B080012BEA4 /* RLM_SysSettings_117.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLM_SysSettings_117.swift; sourceTree = "<group>"; };
 		FA1514D822B289380012BEA4 /* DefaultNVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNVC.swift; sourceTree = "<group>"; };
 		FA1514DA22B2C4010012BEA4 /* ChatMsgActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMsgActions.swift; sourceTree = "<group>"; };
@@ -119,7 +118,6 @@
 		FAE439622237B5C900F828EF /* UIOps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOps.swift; sourceTree = "<group>"; };
 		FAF37EB8221D65610065B18A /* NodeAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAppearance.swift; sourceTree = "<group>"; };
 		FAF4C9A1223474D500C2F371 /* QrScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrScanner.swift; sourceTree = "<group>"; };
-		FF593F95438552C5DDE487C5 /* Pods-Aulae.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aulae.debug.xcconfig"; path = "Target Support Files/Pods-Aulae/Pods-Aulae.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,8 +125,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6402A10826CA66B4002FBCAC /* Realm in Frameworks */,
+				6402A10626CA66B4002FBCAC /* RealmSwift in Frameworks */,
 				318FE8F520B0BDDD0050528B /* MapKit.framework in Frameworks */,
-				E44807058F878A122D9E5EB5 /* Pods_Aulae.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,7 +168,6 @@
 				318FE90320B1696E0050528B /* Internals */,
 				3177251C20B03AD4009FA8B1 /* Products */,
 				318FE8F320B0BDDD0050528B /* Frameworks */,
-				468C1681482247295EA48EBC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -203,7 +201,6 @@
 			isa = PBXGroup;
 			children = (
 				318FE8F420B0BDDD0050528B /* MapKit.framework */,
-				EA0A4B178E0EA95DAE775C79 /* Pods_Aulae.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -292,15 +289,6 @@
 			path = 01_Data;
 			sourceTree = "<group>";
 		};
-		468C1681482247295EA48EBC /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				FF593F95438552C5DDE487C5 /* Pods-Aulae.debug.xcconfig */,
-				C66F8FA608BC767CD21F1B4E /* Pods-Aulae.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		FA1934E5222567D100457C6E /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -385,18 +373,20 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3177252F20B03AD6009FA8B1 /* Build configuration list for PBXNativeTarget "Aulae" */;
 			buildPhases = (
-				19162E019B335F97C9CD3A3D /* [CP] Check Pods Manifest.lock */,
 				3177251720B03AD4009FA8B1 /* Sources */,
 				3177251920B03AD4009FA8B1 /* Resources */,
 				3177251820B03AD4009FA8B1 /* Frameworks */,
 				FAF0D0372371A7C200E0875E /* Embed Frameworks */,
-				9EE9DBA3F21538497F406383 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Aulae;
+			packageProductDependencies = (
+				6402A10526CA66B4002FBCAC /* RealmSwift */,
+				6402A10726CA66B4002FBCAC /* Realm */,
+			);
 			productName = ArkitTest;
 			productReference = 3177251B20B03AD4009FA8B1 /* Aulae.app */;
 			productType = "com.apple.product-type.application";
@@ -446,6 +436,9 @@
 				Base,
 			);
 			mainGroup = 3177251220B03AD4009FA8B1;
+			packageReferences = (
+				6402A10426CA66B4002FBCAC /* XCRemoteSwiftPackageReference "realm-cocoa" */,
+			);
 			productRefGroup = 3177251C20B03AD4009FA8B1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -469,48 +462,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		19162E019B335F97C9CD3A3D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Aulae-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9EE9DBA3F21538497F406383 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Aulae/Pods-Aulae-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Aulae/Pods-Aulae-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Aulae/Pods-Aulae-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3177251720B03AD4009FA8B1 /* Sources */ = {
@@ -632,7 +583,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -688,7 +639,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -700,7 +651,6 @@
 		};
 		3177253020B03AD6009FA8B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FF593F95438552C5DDE487C5 /* Pods-Aulae.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Internals/Aulae.entitlements;
@@ -717,7 +667,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.888.99999993;
+				MARKETING_VERSION = 1.888.99999994;
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
 				PRODUCT_NAME = Aulae;
 				SUPPORTS_MACCATALYST = NO;
@@ -728,7 +678,6 @@
 		};
 		3177253120B03AD6009FA8B1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C66F8FA608BC767CD21F1B4E /* Pods-Aulae.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Internals/Aulae.entitlements;
@@ -745,7 +694,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.888.99999993;
+				MARKETING_VERSION = 1.888.99999994;
 				PRODUCT_BUNDLE_IDENTIFIER = com.abstraqata.aulae;
 				PRODUCT_NAME = Aulae;
 				SUPPORTS_MACCATALYST = NO;
@@ -776,6 +725,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6402A10426CA66B4002FBCAC /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-cocoa.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6402A10526CA66B4002FBCAC /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6402A10426CA66B4002FBCAC /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			productName = RealmSwift;
+		};
+		6402A10726CA66B4002FBCAC /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6402A10426CA66B4002FBCAC /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			productName = Realm;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3177251320B03AD4009FA8B1 /* Project object */;
 }

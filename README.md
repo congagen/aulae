@@ -7,9 +7,8 @@ AppStore: https://apps.apple.com/us/app/aulae/id1358482195#?platform=iphone
 
 ### Developing
 - #### App
-  - Install CocoaPods
-  - Run ```pod install``` in the root directory
-  - Open Aulae.xcworkspace
+  - Modify Swift Packages (Optional)
+  - Install Swift Packages
 
 - #### Content
   - Spec: https://github.com/congagen/aulae/blob/master/Content/Docs/Sources.md
