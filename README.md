@@ -7,7 +7,6 @@ AppStore: https://apps.apple.com/us/app/aulae/id1358482195#?platform=iphone
 
 ### Developing
 - #### App
-  - Modify Swift Packages (Optional)
   - Install Swift Packages
 
 - #### Content
