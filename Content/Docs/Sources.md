@@ -1,5 +1,5 @@
 
-#### Supported file formats:
+### Supported file formats:
 	Images: Jpg (1:1), Png (1:1)
 	Animation: Gif (1:1), USDZ
 	3D: USDZ
@@ -7,7 +7,7 @@
 
 ---
 
-#### Sources  (JSON File / API Response):
+### Sources  (JSON File / API Response):
 
 	Required:
 
