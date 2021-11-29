@@ -7,7 +7,7 @@
 
 ---
 
-### Sources  (JSON File / API Response):
+### JSON File / API Response:
 
 	Required:
 
