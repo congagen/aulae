@@ -10,9 +10,9 @@ AppStore: https://apps.apple.com/us/app/aulae/id1358482195#?platform=iphone
   Install Swift Packages
 
 - #### Content
-  Spec: https://github.com/congagen/aulae/blob/master/Content/Docs/Sources.md
-  Chat: https://github.com/congagen/aulae/blob/master/Content/Docs/Chat.md
-  Examples: https://github.com/congagen/aulae/tree/master/Content/Examples
+  - Spec: https://github.com/congagen/aulae/blob/master/Content/Docs/Sources.md
+  - Chat: https://github.com/congagen/aulae/blob/master/Content/Docs/Chat.md
+  - Examples: https://github.com/congagen/aulae/tree/master/Content/Examples
 
 ### Usage
 
