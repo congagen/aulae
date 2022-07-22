@@ -1,6 +1,6 @@
 # AULAE
 
-AULAE is an iOS app that enables browserlike consumption of positional AR content
+AULAE is an iOS app that enables feed-based consumption of dynamic AR content
 
 AppStore: https://apps.apple.com/us/app/aulae/id1358482195#?platform=iphone
 
